@@ -16,6 +16,14 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(EnTT)
 
+#GoogleTest
+FetchContent_Declare(
+    googletest
+    GIT_REPOSITORY https://github.com/google/googletest
+    GIT_TAG release-1.12.1
+)
+FetchContent_MakeAvailable(googletest)
+
 add_executable(main main.cpp)
 
 #SFML
@@ -23,3 +31,6 @@ target_link_libraries(main sfml-graphics sfml-audio)
 
 #EnTT
 target_link_libraries(main EnTT::EnTT)
+
+#GoogleTest
+enable_testing()
