@@ -1,0 +1,27 @@
+# Ignore build directory
+/build/
+
+# Ignore files created by IDEs
+/.idea/
+*.user
+*.suo
+*.sln.docstates
+
+# Ignore output binaries
+*.exe
+*.out
+*.o
+
+# Ignore files created by CMake
+CMakeCache.txt
+CMakeFiles/
+CMakeScripts/
+Testing/
+Makefile
+cmake_install.cmake
+install_manifest.txt
+
+# Ignore other files
+*.log
+*.swp
+*.bak
