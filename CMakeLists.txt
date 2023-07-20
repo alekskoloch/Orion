@@ -7,7 +7,19 @@ set(CMAKE_CXX_STANDARD 17)
 #SFML
 find_package(SFML 2.6 COMPONENTS graphics audio REQUIRED)
 
+#EnTT
+include(FetchContent)
+FetchContent_Declare(
+    EnTT
+    GIT_REPOSITORY https://github.com/skypjack/entt
+    GIT_TAG v3.12.2
+)
+FetchContent_MakeAvailable(EnTT)
+
 add_executable(main main.cpp)
 
 #SFML
 target_link_libraries(main sfml-graphics sfml-audio)
+
+#EnTT
+target_link_libraries(main EnTT::EnTT)
