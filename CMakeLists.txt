@@ -34,3 +34,5 @@ target_link_libraries(main EnTT::EnTT)
 
 #GoogleTest
 enable_testing()
+add_executable(tests tests/tests.cpp)
+target_link_libraries(tests gtest_main)
