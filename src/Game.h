@@ -10,6 +10,7 @@ private:
 
     void processEvents();
     void update();
+    void render();
 public:
     Game();
     void run();

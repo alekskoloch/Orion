@@ -27,3 +27,9 @@ void Game::update()
 {
 
 }
+
+void Game::render()
+{
+    this->window.clear();
+    this->window.display();
+}
