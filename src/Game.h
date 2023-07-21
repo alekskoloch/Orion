@@ -9,4 +9,5 @@ private:
     sf::RenderWindow window;
 public:
     Game();
+    void run();
 };
