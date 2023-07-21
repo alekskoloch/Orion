@@ -22,3 +22,8 @@ void Game::processEvents()
             window.close();
     }
 }
+
+void Game::update()
+{
+
+}

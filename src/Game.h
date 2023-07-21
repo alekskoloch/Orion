@@ -9,6 +9,7 @@ private:
     sf::RenderWindow window;
 
     void processEvents();
+    void update();
 public:
     Game();
     void run();
