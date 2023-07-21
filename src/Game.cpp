@@ -9,7 +9,9 @@ void Game::run()
 {
     while (window.isOpen())
     {
-        
+        this->processEvents();
+        this->update();
+        this->render();
     }
 }
 
