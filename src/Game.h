@@ -7,6 +7,7 @@ class Game
 {
 private:
     sf::RenderWindow window;
+    entt::registry registry;
 
     void processEvents();
     void update();
