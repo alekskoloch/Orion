@@ -24,7 +24,7 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(googletest)
 
-add_executable(main src/main.cpp src/Game.h src/Game.cpp)
+add_executable(main src/main.cpp src/Game.h src/Game.cpp src/components/components.h)
 
 #SFML
 target_link_libraries(main sfml-graphics sfml-audio)
