@@ -10,7 +10,7 @@ static float playerStartPositionY = 100.f;
 
 void PlayerInitializationSystem::initializePlayer(entt::registry& registry)
 {
-    TextureManager::getInstance().loadTexture("PLAYER_TEXTURE", "../assets/player.png");
+    TextureManager::getInstance().loadTexture("PLAYER_TEXTURE", "assets/player.png");
 
     auto player = registry.create();
     registry.emplace<Player>(player);
