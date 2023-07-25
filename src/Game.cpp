@@ -1,8 +1,15 @@
 #include "Game.h"
 
+#include "systems/PlayerInitializationSystem.h"
+#include "systems/RenderSystem.h"
+
+#include "components/components.h"
+#include "components/tagComponents.h"
+
 Game::Game() : window(sf::VideoMode(1920u, 1080u), "Orion")
 {
-
+    PlayerInitializationSystem playerInitializationSystem;
+    playerInitializationSystem.initializePlayer(this->registry);
 }
 
 void Game::run()
@@ -33,5 +40,8 @@ void Game::update()
 void Game::render()
 {
     this->window.clear();
+
+    RenderSystem::renderEntities(this->window, this->registry);
+
     this->window.display();
 }
