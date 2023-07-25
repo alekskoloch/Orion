@@ -11,8 +11,3 @@ struct Renderable
 {
     sf::Sprite sprite;
 };
-
-struct Texture
-{
-    sf::Texture texture;
-};
