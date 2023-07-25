@@ -24,7 +24,7 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(googletest)
 
-add_executable(main src/main.cpp src/Game.h src/Game.cpp src/components/components.h src/systems/PlayerInitializationSystem.h src/systems/PlayerInitializationSystem.cpp src/managers/TextureManager.h src/managers/TextureManager.cpp)
+add_executable(main src/main.cpp src/Game.h src/Game.cpp src/components/components.h src/systems/PlayerInitializationSystem.h src/systems/PlayerInitializationSystem.cpp src/systems/RenderSystem.h src/systems/RenderSystem.cpp src/managers/TextureManager.h src/managers/TextureManager.cpp)
 
 #SFML
 target_link_libraries(main sfml-graphics sfml-audio)
