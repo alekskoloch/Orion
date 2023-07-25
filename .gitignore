@@ -3,6 +3,7 @@
 
 # Ignore files created by IDEs
 /.idea/
+/.vscode/
 *.user
 *.suo
 *.sln.docstates
