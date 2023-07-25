@@ -8,6 +8,7 @@
 class TextureManager
 {
 private:
+    TextureManager() = default;
     std::unordered_map<std::string, sf::Texture> textures;
 public:
     static TextureManager& getInstance();
