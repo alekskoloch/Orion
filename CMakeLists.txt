@@ -35,8 +35,15 @@ target_link_libraries(main EnTT::EnTT)
 
 #GoogleTest
 enable_testing()
-add_executable(tests tests/tests.cpp)
-target_link_libraries(tests gtest_main)
+
+# create library for TextureManager
+add_library(texture_manager src/managers/TextureManager.cpp)
+target_include_directories(texture_manager PUBLIC src/managers)
+target_link_libraries(texture_manager sfml-graphics)
+
+file(GLOB TEST_SRC tests/*.cpp)
+add_executable(tests ${TEST_SRC})
+target_link_libraries(tests gtest_main texture_manager sfml-graphics)
 
 #GoogleTest discovery
 include(GoogleTest)
