@@ -36,3 +36,7 @@ target_link_libraries(main EnTT::EnTT)
 enable_testing()
 add_executable(tests tests/tests.cpp)
 target_link_libraries(tests gtest_main)
+
+#GoogleTest discovery
+include(GoogleTest)
+gtest_discover_tests(tests)
