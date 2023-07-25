@@ -15,4 +15,6 @@ public:
 
     TextureManager(TextureManager const&) = delete;
     void operator=(TextureManager const&) = delete;
+
+    void loadTexture(const std::string& textureName, const std::string& texturePath);
 };
