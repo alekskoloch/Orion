@@ -12,4 +12,7 @@ private:
     std::unordered_map<std::string, sf::Texture> textures;
 public:
     static TextureManager& getInstance();
+
+    TextureManager(TextureManager const&) = delete;
+    void operator=(TextureManager const&) = delete;
 };
