@@ -20,4 +20,5 @@ void PlayerInitializationSystem::initializePlayer(entt::registry& registry)
     registry.emplace<Position>(player, sf::Vector2f(playerStartPositionX, playerStartPositionY));
 
     registry.emplace<Input>(player);
+    registry.emplace<Speed>(player, 1000.f);
 }
