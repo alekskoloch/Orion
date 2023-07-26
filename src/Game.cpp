@@ -22,7 +22,7 @@ void Game::run()
     while (window.isOpen())
     {
         this->processEvents();
-        this->update();
+        this->update(this->clock.restart());
         this->render();
     }
 }
@@ -37,7 +37,7 @@ void Game::processEvents()
     }
 }
 
-void Game::update()
+void Game::update(sf::Time deltaTime)
 {
     InputSystem::processInput(this->registry);
     MovementSystem::updateMovement(this->registry);
