@@ -19,3 +19,11 @@ struct Renderable
 {
     sf::Sprite sprite;
 };
+
+struct Speed
+{
+    float speed;
+};
+
+
+
