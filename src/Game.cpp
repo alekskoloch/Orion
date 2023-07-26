@@ -1,7 +1,10 @@
 #include "Game.h"
 
 #include "systems/PlayerInitializationSystem.h"
+#include "systems/InputSystem.h"
+#include "systems/MovementSystem.h"
 #include "systems/RenderSystem.h"
+
 
 #include "components/components.h"
 #include "components/tagComponents.h"
@@ -34,7 +37,8 @@ void Game::processEvents()
 
 void Game::update()
 {
-
+    InputSystem::processInput(this->registry);
+    MovementSystem::updateMovement(this->registry);
 }
 
 void Game::render()
