@@ -25,7 +25,8 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(googletest)
 
-add_executable(main src/main.cpp src/Game.h src/Game.cpp src/components/components.h src/systems/PlayerInitializationSystem.h src/systems/PlayerInitializationSystem.cpp src/systems/RenderSystem.h src/systems/RenderSystem.cpp src/managers/TextureManager.h src/managers/TextureManager.cpp)
+file(GLOB_RECURSE SOURCES src/*.cpp src/*.h)
+add_executable(main ${SOURCES})
 
 #SFML
 target_link_libraries(main sfml-graphics sfml-audio)
