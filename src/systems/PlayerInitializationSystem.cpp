@@ -18,4 +18,6 @@ void PlayerInitializationSystem::initializePlayer(entt::registry& registry)
     sf::Sprite sprite(TextureManager::getInstance().getTexture("PLAYER_TEXTURE"));
     registry.emplace<Renderable>(player, sprite);
     registry.emplace<Position>(player, sf::Vector2f(playerStartPositionX, playerStartPositionY));
+
+    registry.emplace<Input>(player);
 }
