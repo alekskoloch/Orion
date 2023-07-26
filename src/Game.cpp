@@ -40,7 +40,7 @@ void Game::processEvents()
 void Game::update(sf::Time deltaTime)
 {
     InputSystem::processInput(this->registry);
-    MovementSystem::updateMovement(this->registry);
+    MovementSystem::updateMovement(this->registry, deltaTime);
 }
 
 void Game::render()

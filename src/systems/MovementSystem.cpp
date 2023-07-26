@@ -4,7 +4,7 @@
 
 //TODO: This should be configurable
 
-void MovementSystem::updateMovement(entt::registry& registry)
+void MovementSystem::updateMovement(entt::registry& registry, sf::Time deltaTime)
 {
     auto view = registry.view<Position, Input>();
     for (auto entity : view)
@@ -25,6 +25,6 @@ void MovementSystem::updateMovement(entt::registry& registry)
 
         //TODO: Speed should be component
         //TODO: Velocity
-        position.position += direction * 10.f;
+        position.position += direction * 1000.f * deltaTime.asSeconds();
     }
 }
