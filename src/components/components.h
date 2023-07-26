@@ -2,6 +2,14 @@
 
 #include <SFML/Graphics.hpp>
 
+struct Input
+{
+    bool up;
+    bool down;
+    bool left;
+    bool right;
+};
+
 struct Position
 {
     sf::Vector2f position;
