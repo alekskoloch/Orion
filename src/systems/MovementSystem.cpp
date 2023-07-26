@@ -6,11 +6,12 @@
 
 void MovementSystem::updateMovement(entt::registry& registry, sf::Time deltaTime)
 {
-    auto view = registry.view<Position, Input>();
+    auto view = registry.view<Position, Input, Speed>();
     for (auto entity : view)
     {
         auto& position = view.get<Position>(entity);
         auto& input = view.get<Input>(entity);
+        auto& speed = view.get<Speed>(entity);
 
         sf::Vector2f direction(0.f, 0.f);
 
@@ -23,8 +24,7 @@ void MovementSystem::updateMovement(entt::registry& registry, sf::Time deltaTime
         if (input.right)
             direction.x += 1.f;
 
-        //TODO: Speed should be component
         //TODO: Velocity
-        position.position += direction * 1000.f * deltaTime.asSeconds();
+        position.position += direction * speed.speed * deltaTime.asSeconds();
     }
 }
