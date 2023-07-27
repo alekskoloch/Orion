@@ -2,6 +2,7 @@
 
 #include "systems/PlayerInitializationSystem.h"
 #include "systems/InputSystem.h"
+#include "systems/AccelerationSystem.h"
 #include "systems/MovementSystem.h"
 #include "systems/RenderSystem.h"
 
@@ -40,6 +41,7 @@ void Game::processEvents()
 void Game::update(sf::Time deltaTime)
 {
     InputSystem::processInput(this->registry);
+    AccelerationSystem::accelerate(this->registry);
     MovementSystem::updateMovement(this->registry, deltaTime);
 }
 
