@@ -31,5 +31,7 @@ struct Speed
     float speed;
 };
 
-
-
+struct Velocity
+{
+    sf::Vector2f velocity;
+};
