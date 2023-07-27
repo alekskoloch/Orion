@@ -2,6 +2,12 @@
 
 #include <SFML/Graphics.hpp>
 
+struct Acceleration
+{
+    float accelerationValue;
+    float decelerationValue;
+};
+
 struct Input
 {
     bool up;
