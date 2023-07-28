@@ -28,7 +28,7 @@ struct Renderable
 
 struct Speed
 {
-    float speed;
+    float maxSpeedValue;
 };
 
 struct Velocity
