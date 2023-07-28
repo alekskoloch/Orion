@@ -26,6 +26,13 @@ struct Renderable
     sf::Sprite sprite;
 };
 
+struct RotationTowardsMouse
+{
+    bool enabled;
+    float sensitivity;
+    float minimalActivationDistance;
+};
+
 struct Speed
 {
     float maxSpeedValue;
