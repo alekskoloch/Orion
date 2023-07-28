@@ -2,7 +2,7 @@
 
 #include "../components/components.h"
 
-void AccelerationSystem::accelerate(entt::registry& registry)
+void AccelerationSystem::accelerate(entt::registry& registry, sf::Time deltaTime)
 {
     auto view = registry.view<Acceleration, Input, Speed, Velocity>();
 
@@ -18,13 +18,13 @@ void AccelerationSystem::accelerate(entt::registry& registry)
             if (inputDirection)
             {
                 if (positiveDirection ? axisVelocity < speed.maxSpeedValue : axisVelocity > -speed.maxSpeedValue)
-                    axisVelocity += (positiveDirection ? 1 : -1) * acceleration.accelerationValue;
+                    axisVelocity += (positiveDirection ? 1 : -1) * acceleration.accelerationValue * deltaTime.asSeconds();
                 else
                     axisVelocity = (positiveDirection ? 1 : -1) * speed.maxSpeedValue;
             }
             else if ((positiveDirection && axisVelocity > 0) || (!positiveDirection && axisVelocity < 0))
             {
-                axisVelocity += (positiveDirection ? -1 : 1) * acceleration.decelerationValue;
+                axisVelocity += (positiveDirection ? -1 : 1) * acceleration.decelerationValue * deltaTime.asSeconds();
                 if ((positiveDirection && axisVelocity < 0) || (!positiveDirection && axisVelocity > 0))
                     axisVelocity = 0.0f;
             }
