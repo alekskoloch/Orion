@@ -5,6 +5,7 @@
 #include "systems/AccelerationSystem.h"
 #include "systems/MovementSystem.h"
 #include "systems/RenderSystem.h"
+#include "systems/RotateTowardsMouseSystem.h"
 
 
 #include "components/components.h"
@@ -41,6 +42,7 @@ void Game::processEvents()
 void Game::update(sf::Time deltaTime)
 {
     InputSystem::processInput(this->registry);
+    RotateTowardsMouseSystem::rotateTowardsMouse(this->registry, deltaTime, this->window);
     AccelerationSystem::accelerate(this->registry, deltaTime);
     MovementSystem::updateMovement(this->registry, deltaTime);
 }
