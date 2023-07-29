@@ -7,6 +7,7 @@
 #include "systems/MovementSystem.h"
 #include "systems/RenderSystem.h"
 #include "systems/RotateTowardsMouseSystem.h"
+#include "systems/WaypointsMovementSystem.h"
 
 
 #include "components/components.h"
@@ -47,6 +48,7 @@ void Game::update(sf::Time deltaTime)
 {
     InputSystem::processInput(this->registry);
     RotateTowardsMouseSystem::rotateTowardsMouse(this->registry, deltaTime, this->window);
+    WaypointsMovementSystem::updateWaypoints(this->registry, deltaTime);
     AccelerationSystem::accelerate(this->registry, deltaTime);
     MovementSystem::updateMovement(this->registry, deltaTime);
 }
