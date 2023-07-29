@@ -1,6 +1,7 @@
 #include "Game.h"
 
 #include "systems/PlayerInitializationSystem.h"
+#include "systems/EnemyInitializationSystem.h"
 #include "systems/InputSystem.h"
 #include "systems/AccelerationSystem.h"
 #include "systems/MovementSystem.h"
@@ -17,6 +18,9 @@ Game::Game() : window(sf::VideoMode(1920u, 1080u), "Orion")
     window.setFramerateLimit(144);
     PlayerInitializationSystem playerInitializationSystem;
     playerInitializationSystem.initializePlayer(this->registry);
+
+    EnemyInitializationSystem enemyInitializationSystem;
+    enemyInitializationSystem.initializeEnemy(this->registry);
 }
 
 void Game::run()
