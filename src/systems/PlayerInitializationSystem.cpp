@@ -16,6 +16,7 @@ void PlayerInitializationSystem::initializePlayer(entt::registry& registry)
     registry.emplace<Player>(player);
 
     sf::Sprite sprite(TextureManager::getInstance().getTexture("PLAYER_TEXTURE"));
+    sprite.setOrigin(sprite.getGlobalBounds().width / 2.f, sprite.getGlobalBounds().height / 2.f);
     registry.emplace<Renderable>(player, sprite);
     registry.emplace<Position>(player, sf::Vector2f(playerStartPositionX, playerStartPositionY));
 
@@ -23,4 +24,5 @@ void PlayerInitializationSystem::initializePlayer(entt::registry& registry)
     registry.emplace<Speed>(player, 1000.f);
     registry.emplace<Velocity>(player, sf::Vector2f(0.f, 0.f));
     registry.emplace<Acceleration>(player, 1000.f, 1000.f);
+    registry.emplace<RotationTowardsMouse>(player, true, 600.f, 2.f);
 }
