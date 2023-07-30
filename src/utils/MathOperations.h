@@ -6,6 +6,11 @@
 
 #include "../components/components.h"
 
+inline float lerp(float a, float b, float f)
+{
+    return a + f * (b - a);
+}
+
 float DistanceToMouse(const sf::Vector2f& mousePosition, const Position& position)
 {
     return std::sqrt(std::pow(mousePosition.x - position.position.x, 2) + std::pow(mousePosition.y - position.position.y, 2));
