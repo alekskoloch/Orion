@@ -14,5 +14,7 @@ void InputSystem::processInput(entt::registry& registry)
         input.down = sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S);
         input.left = sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A);
         input.right = sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D);
+
+        input.shoot = sf::Mouse::isButtonPressed(sf::Mouse::Button::Left);
     }
 }
