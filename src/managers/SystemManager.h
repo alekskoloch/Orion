@@ -8,6 +8,7 @@ class SystemManager
 public:
     SystemManager(sf::RenderWindow& window, entt::registry& registry);
 
+    void executeInitializationSystems();
     void executeEventSystems();
     void executeUpdateSystems(sf::Time deltaTime);
     void executeRenderSystems();

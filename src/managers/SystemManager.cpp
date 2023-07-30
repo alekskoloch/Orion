@@ -1,5 +1,8 @@
 #include "SystemManager.h"
 
+#include "../systems/PlayerInitializationSystem.h"
+#include "../systems/EnemyInitializationSystem.h"
+
 #include "../systems/AccelerationSystem.h"
 #include "../systems/InputSystem.h"
 #include "../systems/MovementSystem.h"
@@ -8,6 +11,12 @@
 #include "../systems/WaypointsMovementSystem.h"
 
 SystemManager::SystemManager(sf::RenderWindow& window, entt::registry& registry) : window(window), registry(registry) {}
+
+void SystemManager::executeInitializationSystems()
+{
+    PlayerInitializationSystem::initializePlayer(this->registry);
+    EnemyInitializationSystem::initializeEnemy(this->registry);
+}
 
 void SystemManager::executeEventSystems()
 {
