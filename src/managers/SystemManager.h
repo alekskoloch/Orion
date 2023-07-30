@@ -12,7 +12,12 @@ public:
     void executeEventSystems();
     void executeUpdateSystems(sf::Time deltaTime);
     void executeRenderSystems();
+
+    void enableSlowMotion() { this->slowMotion = true; }
+    void disableSlowMotion() { this->slowMotion = false; }
 private:
     sf::RenderWindow& window;
     entt::registry& registry;
+
+    bool slowMotion = false;
 };

@@ -6,6 +6,8 @@
 #include "components/components.h"
 #include "components/tagComponents.h"
 
+#include <iostream>
+
 Game::Game() : window(sf::VideoMode(1920u, 1080u), "Orion"), systemManager(this->window, this->registry)
 {
     //TODO: Frame rate should be configurable
@@ -30,6 +32,15 @@ void Game::processEvents()
     {
         if (event.type == sf::Event::Closed)
             window.close();
+
+        if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Tab)
+        {
+            this->systemManager.enableSlowMotion();
+        }
+        if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::Tab)
+        {
+            this->systemManager.disableSlowMotion();
+        }
     }
     this->systemManager.executeEventSystems();
 }

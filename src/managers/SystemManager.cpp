@@ -23,12 +23,18 @@ void SystemManager::executeInitializationSystems()
 
 void SystemManager::executeEventSystems()
 {
-    InputSystem::processInput(this->registry);
+    if (!this->slowMotion)
+        InputSystem::processInput(this->registry);
 }
 
 void SystemManager::executeUpdateSystems(sf::Time deltaTime)
 {
-    RotateTowardsMouseSystem::rotateTowardsMouse(this->registry, deltaTime, this->window);
+    if (this->slowMotion)
+        deltaTime *= 0.1f;
+
+    if (!this->slowMotion)
+        RotateTowardsMouseSystem::rotateTowardsMouse(this->registry, deltaTime, this->window);
+        
     WaypointsMovementSystem::updateWaypoints(this->registry, deltaTime);
     ShootingSystem::shoot(this->registry, deltaTime);
     AccelerationSystem::accelerate(this->registry, deltaTime);
