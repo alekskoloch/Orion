@@ -16,6 +16,8 @@ struct Input
     bool down;
     bool left;
     bool right;
+
+    bool shoot;
 };
 
 struct Position
@@ -48,9 +50,9 @@ struct Velocity
 struct Weapon
 {
     float cooldownTime;
+    float bulletSpeed;
+    std::string bulletTextureName;
     bool autofire = false;
-    float speed;
-    std::string textureName;
     float currentCooldownTime = 0.0f;
     bool shootLastFrame = false;
 };
