@@ -25,4 +25,5 @@ void PlayerInitializationSystem::initializePlayer(entt::registry& registry)
     registry.emplace<Velocity>(player, sf::Vector2f(0.f, 0.f));
     registry.emplace<Acceleration>(player, 1000.f, 1000.f);
     registry.emplace<RotationTowardsMouse>(player, true, 600.f, 2.f);
+    registry.emplace<Weapon>(player, 0.1f, 1000.f, "BULLET_TEXTURE", true);
 }
