@@ -2,18 +2,11 @@
 
 #include "systems/PlayerInitializationSystem.h"
 #include "systems/EnemyInitializationSystem.h"
-#include "systems/InputSystem.h"
-#include "systems/AccelerationSystem.h"
-#include "systems/MovementSystem.h"
-#include "systems/RenderSystem.h"
-#include "systems/RotateTowardsMouseSystem.h"
-#include "systems/WaypointsMovementSystem.h"
-
 
 #include "components/components.h"
 #include "components/tagComponents.h"
 
-Game::Game() : window(sf::VideoMode(1920u, 1080u), "Orion")
+Game::Game() : window(sf::VideoMode(1920u, 1080u), "Orion"), systemManager(this->window, this->registry)
 {
     //TODO: Frame rate should be configurable
     window.setFramerateLimit(144);
@@ -42,22 +35,19 @@ void Game::processEvents()
         if (event.type == sf::Event::Closed)
             window.close();
     }
+    this->systemManager.executeEventSystems();
 }
 
 void Game::update(sf::Time deltaTime)
 {
-    InputSystem::processInput(this->registry);
-    RotateTowardsMouseSystem::rotateTowardsMouse(this->registry, deltaTime, this->window);
-    WaypointsMovementSystem::updateWaypoints(this->registry, deltaTime);
-    AccelerationSystem::accelerate(this->registry, deltaTime);
-    MovementSystem::updateMovement(this->registry, deltaTime);
+    this->systemManager.executeUpdateSystems(deltaTime);
 }
 
 void Game::render()
 {
     this->window.clear();
 
-    RenderSystem::renderEntities(this->window, this->registry);
+    this->systemManager.executeRenderSystems();
 
     this->window.display();
 }
