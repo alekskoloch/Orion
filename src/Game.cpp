@@ -13,8 +13,7 @@ Game::Game() : window(sf::VideoMode(1920u, 1080u), "Orion"), systemManager(this-
     PlayerInitializationSystem playerInitializationSystem;
     playerInitializationSystem.initializePlayer(this->registry);
 
-    EnemyInitializationSystem enemyInitializationSystem;
-    enemyInitializationSystem.initializeEnemy(this->registry);
+    EnemyInitializationSystem::initializeEnemy(this->registry);
 }
 
 void Game::run()

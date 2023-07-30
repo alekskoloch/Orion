@@ -5,5 +5,5 @@
 class EnemyInitializationSystem
 {
 public:
-    void initializeEnemy(entt::registry& registry);
+    static void initializeEnemy(entt::registry& registry);
 };
