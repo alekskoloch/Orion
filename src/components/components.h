@@ -45,6 +45,16 @@ struct Velocity
     sf::Vector2f velocity;
 };
 
+struct Weapon
+{
+    float cooldownTime;
+    bool autofire = false;
+    float speed;
+    std::string textureName;
+    float currentCooldownTime = 0.0f;
+    bool shootLastFrame = false;
+};
+
 struct WaypointMovement
 {
     std::vector<sf::Vector2f> waypoints;
