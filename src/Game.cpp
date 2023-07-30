@@ -10,9 +10,7 @@ Game::Game() : window(sf::VideoMode(1920u, 1080u), "Orion"), systemManager(this-
 {
     //TODO: Frame rate should be configurable
     window.setFramerateLimit(144);
-    PlayerInitializationSystem playerInitializationSystem;
-    playerInitializationSystem.initializePlayer(this->registry);
-
+    PlayerInitializationSystem::initializePlayer(this->registry);
     EnemyInitializationSystem::initializeEnemy(this->registry);
 }
 

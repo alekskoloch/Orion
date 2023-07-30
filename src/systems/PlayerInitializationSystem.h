@@ -5,5 +5,5 @@
 class PlayerInitializationSystem
 {
 public:
-    void initializePlayer(entt::registry& registry);
+    static void initializePlayer(entt::registry& registry);
 };
