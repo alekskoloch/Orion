@@ -13,7 +13,7 @@ static WeaponSchema blueWeapon =
 {
     0.4f,
     2000.f,
-    "bule_bullet"
+    "blue_bullet"
 };
 
 static WeaponSchema redWeapon =
