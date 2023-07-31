@@ -15,6 +15,8 @@
 
 #include "../utils/MathOperations.h"
 
+#include "../systems/TimeControlSystem.h"
+
 SystemManager::SystemManager(sf::RenderWindow& window, entt::registry& registry) : window(window), registry(registry) {}
 
 void SystemManager::executeInitializationSystems()
@@ -33,9 +35,9 @@ void SystemManager::executeUpdateSystems(sf::Time deltaTime)
 {
     if (this->slowMotion || this->slowMotionFactor != 1.0f)
     {
-        this->updateSlowMotion(deltaTime);
+        TimeControlSystem::updateSlowMotion(this->slowMotionFactor, this->slowMotion, this->slowMotionSpeed, deltaTime.asSeconds());
+        deltaTime *= this->slowMotionFactor;
     }
-    deltaTime *= this->slowMotionFactor;
 
     if (!this->slowMotion)
         RotateTowardsMouseSystem::rotateTowardsMouse(this->registry, deltaTime, this->window);
@@ -49,19 +51,4 @@ void SystemManager::executeUpdateSystems(sf::Time deltaTime)
 void SystemManager::executeRenderSystems()
 {
     RenderSystem::renderEntities(this->window, this->registry);
-}
-
-void SystemManager::updateSlowMotion(sf::Time deltaTime)
-{
-    float targetFactor = slowMotion ? targetSlowMotionFactor : 1.0f;
-    float difference = targetFactor - slowMotionFactor;
-    float step = slowMotionSpeed * deltaTime.asSeconds();
-
-    if (std::abs(difference) < step)
-    {
-        slowMotionFactor = targetFactor;
-    } else
-    {
-        slowMotionFactor += std::copysign(step, difference);
-    }
 }

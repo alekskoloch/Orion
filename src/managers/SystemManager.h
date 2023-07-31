@@ -16,12 +16,11 @@ public:
     void enableSlowMotion() { this->slowMotion = true; }
     void disableSlowMotion() { this->slowMotion = false; }
 private:
-    void updateSlowMotion(sf::Time deltaTime);
-
     sf::RenderWindow& window;
     entt::registry& registry;
 
     bool slowMotion = false;
+    //TODO: make this configurable
     float slowMotionFactor = 1.0f;
     static constexpr float targetSlowMotionFactor = 0.05f;
     static constexpr float slowMotionSpeed = 3.f;
