@@ -8,7 +8,7 @@
 
 #include <iostream>
 
-Game::Game() : window(sf::VideoMode(1920u, 1080u), "Orion"), systemManager(this->window, this->registry)
+Game::Game() : window(sf::VideoMode(1920u, 1080u), "Orion"), systemManager(this->window, this->registry), guiManager(this->window)
 {
     //TODO: Frame rate should be configurable
     window.setFramerateLimit(144);
@@ -55,6 +55,7 @@ void Game::render()
     this->window.clear();
 
     this->systemManager.executeRenderSystems();
+    this->guiManager.draw();
 
     this->window.display();
 }
