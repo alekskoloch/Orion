@@ -10,4 +10,8 @@ public:
     void draw();
 private:
     sf::RenderWindow& window;
+
+    void initializeQuickMenu();
+    sf::Sprite quickMenuTileInactive;
+    sf::Sprite quickMenuTileActive;
 };
