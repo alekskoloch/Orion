@@ -26,11 +26,22 @@ void PlayerInitializationSystem::initializePlayer(entt::registry& registry)
     registry.emplace<Velocity>(player, sf::Vector2f(0.f, 0.f));
     registry.emplace<Acceleration>(player, 1000.f, 1000.f);
     registry.emplace<RotationTowardsMouse>(player, true, 600.f, 2.f);
-    
-    auto loadWeapon = [&](entt::registry& registry, const WeaponSchema& weaponSchema, entt::entity& ownerEntity) {
-        TextureManager::getInstance().loadTexture(weaponSchema.bulletTextureName, ASSETS_PATH + weaponSchema.bulletTextureName + ".png");
-        registry.emplace<Weapon>(ownerEntity, weaponSchema.cooldownTime, weaponSchema.bulletSpeed, weaponSchema.bulletTextureName);
-    };
 
     loadWeapon(registry, redWeapon, player);
+}
+
+void PlayerInitializationSystem::changeWeapon(entt::registry& registry, const WeaponSchema& weaponSchema)
+{
+    auto player = registry.view<Player>();
+    for (auto& entity : player)
+    {
+        registry.remove<Weapon>(entity);
+        loadWeapon(registry, weaponSchema, entity);
+    }
+}
+
+void PlayerInitializationSystem::loadWeapon(entt::registry& registry, const WeaponSchema& weaponSchema, entt::entity ownerEntity)
+{
+    TextureManager::getInstance().loadTexture(weaponSchema.bulletTextureName, ASSETS_PATH + weaponSchema.bulletTextureName + ".png");
+    registry.emplace<Weapon>(ownerEntity, weaponSchema.cooldownTime, weaponSchema.bulletSpeed, weaponSchema.bulletTextureName);
 }
