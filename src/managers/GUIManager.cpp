@@ -2,11 +2,16 @@
 
 #include "../managers/TextureManager.h"
 
-GUIManager::GUIManager(sf::RenderWindow& window) : window(window) {}
+#include <iostream>
+
+GUIManager::GUIManager(sf::RenderWindow& window) : window(window)
+{
+    this->initializeQuickMenu();
+}
 
 void GUIManager::draw()
 {
-    
+    this->window.draw(this->quickMenuTileInactive);
 }
 
 void GUIManager::initializeQuickMenu()
