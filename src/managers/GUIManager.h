@@ -11,9 +11,12 @@ public:
 
     void update();
     void draw();
+
+    void toggleQuickMenu(bool value);
 private:
     sf::RenderWindow& window;
 
+    bool quickMenuActive = false;
     void initializeQuickMenu();
     std::vector<sf::Sprite> quickMenuTiles;
 };

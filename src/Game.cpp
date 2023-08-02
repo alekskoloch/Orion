@@ -36,10 +36,12 @@ void Game::processEvents()
         if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Tab)
         {
             this->systemManager.enableSlowMotion();
+            this->guiManager.toggleQuickMenu(true);
         }
         if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::Tab)
         {
             this->systemManager.disableSlowMotion();
+            this->guiManager.toggleQuickMenu(false);
         }
     }
     this->systemManager.executeEventSystems();

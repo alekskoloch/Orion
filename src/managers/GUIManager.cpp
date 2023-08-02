@@ -4,14 +4,13 @@
 
 #include "../managers/TextureManager.h"
 
-//TODO: move to utils
+//TODO: move to utils / optimize it
 bool isMouseOverSprite(const sf::Sprite& sprite, const sf::Vector2i& mousePosition)
 {
     sf::Vector2f localPosition = sprite.getInverseTransform().transformPoint(static_cast<sf::Vector2f>(mousePosition));
     sf::IntRect textureRect = sprite.getTextureRect();
 
-    if (localPosition.x >= 0 && localPosition.y >= 0 &&
-        localPosition.x < textureRect.width && localPosition.y < textureRect.height)
+    if (localPosition.x >= 0 && localPosition.y >= 0 && localPosition.x < textureRect.width && localPosition.y < textureRect.height)
     {
         const sf::Texture* texture = sprite.getTexture();
         sf::Image image = texture->copyToImage();
@@ -30,27 +29,38 @@ GUIManager::GUIManager(sf::RenderWindow& window) : window(window)
 
 void GUIManager::update()
 {
-    sf::Vector2i mousePosition = sf::Mouse::getPosition(this->window);
-
-    for (auto& tile : this->quickMenuTiles)
+    if (this->quickMenuActive)
     {
-        if (isMouseOverSprite(tile, mousePosition))
+        sf::Vector2i mousePosition = sf::Mouse::getPosition(this->window);
+
+        for (auto& tile : this->quickMenuTiles)
         {
-            tile.setTexture(TextureManager::getInstance().getTexture("ACTIVE_TILE"));
-        }
-        else
-        {
-            tile.setTexture(TextureManager::getInstance().getTexture("INACTIVE_TILE"));
+            if (isMouseOverSprite(tile, mousePosition))
+            {
+                tile.setTexture(TextureManager::getInstance().getTexture("ACTIVE_TILE"));
+            }
+            else
+            {
+                tile.setTexture(TextureManager::getInstance().getTexture("INACTIVE_TILE"));
+            }
         }
     }
 }
 
 void GUIManager::draw()
 {
-    for (auto& tile : this->quickMenuTiles)
+    if (this->quickMenuActive)
     {
-        this->window.draw(tile);
+        for (auto& tile : this->quickMenuTiles)
+        {
+            this->window.draw(tile);
+        }
     }
+}
+
+void GUIManager::toggleQuickMenu(bool value)
+{
+    this->quickMenuActive = value;
 }
 
 void GUIManager::initializeQuickMenu()
