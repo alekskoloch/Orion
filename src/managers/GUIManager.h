@@ -23,4 +23,10 @@ private:
     void initializeQuickMenu();
     std::vector<sf::Sprite> quickMenuTiles;
     std::vector<sf::Sprite> quickMenuIcons;
+
+//TODO: move shader
+    sf::Shader shader;
+    sf::Texture shaderTexture;
+    sf::Sprite shaderSprite;
+    void initializeShader();
 };

@@ -27,6 +27,7 @@ bool isMouseOverSprite(const sf::Sprite& sprite, const sf::Vector2i& mousePositi
 GUIManager::GUIManager(sf::RenderWindow& window, entt::registry& registry) : window(window), registry(registry)
 {
     this->initializeQuickMenu();
+    this->initializeShader();
 }
 
 void GUIManager::update()
@@ -55,6 +56,9 @@ void GUIManager::draw()
 {
     if (this->quickMenuActive)
     {
+        this->shaderTexture.update(this->window);
+        this->window.draw(this->shaderSprite, &this->shader);
+
         for (auto& tile : this->quickMenuTiles)
         {
             this->window.draw(tile);
@@ -120,4 +124,11 @@ void GUIManager::initializeQuickMenu()
         this->quickMenuIcons[i].setOrigin(this->quickMenuIcons[i].getGlobalBounds().width / 2.f, this->quickMenuIcons[i].getGlobalBounds().height / 2.f);
         this->quickMenuIcons[i].setPosition(this->quickMenuTiles[i].getPosition());
     }
+}
+
+void GUIManager::initializeShader()
+{
+    this->shader.loadFromFile(ASSETS_PATH + std::string("shader.frag"), sf::Shader::Fragment);
+    this->shaderTexture.create(this->window.getSize().x, this->window.getSize().y);
+    this->shaderSprite.setTexture(this->shaderTexture);
 }
