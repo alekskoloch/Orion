@@ -47,6 +47,7 @@ void Game::processEvents()
 
 void Game::update(sf::Time deltaTime)
 {
+    this->guiManager.update();
     this->systemManager.executeUpdateSystems(deltaTime);
 }
 

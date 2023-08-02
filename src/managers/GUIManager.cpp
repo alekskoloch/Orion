@@ -4,9 +4,45 @@
 
 #include "../managers/TextureManager.h"
 
+//TODO: move to utils
+bool isMouseOverSprite(const sf::Sprite& sprite, const sf::Vector2i& mousePosition)
+{
+    sf::Vector2f localPosition = sprite.getInverseTransform().transformPoint(static_cast<sf::Vector2f>(mousePosition));
+    sf::IntRect textureRect = sprite.getTextureRect();
+
+    if (localPosition.x >= 0 && localPosition.y >= 0 &&
+        localPosition.x < textureRect.width && localPosition.y < textureRect.height)
+    {
+        const sf::Texture* texture = sprite.getTexture();
+        sf::Image image = texture->copyToImage();
+
+        return image.getPixel(static_cast<unsigned int>(localPosition.x) + textureRect.left,
+                              static_cast<unsigned int>(localPosition.y) + textureRect.top).a > 0;
+    }
+
+    return false;
+}
+
 GUIManager::GUIManager(sf::RenderWindow& window) : window(window)
 {
     this->initializeQuickMenu();
+}
+
+void GUIManager::update()
+{
+    sf::Vector2i mousePosition = sf::Mouse::getPosition(this->window);
+
+    for (auto& tile : this->quickMenuTiles)
+    {
+        if (isMouseOverSprite(tile, mousePosition))
+        {
+            tile.setTexture(TextureManager::getInstance().getTexture("ACTIVE_TILE"));
+        }
+        else
+        {
+            tile.setTexture(TextureManager::getInstance().getTexture("INACTIVE_TILE"));
+        }
+    }
 }
 
 void GUIManager::draw()
@@ -19,6 +55,7 @@ void GUIManager::draw()
 
 void GUIManager::initializeQuickMenu()
 {
+    TextureManager::getInstance().loadTexture("ACTIVE_TILE", ASSETS_PATH + std::string("tileActive.png"));
     TextureManager::getInstance().loadTexture("INACTIVE_TILE", ASSETS_PATH + std::string("tileInactive.png"));
 
     float centerX = this->window.getSize().x / 2.f;
