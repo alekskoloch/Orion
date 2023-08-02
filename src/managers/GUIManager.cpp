@@ -59,6 +59,11 @@ void GUIManager::draw()
         {
             this->window.draw(tile);
         }
+
+        for (auto& icon : this->quickMenuIcons)
+        {
+            this->window.draw(icon);
+        }
     }
 }
 
@@ -84,17 +89,35 @@ void GUIManager::initializeQuickMenu()
     TextureManager::getInstance().loadTexture("ACTIVE_TILE", ASSETS_PATH + std::string("tileActive.png"));
     TextureManager::getInstance().loadTexture("INACTIVE_TILE", ASSETS_PATH + std::string("tileInactive.png"));
 
+    //TODO: this is a temporary solution for loading bullet ico textures
+    TextureManager::getInstance().loadTexture("RED_BULLET", ASSETS_PATH + std::string("red_bullet.png"));
+    TextureManager::getInstance().loadTexture("BLUE_BULLET", ASSETS_PATH + std::string("blue_bullet.png"));
+
     float centerX = this->window.getSize().x / 2.f;
     float centerY = this->window.getSize().y / 2.f;
     float radius = 360.f;
     float angleIncrement = 45.f;
 
     this->quickMenuTiles.resize(8);
+    this->quickMenuIcons.resize(8);
     for (int i = 0; i < 8; i++)
     {
         this->quickMenuTiles[i].setTexture(TextureManager::getInstance().getTexture("INACTIVE_TILE"));
         this->quickMenuTiles[i].setOrigin(this->quickMenuTiles[i].getGlobalBounds().width / 2.f, this->quickMenuTiles[i].getGlobalBounds().height / 2.f);
         this->quickMenuTiles[i].setPosition(centerX + std::sin((i * angleIncrement) * M_PI / 180.f) * radius, centerY - std::cos((i * angleIncrement) * M_PI / 180.f) * radius);
         this->quickMenuTiles[i].setRotation(i * angleIncrement);
+
+        //TODO: this is a temporary solution for loading bullet ico textures
+        if (i == 0)
+        {
+            this->quickMenuIcons[i].setTexture(TextureManager::getInstance().getTexture("RED_BULLET"));
+        }
+        else if (i == 1)
+        {
+            this->quickMenuIcons[i].setTexture(TextureManager::getInstance().getTexture("BLUE_BULLET"));
+        }
+
+        this->quickMenuIcons[i].setOrigin(this->quickMenuIcons[i].getGlobalBounds().width / 2.f, this->quickMenuIcons[i].getGlobalBounds().height / 2.f);
+        this->quickMenuIcons[i].setPosition(this->quickMenuTiles[i].getPosition());
     }
 }

@@ -22,4 +22,5 @@ private:
     int selectedTile = 0;
     void initializeQuickMenu();
     std::vector<sf::Sprite> quickMenuTiles;
+    std::vector<sf::Sprite> quickMenuIcons;
 };
