@@ -3,17 +3,19 @@
 #include <vector>
 
 #include <SFML/Graphics.hpp>
+#include <entt/entt.hpp>
 
 class GUIManager
 {
 public:
-    GUIManager(sf::RenderWindow& window);
+    GUIManager(sf::RenderWindow& window, entt::registry& registry);
 
     void update();
     void draw();
 
     void toggleQuickMenu(bool value);
 private:
+    entt::registry& registry;
     sf::RenderWindow& window;
 
     bool quickMenuActive = false;

@@ -22,7 +22,7 @@ bool isMouseOverSprite(const sf::Sprite& sprite, const sf::Vector2i& mousePositi
     return false;
 }
 
-GUIManager::GUIManager(sf::RenderWindow& window) : window(window)
+GUIManager::GUIManager(sf::RenderWindow& window, entt::registry& registry) : window(window), registry(registry)
 {
     this->initializeQuickMenu();
 }
@@ -66,7 +66,7 @@ void GUIManager::toggleQuickMenu(bool value)
 
     if (this->selectedTile != 0 && !this->quickMenuActive)
     {
-        //do some stuff
+        
     }
 }
 
