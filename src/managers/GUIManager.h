@@ -17,6 +17,7 @@ private:
     sf::RenderWindow& window;
 
     bool quickMenuActive = false;
+    int selectedTile = 0;
     void initializeQuickMenu();
     std::vector<sf::Sprite> quickMenuTiles;
 };

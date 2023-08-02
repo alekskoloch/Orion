@@ -32,16 +32,18 @@ void GUIManager::update()
     if (this->quickMenuActive)
     {
         sf::Vector2i mousePosition = sf::Mouse::getPosition(this->window);
+        this->selectedTile = 0;
 
-        for (auto& tile : this->quickMenuTiles)
+        for (int i = 0; i < 8; i++)
         {
-            if (isMouseOverSprite(tile, mousePosition))
+            if (isMouseOverSprite(this->quickMenuTiles[i], mousePosition))
             {
-                tile.setTexture(TextureManager::getInstance().getTexture("ACTIVE_TILE"));
+                this->quickMenuTiles[i].setTexture(TextureManager::getInstance().getTexture("ACTIVE_TILE"));
+                this->selectedTile = i + 1;
             }
             else
             {
-                tile.setTexture(TextureManager::getInstance().getTexture("INACTIVE_TILE"));
+                this->quickMenuTiles[i].setTexture(TextureManager::getInstance().getTexture("INACTIVE_TILE"));
             }
         }
     }
@@ -61,6 +63,11 @@ void GUIManager::draw()
 void GUIManager::toggleQuickMenu(bool value)
 {
     this->quickMenuActive = value;
+
+    if (this->selectedTile != 0 && !this->quickMenuActive)
+    {
+        //do some stuff
+    }
 }
 
 void GUIManager::initializeQuickMenu()
