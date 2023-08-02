@@ -1,5 +1,7 @@
 #pragma once
 
+#include <vector>
+
 #include <SFML/Graphics.hpp>
 
 class GUIManager
@@ -12,6 +14,9 @@ private:
     sf::RenderWindow& window;
 
     void initializeQuickMenu();
-    sf::Sprite quickMenuTileInactive;
-    sf::Sprite quickMenuTileActive;
+    std::vector<sf::Sprite> quickMenuTiles;
+
+    //for test
+    // sf::Sprite quickMenuTileActive;
+    // sf::Sprite quickMenuTileInactive2;
 };
