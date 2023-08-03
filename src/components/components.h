@@ -16,6 +16,11 @@ struct Acceleration
     float decelerationValue;
 };
 
+struct Collision
+{
+    sf::FloatRect collisionBox;
+};
+
 struct Input
 {
     bool up;
