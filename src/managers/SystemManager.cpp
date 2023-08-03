@@ -5,6 +5,7 @@
 
 #include "../systems/InputSystem.h"
 
+#include "../systems/CollisionSystem.h"
 #include "../systems/RotateTowardsMouseSystem.h"
 #include "../systems/WaypointsMovementSystem.h"
 #include "../systems/ShootingSystem.h"
@@ -41,7 +42,9 @@ void SystemManager::executeUpdateSystems(sf::Time deltaTime)
 
     if (!this->slowMotion)
         RotateTowardsMouseSystem::rotateTowardsMouse(this->registry, deltaTime, this->window);
-        
+
+    CollisionSystem::updateCollisionBoxes(this->registry);      
+    CollisionSystem::checkCollisions(this->registry);
     WaypointsMovementSystem::updateWaypoints(this->registry, deltaTime);
     ShootingSystem::shoot(this->registry, deltaTime);
     AccelerationSystem::accelerate(this->registry, deltaTime);
