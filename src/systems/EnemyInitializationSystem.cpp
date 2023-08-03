@@ -17,6 +17,7 @@ void EnemyInitializationSystem::initializeEnemy(entt::registry& registry)
     
     sf::Sprite sprite(TextureManager::getInstance().getTexture("ENEMY_TEXTURE"));
     sprite.setOrigin(sprite.getGlobalBounds().width / 2.f, sprite.getGlobalBounds().height / 2.f);
+    registry.emplace<Collision>(enemy, sprite.getGlobalBounds());
     registry.emplace<Renderable>(enemy, sprite);
     registry.emplace<Position>(enemy, sf::Vector2f(enemyStartPositionX, enemyStartPositionY));
     registry.emplace<Speed>(enemy, 600.f);
