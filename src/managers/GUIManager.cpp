@@ -2,6 +2,8 @@
 
 #include <cmath>
 
+#include "../systems/WeaponsSystem.h"
+
 #include "../managers/TextureManager.h"
 #include "../systems/PlayerInitializationSystem.h"
 #include "../schema/WeaponsSchema.h"
@@ -79,11 +81,11 @@ void GUIManager::toggleQuickMenu(bool value)
     {
         if (this->selectedTile == 1)
         {
-            PlayerInitializationSystem::changeWeapon(this->registry, redWeapon);
+            WeaponsSystem::changeWeapon(this->registry, redWeapon);
         }
         else if (this->selectedTile == 2)
         {
-            PlayerInitializationSystem::changeWeapon(this->registry, blueWeapon);
+            WeaponsSystem::changeWeapon(this->registry, blueWeapon);
         }
     }
 }
