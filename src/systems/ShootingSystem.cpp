@@ -4,6 +4,7 @@
 
 #include "../managers/TextureManager.h"
 #include "../components/components.h"
+#include "../components/tagComponents.h"
 
 #include <iostream>
 
@@ -41,11 +42,13 @@ void ShootingSystem::shoot(entt::registry& registry, sf::Time deltaTime)
             if (weapon.weaponType == WeaponType::SingleShot)
             {
                 auto bulletEntity = registry.create();
+                registry.emplace<Bullet>(bulletEntity);
 
                 sf::Sprite sprite(TextureManager::getInstance().getTexture(weapon.bulletTextureName));
                 sprite.setOrigin(sprite.getGlobalBounds().width / 2.f, sprite.getGlobalBounds().height / 2.f);
 
                 registry.emplace<Position>(bulletEntity, playerPosition.position);
+                registry.emplace<Collision>(bulletEntity, sprite.getGlobalBounds());
 
                 float rotation = playerRenderable.sprite.getRotation();
                 sprite.setRotation(rotation);
@@ -66,13 +69,15 @@ void ShootingSystem::shoot(entt::registry& registry, sf::Time deltaTime)
                 for (float offset : angleOffset)
                 {
                     auto bulletEntity = registry.create();
+                    registry.emplace<Bullet>(bulletEntity);
 
                     sf::Sprite sprite(TextureManager::getInstance().getTexture(weapon.bulletTextureName));
                     sprite.setOrigin(sprite.getGlobalBounds().width / 2.f, sprite.getGlobalBounds().height / 2.f);
 
                     registry.emplace<Position>(bulletEntity, playerPosition.position);
+                    registry.emplace<Collision>(bulletEntity, sprite.getGlobalBounds());
 
-                    float rotation = playerRenderable.sprite.getRotation() + offset; // Adding offset for triple shot
+                    float rotation = playerRenderable.sprite.getRotation() + offset;
                     sprite.setRotation(rotation);
 
                     float adjustedRotation = 90.f - rotation;
