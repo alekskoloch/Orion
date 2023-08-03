@@ -96,8 +96,8 @@ void GUIManager::initializeQuickMenu()
     TextureManager::getInstance().loadTexture("INACTIVE_TILE", ASSETS_PATH + std::string("tileInactive.png"));
 
     //TODO: this is a temporary solution for loading bullet ico textures
-    TextureManager::getInstance().loadTexture("RED_BULLET", ASSETS_PATH + std::string("red_bullet.png"));
-    TextureManager::getInstance().loadTexture("BLUE_BULLET", ASSETS_PATH + std::string("blue_bullet.png"));
+    TextureManager::getInstance().loadTexture("RED_WEAPON_ICO", ASSETS_PATH + std::string("red_weapon.png"));
+    TextureManager::getInstance().loadTexture("BLUE_WEAPON_ICO", ASSETS_PATH + std::string("blue_weapon.png"));
 
     float centerX = this->window.getSize().x / 2.f;
     float centerY = this->window.getSize().y / 2.f;
@@ -116,11 +116,11 @@ void GUIManager::initializeQuickMenu()
         //TODO: this is a temporary solution for loading bullet ico textures
         if (i == 0)
         {
-            this->quickMenuIcons[i].setTexture(TextureManager::getInstance().getTexture("RED_BULLET"));
+            this->quickMenuIcons[i].setTexture(TextureManager::getInstance().getTexture("RED_WEAPON_ICO"));
         }
         else if (i == 1)
         {
-            this->quickMenuIcons[i].setTexture(TextureManager::getInstance().getTexture("BLUE_BULLET"));
+            this->quickMenuIcons[i].setTexture(TextureManager::getInstance().getTexture("BLUE_WEAPON_ICO"));
         }
 
         this->quickMenuIcons[i].setOrigin(this->quickMenuIcons[i].getGlobalBounds().width / 2.f, this->quickMenuIcons[i].getGlobalBounds().height / 2.f);
