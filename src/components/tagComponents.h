@@ -2,3 +2,5 @@
 
 struct Player {};
 struct Enemy {};
+
+struct Bullet {};
