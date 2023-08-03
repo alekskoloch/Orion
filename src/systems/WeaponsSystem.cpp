@@ -20,5 +20,5 @@ void WeaponsSystem::changeWeapon(entt::registry& registry, WeaponSchema weapon)
 void WeaponsSystem::loadWeapon(entt::registry& registry, const WeaponSchema& weaponSchema, entt::entity ownerEntity)
 {
     TextureManager::getInstance().loadTexture(weaponSchema.bulletTextureName, ASSETS_PATH + weaponSchema.bulletTextureName + ".png");
-    registry.emplace<Weapon>(ownerEntity, weaponSchema.cooldownTime, weaponSchema.bulletSpeed, weaponSchema.bulletTextureName);
+    registry.emplace<Weapon>(ownerEntity, weaponSchema.weaponType, weaponSchema.cooldownTime, weaponSchema.bulletSpeed, weaponSchema.bulletTextureName);
 }

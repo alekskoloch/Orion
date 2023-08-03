@@ -4,6 +4,12 @@
 
 #include <SFML/Graphics.hpp>
 
+enum class WeaponType
+{
+    SingleShot,
+    TrippleShot
+};
+
 struct Acceleration
 {
     float accelerationValue;
@@ -49,6 +55,7 @@ struct Velocity
 
 struct Weapon
 {
+    WeaponType weaponType;
     float cooldownTime;
     float bulletSpeed;
     std::string bulletTextureName;
