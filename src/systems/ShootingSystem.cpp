@@ -37,24 +37,54 @@ void ShootingSystem::shoot(entt::registry& registry, sf::Time deltaTime)
 
         if (canShoot)
         {
-            auto bulletEntity = registry.create();
+            //TODO: Refactor this
+            if (weapon.weaponType == WeaponType::SingleShot)
+            {
+                auto bulletEntity = registry.create();
 
-            sf::Sprite sprite(TextureManager::getInstance().getTexture(weapon.bulletTextureName));
-            sprite.setOrigin(sprite.getGlobalBounds().width / 2.f, sprite.getGlobalBounds().height / 2.f);
+                sf::Sprite sprite(TextureManager::getInstance().getTexture(weapon.bulletTextureName));
+                sprite.setOrigin(sprite.getGlobalBounds().width / 2.f, sprite.getGlobalBounds().height / 2.f);
 
-            registry.emplace<Position>(bulletEntity, playerPosition.position);
+                registry.emplace<Position>(bulletEntity, playerPosition.position);
 
-            float rotation = playerRenderable.sprite.getRotation();
-            sprite.setRotation(rotation);
+                float rotation = playerRenderable.sprite.getRotation();
+                sprite.setRotation(rotation);
 
-            float adjustedRotation = 90.f - rotation;
-            float radians = adjustedRotation * (3.14159265f / 180.f);
-            sf::Vector2f velocity(std::cos(radians) * weapon.bulletSpeed, -std::sin(radians) * weapon.bulletSpeed);
+                float adjustedRotation = 90.f - rotation;
+                float radians = adjustedRotation * (3.14159265f / 180.f);
+                sf::Vector2f velocity(std::cos(radians) * weapon.bulletSpeed, -std::sin(radians) * weapon.bulletSpeed);
 
-            registry.emplace<Velocity>(bulletEntity, velocity);
-            registry.emplace<Renderable>(bulletEntity, sprite);
+                registry.emplace<Velocity>(bulletEntity, velocity);
+                registry.emplace<Renderable>(bulletEntity, sprite);
 
-            weapon.currentCooldownTime = weapon.cooldownTime;
+                weapon.currentCooldownTime = weapon.cooldownTime;
+            }
+            else if (weapon.weaponType == WeaponType::TrippleShot)
+            {
+                float angleOffset[] = { -10.f, 0.f, 10.f };
+
+                for (float offset : angleOffset)
+                {
+                    auto bulletEntity = registry.create();
+
+                    sf::Sprite sprite(TextureManager::getInstance().getTexture(weapon.bulletTextureName));
+                    sprite.setOrigin(sprite.getGlobalBounds().width / 2.f, sprite.getGlobalBounds().height / 2.f);
+
+                    registry.emplace<Position>(bulletEntity, playerPosition.position);
+
+                    float rotation = playerRenderable.sprite.getRotation() + offset; // Adding offset for triple shot
+                    sprite.setRotation(rotation);
+
+                    float adjustedRotation = 90.f - rotation;
+                    float radians = adjustedRotation * (3.14159265f / 180.f);
+                    sf::Vector2f velocity(std::cos(radians) * weapon.bulletSpeed, -std::sin(radians) * weapon.bulletSpeed);
+
+                    registry.emplace<Velocity>(bulletEntity, velocity);
+                    registry.emplace<Renderable>(bulletEntity, sprite);
+                }
+
+                weapon.currentCooldownTime = weapon.cooldownTime;
+            }
         }
 
         weapon.shootLastFrame = input.shoot;
