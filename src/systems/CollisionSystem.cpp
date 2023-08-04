@@ -1,7 +1,11 @@
 #include "CollisionSystem.h"
 
+#include "EnemyInitializationSystem.h"
+
 #include "../components/components.h"
 #include "../components/tagComponents.h"
+
+#include "../schema/EnemySchema.h"
 
 void CollisionSystem::updateCollisionBoxes(entt::registry& registry)
 {
@@ -18,21 +22,40 @@ void CollisionSystem::updateCollisionBoxes(entt::registry& registry)
 void CollisionSystem::checkCollisions(entt::registry& registry)
 {
     auto bullets = registry.view<Collision, Renderable, Velocity, Bullet>();
-    auto enemies = registry.view<Collision, Enemy>();
 
-    for (auto bullet : bullets)
-    {
+    std::unordered_set<entt::entity> bulletsToDestroy;
+    std::unordered_set<entt::entity> enemiesToDestroy;
+
+    for (auto bullet : bullets) {
+        if (bulletsToDestroy.find(bullet) != bulletsToDestroy.end())
+        {
+            continue;
+        }
+
         auto& bulletCollision = bullets.get<Collision>(bullet);
 
-        for (auto enemy : enemies)
+        registry.view<Collision, Enemy>().each([&](auto enemy, auto& enemyCollision)
         {
-            auto& enemyCollision = enemies.get<Collision>(enemy);
-
-            if (bulletCollision.collisionBox.intersects(enemyCollision.collisionBox))
+            if (bulletsToDestroy.find(bullet) == bulletsToDestroy.end() &&
+                enemiesToDestroy.find(enemy) == enemiesToDestroy.end() &&
+                bulletCollision.collisionBox.intersects(enemyCollision.collisionBox))
             {
-                registry.destroy(bullet);
-                registry.destroy(enemy);
+                bulletsToDestroy.insert(bullet);
+                enemiesToDestroy.insert(enemy);
+
+                //RESPAWN ONLY FOR TESTING
+                EnemyInitializationSystem::createEnemy(registry, enemy2);
             }
-        }
+        });
+    }
+
+    for (auto bullet : bulletsToDestroy)
+    {
+        registry.destroy(bullet);
+    }
+
+    for (auto enemy : enemiesToDestroy)
+    {
+        registry.destroy(enemy);
     }
 }
