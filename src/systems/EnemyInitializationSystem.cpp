@@ -10,25 +10,26 @@ static float enemyStartPositionY = 980.f;
 
 void EnemyInitializationSystem::initializeEnemy(entt::registry& registry)
 {
-    TextureManager::getInstance().loadTexture("ENEMY_TEXTURE", ASSETS_PATH + std::string("enemy.png"));
+    EnemyInitializationSystem::createEnemy(registry, enemy);
+    EnemyInitializationSystem::createEnemy(registry, enemy2);
+    EnemyInitializationSystem::createEnemy(registry, enemy3);
+    EnemyInitializationSystem::createEnemy(registry, enemy4);
+}
+
+void EnemyInitializationSystem::createEnemy(entt::registry& registry, const EnemySchema& enemySchema)
+{
+    TextureManager::getInstance().loadTexture(enemySchema.textureName, ASSETS_PATH + enemySchema.textureName + ".png");
 
     auto enemy = registry.create();
     registry.emplace<Enemy>(enemy);
-    
-    sf::Sprite sprite(TextureManager::getInstance().getTexture("ENEMY_TEXTURE"));
+
+    sf::Sprite sprite(TextureManager::getInstance().getTexture(enemySchema.textureName));
     sprite.setOrigin(sprite.getGlobalBounds().width / 2.f, sprite.getGlobalBounds().height / 2.f);
     registry.emplace<Collision>(enemy, sprite.getGlobalBounds());
     registry.emplace<Renderable>(enemy, sprite);
-    registry.emplace<Position>(enemy, sf::Vector2f(enemyStartPositionX, enemyStartPositionY));
-    registry.emplace<Speed>(enemy, 600.f);
-    registry.emplace<Velocity>(enemy, sf::Vector2f(0.f, 0.f));
+    registry.emplace<Position>(enemy, enemySchema.position);
+    registry.emplace<Speed>(enemy, enemySchema.speed);
+    registry.emplace<Velocity>(enemy, enemySchema.velocity);
 
-    std::vector<sf::Vector2f> waypoints = {
-    sf::Vector2f(100.f, 100.f),
-    sf::Vector2f(1820.f, 100.f),
-    sf::Vector2f(1820.f, 980.f),
-    sf::Vector2f(100.f, 980.f)
-    };
-
-    registry.emplace<WaypointMovement>(enemy, waypoints);
+    registry.emplace<WaypointMovement>(enemy, enemySchema.waypoints);
 }
