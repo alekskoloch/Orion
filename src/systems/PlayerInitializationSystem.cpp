@@ -20,6 +20,14 @@ void PlayerInitializationSystem::initializePlayer(entt::registry& registry)
     sf::Sprite sprite(TextureManager::getInstance().getTexture("PLAYER_TEXTURE"));
     sprite.setOrigin(sprite.getGlobalBounds().width / 2.f, sprite.getGlobalBounds().height / 2.f);
     registry.emplace<Renderable>(player, sprite);
+
+    sf::FloatRect globalBounds = sprite.getGlobalBounds();
+
+    globalBounds.width /= 2.f;
+    globalBounds.height /= 2.f;
+
+    registry.emplace<Collision>(player, globalBounds);
+
     registry.emplace<Position>(player, sf::Vector2f(playerStartPositionX, playerStartPositionY));
 
     registry.emplace<Input>(player);
