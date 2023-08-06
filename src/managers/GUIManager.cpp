@@ -1,7 +1,5 @@
 #include "GUIManager.h"
 
-#include <cmath>
-
 #include "../systems/WeaponsSystem.h"
 
 #include "../managers/TextureManager.h"

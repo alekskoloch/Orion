@@ -1,9 +1,6 @@
 #pragma once
 
-#include <vector>
-
-#include <SFML/Graphics.hpp>
-#include <entt/entt.hpp>
+#include "../pch.h"
 
 class GUIManager
 {

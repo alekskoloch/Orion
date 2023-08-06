@@ -1,8 +1,6 @@
 #pragma once
 
-#include <cmath>
-
-#include <SFML/Graphics.hpp>
+#include "../pch.h"
 
 #include "../components/components.h"
 

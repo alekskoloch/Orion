@@ -1,8 +1,6 @@
 #pragma once
 
-#include <vector>
-
-#include <SFML/Graphics.hpp>
+#include "../pch.h"
 
 enum class WeaponType
 {

@@ -1,7 +1,5 @@
 #include "RotateTowardsMouseSystem.h"
 
-#include <cmath>
-
 #include "../utils/MathOperations.h"
 #include "../components/components.h"
 

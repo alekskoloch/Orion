@@ -1,7 +1,6 @@
 #pragma once
 
-#include <SFML/Graphics.hpp>
-#include <entt/entt.hpp>
+#include "pch.h"
 
 #include "managers/GUIManager.h"
 #include "managers/SystemManager.h"

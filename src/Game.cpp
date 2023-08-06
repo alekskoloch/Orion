@@ -6,8 +6,6 @@
 #include "components/components.h"
 #include "components/tagComponents.h"
 
-#include <iostream>
-
 Game::Game() : window(sf::VideoMode(1920u, 1080u), "Orion"), systemManager(this->window, this->registry), guiManager(this->window, this->registry)
 {
     //TODO: Frame rate should be configurable

@@ -26,7 +26,12 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(googletest)
 
 file(GLOB_RECURSE SOURCES src/*.cpp src/*.h)
+
+# Main Executable
 add_executable(main ${SOURCES})
+
+# PCH setup
+target_precompile_headers(main PRIVATE src/pch.h)
 
 #SFML
 target_link_libraries(main sfml-graphics sfml-audio)
@@ -40,11 +45,13 @@ enable_testing()
 # create library for TextureManager
 add_library(texture_manager src/managers/TextureManager.cpp)
 target_include_directories(texture_manager PUBLIC src/managers)
-target_link_libraries(texture_manager sfml-graphics)
+target_link_libraries(texture_manager sfml-graphics EnTT::EnTT)
 
 file(GLOB TEST_SRC tests/*.cpp)
 add_executable(tests ${TEST_SRC})
 target_link_libraries(tests gtest_main texture_manager sfml-graphics)
+
+target_precompile_headers(tests PRIVATE src/pch.h)
 
 #GoogleTest discovery
 include(GoogleTest)
