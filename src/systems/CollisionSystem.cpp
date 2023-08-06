@@ -9,32 +9,38 @@
 
 void CollisionSystem::updateCollisionBoxes(entt::registry& registry)
 {
-    auto view = registry.view<Collision, Renderable>();
+    auto view = registry.view<Collision, Position>();
     for (auto entity : view)
     {
         auto& collision = view.get<Collision>(entity);
-        auto& renderable = view.get<Renderable>(entity);
+        auto& position = view.get<Position>(entity);
 
-        collision.collisionBox = renderable.sprite.getGlobalBounds();
+        collision.collisionBox.left = position.position.x - collision.collisionBox.width / 2.f;
+        collision.collisionBox.top = position.position.y - collision.collisionBox.height / 2.f;
     }
 }
 
 void CollisionSystem::checkCollisions(entt::registry& registry)
 {
-    auto bullets = registry.view<Collision, Renderable, Velocity, Bullet>();
+    auto playerBullets = registry.view<Collision, Renderable, Velocity, Bullet, PlayerBullet>();
+    auto enemies = registry.view<Collision, Enemy>();
+    auto enemyBullets = registry.view<Collision, Renderable, Velocity, Bullet, EnemyBullet>();
+    auto players = registry.view<Collision, Player>();
 
     std::unordered_set<entt::entity> bulletsToDestroy;
     std::unordered_set<entt::entity> enemiesToDestroy;
+    std::unordered_set<entt::entity> playersToDestroy;
 
-    for (auto bullet : bullets) {
+    for (auto bullet : playerBullets)
+    {
         if (bulletsToDestroy.find(bullet) != bulletsToDestroy.end())
         {
             continue;
         }
 
-        auto& bulletCollision = bullets.get<Collision>(bullet);
+        auto& bulletCollision = playerBullets.get<Collision>(bullet);
 
-        registry.view<Collision, Enemy>().each([&](auto enemy, auto& enemyCollision)
+        enemies.each([&](auto enemy, auto& enemyCollision)
         {
             if (bulletsToDestroy.find(bullet) == bulletsToDestroy.end() &&
                 enemiesToDestroy.find(enemy) == enemiesToDestroy.end() &&
@@ -49,6 +55,27 @@ void CollisionSystem::checkCollisions(entt::registry& registry)
         });
     }
 
+    for (auto bullet : enemyBullets)
+    {
+        if (bulletsToDestroy.find(bullet) != bulletsToDestroy.end())
+        {
+            continue;
+        }
+
+        auto& bulletCollision = enemyBullets.get<Collision>(bullet);
+
+        players.each([&](auto player, auto& playerCollision)
+        {
+            if (bulletsToDestroy.find(bullet) == bulletsToDestroy.end() &&
+                playersToDestroy.find(player) == playersToDestroy.end() &&
+                bulletCollision.collisionBox.intersects(playerCollision.collisionBox))
+            {
+                bulletsToDestroy.insert(bullet);
+                //TODO: handle player death
+            }
+        });
+    }
+
     for (auto bullet : bulletsToDestroy)
     {
         registry.destroy(bullet);
@@ -57,5 +84,10 @@ void CollisionSystem::checkCollisions(entt::registry& registry)
     for (auto enemy : enemiesToDestroy)
     {
         registry.destroy(enemy);
+    }
+
+    for (auto player : playersToDestroy)
+    {
+        registry.destroy(player);
     }
 }
