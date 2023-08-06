@@ -43,12 +43,12 @@ void SystemManager::executeUpdateSystems(sf::Time deltaTime)
     if (!this->slowMotion)
         RotateTowardsMouseSystem::rotateTowardsMouse(this->registry, deltaTime, this->window);
 
-    CollisionSystem::updateCollisionBoxes(this->registry);      
-    CollisionSystem::checkCollisions(this->registry);
     WaypointsMovementSystem::updateWaypoints(this->registry, deltaTime);
     ShootingSystem::shoot(this->registry, deltaTime);
     AccelerationSystem::accelerate(this->registry, deltaTime);
     MovementSystem::updateMovement(this->registry, deltaTime);
+    CollisionSystem::updateCollisionBoxes(this->registry);      
+    CollisionSystem::checkCollisions(this->registry);
 }
 
 void SystemManager::executeRenderSystems()
