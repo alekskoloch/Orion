@@ -6,23 +6,7 @@
 #include "../systems/PlayerInitializationSystem.h"
 #include "../schema/WeaponsSchema.h"
 
-//TODO: move to utils / optimize it
-bool isMouseOverSprite(const sf::Sprite& sprite, const sf::Vector2i& mousePosition)
-{
-    sf::Vector2f localPosition = sprite.getInverseTransform().transformPoint(static_cast<sf::Vector2f>(mousePosition));
-    sf::IntRect textureRect = sprite.getTextureRect();
-
-    if (localPosition.x >= 0 && localPosition.y >= 0 && localPosition.x < textureRect.width && localPosition.y < textureRect.height)
-    {
-        const sf::Texture* texture = sprite.getTexture();
-        sf::Image image = texture->copyToImage();
-
-        return image.getPixel(static_cast<unsigned int>(localPosition.x) + textureRect.left,
-                              static_cast<unsigned int>(localPosition.y) + textureRect.top).a > 0;
-    }
-
-    return false;
-}
+#include "../utils/Mouse.h"
 
 GUIManager::GUIManager(sf::RenderWindow& window, entt::registry& registry) : window(window), registry(registry)
 {
@@ -39,7 +23,7 @@ void GUIManager::update()
 
         for (int i = 0; i < 8; i++)
         {
-            if (isMouseOverSprite(this->quickMenuTiles[i], mousePosition))
+            if ( utils::isMouseOverSprite(this->quickMenuTiles[i], mousePosition))
             {
                 this->quickMenuTiles[i].setTexture(TextureManager::getInstance().getTexture("ACTIVE_TILE"));
                 this->selectedTile = i + 1;
