@@ -19,6 +19,7 @@ void EnemyInitializationSystem::initializeEnemy(entt::registry& registry)
 void EnemyInitializationSystem::createEnemy(entt::registry& registry, const EnemySchema& enemySchema)
 {
     TextureManager::getInstance().loadTexture(enemySchema.textureName, ASSETS_PATH + enemySchema.textureName + ".png");
+    TextureManager::getInstance().loadTexture("enemy_bullet", ASSETS_PATH + std::string("enemy_bullet") + ".png");
 
     auto enemy = registry.create();
     registry.emplace<Enemy>(enemy);
@@ -30,6 +31,7 @@ void EnemyInitializationSystem::createEnemy(entt::registry& registry, const Enem
     registry.emplace<Position>(enemy, enemySchema.position);
     registry.emplace<Speed>(enemy, enemySchema.speed);
     registry.emplace<Velocity>(enemy, enemySchema.velocity);
+    registry.emplace<Weapon>(enemy, WeaponType::SingleShot, 2.5f, 900.f, "enemy_bullet");
 
     registry.emplace<WaypointMovement>(enemy, enemySchema.waypoints);
 }
