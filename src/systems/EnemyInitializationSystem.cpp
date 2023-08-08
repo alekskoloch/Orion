@@ -31,7 +31,9 @@ void EnemyInitializationSystem::createEnemy(entt::registry& registry, const Enem
     registry.emplace<Position>(enemy, enemySchema.position);
     registry.emplace<Speed>(enemy, enemySchema.speed);
     registry.emplace<Velocity>(enemy, enemySchema.velocity);
-    registry.emplace<Weapon>(enemy, WeaponType::SingleShot, 2.5f, 900.f, "enemy_bullet");
+
+    //TODO: temporary solution for adding icon to enemy weapon
+    registry.emplace<Weapon>(enemy, WeaponType::SingleShot, 2.5f, 900.f, "enemy_bullet", "enemy_bullet");
 
     registry.emplace<WaypointMovement>(enemy, enemySchema.waypoints);
 }

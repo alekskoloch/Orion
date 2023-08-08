@@ -8,6 +8,7 @@ struct WeaponSchema
     float cooldownTime;
     float bulletSpeed;
     std::string bulletTextureName;
+    std::string weaponIconTextureName;
 };
 
 static WeaponSchema redWeapon =
@@ -15,7 +16,8 @@ static WeaponSchema redWeapon =
     WeaponType::SingleShot,
     0.2f,
     1300.f,
-    "red_bullet"
+    "red_bullet",
+    "red_weapon"
 };
 
 static WeaponSchema blueWeapon =
@@ -23,5 +25,6 @@ static WeaponSchema blueWeapon =
     WeaponType::TrippleShot,
     0.4f,
     2000.f,
-    "blue_bullet"
+    "blue_bullet",
+    "blue_weapon"
 };
