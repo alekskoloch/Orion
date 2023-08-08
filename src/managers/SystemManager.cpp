@@ -39,7 +39,7 @@ void SystemManager::executeUpdateSystems(sf::Time deltaTime)
 {
     if (this->slowMotion || this->slowMotionFactor != 1.0f)
     {
-        TimeControlSystem::updateSlowMotion(this->slowMotionFactor, this->slowMotion, this->slowMotionSpeed, deltaTime.asSeconds());
+        TimeControlSystem::updateSlowMotion(this->slowMotionFactor, this->slowMotion, SLOW_MOTION_SPEED, TARGET_SLOW_MOTION_FACTOR, deltaTime.asSeconds());
         deltaTime *= this->slowMotionFactor;
     }
 

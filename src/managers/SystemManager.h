@@ -2,6 +2,10 @@
 
 #include "../pch.h"
 
+// make this configurable
+const constexpr float TARGET_SLOW_MOTION_FACTOR = 0.05f;
+const constexpr float SLOW_MOTION_SPEED = 3.f;
+
 class SystemManager
 {
 public:
@@ -19,8 +23,5 @@ private:
     entt::registry& registry;
 
     bool slowMotion = false;
-    //TODO: make this configurable
     float slowMotionFactor = 1.0f;
-    static constexpr float targetSlowMotionFactor = 0.05f;
-    static constexpr float slowMotionSpeed = 3.f;
 };
