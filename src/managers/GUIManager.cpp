@@ -6,107 +6,40 @@
 #include "../systems/PlayerInitializationSystem.h"
 #include "../schema/WeaponsSchema.h"
 
-#include "../utils/Mouse.h"
-
-GUIManager::GUIManager(sf::RenderWindow& window, entt::registry& registry) : window(window), registry(registry)
+GUIManager::GUIManager(sf::RenderWindow& window, entt::registry& registry) : window(window), registry(registry), quickMenu(window, registry)
 {
-    this->initializeQuickMenu();
     this->initializeShader();
 }
 
 void GUIManager::update()
 {
     if (this->quickMenuActive)
-    {
-        sf::Vector2i mousePosition = sf::Mouse::getPosition(this->window);
-        this->selectedTile = 0;
-
-        for (int i = 0; i < 8; i++)
-        {
-            if ( utils::isMouseOverSprite(this->quickMenuTiles[i], mousePosition))
-            {
-                this->quickMenuTiles[i].setTexture(TextureManager::getInstance().getTexture("ACTIVE_TILE"));
-                this->selectedTile = i + 1;
-            }
-            else
-            {
-                this->quickMenuTiles[i].setTexture(TextureManager::getInstance().getTexture("INACTIVE_TILE"));
-            }
-        }
-    }
+        this->quickMenu.update();
 }
 
 void GUIManager::draw()
 {
     if (this->quickMenuActive)
-    {
-        this->shaderTexture.update(this->window);
-        this->window.draw(this->shaderSprite, &this->shader);
-
-        for (auto& tile : this->quickMenuTiles)
-        {
-            this->window.draw(tile);
-        }
-
-        for (auto& icon : this->quickMenuIcons)
-        {
-            this->window.draw(icon);
-        }
-    }
+        this->quickMenu.draw();
 }
 
 void GUIManager::toggleQuickMenu(bool value)
 {
     this->quickMenuActive = value;
-
-    if (this->selectedTile != 0 && !this->quickMenuActive)
+    //TODO: temporary solution for changing weapon
+    if (!this->quickMenuActive)
     {
-        if (this->selectedTile == 1)
+        switch (this->quickMenu.getSelectedTile())
         {
+        case 1:
             WeaponsSystem::changeWeapon(this->registry, redWeapon);
-        }
-        else if (this->selectedTile == 2)
-        {
+            break;
+        case 2:
             WeaponsSystem::changeWeapon(this->registry, blueWeapon);
+            break;
+        default:
+            break;
         }
-    }
-}
-
-void GUIManager::initializeQuickMenu()
-{
-    TextureManager::getInstance().loadTexture("ACTIVE_TILE", ASSETS_PATH + std::string("tileActive.png"));
-    TextureManager::getInstance().loadTexture("INACTIVE_TILE", ASSETS_PATH + std::string("tileInactive.png"));
-
-    //TODO: this is a temporary solution for loading bullet ico textures
-    TextureManager::getInstance().loadTexture("RED_WEAPON_ICO", ASSETS_PATH + std::string("red_weapon.png"));
-    TextureManager::getInstance().loadTexture("BLUE_WEAPON_ICO", ASSETS_PATH + std::string("blue_weapon.png"));
-
-    float centerX = this->window.getSize().x / 2.f;
-    float centerY = this->window.getSize().y / 2.f;
-    float radius = 360.f;
-    float angleIncrement = 45.f;
-
-    this->quickMenuTiles.resize(8);
-    this->quickMenuIcons.resize(8);
-    for (int i = 0; i < 8; i++)
-    {
-        this->quickMenuTiles[i].setTexture(TextureManager::getInstance().getTexture("INACTIVE_TILE"));
-        this->quickMenuTiles[i].setOrigin(this->quickMenuTiles[i].getGlobalBounds().width / 2.f, this->quickMenuTiles[i].getGlobalBounds().height / 2.f);
-        this->quickMenuTiles[i].setPosition(centerX + std::sin((i * angleIncrement) * M_PI / 180.f) * radius, centerY - std::cos((i * angleIncrement) * M_PI / 180.f) * radius);
-        this->quickMenuTiles[i].setRotation(i * angleIncrement);
-
-        //TODO: this is a temporary solution for loading bullet ico textures
-        if (i == 0)
-        {
-            this->quickMenuIcons[i].setTexture(TextureManager::getInstance().getTexture("RED_WEAPON_ICO"));
-        }
-        else if (i == 1)
-        {
-            this->quickMenuIcons[i].setTexture(TextureManager::getInstance().getTexture("BLUE_WEAPON_ICO"));
-        }
-
-        this->quickMenuIcons[i].setOrigin(this->quickMenuIcons[i].getGlobalBounds().width / 2.f, this->quickMenuIcons[i].getGlobalBounds().height / 2.f);
-        this->quickMenuIcons[i].setPosition(this->quickMenuTiles[i].getPosition());
     }
 }
 

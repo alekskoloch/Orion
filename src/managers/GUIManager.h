@@ -2,6 +2,8 @@
 
 #include "../pch.h"
 
+#include "GUIElements/GUIQuickMenu.h"
+
 class GUIManager
 {
 public:
@@ -15,11 +17,9 @@ private:
     entt::registry& registry;
     sf::RenderWindow& window;
 
+    GUIQuickMenu quickMenu;
+
     bool quickMenuActive = false;
-    int selectedTile = 0;
-    void initializeQuickMenu();
-    std::vector<sf::Sprite> quickMenuTiles;
-    std::vector<sf::Sprite> quickMenuIcons;
 
 //TODO: move shader
     sf::Shader shader;

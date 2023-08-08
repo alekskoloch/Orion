@@ -18,7 +18,10 @@
 
 #include "../systems/TimeControlSystem.h"
 
-SystemManager::SystemManager(sf::RenderWindow& window, entt::registry& registry) : window(window), registry(registry) {}
+SystemManager::SystemManager(sf::RenderWindow& window, entt::registry& registry) : window(window), registry(registry)
+{
+    this->executeInitializationSystems();
+}
 
 void SystemManager::executeInitializationSystems()
 {
