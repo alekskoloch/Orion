@@ -1,8 +1,11 @@
 #include "EnemyInitializationSystem.h"
 
 #include "../managers/TextureManager.h"
+#include "../systems/WeaponsSystem.h"
 #include "../components/components.h"
 #include "../components/tagComponents.h"
+
+#include "../schema/WeaponsSchema.h"
 
 //TODO: Only for testing
 static float enemyStartPositionX = 100.f;
@@ -32,8 +35,7 @@ void EnemyInitializationSystem::createEnemy(entt::registry& registry, const Enem
     registry.emplace<Speed>(enemy, enemySchema.speed);
     registry.emplace<Velocity>(enemy, enemySchema.velocity);
 
-    //TODO: temporary solution for adding icon to enemy weapon
-    registry.emplace<Weapon>(enemy, WeaponType::SingleShot, 2.5f, 900.f, "enemy_bullet", "enemy_bullet");
+    WeaponsSystem::loadWeapon(registry, basicEnemyWeapon, enemy);
 
     registry.emplace<WaypointMovement>(enemy, enemySchema.waypoints);
 }
