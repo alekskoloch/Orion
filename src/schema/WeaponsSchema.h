@@ -28,3 +28,13 @@ static WeaponSchema blueWeapon =
     "blue_bullet",
     "blue_weapon"
 };
+
+
+static WeaponSchema basicEnemyWeapon =
+{
+    WeaponType::SingleShot,
+    2.5f,
+    800.f,
+    "enemy_bullet",
+    "empty"
+};
