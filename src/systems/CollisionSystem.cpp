@@ -27,27 +27,23 @@ void CollisionSystem::checkCollisions(entt::registry& registry)
     auto enemyBullets = registry.view<Collision, Renderable, Velocity, Bullet, EnemyBullet>();
     auto players = registry.view<Collision, Player>();
 
-    std::unordered_set<entt::entity> bulletsToDestroy;
-    std::unordered_set<entt::entity> enemiesToDestroy;
-    std::unordered_set<entt::entity> playersToDestroy;
+    std::unordered_set<entt::entity> entitiesToDestroy;
 
     for (auto bullet : playerBullets)
     {
-        if (bulletsToDestroy.find(bullet) != bulletsToDestroy.end())
-        {
+        if (entitiesToDestroy.find(bullet) != entitiesToDestroy.end())
             continue;
-        }
 
         auto& bulletCollision = playerBullets.get<Collision>(bullet);
 
         enemies.each([&](auto enemy, auto& enemyCollision)
         {
-            if (bulletsToDestroy.find(bullet) == bulletsToDestroy.end() &&
-                enemiesToDestroy.find(enemy) == enemiesToDestroy.end() &&
+            if (entitiesToDestroy.find(bullet) == entitiesToDestroy.end() &&
+                entitiesToDestroy.find(enemy) == entitiesToDestroy.end() &&
                 bulletCollision.collisionBox.intersects(enemyCollision.collisionBox))
             {
-                bulletsToDestroy.insert(bullet);
-                enemiesToDestroy.insert(enemy);
+                entitiesToDestroy.insert(bullet);
+                entitiesToDestroy.insert(enemy);
 
                 //RESPAWN ONLY FOR TESTING
                 EnemyInitializationSystem::createEnemy(registry, enemy2);
@@ -57,37 +53,23 @@ void CollisionSystem::checkCollisions(entt::registry& registry)
 
     for (auto bullet : enemyBullets)
     {
-        if (bulletsToDestroy.find(bullet) != bulletsToDestroy.end())
-        {
+        if (entitiesToDestroy.find(bullet) != entitiesToDestroy.end())
             continue;
-        }
 
         auto& bulletCollision = enemyBullets.get<Collision>(bullet);
 
         players.each([&](auto player, auto& playerCollision)
         {
-            if (bulletsToDestroy.find(bullet) == bulletsToDestroy.end() &&
-                playersToDestroy.find(player) == playersToDestroy.end() &&
+            if (entitiesToDestroy.find(bullet) == entitiesToDestroy.end() &&
+                entitiesToDestroy.find(player) == entitiesToDestroy.end() &&
                 bulletCollision.collisionBox.intersects(playerCollision.collisionBox))
             {
-                bulletsToDestroy.insert(bullet);
+                entitiesToDestroy.insert(bullet);
                 //TODO: handle player death
             }
         });
     }
 
-    for (auto bullet : bulletsToDestroy)
-    {
-        registry.destroy(bullet);
-    }
-
-    for (auto enemy : enemiesToDestroy)
-    {
-        registry.destroy(enemy);
-    }
-
-    for (auto player : playersToDestroy)
-    {
-        registry.destroy(player);
-    }
+    for (auto entity : entitiesToDestroy)
+        registry.destroy(entity);
 }
