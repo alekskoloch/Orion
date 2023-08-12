@@ -5,5 +5,5 @@
 class ShootingSystem
 {
 public:
-    static void shoot(entt::registry& registry, sf::Time deltaTime);
+    static void shoot(entt::registry& registry, sf::Time deltaTime, sf::RenderWindow& window);
 };

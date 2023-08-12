@@ -47,7 +47,7 @@ void SystemManager::executeUpdateSystems(sf::Time deltaTime)
         RotateTowardsMouseSystem::rotateTowardsMouse(this->registry, deltaTime, this->window);
 
     WaypointsMovementSystem::updateWaypoints(this->registry, deltaTime);
-    ShootingSystem::shoot(this->registry, deltaTime);
+    ShootingSystem::shoot(this->registry, deltaTime, this->window);
     AccelerationSystem::accelerate(this->registry, deltaTime);
     MovementSystem::updateMovement(this->registry, deltaTime);
     CollisionSystem::updateCollisionBoxes(this->registry);      

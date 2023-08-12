@@ -5,40 +5,73 @@
 #include "../components/tagComponents.h"
 
 template <typename BulletOwnerTag>
-void createBullet(entt::registry& registry, sf::Vector2f position, sf::FloatRect& hitbox, sf::Sprite& sprite, sf::Vector2f velocity)
+void createBullet(entt::registry& registry, entt::entity& entity, sf::Vector2f targetPosition, float offset = 0.f)
 {
+    auto weapon = registry.get<Weapon>(entity);
+    auto position = registry.get<Position>(entity);
+
+    sf::Vector2f direction = targetPosition - position.position;
+    float length = std::sqrt(direction.x * direction.x + direction.y * direction.y);
+    sf::Vector2f normalizedDirection = direction / length;
+
+    float angleInRadians = std::atan2(normalizedDirection.y, normalizedDirection.x);
+    angleInRadians += offset * (3.14159265f / 180.f);
+    sf::Vector2f newDirection(std::cos(angleInRadians), std::sin(angleInRadians));
+
+    float rotation = std::atan2(newDirection.y, newDirection.x) * (180.f / 3.14159265f) + 90.f;
+
+    sf::Sprite sprite(TextureManager::getInstance().getTexture(weapon.bulletTextureName));
+    sprite.setOrigin(sprite.getGlobalBounds().width / 2.f, sprite.getGlobalBounds().height / 2.f);
+    sprite.setRotation(rotation);
+
     auto bulletEntity = registry.create();
     registry.emplace<Bullet>(bulletEntity);
     registry.emplace<BulletOwnerTag>(bulletEntity);
 
-    registry.emplace<Position>(bulletEntity, position);
-    registry.emplace<Collision>(bulletEntity, hitbox);
+    registry.emplace<Position>(bulletEntity, position.position);
+    //TODO: Get Collision from weaponSchema
+    registry.emplace<Collision>(bulletEntity, sprite.getGlobalBounds());
 
-    registry.emplace<Velocity>(bulletEntity, velocity);
+    registry.emplace<Velocity>(bulletEntity, newDirection * weapon.bulletSpeed);
     registry.emplace<Renderable>(bulletEntity, sprite);
 }
 
-void ShootingSystem::shoot(entt::registry& registry, sf::Time deltaTime)
+template <typename BulletOwnerTag>
+void handleShoot(entt::registry& registry, entt::entity& entity, sf::Vector2f targetPosition)
 {
-    auto view = registry.view<Weapon, Input, Position, Renderable>();
+    auto weapon = registry.get<Weapon>(entity);
+    //TODO: Make this configurable
+    float angleOffset[] = { -10.f, 0.f, 10.f };
+    switch (weapon.weaponType)
+    {
+    case WeaponType::SingleShot:
+        createBullet<BulletOwnerTag>(registry, entity, targetPosition);
+        break;
+    case WeaponType::TrippleShot:
+        for (auto offset : angleOffset)
+            createBullet<BulletOwnerTag>(registry, entity, targetPosition, offset);
+        break;
+    default:
+        break;
+    }
+}
+
+void handlePlayerShooting(entt::registry& registry, sf::Time deltaTime, sf::RenderWindow& window)
+{
+    auto view = registry.view<Weapon, Input>();
     for (auto entity : view)
     {
         auto& weapon = view.get<Weapon>(entity);
         auto& input = view.get<Input>(entity);
-        auto& playerPosition = view.get<Position>(entity);
-        auto& playerRenderable = view.get<Renderable>(entity);
 
         bool canShoot = false;
 
         if (weapon.autofire)
-        {
             canShoot = input.shoot && weapon.currentCooldownTime == 0.f;
-        }
         else
-        {
             canShoot = input.shoot && !weapon.shootLastFrame;
-        }
 
+        //TODO: Chceck cooldown refactoring
         if (weapon.currentCooldownTime > 0.f)
         {
             weapon.currentCooldownTime -= deltaTime.asSeconds();
@@ -48,100 +81,39 @@ void ShootingSystem::shoot(entt::registry& registry, sf::Time deltaTime)
 
         if (canShoot)
         {
-            //TODO: Refactor this
-            if (weapon.weaponType == WeaponType::SingleShot)
-            {
-                sf::Sprite sprite(TextureManager::getInstance().getTexture(weapon.bulletTextureName));
-                sprite.setOrigin(sprite.getGlobalBounds().width / 2.f, sprite.getGlobalBounds().height / 2.f);
-
-                sf::FloatRect collisionRect(playerPosition.position.x - 3.5f, playerPosition.position.y - 3.5f, 7.f, 7.f);
-
-                float rotation = playerRenderable.sprite.getRotation();
-                sprite.setRotation(rotation);
-                float adjustedRotation = 90.f - rotation;
-                float radians = adjustedRotation * (3.14159265f / 180.f);
-
-                sf::Vector2f velocity(std::cos(radians) * weapon.bulletSpeed, -std::sin(radians) * weapon.bulletSpeed);
-
-                createBullet<PlayerBullet>(registry, playerPosition.position, collisionRect, sprite, velocity);
-
-                weapon.currentCooldownTime = weapon.cooldownTime;
-            }
-            else if (weapon.weaponType == WeaponType::TrippleShot)
-            {
-                float angleOffset[] = { -10.f, 0.f, 10.f };
-
-                for (float offset : angleOffset)
-                {
-                    sf::Sprite sprite(TextureManager::getInstance().getTexture(weapon.bulletTextureName));
-                    sprite.setOrigin(sprite.getGlobalBounds().width / 2.f, sprite.getGlobalBounds().height / 2.f);
-
-                    sf::FloatRect collisionRect(playerPosition.position.x - 3.5f, playerPosition.position.y - 3.5f, 7.f, 7.f);
-
-                    float rotation = playerRenderable.sprite.getRotation() + offset;
-                    sprite.setRotation(rotation);
-                    float adjustedRotation = 90.f - rotation;
-                    float radians = adjustedRotation * (3.14159265f / 180.f);
-                    sf::Vector2f velocity(std::cos(radians) * weapon.bulletSpeed, -std::sin(radians) * weapon.bulletSpeed);
-
-                    createBullet<PlayerBullet>(registry, playerPosition.position, collisionRect, sprite, velocity);
-                }
-
-                weapon.currentCooldownTime = weapon.cooldownTime;
-            }
+            handleShoot<PlayerBullet>(registry, entity, sf::Vector2f(sf::Mouse::getPosition(window)));
+            weapon.currentCooldownTime = weapon.cooldownTime;
         }
 
         weapon.shootLastFrame = input.shoot;
     }
-
-    auto enemyView = registry.view<Enemy, Weapon, Position, Renderable>();
-    auto playerView = registry.view<Player, Position>();
+}
+void handleEnemyShooting(entt::registry& registry, sf::Time deltaTime)
+{
+    auto enemyView = registry.view<Enemy, Weapon, Position>();
+    auto playerPosition = registry.view<Player, Position>().get<Position>(registry.view<Player, Position>().front()).position;
     for (auto enemyEntity : enemyView)
     {
         auto& enemyWeapon = enemyView.get<Weapon>(enemyEntity);
         auto& enemyPosition = enemyView.get<Position>(enemyEntity);
 
-        for (auto playerEntity : playerView)
+        if (enemyWeapon.currentCooldownTime > 0.f)
         {
-            auto& playerPosition = playerView.get<Position>(playerEntity);
+            enemyWeapon.currentCooldownTime -= deltaTime.asSeconds();
+            if (enemyWeapon.currentCooldownTime < 0.f)
+                enemyWeapon.currentCooldownTime = 0.f;
+        }
 
-            if (enemyWeapon.currentCooldownTime > 0.f)
-            {
-                enemyWeapon.currentCooldownTime -= deltaTime.asSeconds();
-                if (enemyWeapon.currentCooldownTime < 0.f)
-                    enemyWeapon.currentCooldownTime = 0.f;
-            }
-
-            if (enemyWeapon.currentCooldownTime == 0.f)
-            {
-                sf::Vector2f direction = playerPosition.position - enemyPosition.position;
-                float length = std::sqrt(direction.x * direction.x + direction.y * direction.y);
-                sf::Vector2f normalizedDirection = direction / length;
-
-                // auto bulletEntity = registry.create();
-                // registry.emplace<Bullet>(bulletEntity);
-                // registry.emplace<EnemyBullet>(bulletEntity);
-
-                sf::Sprite sprite(TextureManager::getInstance().getTexture(enemyWeapon.bulletTextureName));
-                sprite.setOrigin(sprite.getGlobalBounds().width / 2.f, sprite.getGlobalBounds().height / 2.f);
-
-                sf::FloatRect collisionRect(sprite.getGlobalBounds());
-
-                float rotation = std::atan2(normalizedDirection.y, normalizedDirection.x) * (180.f / 3.14159265f) + 90.f;
-                sprite.setRotation(rotation);
-
-                // registry.emplace<Position>(bulletEntity, enemyPosition.position);
-                // registry.emplace<Collision>(bulletEntity, sprite.getGlobalBounds());
-
-                sf::Vector2f velocity = normalizedDirection * enemyWeapon.bulletSpeed;
-
-                // registry.emplace<Velocity>(bulletEntity, velocity);
-                // registry.emplace<Renderable>(bulletEntity, sprite);
-
-                createBullet<EnemyBullet>(registry, enemyPosition.position, collisionRect, sprite, velocity);
-
-                enemyWeapon.currentCooldownTime = enemyWeapon.cooldownTime;
-            }
+        if (enemyWeapon.currentCooldownTime == 0.f)
+        {
+            handleShoot<EnemyBullet>(registry, enemyEntity, playerPosition);
+            enemyWeapon.currentCooldownTime = enemyWeapon.cooldownTime;
         }
     }
+}
+
+void ShootingSystem::shoot(entt::registry& registry, sf::Time deltaTime, sf::RenderWindow& window)
+{
+    handlePlayerShooting(registry, deltaTime, window);
+    handleEnemyShooting(registry, deltaTime);
 }
