@@ -130,6 +130,9 @@ void ShootingSystem::shoot(entt::registry& registry, sf::Time deltaTime)
                 sf::Sprite sprite(TextureManager::getInstance().getTexture(enemyWeapon.bulletTextureName));
                 sprite.setOrigin(sprite.getGlobalBounds().width / 2.f, sprite.getGlobalBounds().height / 2.f);
 
+                float rotation = std::atan2(normalizedDirection.y, normalizedDirection.x) * (180.f / 3.14159265f) + 90.f;
+                sprite.setRotation(rotation);
+
                 registry.emplace<Position>(bulletEntity, enemyPosition.position);
                 registry.emplace<Collision>(bulletEntity, sprite.getGlobalBounds());
 
