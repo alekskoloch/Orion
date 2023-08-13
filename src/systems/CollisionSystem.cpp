@@ -7,6 +7,41 @@
 
 #include "../schema/EnemySchema.h"
 
+template <typename BulletOwnerTag, typename TargetTag>
+void checkBulletCollitions(entt::registry& registry, std::unordered_set<entt::entity>& entitiesToDestroy)
+{
+    auto bullets = registry.view<Collision, BulletOwnerTag>();
+    auto targets = registry.view<Collision, TargetTag>();
+
+    for (auto bullet : bullets)
+    {
+        if (entitiesToDestroy.find(bullet) != entitiesToDestroy.end())
+            continue;
+
+        targets.each([&](auto target, auto& targetCollision)
+        {
+            if (entitiesToDestroy.find(bullet) == entitiesToDestroy.end() &&
+                entitiesToDestroy.find(target) == entitiesToDestroy.end() &&
+                bullets.template get<Collision>(bullet).collisionBox.intersects(targetCollision.collisionBox))
+            {
+                entitiesToDestroy.insert(bullet);
+                //TODO: make onCollision method for each tag
+                if constexpr (!std::is_same_v<TargetTag, Player>)
+                {
+                    entitiesToDestroy.insert(target);
+                    EnemyInitializationSystem::createEnemy(registry, enemy2);
+                }
+            }
+        });
+    }
+}
+
+void destroyEntities(entt::registry& registry, std::unordered_set<entt::entity>& entitiesToDestroy)
+{
+    for (auto entity : entitiesToDestroy)
+        registry.destroy(entity);
+}
+
 void CollisionSystem::updateCollisionBoxes(entt::registry& registry)
 {
     auto view = registry.view<Collision, Position>();
@@ -22,54 +57,10 @@ void CollisionSystem::updateCollisionBoxes(entt::registry& registry)
 
 void CollisionSystem::checkCollisions(entt::registry& registry)
 {
-    auto playerBullets = registry.view<Collision, Renderable, Velocity, Bullet, PlayerBullet>();
-    auto enemies = registry.view<Collision, Enemy>();
-    auto enemyBullets = registry.view<Collision, Renderable, Velocity, Bullet, EnemyBullet>();
-    auto players = registry.view<Collision, Player>();
-
     std::unordered_set<entt::entity> entitiesToDestroy;
 
-    for (auto bullet : playerBullets)
-    {
-        if (entitiesToDestroy.find(bullet) != entitiesToDestroy.end())
-            continue;
-
-        auto& bulletCollision = playerBullets.get<Collision>(bullet);
-
-        enemies.each([&](auto enemy, auto& enemyCollision)
-        {
-            if (entitiesToDestroy.find(bullet) == entitiesToDestroy.end() &&
-                entitiesToDestroy.find(enemy) == entitiesToDestroy.end() &&
-                bulletCollision.collisionBox.intersects(enemyCollision.collisionBox))
-            {
-                entitiesToDestroy.insert(bullet);
-                entitiesToDestroy.insert(enemy);
-
-                //RESPAWN ONLY FOR TESTING
-                EnemyInitializationSystem::createEnemy(registry, enemy2);
-            }
-        });
-    }
-
-    for (auto bullet : enemyBullets)
-    {
-        if (entitiesToDestroy.find(bullet) != entitiesToDestroy.end())
-            continue;
-
-        auto& bulletCollision = enemyBullets.get<Collision>(bullet);
-
-        players.each([&](auto player, auto& playerCollision)
-        {
-            if (entitiesToDestroy.find(bullet) == entitiesToDestroy.end() &&
-                entitiesToDestroy.find(player) == entitiesToDestroy.end() &&
-                bulletCollision.collisionBox.intersects(playerCollision.collisionBox))
-            {
-                entitiesToDestroy.insert(bullet);
-                //TODO: handle player death
-            }
-        });
-    }
-
-    for (auto entity : entitiesToDestroy)
-        registry.destroy(entity);
+    checkBulletCollitions<PlayerBullet, Enemy>(registry, entitiesToDestroy);
+    checkBulletCollitions<EnemyBullet, Player>(registry, entitiesToDestroy);
+    
+    destroyEntities(registry, entitiesToDestroy);
 }
