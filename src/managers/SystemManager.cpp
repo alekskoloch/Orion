@@ -60,5 +60,6 @@ void SystemManager::executeUpdateSystems(sf::Time deltaTime)
 void SystemManager::executeRenderSystems()
 {
     RenderSystem::renderEntities(this->window, this->registry);
-    DebugSystem::renderCollisionBoxes(this->registry, this->window);
+    if (this->debugMode)
+        DebugSystem::renderCollisionBoxes(this->registry, this->window);
 }

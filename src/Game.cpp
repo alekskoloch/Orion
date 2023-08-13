@@ -40,6 +40,12 @@ void Game::processEvents()
             this->systemManager.disableSlowMotion();
             this->guiManager.toggleQuickMenu(false);
         }
+
+        //when ` key is pressed, toggle debug mode
+        if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Tilde)
+        {
+            this->systemManager.debugMode = !this->systemManager.debugMode;
+        }
     }
     this->systemManager.executeEventSystems();
 }
