@@ -29,7 +29,18 @@ void checkBulletCollitions(entt::registry& registry, std::unordered_set<entt::en
                 if constexpr (!std::is_same_v<TargetTag, Player>)
                 {
                     entitiesToDestroy.insert(target);
-                    EnemyInitializationSystem::createEnemy(registry, enemy2);
+
+                    //TODO: Only for testing
+                    auto thisEnemy = registry.get<Name>(target);
+
+                    if (thisEnemy.name == "enemy")
+                        EnemyInitializationSystem::createEnemy(registry, enemy);
+                    else if (thisEnemy.name == "enemy2")
+                        EnemyInitializationSystem::createEnemy(registry, enemy2);
+                    else if (thisEnemy.name == "enemy3")
+                        EnemyInitializationSystem::createEnemy(registry, enemy3);
+                    else if (thisEnemy.name == "enemy4")
+                        EnemyInitializationSystem::createEnemy(registry, enemy4);
                 }
             }
         });
