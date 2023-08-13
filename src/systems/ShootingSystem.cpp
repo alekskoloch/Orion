@@ -71,14 +71,6 @@ void handlePlayerShooting(entt::registry& registry, sf::Time deltaTime, sf::Rend
         else
             canShoot = input.shoot && !weapon.shootLastFrame;
 
-        //TODO: Chceck cooldown refactoring
-        if (weapon.currentCooldownTime > 0.f)
-        {
-            weapon.currentCooldownTime -= deltaTime.asSeconds();
-            if (weapon.currentCooldownTime < 0.f)
-                weapon.currentCooldownTime = 0.f;
-        }
-
         if (canShoot)
         {
             handleShoot<PlayerBullet>(registry, entity, sf::Vector2f(sf::Mouse::getPosition(window)));
@@ -96,13 +88,6 @@ void handleEnemyShooting(entt::registry& registry, sf::Time deltaTime)
     {
         auto& enemyWeapon = enemyView.get<Weapon>(enemyEntity);
         auto& enemyPosition = enemyView.get<Position>(enemyEntity);
-
-        if (enemyWeapon.currentCooldownTime > 0.f)
-        {
-            enemyWeapon.currentCooldownTime -= deltaTime.asSeconds();
-            if (enemyWeapon.currentCooldownTime < 0.f)
-                enemyWeapon.currentCooldownTime = 0.f;
-        }
 
         if (enemyWeapon.currentCooldownTime == 0.f)
         {

@@ -9,4 +9,5 @@ class WeaponsSystem
 public:
     static void changeWeapon(entt::registry& registry, WeaponSchema weapon);
     static void loadWeapon(entt::registry& registry, const WeaponSchema& weaponSchema, entt::entity ownerEntity);
+    static void updateWeaponCooldown(entt::registry& registry, sf::Time deltaTime);
 };

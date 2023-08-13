@@ -11,6 +11,7 @@
 #include "../systems/ShootingSystem.h"
 #include "../systems/AccelerationSystem.h"
 #include "../systems/MovementSystem.h"
+#include "../systems/WeaponsSystem.h"
 
 #include "../systems/RenderSystem.h"
 
@@ -47,6 +48,7 @@ void SystemManager::executeUpdateSystems(sf::Time deltaTime)
         RotateTowardsMouseSystem::rotateTowardsMouse(this->registry, deltaTime, this->window);
 
     WaypointsMovementSystem::updateWaypoints(this->registry, deltaTime);
+    WeaponsSystem::updateWeaponCooldown(this->registry, deltaTime);
     ShootingSystem::shoot(this->registry, deltaTime, this->window);
     AccelerationSystem::accelerate(this->registry, deltaTime);
     MovementSystem::updateMovement(this->registry, deltaTime);
