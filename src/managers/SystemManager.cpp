@@ -14,6 +14,7 @@
 #include "../systems/WeaponsSystem.h"
 
 #include "../systems/RenderSystem.h"
+#include "../systems/DebugSystem.h"
 
 #include "../utils/MathOperations.h"
 
@@ -59,4 +60,5 @@ void SystemManager::executeUpdateSystems(sf::Time deltaTime)
 void SystemManager::executeRenderSystems()
 {
     RenderSystem::renderEntities(this->window, this->registry);
+    DebugSystem::renderCollisionBoxes(this->registry, this->window);
 }
