@@ -15,10 +15,10 @@ void createBullet(entt::registry& registry, entt::entity& entity, sf::Vector2f t
     sf::Vector2f normalizedDirection = direction / length;
 
     float angleInRadians = std::atan2(normalizedDirection.y, normalizedDirection.x);
-    angleInRadians += offset * (3.14159265f / 180.f);
+    angleInRadians += offset * (M_PI / 180.f);
     sf::Vector2f newDirection(std::cos(angleInRadians), std::sin(angleInRadians));
 
-    float rotation = std::atan2(newDirection.y, newDirection.x) * (180.f / 3.14159265f) + 90.f;
+    float rotation = std::atan2(newDirection.y, newDirection.x) * (180.f / M_PI) + 90.f;
 
     sf::Sprite sprite(TextureManager::getInstance().getTexture(weapon.bulletTextureName));
     sprite.setOrigin(sprite.getGlobalBounds().width / 2.f, sprite.getGlobalBounds().height / 2.f);
@@ -80,6 +80,7 @@ void handlePlayerShooting(entt::registry& registry, sf::Time deltaTime, sf::Rend
         weapon.shootLastFrame = input.shoot;
     }
 }
+
 void handleEnemyShooting(entt::registry& registry, sf::Time deltaTime)
 {
     auto enemyView = registry.view<Enemy, Weapon, Position>();
