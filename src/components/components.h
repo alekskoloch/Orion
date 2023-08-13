@@ -29,6 +29,11 @@ struct Input
     bool shoot;
 };
 
+struct Name
+{
+    std::string name;
+};
+
 struct Position
 {
     sf::Vector2f position;
