@@ -6,7 +6,7 @@
 #include "components/components.h"
 #include "components/tagComponents.h"
 
-Game::Game() : window(sf::VideoMode(1920u, 1080u), "Orion"), systemManager(this->window, this->registry), guiManager(this->window, this->registry)
+Game::Game() : window(sf::VideoMode(3840u, 2160u), "Orion"), systemManager(this->window, this->registry), guiManager(this->window, this->registry)
 {
     //TODO: Frame rate should be configurable
     window.setFramerateLimit(144);

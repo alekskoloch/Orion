@@ -1,5 +1,7 @@
 #include "ShootingSystem.h"
 
+#include "../systems/CameraSystem.h"
+
 #include "../managers/TextureManager.h"
 #include "../components/components.h"
 #include "../components/tagComponents.h"
@@ -73,7 +75,7 @@ void handlePlayerShooting(entt::registry& registry, sf::Time deltaTime, sf::Rend
 
         if (canShoot)
         {
-            handleShoot<PlayerBullet>(registry, entity, sf::Vector2f(sf::Mouse::getPosition(window)));
+            handleShoot<PlayerBullet>(registry, entity, window.mapPixelToCoords(sf::Mouse::getPosition(window)));
             weapon.currentCooldownTime = weapon.cooldownTime;
         }
 
@@ -100,6 +102,10 @@ void handleEnemyShooting(entt::registry& registry, sf::Time deltaTime)
 
 void ShootingSystem::shoot(entt::registry& registry, sf::Time deltaTime, sf::RenderWindow& window)
 {
+    //TODO: Temporary solution for player camera
+    CameraSystem::setPlayerCamera(registry, window);
     handlePlayerShooting(registry, deltaTime, window);
+    CameraSystem::setDefaultCamera(window);
+
     handleEnemyShooting(registry, deltaTime);
 }

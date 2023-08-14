@@ -12,6 +12,7 @@
 #include "../systems/AccelerationSystem.h"
 #include "../systems/MovementSystem.h"
 #include "../systems/WeaponsSystem.h"
+#include "../systems/CameraSystem.h"
 
 #include "../systems/RenderSystem.h"
 #include "../systems/DebugSystem.h"
@@ -59,7 +60,11 @@ void SystemManager::executeUpdateSystems(sf::Time deltaTime)
 
 void SystemManager::executeRenderSystems()
 {
+    CameraSystem::setPlayerCamera(this->registry, this->window);
+
     RenderSystem::renderEntities(this->window, this->registry);
     if (this->debugMode)
         DebugSystem::renderCollisionBoxes(this->registry, this->window);
+
+    CameraSystem::setDefaultCamera(this->window);
 }

@@ -1,10 +1,15 @@
 #include "RotateTowardsMouseSystem.h"
 
+#include "../systems/CameraSystem.h"
+
 #include "../utils/MathOperations.h"
 #include "../components/components.h"
 
 void RotateTowardsMouseSystem::rotateTowardsMouse(entt::registry& registry, sf::Time deltaTime, sf::RenderWindow& window)
 {
+    //TODO: Temporary solution for player camera
+    CameraSystem::setPlayerCamera(registry, window);
+
     auto view = registry.view<RotationTowardsMouse, Position, Renderable>();
 
     for (auto entity : view)
@@ -16,6 +21,8 @@ void RotateTowardsMouseSystem::rotateTowardsMouse(entt::registry& registry, sf::
         if (rotation.enabled)
         {
             sf::Vector2f mousePosition = static_cast<sf::Vector2f>(sf::Mouse::getPosition(window));
+            mousePosition = window.mapPixelToCoords(sf::Mouse::getPosition(window));
+                        
             float distanceToMouse = DistanceToMouse(mousePosition, position);
 
             if (distanceToMouse > rotation.minimalActivationDistance)
@@ -38,4 +45,6 @@ void RotateTowardsMouseSystem::rotateTowardsMouse(entt::registry& registry, sf::
             }
         }
     }
+
+    CameraSystem::setDefaultCamera(window);
 }
