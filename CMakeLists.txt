@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.10)
 project(Orion)
 add_definitions(-DASSETS_PATH=\"${CMAKE_SOURCE_DIR}/assets/\")
 
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 23)
 
 #SFML
 find_package(SFML 2.6 COMPONENTS graphics audio REQUIRED)
