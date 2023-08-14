@@ -1,1 +1,22 @@
 #include "CameraSystem.h"
+
+#include "../components/components.h"
+#include "../components/tagComponents.h"
+
+void CameraSystem::setDefaultCamera(sf::RenderWindow& window)
+{
+    window.setView(window.getDefaultView());
+}
+
+void CameraSystem::setPlayerCamera(entt::registry& registry, sf::RenderWindow& window)
+{
+    auto view = registry.view<Player, Position>();
+    for (auto entity : view)
+    {
+        auto& playerPosition = view.get<Position>(entity);
+
+        sf::View view = window.getView();
+        view.setCenter(playerPosition.position);
+        window.setView(view);
+    }
+}
