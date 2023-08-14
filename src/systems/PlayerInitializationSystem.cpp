@@ -7,8 +7,8 @@
 #include "../schema/WeaponsSchema.h"
 
 // TODO: Change start position
-static float playerStartPositionX = 100.f;
-static float playerStartPositionY = 100.f;
+static float playerStartPositionX = 0.f;
+static float playerStartPositionY = 0.f;
 
 void PlayerInitializationSystem::initializePlayer(entt::registry& registry)
 {
