@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../components/components.h"
+#include "WeaponsSchema.h"
 
 struct EnemySchema
 {
@@ -9,6 +10,7 @@ struct EnemySchema
     float speed;
     std::vector<sf::Vector2f> waypoints;
     std::string name;
+    WeaponSchema weaponSchema;
     sf::Vector2f velocity = sf::Vector2f(0.f, 0.f);
 };
 
@@ -23,7 +25,8 @@ static EnemySchema enemy =
         sf::Vector2f(1820.f, 980.f),
         sf::Vector2f(100.f, 980.f)
     },
-    "enemy"
+    "enemy",
+    basicEnemyWeapon
 };
 
 static EnemySchema enemy2 =
@@ -37,7 +40,8 @@ static EnemySchema enemy2 =
         sf::Vector2f(100.f, 980.f),
         sf::Vector2f(100.f, 100.f)
     },
-    "enemy2"
+    "enemy2",
+    basicEnemyWeapon2
 };
 
 static EnemySchema enemy3 =
@@ -51,7 +55,8 @@ static EnemySchema enemy3 =
         sf::Vector2f(100.f, 100.f),
         sf::Vector2f(1820.f, 100.f)
     },
-    "enemy3"
+    "enemy3",
+    basicEnemyWeapon3
 };
 
 static EnemySchema enemy4 =
@@ -65,5 +70,6 @@ static EnemySchema enemy4 =
         sf::Vector2f(1820.f, 100.f),
         sf::Vector2f(1820.f, 980.f)
     },
-    "enemy4"
+    "enemy4",
+    basicEnemyWeapon
 };
