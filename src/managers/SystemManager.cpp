@@ -1,5 +1,7 @@
 #include "SystemManager.h"
 
+#include "../systems/ProceduralGenerationSystem.h"
+
 #include "../systems/PlayerInitializationSystem.h"
 #include "../systems/EnemyInitializationSystem.h"
 
@@ -28,6 +30,8 @@ SystemManager::SystemManager(sf::RenderWindow& window, entt::registry& registry)
 
 void SystemManager::executeInitializationSystems()
 {
+    //TODO: Seed should be random
+    ProceduralGenerationSystem::Initialize(1);
     PlayerInitializationSystem::initializePlayer(this->registry);
     EnemyInitializationSystem::initializeEnemy(this->registry);
 }

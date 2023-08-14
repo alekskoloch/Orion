@@ -1,15 +1,13 @@
 #include "EnemyInitializationSystem.h"
 
+#include "ProceduralGenerationSystem.h"
+
 #include "../managers/TextureManager.h"
 #include "../systems/WeaponsSystem.h"
 #include "../components/components.h"
 #include "../components/tagComponents.h"
 
 #include "../schema/WeaponsSchema.h"
-
-//TODO: Only for testing
-static float enemyStartPositionX = 100.f;
-static float enemyStartPositionY = 980.f;
 
 void EnemyInitializationSystem::initializeEnemy(entt::registry& registry)
 {
@@ -31,7 +29,7 @@ void EnemyInitializationSystem::createEnemy(entt::registry& registry, const Enem
     sprite.setOrigin(sprite.getGlobalBounds().width / 2.f, sprite.getGlobalBounds().height / 2.f);
     registry.emplace<Collision>(enemy, sprite.getGlobalBounds());
     registry.emplace<Renderable>(enemy, sprite);
-    registry.emplace<Position>(enemy, enemySchema.position);
+    registry.emplace<Position>(enemy, sf::Vector2f(ProceduralGenerationSystem::GetRandomNumber<float>(-1920.f, 1920.f), ProceduralGenerationSystem::GetRandomNumber<float>(-1080.f, 1080.f)));
     registry.emplace<Speed>(enemy, enemySchema.speed);
     registry.emplace<Velocity>(enemy, enemySchema.velocity);
     registry.emplace<Name>(enemy, enemySchema.name);
