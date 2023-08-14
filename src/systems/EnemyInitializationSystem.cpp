@@ -34,7 +34,7 @@ void EnemyInitializationSystem::createEnemy(entt::registry& registry, const Enem
     registry.emplace<Velocity>(enemy, enemySchema.velocity);
     registry.emplace<Name>(enemy, enemySchema.name);
 
-    WeaponsSystem::loadWeapon(registry, basicEnemyWeapon, enemy);
+    WeaponsSystem::loadWeapon(registry, enemySchema.weaponSchema, enemy);
 
     registry.emplace<WaypointMovement>(enemy, enemySchema.waypoints);
 }
