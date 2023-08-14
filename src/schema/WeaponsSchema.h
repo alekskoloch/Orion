@@ -38,3 +38,21 @@ static WeaponSchema basicEnemyWeapon =
     "enemy_bullet",
     "empty"
 };
+
+static WeaponSchema basicEnemyWeapon2 =
+{
+    WeaponType::TrippleShot,
+    4.0f,
+    500.f,
+    "enemy_bullet2",
+    "empty"
+};
+
+static WeaponSchema basicEnemyWeapon3 =
+{
+    WeaponType::SingleShot,
+    5.0f,
+    2000.f,
+    "enemy_bullet3",
+    "empty"
+};
