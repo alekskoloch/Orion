@@ -44,6 +44,7 @@ void EnemyInitializationSystem::createEnemy(entt::registry& registry, const Enem
 
     auto enemy = registry.create();
     registry.emplace<Enemy>(enemy);
+    registry.emplace<EntityState>(enemy);
 
     sf::Sprite sprite(TextureManager::getInstance().getTexture(enemySchema.textureName));
     sprite.setOrigin(sprite.getGlobalBounds().width / 2.f, sprite.getGlobalBounds().height / 2.f);
