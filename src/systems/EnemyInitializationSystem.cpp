@@ -9,12 +9,32 @@
 
 #include "../schema/WeaponsSchema.h"
 
+//const number of enemies
+const int ENEMIES = 6;
+
 void EnemyInitializationSystem::initializeEnemy(entt::registry& registry)
 {
-    EnemyInitializationSystem::createEnemy(registry, enemy);
-    EnemyInitializationSystem::createEnemy(registry, enemy2);
-    EnemyInitializationSystem::createEnemy(registry, enemy3);
-    EnemyInitializationSystem::createEnemy(registry, enemy4);
+    //TODO: Temporary solution for initialize enemy
+    for (int i = 0; i < ENEMIES; i++)
+    {
+        switch (ProceduralGenerationSystem::GetRandomNumber(1,4))
+        {
+        case 1:
+            createEnemy(registry, enemy);
+            break;
+        case 2:
+            createEnemy(registry, enemy2);
+            break;
+        case 3:
+            createEnemy(registry, enemy3);
+            break;
+        case 4:
+            createEnemy(registry, enemy4);
+            break;
+        default:
+            break;
+        }
+    }
 }
 
 void EnemyInitializationSystem::createEnemy(entt::registry& registry, const EnemySchema& enemySchema)
@@ -29,12 +49,47 @@ void EnemyInitializationSystem::createEnemy(entt::registry& registry, const Enem
     sprite.setOrigin(sprite.getGlobalBounds().width / 2.f, sprite.getGlobalBounds().height / 2.f);
     registry.emplace<Collision>(enemy, sprite.getGlobalBounds());
     registry.emplace<Renderable>(enemy, sprite);
-    registry.emplace<Position>(enemy, sf::Vector2f(ProceduralGenerationSystem::GetRandomNumber<float>(-1920.f, 1920.f), ProceduralGenerationSystem::GetRandomNumber<float>(-1080.f, 1080.f)));
+
+    //TODO: Temporary solution for procedural enemy position
+    auto player = registry.view<Player, Position>();
+    auto playerPos = registry.get<Position>(*player.begin());
+
+    const float screenWidth = 3840.0f;
+    const float screenHeight = 2160.0f;
+
+    float xPos = 0;
+    float yPos = 0;
+
+    while (std::abs(xPos) <= (screenWidth / 2) && std::abs(yPos) <= (screenHeight / 2))
+    {
+        xPos = ProceduralGenerationSystem::GetRandomNumber(-screenWidth, screenWidth);
+        yPos = ProceduralGenerationSystem::GetRandomNumber(-screenHeight, screenHeight);
+    }
+
+    std::cout << "Enemy position: " << xPos << ", " << yPos << std::endl;
+
+    sf::Vector2f newPosition(playerPos.position.x + xPos, playerPos.position.y + yPos);
+
+    registry.emplace<Position>(enemy, newPosition);
     registry.emplace<Speed>(enemy, enemySchema.speed);
     registry.emplace<Velocity>(enemy, enemySchema.velocity);
     registry.emplace<Name>(enemy, enemySchema.name);
 
     WeaponsSystem::loadWeapon(registry, enemySchema.weaponSchema, enemy);
 
-    registry.emplace<WaypointMovement>(enemy, enemySchema.waypoints);
+    //TODO: Temporary solution for waypoints
+    int numOfWaypoints = ProceduralGenerationSystem::GetRandomNumber(2, 6);
+    std::vector<sf::Vector2f> waypoints;
+
+    auto enemyPos = registry.get<Position>(enemy);
+
+    for (int i = 0; i < numOfWaypoints; i++)
+    {
+        float x = ProceduralGenerationSystem::GetRandomNumber(enemyPos.position.x - 500.f, enemyPos.position.x + 500.f);
+        float y = ProceduralGenerationSystem::GetRandomNumber(enemyPos.position.y - 500.f, enemyPos.position.y + 500.f);
+
+        waypoints.push_back(sf::Vector2f(x, y));
+    }
+
+    registry.emplace<WaypointMovement>(enemy, waypoints);
 }
