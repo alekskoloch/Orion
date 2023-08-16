@@ -29,18 +29,27 @@ void DebugSystem::renderAttackRangeCircles(entt::registry& registry, sf::RenderW
     auto enemiesView = registry.view<Enemy, Position, EntityState>();
     for (auto entity : enemiesView)
     {
-        //TODO: Make this configurable
-        sf::CircleShape circle(1000.f);
+        auto attackRange = enemiesView.get<EntityState>(entity).attackRange;
+        auto idleRange = enemiesView.get<EntityState>(entity).idleRange;
+
+        sf::CircleShape attackCircle(attackRange);
+        sf::CircleShape idleCircle(idleRange);
 
         auto entityPosition = enemiesView.get<Position>(entity);
 
-        circle.setPosition(entityPosition.position.x - 1000.f, entityPosition.position.y - 1000.f);
+        attackCircle.setPosition(entityPosition.position.x - attackRange, entityPosition.position.y - attackRange);
+        idleCircle.setPosition(entityPosition.position.x - idleRange, entityPosition.position.y - idleRange);
 
-        circle.setFillColor(sf::Color::Transparent);
-        circle.setOutlineColor(sf::Color::White);
-        circle.setOutlineThickness(-2.0f);
+        attackCircle.setFillColor(sf::Color::Transparent);
+        attackCircle.setOutlineColor(sf::Color::Red);
+        attackCircle.setOutlineThickness(-2.0f);
 
-        window.draw(circle);
+        idleCircle.setFillColor(sf::Color::Transparent);
+        idleCircle.setOutlineColor(sf::Color::Green);
+        idleCircle.setOutlineThickness(-2.0f);
+
+        window.draw(attackCircle);
+        window.draw(idleCircle);
     }
 }
     
