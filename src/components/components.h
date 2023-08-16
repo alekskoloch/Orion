@@ -19,6 +19,17 @@ struct Collision
     sf::FloatRect collisionBox;
 };
 
+struct EntityState
+{
+    enum class State
+    {
+        Idle,
+        Attacking
+    };
+
+    State currentState = State::Idle;
+};
+
 struct Input
 {
     bool up;
