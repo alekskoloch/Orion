@@ -28,6 +28,9 @@ struct EntityState
     };
 
     State currentState = State::Idle;
+
+    float attackRange;
+    float idleRange;
 };
 
 struct Input
