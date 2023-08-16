@@ -56,3 +56,12 @@ static WeaponSchema basicEnemyWeapon3 =
     "enemy_bullet3",
     "empty"
 };
+
+static WeaponSchema basicEnemyWeapon4 =
+{
+    WeaponType::TrippleShot,
+    2.0f,
+    800.f,
+    "enemy_bullet4",
+    "empty"
+};

@@ -71,5 +71,5 @@ static EnemySchema enemy4 =
         sf::Vector2f(1820.f, 980.f)
     },
     "enemy4",
-    basicEnemyWeapon
+    basicEnemyWeapon4
 };
