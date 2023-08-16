@@ -76,7 +76,7 @@ void handlePlayerShooting(entt::registry& registry, sf::Time deltaTime, sf::Rend
 
         //TODO: Energy should be handled in separate system
         float requiredEnergy = 10.f;
-        if (canShoot && energy.currentEnergyValue > requiredEnergy)
+        if (canShoot && energy.currentEnergyValue >= requiredEnergy)
         {
             energy.currentEnergyValue -= requiredEnergy;
             handleShoot<PlayerBullet>(registry, entity, window.mapPixelToCoords(sf::Mouse::getPosition(window)));
