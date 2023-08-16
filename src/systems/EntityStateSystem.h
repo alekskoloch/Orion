@@ -4,5 +4,6 @@
 
 class EntityStateSystem
 {
-
+public:
+    static void updateEntityState(entt::registry& registry);
 };
