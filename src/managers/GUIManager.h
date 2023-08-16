@@ -3,6 +3,7 @@
 #include "../pch.h"
 
 #include "GUIElements/GUIQuickMenu.h"
+#include "GUIElements/GUIEnergyBar.h"
 
 class GUIManager
 {
@@ -18,6 +19,7 @@ private:
     sf::RenderWindow& window;
 
     GUIQuickMenu quickMenu;
+    GUIEnergyBar energyBar;
 
     bool quickMenuActive = false;
 
