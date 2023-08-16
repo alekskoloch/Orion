@@ -60,11 +60,12 @@ void handleShoot(entt::registry& registry, entt::entity& entity, sf::Vector2f ta
 
 void handlePlayerShooting(entt::registry& registry, sf::Time deltaTime, sf::RenderWindow& window)
 {
-    auto view = registry.view<Weapon, Input>();
+    auto view = registry.view<Weapon, Input, Energy>();
     for (auto entity : view)
     {
         auto& weapon = view.get<Weapon>(entity);
         auto& input = view.get<Input>(entity);
+        auto& energy = view.get<Energy>(entity);
 
         bool canShoot = false;
 
@@ -73,8 +74,11 @@ void handlePlayerShooting(entt::registry& registry, sf::Time deltaTime, sf::Rend
         else
             canShoot = input.shoot && !weapon.shootLastFrame;
 
-        if (canShoot)
+        //TODO: Energy should be handled in separate system
+        float requiredEnergy = 10.f;
+        if (canShoot && energy.currentEnergyValue > requiredEnergy)
         {
+            energy.currentEnergyValue -= requiredEnergy;
             handleShoot<PlayerBullet>(registry, entity, window.mapPixelToCoords(sf::Mouse::getPosition(window)));
             weapon.currentCooldownTime = weapon.cooldownTime;
         }
