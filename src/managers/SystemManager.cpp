@@ -70,7 +70,10 @@ void SystemManager::executeRenderSystems()
 
     RenderSystem::renderEntities(this->window, this->registry);
     if (this->debugMode)
+    {
         DebugSystem::renderCollisionBoxes(this->registry, this->window);
+        DebugSystem::renderAttackRangeCircles(this->registry, this->window);
+    }
 
     CameraSystem::setDefaultCamera(this->window);
 }
