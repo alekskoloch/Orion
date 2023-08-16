@@ -11,6 +11,8 @@ struct EnemySchema
     std::vector<sf::Vector2f> waypoints;
     std::string name;
     WeaponSchema weaponSchema;
+    float attackRange;
+    float idleRange;
     sf::Vector2f velocity = sf::Vector2f(0.f, 0.f);
 };
 
@@ -26,7 +28,9 @@ static EnemySchema enemy =
         sf::Vector2f(100.f, 980.f)
     },
     "enemy",
-    basicEnemyWeapon
+    basicEnemyWeapon,
+    1000.f,
+    2000.f
 };
 
 static EnemySchema enemy2 =
@@ -41,7 +45,9 @@ static EnemySchema enemy2 =
         sf::Vector2f(100.f, 100.f)
     },
     "enemy2",
-    basicEnemyWeapon2
+    basicEnemyWeapon2,
+    600.f,
+    1000.f
 };
 
 static EnemySchema enemy3 =
@@ -56,7 +62,9 @@ static EnemySchema enemy3 =
         sf::Vector2f(1820.f, 100.f)
     },
     "enemy3",
-    basicEnemyWeapon3
+    basicEnemyWeapon3,
+    800.f,
+    1500.f
 };
 
 static EnemySchema enemy4 =
@@ -71,5 +79,7 @@ static EnemySchema enemy4 =
         sf::Vector2f(1820.f, 980.f)
     },
     "enemy4",
-    basicEnemyWeapon4
+    basicEnemyWeapon4,
+    1400.f,
+    1800.f
 };
