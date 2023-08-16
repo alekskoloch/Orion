@@ -3,6 +3,9 @@
 #include "../components/components.h"
 #include "../components/tagComponents.h"
 
+//TODO: Temporary variable for default attack range
+const float DEFAULT_ATTACK_RANGE = 1000.f;
+
 //TODO: Move this to utils and refactor in other systems
 float CalculateDistance(const sf::Vector2f& point1, const sf::Vector2f& point2)
 {
@@ -24,7 +27,7 @@ void EntityStateSystem::updateEntityState(entt::registry& registry)
         float distance = CalculateDistance(enemyPosition.position, playerPosition.position);
         auto& enemyState = enemies.get<EntityState>(enemy);
         
-        if (distance < 1000.f)
+        if (distance < DEFAULT_ATTACK_RANGE)
             enemyState.currentState = EntityState::State::Attacking;
         else
             enemyState.currentState = EntityState::State::Idle;
