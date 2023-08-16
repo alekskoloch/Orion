@@ -19,6 +19,12 @@ struct Collision
     sf::FloatRect collisionBox;
 };
 
+struct Energy
+{
+    float maxEnergyValue;
+    float currentEnergyValue;
+};
+
 struct EntityState
 {
     enum class State
