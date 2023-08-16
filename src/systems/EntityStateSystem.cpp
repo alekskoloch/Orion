@@ -27,9 +27,9 @@ void EntityStateSystem::updateEntityState(entt::registry& registry)
         float distance = CalculateDistance(enemyPosition.position, playerPosition.position);
         auto& enemyState = enemies.get<EntityState>(enemy);
         
-        if (distance < DEFAULT_ATTACK_RANGE)
+        if (distance < enemyState.attackRange && enemyState.currentState == EntityState::State::Idle)
             enemyState.currentState = EntityState::State::Attacking;
-        else
+        else if (distance > enemyState.idleRange && enemyState.currentState == EntityState::State::Attacking)
             enemyState.currentState = EntityState::State::Idle;
     }
 }
