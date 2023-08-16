@@ -23,6 +23,7 @@ struct Energy
 {
     float maxEnergyValue;
     float currentEnergyValue;
+    float energyRegenerationRate;
 };
 
 struct EntityState
