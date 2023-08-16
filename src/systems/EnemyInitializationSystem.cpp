@@ -46,6 +46,11 @@ void EnemyInitializationSystem::createEnemy(entt::registry& registry, const Enem
     registry.emplace<Enemy>(enemy);
     registry.emplace<EntityState>(enemy);
 
+    //TODO: Temporary solution to set ranges
+    auto& enemyState = registry.get<EntityState>(enemy);
+    enemyState.attackRange = enemySchema.attackRange;
+    enemyState.idleRange = enemySchema.idleRange;
+
     sf::Sprite sprite(TextureManager::getInstance().getTexture(enemySchema.textureName));
     sprite.setOrigin(sprite.getGlobalBounds().width / 2.f, sprite.getGlobalBounds().height / 2.f);
     registry.emplace<Collision>(enemy, sprite.getGlobalBounds());
