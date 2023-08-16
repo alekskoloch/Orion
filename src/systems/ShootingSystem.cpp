@@ -85,17 +85,21 @@ void handlePlayerShooting(entt::registry& registry, sf::Time deltaTime, sf::Rend
 
 void handleEnemyShooting(entt::registry& registry, sf::Time deltaTime)
 {
-    auto enemyView = registry.view<Enemy, Weapon, Position>();
+    auto enemyView = registry.view<Enemy, Weapon, Position, EntityState>();
     auto playerPosition = registry.view<Player, Position>().get<Position>(registry.view<Player, Position>().front()).position;
     for (auto enemyEntity : enemyView)
     {
-        auto& enemyWeapon = enemyView.get<Weapon>(enemyEntity);
-        auto& enemyPosition = enemyView.get<Position>(enemyEntity);
-
-        if (enemyWeapon.currentCooldownTime == 0.f)
+        auto& enemyState = enemyView.get<EntityState>(enemyEntity);
+        if (enemyState.currentState == EntityState::State::Attacking)
         {
-            handleShoot<EnemyBullet>(registry, enemyEntity, playerPosition);
-            enemyWeapon.currentCooldownTime = enemyWeapon.cooldownTime;
+            auto& enemyWeapon = enemyView.get<Weapon>(enemyEntity);
+            auto& enemyPosition = enemyView.get<Position>(enemyEntity);
+
+            if (enemyWeapon.currentCooldownTime == 0.f)
+            {
+                handleShoot<EnemyBullet>(registry, enemyEntity, playerPosition);
+                enemyWeapon.currentCooldownTime = enemyWeapon.cooldownTime;
+            }
         }
     }
 }
