@@ -89,6 +89,8 @@ struct Weapon
     float bulletSpeed;
     std::string bulletTextureName;
     std::string weaponIconTextureName;
+    float energyCost;
+    
     bool autofire = false;
     float currentCooldownTime = 0.0f;
     bool shootLastFrame = false;
