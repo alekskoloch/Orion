@@ -1,0 +1,1 @@
+#include "BackgroundManager.h"
