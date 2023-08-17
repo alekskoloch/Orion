@@ -13,7 +13,7 @@ public:
         tile.setSize(size);
         tile.setPosition(position);
         tile.setFillColor(color);
-        
+
         tile.setOrigin(size.x / 2, size.y / 2);
     }
 
@@ -21,6 +21,9 @@ public:
     {
         window.draw(tile);
     }
+
+    //TODO: For DebugSystem
+    sf::RectangleShape& getTile() { return tile; }
 
 private:
     sf::Vector2f position;
@@ -36,7 +39,9 @@ public:
 
     void update();
     void draw();
-    
+
+    //TODO: For DebugSystem
+    std::vector<BackgroundTile>& getBackgroundTiles() { return backgroundTiles; }
 private:
     entt::registry& registry;
     sf::RenderWindow& window;
