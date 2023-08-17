@@ -79,6 +79,7 @@ void SystemManager::executeRenderSystems()
     {
         DebugSystem::renderCollisionBoxes(this->registry, this->window);
         DebugSystem::renderAttackRangeCircles(this->registry, this->window);
+        DebugSystem::renderBackgroundTilesFrame(this->registry, this->window, backgroundManager.getBackgroundTiles());
     }
 
     CameraSystem::setDefaultCamera(this->window);
