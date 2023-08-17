@@ -2,6 +2,8 @@
 
 #include "../pch.h"
 
+#include "BackgroundManager.h"
+
 // make this configurable
 const constexpr float TARGET_SLOW_MOTION_FACTOR = 0.05f;
 const constexpr float SLOW_MOTION_SPEED = 3.f;
@@ -23,6 +25,8 @@ public:
 private:
     sf::RenderWindow& window;
     entt::registry& registry;
+
+    BackgroundManager backgroundManager;
 
     bool slowMotion = false;
     float slowMotionFactor = 1.0f;

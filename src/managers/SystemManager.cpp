@@ -25,7 +25,7 @@
 
 #include "../systems/TimeControlSystem.h"
 
-SystemManager::SystemManager(sf::RenderWindow& window, entt::registry& registry) : window(window), registry(registry)
+SystemManager::SystemManager(sf::RenderWindow& window, entt::registry& registry) : window(window), registry(registry), backgroundManager(registry, window)
 {
     this->executeInitializationSystems();
 }
@@ -55,6 +55,8 @@ void SystemManager::executeUpdateSystems(sf::Time deltaTime)
     if (!this->slowMotion)
         RotateTowardsMouseSystem::rotateTowardsMouse(this->registry, deltaTime, this->window);
 
+    backgroundManager.update();
+    
     WaypointsMovementSystem::updateWaypoints(this->registry, deltaTime);
     EnergySystem::updateEnergy(this->registry, deltaTime);
     WeaponsSystem::updateWeaponCooldown(this->registry, deltaTime);
@@ -70,6 +72,8 @@ void SystemManager::executeRenderSystems()
 {
     CameraSystem::setPlayerCamera(this->registry, this->window);
 
+    backgroundManager.draw();
+    
     RenderSystem::renderEntities(this->window, this->registry);
     if (this->debugMode)
     {
