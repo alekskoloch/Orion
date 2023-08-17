@@ -52,4 +52,24 @@ void DebugSystem::renderAttackRangeCircles(entt::registry& registry, sf::RenderW
         window.draw(idleCircle);
     }
 }
-    
+
+void DebugSystem::renderBackgroundTilesFrame(entt::registry& registry, sf::RenderWindow& window, std::vector<BackgroundTile>& backgroundTiles)
+{
+    for (auto& backgroundTile : backgroundTiles)
+    {
+        auto& tile = backgroundTile.getTile();
+
+        sf::RectangleShape rectBox;
+
+        rectBox.setSize(sf::Vector2f(tile.getSize().x, tile.getSize().y));
+
+        rectBox.setPosition(tile.getPosition().x, tile.getPosition().y);
+        rectBox.setOrigin(tile.getOrigin().x, tile.getOrigin().y);
+
+        rectBox.setFillColor(sf::Color::Transparent);
+        rectBox.setOutlineColor(sf::Color::White);
+        rectBox.setOutlineThickness(-1.0f);
+
+        window.draw(rectBox);
+    }
+}
