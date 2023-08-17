@@ -10,7 +10,7 @@ void EnergySystem::updateEnergy(entt::registry& registry, sf::Time deltaTime)
     {
         auto& energyComponent = view.get<Energy>(entity);
 
-        if (energyComponent.maxEnergyValue < energyComponent.currentEnergyValue)
+        if (energyComponent.currentEnergyValue < energyComponent.maxEnergyValue)
         {
             energyComponent.currentEnergyValue += energyComponent.energyRegenerationRate * deltaTime.asSeconds();
             if (energyComponent.currentEnergyValue > energyComponent.maxEnergyValue)
