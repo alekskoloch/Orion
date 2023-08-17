@@ -8,6 +8,7 @@
 #include "../systems/InputSystem.h"
 
 #include "../systems/CollisionSystem.h"
+#include "../systems/EnergySystem.h"
 #include "../systems/RotateTowardsMouseSystem.h"
 #include "../systems/WaypointsMovementSystem.h"
 #include "../systems/EntityStateSystem.h"
@@ -55,6 +56,7 @@ void SystemManager::executeUpdateSystems(sf::Time deltaTime)
         RotateTowardsMouseSystem::rotateTowardsMouse(this->registry, deltaTime, this->window);
 
     WaypointsMovementSystem::updateWaypoints(this->registry, deltaTime);
+    EnergySystem::updateEnergy(this->registry, deltaTime);
     WeaponsSystem::updateWeaponCooldown(this->registry, deltaTime);
     EntityStateSystem::updateEntityState(this->registry);
     ShootingSystem::shoot(this->registry, deltaTime, this->window);
