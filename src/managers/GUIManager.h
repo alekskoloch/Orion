@@ -4,6 +4,7 @@
 
 #include "GUIElements/GUIQuickMenu.h"
 #include "GUIElements/GUIEnergyBar.h"
+#include "GUIElements/GUIMinimap.h"
 
 class GUIManager
 {
@@ -20,6 +21,7 @@ private:
 
     GUIQuickMenu quickMenu;
     GUIEnergyBar energyBar;
+    GUIMinimap minimap;
 
     bool quickMenuActive = false;
 

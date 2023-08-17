@@ -6,7 +6,7 @@
 #include "../systems/PlayerInitializationSystem.h"
 #include "../schema/WeaponsSchema.h"
 
-GUIManager::GUIManager(sf::RenderWindow& window, entt::registry& registry) : window(window), registry(registry), quickMenu(window, registry), energyBar(window, registry)
+GUIManager::GUIManager(sf::RenderWindow& window, entt::registry& registry) : window(window), registry(registry), quickMenu(window, registry), energyBar(window, registry), minimap(window, registry)
 {
     this->initializeShader();
 }
@@ -17,6 +17,7 @@ void GUIManager::update()
         this->quickMenu.update();
 
     this->energyBar.update();
+    this->minimap.update();
 }
 
 void GUIManager::draw()
@@ -25,6 +26,7 @@ void GUIManager::draw()
         this->quickMenu.draw();
 
     this->energyBar.draw();
+    this->minimap.draw();
 }
 
 void GUIManager::toggleQuickMenu(bool value)
