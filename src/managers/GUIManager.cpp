@@ -22,11 +22,16 @@ void GUIManager::update()
 
 void GUIManager::draw()
 {
-    if (this->quickMenuActive)
-        this->quickMenu.draw();
-
     this->energyBar.draw();
     this->minimap.draw();
+    
+    if (this->quickMenuActive)
+    {
+        this->shaderTexture.update(this->window);
+        this->window.draw(this->shaderSprite, &this->shader);
+
+        this->quickMenu.draw();
+    }
 }
 
 void GUIManager::toggleQuickMenu(bool value)
