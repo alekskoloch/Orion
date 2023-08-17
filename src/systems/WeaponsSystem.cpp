@@ -21,7 +21,7 @@ void WeaponsSystem::loadWeapon(entt::registry& registry, const WeaponSchema& wea
 {
     TextureManager::getInstance().loadTexture(weaponSchema.bulletTextureName, ASSETS_PATH + weaponSchema.bulletTextureName + ".png");
     TextureManager::getInstance().loadTexture(weaponSchema.weaponIconTextureName, ASSETS_PATH + weaponSchema.weaponIconTextureName + ".png");
-    registry.emplace<Weapon>(ownerEntity, weaponSchema.weaponType, weaponSchema.cooldownTime, weaponSchema.bulletSpeed, weaponSchema.bulletTextureName, weaponSchema.weaponIconTextureName);
+    registry.emplace<Weapon>(ownerEntity, weaponSchema.weaponType, weaponSchema.cooldownTime, weaponSchema.bulletSpeed, weaponSchema.bulletTextureName, weaponSchema.weaponIconTextureName, weaponSchema.energyCost);
 }
 
 void WeaponsSystem::updateWeaponCooldown(entt::registry& registry, sf::Time deltaTime)
