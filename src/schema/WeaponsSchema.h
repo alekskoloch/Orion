@@ -9,6 +9,7 @@ struct WeaponSchema
     float bulletSpeed;
     std::string bulletTextureName;
     std::string weaponIconTextureName;
+    float energyCost = 0.f;
 };
 
 static WeaponSchema redWeapon =
@@ -17,7 +18,8 @@ static WeaponSchema redWeapon =
     0.2f,
     1300.f,
     "red_bullet",
-    "red_weapon"
+    "red_weapon",
+    10.f
 };
 
 static WeaponSchema blueWeapon =
@@ -26,7 +28,8 @@ static WeaponSchema blueWeapon =
     0.4f,
     2000.f,
     "blue_bullet",
-    "blue_weapon"
+    "blue_weapon",
+    35.f
 };
 
 
