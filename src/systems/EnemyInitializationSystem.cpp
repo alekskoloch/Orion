@@ -72,8 +72,6 @@ void EnemyInitializationSystem::createEnemy(entt::registry& registry, const Enem
         yPos = ProceduralGenerationSystem::GetRandomNumber(-screenHeight, screenHeight);
     }
 
-    std::cout << "Enemy position: " << xPos << ", " << yPos << std::endl;
-
     sf::Vector2f newPosition(playerPos.position.x + xPos, playerPos.position.y + yPos);
 
     registry.emplace<Position>(enemy, newPosition);
