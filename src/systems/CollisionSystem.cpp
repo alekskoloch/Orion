@@ -52,6 +52,29 @@ void checkBulletCollitions(entt::registry& registry, std::unordered_set<entt::en
     }
 }
 
+void checkDropCollision(entt::registry& registry)
+{
+    auto drops = registry.view<Collision, DropItem>();
+    auto players = registry.view<Collision, Player>();
+
+    for (auto drop : drops)
+    {
+        for (auto player : players)
+        {
+            auto& dropCollision = drops.get<Collision>(drop);
+            auto& playerCollision = players.get<Collision>(player);
+
+            if (dropCollision.collisionBox.intersects(playerCollision.collisionBox))
+            {
+                registry.destroy(drop);
+                //TODO: Only temporary effect
+                auto& playerEnergy = registry.get<Energy>(player);
+                playerEnergy.currentEnergyValue = playerEnergy.maxEnergyValue;
+            }
+        }
+    }
+}
+
 void destroyEntities(entt::registry& registry, std::unordered_set<entt::entity>& entitiesToDestroy)
 {
     for (auto entity : entitiesToDestroy)
@@ -77,6 +100,8 @@ void CollisionSystem::checkCollisions(entt::registry& registry)
 
     checkBulletCollitions<PlayerBullet, Enemy>(registry, entitiesToDestroy);
     checkBulletCollitions<EnemyBullet, Player>(registry, entitiesToDestroy);
+
+    checkDropCollision(registry);
     
     destroyEntities(registry, entitiesToDestroy);
 }
