@@ -2,6 +2,8 @@
 
 #include "../pch.h"
 
+#include "../managers/TextureManager.h"
+
 #include "../systems/ProceduralGenerationSystem.h"
 
 class BackgroundTile
@@ -9,6 +11,11 @@ class BackgroundTile
 public:
     BackgroundTile(sf::Vector2f position, sf::Vector2f size, sf::Color color)
     {
+        //TODO: Temporary solution for loading background object textures
+        TextureManager::getInstance().loadTexture("STAR1_TEXTURE", ASSETS_PATH + std::string("backgroundElements/star1.png"));
+        TextureManager::getInstance().loadTexture("STAR2_TEXTURE", ASSETS_PATH + std::string("backgroundElements/star2.png"));
+        TextureManager::getInstance().loadTexture("STAR3_TEXTURE", ASSETS_PATH + std::string("backgroundElements/star3.png"));
+
         this->position = position;
         this->size = size;
 
@@ -22,6 +29,7 @@ public:
 
         tile.setOrigin(size.x / 2, size.y / 2);
 
+        //TODO: Temporary, need to find a better way to procedurally generate stars and object
         unsigned int numberOfStars = ProceduralGenerationSystem::GetRandomNumber(0, 4, static_cast<int>(position.x), static_cast<int>(position.y));
 
         for (int i = 0; i < numberOfStars; i++)
@@ -29,12 +37,42 @@ public:
             sf::CircleShape star(ProceduralGenerationSystem::GetRandomNumber(2.f, 4.f, static_cast<int>(position.x) + i, static_cast<int>(position.y) + numberOfStars + i));
             star.setFillColor(color);
             star.setPosition(
-                //TODO: This is temporary, need to find a better way to generate stars
                 ProceduralGenerationSystem::GetRandomNumber(position.x - size.x / 2, position.x + size.x / 2, static_cast<int>(position.x) + i, static_cast<int>(position.y)),
                 ProceduralGenerationSystem::GetRandomNumber(position.y - size.y / 2, position.y + size.y / 2, static_cast<int>(position.y) + i + numberOfStars, static_cast<int>(position.x))
             );
 
             this->stars.push_back(star);
+        }
+
+        int hasObject = ProceduralGenerationSystem::GetRandomNumber(0, 20, static_cast<int>(position.x), static_cast<int>(position.y));
+
+        std::cout << hasObject << std::endl;
+        if (hasObject < 2)
+        {
+            int objectTexture = ProceduralGenerationSystem::GetRandomNumber(1, 3, hasObject, static_cast<int>(position.x) + static_cast<int>(position.y));
+
+            sf::Sprite object;
+
+            if (objectTexture == 1)
+            {
+                object.setTexture(TextureManager::getInstance().getTexture("STAR1_TEXTURE"));
+            }
+            else if (objectTexture == 2)
+            {
+                object.setTexture(TextureManager::getInstance().getTexture("STAR2_TEXTURE"));
+            }
+            else if (objectTexture == 3)
+            {
+                object.setTexture(TextureManager::getInstance().getTexture("STAR3_TEXTURE"));
+            }
+
+            object.setScale(0.5f, 0.5f);
+            object.setPosition(
+                ProceduralGenerationSystem::GetRandomNumber(position.x - size.x / 2, position.x + size.x / 2, static_cast<int>(position.x), static_cast<int>(position.y)),
+                ProceduralGenerationSystem::GetRandomNumber(position.y - size.y / 2, position.y + size.y / 2, static_cast<int>(position.y), static_cast<int>(position.x))
+            );
+
+            this->objects.push_back(object);
         }
     }
 
@@ -46,9 +84,15 @@ public:
         {
             window.draw(star);
         }
+
+        for (auto& object : objects)
+        {
+            window.draw(object);
+        }
     }
 
     std::vector<sf::CircleShape> stars;
+    std::vector<sf::Sprite> objects;
 
     //TODO: For DebugSystem
     sf::RectangleShape& getTile() { return tile; }
