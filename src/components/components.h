@@ -19,6 +19,12 @@ struct Collision
     sf::FloatRect collisionBox;
 };
 
+struct Drop
+{
+    int dropChance;
+    int dropRate;
+};
+
 struct Energy
 {
     float maxEnergyValue;
