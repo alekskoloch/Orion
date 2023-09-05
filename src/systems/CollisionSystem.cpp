@@ -1,6 +1,7 @@
 #include "CollisionSystem.h"
 
 #include "EnemyInitializationSystem.h"
+#include "DropSystem.h"
 
 #include "../components/components.h"
 #include "../components/tagComponents.h"
@@ -29,6 +30,10 @@ void checkBulletCollitions(entt::registry& registry, std::unordered_set<entt::en
                 if constexpr (!std::is_same_v<TargetTag, Player>)
                 {
                     entitiesToDestroy.insert(target);
+
+                    //TODO: Handle it in a separate system
+                    if (auto* dropComponent = registry.try_get<Drop>(target))
+                        DropSystem::drop(registry, target);
 
                     //TODO: Only for testing
                     auto thisEnemy = registry.get<Name>(target);
