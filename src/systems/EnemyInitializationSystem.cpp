@@ -79,6 +79,8 @@ void EnemyInitializationSystem::createEnemy(entt::registry& registry, const Enem
     registry.emplace<Velocity>(enemy, enemySchema.velocity);
     registry.emplace<Name>(enemy, enemySchema.name);
 
+    registry.emplace<Drop>(enemy, 100, 69);
+
     WeaponsSystem::loadWeapon(registry, enemySchema.weaponSchema, enemy);
 
     //TODO: Temporary solution for waypoints
