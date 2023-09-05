@@ -1,10 +1,106 @@
 #include "DropSystem.h"
 
+#include "../managers/TextureManager.h"
+
 #include "../Components/Components.h"
+#include "../Components/TagComponents.h"
+
+#include "../systems/ProceduralGenerationSystem.h"
 
 void DropSystem::drop(entt::registry& registry, entt::entity& entity)
 {
     auto& entityDrop = registry.get<Drop>(entity);
 
-    std::cout << entityDrop.dropRate << std::endl;
+    //TODO: Temporary method of loading all money textures
+    TextureManager::getInstance().loadTexture("MONEY_10", ASSETS_PATH + std::string("money10") + ".png");
+    TextureManager::getInstance().loadTexture("MONEY_20", ASSETS_PATH + std::string("money20") + ".png");
+    TextureManager::getInstance().loadTexture("MONEY_50", ASSETS_PATH + std::string("money50") + ".png");
+    TextureManager::getInstance().loadTexture("MONEY_100", ASSETS_PATH + std::string("money100") + ".png");
+    TextureManager::getInstance().loadTexture("MONEY_200", ASSETS_PATH + std::string("money200") + ".png");
+    TextureManager::getInstance().loadTexture("MONEY_500", ASSETS_PATH + std::string("money500") + ".png");
+    TextureManager::getInstance().loadTexture("MONEY_1000", ASSETS_PATH + std::string("money1000") + ".png");
+
+    auto drop = registry.create();
+    registry.emplace<DropItem>(drop);
+
+    sf::Sprite dropSprite;
+    switch (ProceduralGenerationSystem::GetRandomNumber(1, 7))
+    {
+        case 1:
+            dropSprite.setTexture(TextureManager::getInstance().getTexture("MONEY_10"));
+            break;
+        case 2:
+            dropSprite.setTexture(TextureManager::getInstance().getTexture("MONEY_20"));
+            break;
+        case 3:
+            dropSprite.setTexture(TextureManager::getInstance().getTexture("MONEY_50"));
+            break;
+        case 4:
+            dropSprite.setTexture(TextureManager::getInstance().getTexture("MONEY_100"));
+            break;
+        case 5:
+            dropSprite.setTexture(TextureManager::getInstance().getTexture("MONEY_200"));
+            break;
+        case 6:
+            dropSprite.setTexture(TextureManager::getInstance().getTexture("MONEY_500"));
+            break;
+        case 7:
+            dropSprite.setTexture(TextureManager::getInstance().getTexture("MONEY_1000"));
+            break;
+    }
+
+    dropSprite.setOrigin(dropSprite.getGlobalBounds().width / 2.f, dropSprite.getGlobalBounds().height / 2.f);
+    dropSprite.setScale(0.5f, 0.5f);
+    registry.emplace<Renderable>(drop, dropSprite);
+
+    auto dropPosition = registry.get<Position>(entity);
+    registry.emplace<Position>(drop, dropPosition.position);
+
+    float randomX = ProceduralGenerationSystem::GetRandomNumber(30.f, 50.f);
+    float randomY = ProceduralGenerationSystem::GetRandomNumber(30.f, 50.f);
+
+    if (ProceduralGenerationSystem::GetRandomNumber(0, 1))
+        randomX *= -1;
+    if (ProceduralGenerationSystem::GetRandomNumber(0, 1))
+        randomY *= -1;
+
+    registry.emplace<Velocity>(drop, sf::Vector2f(randomX, randomY));
+
+    registry.emplace<Collision>(drop, dropSprite.getGlobalBounds());
+}
+
+void DropSystem::updateDrop(entt::registry& registry, sf::Time deltaTime)
+{
+    auto view = registry.view<DropItem, Velocity>();
+    for (auto entity : view)
+    {
+        auto& velocity = view.get<Velocity>(entity);
+
+        if (velocity.velocity.x > 0)
+        {
+            velocity.velocity.x -= 10.f * deltaTime.asSeconds();
+            if (velocity.velocity.x < 1.f)
+                velocity.velocity.x = 0;
+
+        }
+        else if (velocity.velocity.x < 0)
+        {
+            velocity.velocity.x += 10.f * deltaTime.asSeconds();
+            if (velocity.velocity.x > -1.f)
+                velocity.velocity.x = 0;
+        }
+
+        if (velocity.velocity.y > 0)
+        {
+            velocity.velocity.y -= 10.f * deltaTime.asSeconds();
+            if (velocity.velocity.y < 1.f)
+                velocity.velocity.y = 0;
+        }
+        else if (velocity.velocity.y < 0)
+        {
+            velocity.velocity.y += 10.f * deltaTime.asSeconds();
+            if (velocity.velocity.y > -1.f)
+                velocity.velocity.y = 0;
+        }
+    }
 }
