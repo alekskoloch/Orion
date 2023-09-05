@@ -54,17 +54,47 @@ void BackgroundManager::draw()
 
 void BackgroundManager::updateBackgroundTiles(int playerTileX, int playerTileY)
 {
-    backgroundTiles.clear();
+    int minX = playerTileX - tilesAroundPlayer;
+    int maxX = playerTileX + tilesAroundPlayer;
+    int minY = playerTileY - tilesAroundPlayer;
+    int maxY = playerTileY + tilesAroundPlayer;
 
-    for (int x = playerTileX - tilesAroundPlayer; x <= playerTileX + tilesAroundPlayer; x++)
+    std::vector<BackgroundTile> newBackgroundTiles;
+
+    for (const BackgroundTile& tile : backgroundTiles)
     {
-        for (int y = playerTileY - tilesAroundPlayer; y <= playerTileY + tilesAroundPlayer; y++)
+        if (tile.position.x >= minX * backgroundTileSize && tile.position.x <= maxX * backgroundTileSize &&
+            tile.position.y >= minY * backgroundTileSize && tile.position.y <= maxY * backgroundTileSize)
         {
-            backgroundTiles.push_back(BackgroundTile(
-                sf::Vector2f(x * backgroundTileSize, y * backgroundTileSize),
-                sf::Vector2f(backgroundTileSize, backgroundTileSize),
-                sf::Color(100 + (x * 2), 100 + (y * 2), 100)
-            ));
+            newBackgroundTiles.push_back(tile);
         }
     }
+
+    for (int x = minX; x <= maxX; x++)
+    {
+        for (int y = minY; y <= maxY; y++)
+        {
+            bool tileExists = false;
+            for (const BackgroundTile& tile : newBackgroundTiles)
+            {
+                sf::Vector2f tilePosition = tile.position;
+                if (tilePosition.x == x * backgroundTileSize && tilePosition.y == y * backgroundTileSize)
+                {
+                    tileExists = true;
+                    break;
+                }
+            }
+
+            if (!tileExists)
+            {
+                newBackgroundTiles.push_back(BackgroundTile(
+                    sf::Vector2f(x * backgroundTileSize, y * backgroundTileSize),
+                    sf::Vector2f(backgroundTileSize, backgroundTileSize),
+                    sf::Color(100 + (x * 2), 100 + (y * 2), 100)
+                ));
+            }
+        }
+    }
+
+    backgroundTiles = std::move(newBackgroundTiles);
 }

@@ -53,8 +53,9 @@ public:
     //TODO: For DebugSystem
     sf::RectangleShape& getTile() { return tile; }
 
-private:
+    //TODO: Temporary for optimization in updateBackgroundTiles
     sf::Vector2f position;
+private:
     sf::Vector2f size;
 
     sf::RectangleShape tile;
