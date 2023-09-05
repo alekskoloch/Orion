@@ -26,8 +26,14 @@ void BackgroundManager::update()
     auto playerEntity = playerView.front();
     auto& playerPosition = playerView.get<Position>(playerEntity);
 
-    int playerTileX = static_cast<int>(playerPosition.position.x / backgroundTileSize);
-    int playerTileY = static_cast<int>(playerPosition.position.y / backgroundTileSize);
+    auto calculateTileIndex = [this](float position)
+    {
+        float absPosition = std::abs(position);
+        return static_cast<int>((absPosition + (backgroundTileSize / 2.0f)) / backgroundTileSize) * (position < 0 ? -1 : 1);
+    };
+
+    int playerTileX = calculateTileIndex(playerPosition.position.x);
+    int playerTileY = calculateTileIndex(playerPosition.position.y);
 
     if (playerTileX != currentPlayerTileX || playerTileY != currentPlayerTileY)
     {

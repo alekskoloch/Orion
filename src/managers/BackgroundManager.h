@@ -49,7 +49,7 @@ private:
     int currentPlayerTileX = 0;
     int currentPlayerTileY = 0;
 
-    int tilesAroundPlayer = 6;
+    int tilesAroundPlayer = 2;
 
     float backgroundTileSize = 400.f;
     std::vector<BackgroundTile> backgroundTiles;
