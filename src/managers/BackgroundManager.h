@@ -46,7 +46,6 @@ public:
 
         int hasObject = ProceduralGenerationSystem::GetRandomNumber(0, 20, static_cast<int>(position.x), static_cast<int>(position.y));
 
-        std::cout << hasObject << std::endl;
         if (hasObject < 2)
         {
             int objectTexture = ProceduralGenerationSystem::GetRandomNumber(1, 3, hasObject, static_cast<int>(position.x) + static_cast<int>(position.y));
