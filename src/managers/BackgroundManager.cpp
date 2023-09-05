@@ -14,7 +14,7 @@ BackgroundManager::BackgroundManager(entt::registry& registry, sf::RenderWindow&
             backgroundTiles.push_back(BackgroundTile(
                 sf::Vector2f(0.f + x * backgroundTileSize, 0.f + y * backgroundTileSize),
                 sf::Vector2f(backgroundTileSize, backgroundTileSize),
-                sf::Color(100 + (x * 10), 100 + (y * 10), 100)
+                sf::Color(100 + (x * 2), 100 + (y * 2), 100)
             ));
         }
     }
@@ -63,7 +63,7 @@ void BackgroundManager::updateBackgroundTiles(int playerTileX, int playerTileY)
             backgroundTiles.push_back(BackgroundTile(
                 sf::Vector2f(x * backgroundTileSize, y * backgroundTileSize),
                 sf::Vector2f(backgroundTileSize, backgroundTileSize),
-                sf::Color(100 + (x * 10), 100 + (y * 10), 100)
+                sf::Color(100 + (x * 2), 100 + (y * 2), 100)
             ));
         }
     }

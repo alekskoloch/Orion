@@ -2,6 +2,8 @@
 
 #include "../pch.h"
 
+#include "../systems/ProceduralGenerationSystem.h"
+
 class BackgroundTile
 {
 public:
@@ -12,15 +14,41 @@ public:
 
         tile.setSize(size);
         tile.setPosition(position);
-        tile.setFillColor(color);
+
+        sf::Color backgroundTileColor = color;
+        backgroundTileColor.a = 30;
+
+        tile.setFillColor(backgroundTileColor);
 
         tile.setOrigin(size.x / 2, size.y / 2);
+
+        unsigned int numberOfStars = ProceduralGenerationSystem::GetRandomNumber(0, 4, static_cast<int>(position.x), static_cast<int>(position.y));
+
+        for (int i = 0; i < numberOfStars; i++)
+        {
+            sf::CircleShape star(ProceduralGenerationSystem::GetRandomNumber(2.f, 4.f, static_cast<int>(position.x) + i, static_cast<int>(position.y) + numberOfStars + i));
+            star.setFillColor(color);
+            star.setPosition(
+                //TODO: This is temporary, need to find a better way to generate stars
+                ProceduralGenerationSystem::GetRandomNumber(position.x - size.x / 2, position.x + size.x / 2, static_cast<int>(position.x) + i, static_cast<int>(position.y)),
+                ProceduralGenerationSystem::GetRandomNumber(position.y - size.y / 2, position.y + size.y / 2, static_cast<int>(position.y) + i + numberOfStars, static_cast<int>(position.x))
+            );
+
+            this->stars.push_back(star);
+        }
     }
 
     void draw(sf::RenderWindow& window)
     {
         window.draw(tile);
+
+        for (auto& star : stars)
+        {
+            window.draw(star);
+        }
     }
+
+    std::vector<sf::CircleShape> stars;
 
     //TODO: For DebugSystem
     sf::RectangleShape& getTile() { return tile; }
@@ -49,7 +77,7 @@ private:
     int currentPlayerTileX = 0;
     int currentPlayerTileY = 0;
 
-    int tilesAroundPlayer = 2;
+    int tilesAroundPlayer = 5;
 
     float backgroundTileSize = 400.f;
     std::vector<BackgroundTile> backgroundTiles;
