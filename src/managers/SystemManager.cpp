@@ -17,6 +17,7 @@
 #include "../systems/MovementSystem.h"
 #include "../systems/WeaponsSystem.h"
 #include "../systems/CameraSystem.h"
+#include "../systems/DropSystem.h"
 
 #include "../systems/RenderSystem.h"
 #include "../systems/DebugSystem.h"
@@ -62,6 +63,7 @@ void SystemManager::executeUpdateSystems(sf::Time deltaTime)
     WeaponsSystem::updateWeaponCooldown(this->registry, deltaTime);
     EntityStateSystem::updateEntityState(this->registry);
     ShootingSystem::shoot(this->registry, deltaTime, this->window);
+    DropSystem::updateDrop(this->registry, deltaTime);
     AccelerationSystem::accelerate(this->registry, deltaTime);
     MovementSystem::updateMovement(this->registry, deltaTime);
     CollisionSystem::updateCollisionBoxes(this->registry);      
