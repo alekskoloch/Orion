@@ -84,6 +84,8 @@ struct Shield
     float durability;
     float energyCost;
     float duration;
+    
+    bool active = false;
 };
 
 struct Speed
