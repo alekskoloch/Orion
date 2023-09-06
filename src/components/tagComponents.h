@@ -7,4 +7,6 @@ struct Bullet {};
 struct PlayerBullet{};
 struct EnemyBullet{};
 
+struct PlayerShield {};
+
 struct DropItem {};
