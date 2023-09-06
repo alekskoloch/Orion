@@ -27,7 +27,32 @@ void checkBulletCollitions(entt::registry& registry, std::unordered_set<entt::en
             {
                 entitiesToDestroy.insert(bullet);
                 //TODO: make onCollision method for each tag
-                if constexpr (!std::is_same_v<TargetTag, Player>)
+                if constexpr (std::is_same_v<TargetTag, Player>)
+                {
+                    auto shieldPlayerView = registry.view<Player, Shield>();
+
+                    for (auto shield : shieldPlayerView)
+                    {
+                        auto isActive = shieldPlayerView.get<Shield>(shield).active;
+
+                        if (isActive)
+                        {
+                            auto& shieldDuration = shieldPlayerView.get<Shield>(shield).duration;
+                            shieldDuration = 0;
+                        }
+                        else
+                        {
+                            //TODO: Temporary effect
+                            auto playerEnergyView = registry.view<Player, Energy>();
+                            for (auto player : playerEnergyView)
+                            {
+                                auto& playerEnergy = playerEnergyView.get<Energy>(player);
+                                playerEnergy.currentEnergyValue = 0.f;
+                            }
+                        }
+                    }
+                }
+                else if constexpr (std::is_same_v<TargetTag, Enemy>)
                 {
                     entitiesToDestroy.insert(target);
 
