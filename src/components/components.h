@@ -78,6 +78,13 @@ struct RotationTowardsMouse
     float minimalActivationDistance;
 };
 
+struct Shield
+{
+    float durability;
+    float energyCost;
+    float duration;
+};
+
 struct Speed
 {
     float maxSpeedValue;
