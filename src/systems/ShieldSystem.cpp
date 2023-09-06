@@ -33,7 +33,7 @@ void ShieldSystem::updateShield(entt::registry& registry, sf::Time deltaTime)
                 }
 
                 //TODO: Add shields shema
-                shield.duration = 30.f;
+                shield.duration = 3.f;
             }
         }
     }
