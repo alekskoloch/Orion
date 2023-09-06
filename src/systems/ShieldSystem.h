@@ -4,5 +4,6 @@
 
 class ShieldSystem
 {
-    
+public:
+    static void getShield(entt::registry& registry);
 };
