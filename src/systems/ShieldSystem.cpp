@@ -39,7 +39,7 @@ void ShieldSystem::updateShield(entt::registry& registry, sf::Time deltaTime)
         auto& input = view.get<Input>(entity);
         auto& shield = view.get<Shield>(entity);
 
-        if (input.getShield && !shield.active)
+        if (input.getShield)
         {
            getShield(registry);
         }
@@ -83,6 +83,15 @@ void ShieldSystem::getShield(entt::registry& registry)
         
         if (energy.currentEnergyValue >= shield.energyCost)
         {
+            if (shield.active)
+            {
+                auto shieldView = registry.view<PlayerShield>();
+                for (auto entity : shieldView)
+                {
+                    registry.destroy(entity);
+                }
+            }
+
             energy.currentEnergyValue -= shield.energyCost;
             shield.currentDuration = shield.duration;
 
