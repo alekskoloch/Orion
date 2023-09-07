@@ -3,7 +3,7 @@
 #include "../components/components.h"
 #include "../components/tagComponents.h"
 
-void InputSystem::processInput(entt::registry& registry)
+void InputSystem::processInput(entt::registry& registry, sf::Event& event)
 {
     auto view = registry.view<Player, Input>();
     for (auto entity : view)
@@ -16,6 +16,11 @@ void InputSystem::processInput(entt::registry& registry)
         input.right = sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D);
 
         input.shoot = sf::Mouse::isButtonPressed(sf::Mouse::Button::Left);
-        input.getShield = sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Q);
+
+        if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::Q)
+            input.getShield = true;
+        else
+            input.getShield = false;
+        
     }
 }

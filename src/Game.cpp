@@ -6,7 +6,7 @@
 #include "components/components.h"
 #include "components/tagComponents.h"
 
-Game::Game() : window(sf::VideoMode(3840u, 2160u), "Orion"), systemManager(this->window, this->registry), guiManager(this->window, this->registry)
+Game::Game() : window(sf::VideoMode(3840u, 2160u), "Orion"), systemManager(this->window, this->registry, this->event), guiManager(this->window, this->registry)
 {
     //TODO: Frame rate should be configurable
     window.setFramerateLimit(144);
@@ -24,7 +24,8 @@ void Game::run()
 
 void Game::processEvents()
 {
-    sf::Event event;
+    this->event = sf::Event();
+
     while (window.pollEvent(event))
     {
         if (event.type == sf::Event::Closed)
@@ -47,7 +48,9 @@ void Game::processEvents()
             this->systemManager.debugMode = !this->systemManager.debugMode;
         }
     }
+    
     this->systemManager.executeEventSystems();
+
 }
 
 void Game::update(sf::Time deltaTime)

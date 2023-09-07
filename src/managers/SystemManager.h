@@ -11,7 +11,7 @@ const constexpr float SLOW_MOTION_SPEED = 3.f;
 class SystemManager
 {
 public:
-    SystemManager(sf::RenderWindow& window, entt::registry& registry);
+    SystemManager(sf::RenderWindow& window, entt::registry& registry, sf::Event& event);
 
     void executeInitializationSystems();
     void executeEventSystems();
@@ -25,6 +25,7 @@ public:
 private:
     sf::RenderWindow& window;
     entt::registry& registry;
+    sf::Event& event;
 
     BackgroundManager backgroundManager;
 

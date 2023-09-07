@@ -27,7 +27,7 @@
 
 #include "../systems/TimeControlSystem.h"
 
-SystemManager::SystemManager(sf::RenderWindow& window, entt::registry& registry) : window(window), registry(registry), backgroundManager(registry, window)
+SystemManager::SystemManager(sf::RenderWindow& window, entt::registry& registry, sf::Event& event) : window(window), registry(registry), event(event), backgroundManager(registry, window)
 {
     this->executeInitializationSystems();
 }
@@ -43,7 +43,7 @@ void SystemManager::executeInitializationSystems()
 void SystemManager::executeEventSystems()
 {
     if (!this->slowMotion)
-        InputSystem::processInput(this->registry);
+        InputSystem::processInput(this->registry, this->event);
 }
 
 void SystemManager::executeUpdateSystems(sf::Time deltaTime)
