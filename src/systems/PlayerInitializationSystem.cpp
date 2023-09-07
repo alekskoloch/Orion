@@ -2,6 +2,7 @@
 
 #include "../managers/TextureManager.h"
 #include "../systems/WeaponsSystem.h"
+#include "../systems/ShieldSystem.h"
 #include "../components/components.h"
 #include "../components/tagComponents.h"
 #include "../schema/WeaponsSchema.h"
@@ -38,6 +39,5 @@ void PlayerInitializationSystem::initializePlayer(entt::registry& registry)
     registry.emplace<RotationTowardsMouse>(player, true, 600.f, 2.f);
 
     WeaponsSystem::loadWeapon(registry, redWeapon, player);
-
-    registry.emplace<Shield>(player, 1.f, 50.f, 3.f);
+    ShieldSystem::loadShield(registry, basicShield, player);
 }
