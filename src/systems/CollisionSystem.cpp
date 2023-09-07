@@ -37,7 +37,7 @@ void checkBulletCollitions(entt::registry& registry, std::unordered_set<entt::en
 
                         if (isActive)
                         {
-                            auto& shieldDuration = shieldPlayerView.get<Shield>(shield).duration;
+                            auto& shieldDuration = shieldPlayerView.get<Shield>(shield).currentDuration;
                             shieldDuration = 0;
                         }
                         else
