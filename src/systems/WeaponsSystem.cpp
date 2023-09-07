@@ -17,6 +17,7 @@ void WeaponsSystem::changeWeapon(entt::registry& registry, WeaponSchema weapon)
     }
 }
 
+//TODO: Make template function for loading schema
 void WeaponsSystem::loadWeapon(entt::registry& registry, const WeaponSchema& weaponSchema, entt::entity ownerEntity)
 {
     TextureManager::getInstance().loadTexture(weaponSchema.bulletTextureName, ASSETS_PATH + weaponSchema.bulletTextureName + ".png");

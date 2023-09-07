@@ -5,6 +5,31 @@
 #include "../components/components.h"
 #include "../components/tagComponents.h"
 
+//TODO: Make template function for loading schema
+void ShieldSystem::loadShield(entt::registry& registry, const ShieldSchema& shieldSchema, entt::entity ownerEntity)
+{
+    TextureManager::getInstance().loadTexture(shieldSchema.shieldTextureName, ASSETS_PATH + shieldSchema.shieldTextureName + ".png");
+    TextureManager::getInstance().loadTexture(shieldSchema.shieldIconTextureName, ASSETS_PATH + shieldSchema.shieldIconTextureName + ".png");
+    registry.emplace<Shield>(ownerEntity, shieldSchema.durability, shieldSchema.energyCost, shieldSchema.duration, shieldSchema.shieldTextureName, shieldSchema.shieldIconTextureName);
+}
+
+void ShieldSystem::changeShield(entt::registry& registry, ShieldSchema shield)
+{
+    auto player = registry.view<Player, Shield>();
+    for (auto& entity : player)
+    {
+        auto& shieldComponent = player.get<Shield>(entity);
+        shieldComponent.durability = shield.durability;
+        shieldComponent.energyCost = shield.energyCost;
+        shieldComponent.duration = shield.duration;
+
+        TextureManager::getInstance().loadTexture(shield.shieldTextureName, ASSETS_PATH + shield.shieldTextureName + ".png");
+        shieldComponent.shieldTextureName = shield.shieldTextureName;
+        TextureManager::getInstance().loadTexture(shield.shieldIconTextureName, ASSETS_PATH + shield.shieldIconTextureName + ".png");
+        shieldComponent.shieldIconTextureName = shield.shieldIconTextureName;
+    }
+}
+
 void ShieldSystem::updateShield(entt::registry& registry, sf::Time deltaTime)
 {
     auto view = registry.view<Player, Shield, Input>();
@@ -21,9 +46,9 @@ void ShieldSystem::updateShield(entt::registry& registry, sf::Time deltaTime)
 
         if (shield.active)
         {
-            shield.duration -= deltaTime.asSeconds();
+            shield.currentDuration -= deltaTime.asSeconds();
             
-            if (shield.duration <= 0)
+            if (shield.currentDuration <= 0)
             {
                 shield.active = false;
                 auto shieldView = registry.view<PlayerShield>();
@@ -31,9 +56,6 @@ void ShieldSystem::updateShield(entt::registry& registry, sf::Time deltaTime)
                 {
                     registry.destroy(entity);
                 }
-
-                //TODO: Add shields shema
-                shield.duration = 3.f;
             }
         }
     }
@@ -62,6 +84,7 @@ void ShieldSystem::getShield(entt::registry& registry)
         if (energy.currentEnergyValue >= shield.energyCost)
         {
             energy.currentEnergyValue -= shield.energyCost;
+            shield.currentDuration = shield.duration;
 
             shield.active = true;
 
@@ -70,8 +93,7 @@ void ShieldSystem::getShield(entt::registry& registry)
             auto shieldEntity = registry.create();
             registry.emplace<PlayerShield>(shieldEntity);
 
-            TextureManager::getInstance().loadTexture("BASIC_SHIELD", ASSETS_PATH + std::string("shield") + ".png");
-            sf::Sprite shieldSprite(TextureManager::getInstance().getTexture("BASIC_SHIELD"));
+            sf::Sprite shieldSprite(TextureManager::getInstance().getTexture(shield.shieldTextureName));
             shieldSprite.setOrigin(shieldSprite.getGlobalBounds().width / 2.f, shieldSprite.getGlobalBounds().height / 2.f);
             registry.emplace<Renderable>(shieldEntity, shieldSprite);
 
