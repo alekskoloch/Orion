@@ -20,3 +20,12 @@ static ShieldSchema basicShield =
     "shield",
     "basic_shield_ico"
 };
+
+static ShieldSchema advancedShield =
+{
+    1.f,
+    100.f,
+    10.f,
+    "shield_advanced",
+    "advanced_shield_ico"
+};
