@@ -1,6 +1,7 @@
 #include "GUIManager.h"
 
 #include "../systems/WeaponsSystem.h"
+#include "../systems/ShieldSystem.h"
 
 #include "../managers/TextureManager.h"
 #include "../systems/PlayerInitializationSystem.h"
@@ -48,6 +49,11 @@ void GUIManager::toggleQuickMenu(bool value)
         case 2:
             WeaponsSystem::changeWeapon(this->registry, blueWeapon);
             break;
+        case 3:
+            ShieldSystem::changeShield(this->registry, basicShield);
+            break;
+        case 4:
+            ShieldSystem::changeShield(this->registry, advancedShield);
         default:
             break;
         }
