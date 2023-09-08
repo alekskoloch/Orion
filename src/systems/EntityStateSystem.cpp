@@ -3,9 +3,6 @@
 #include "../components/components.h"
 #include "../components/tagComponents.h"
 
-//TODO: Temporary variable for default attack range
-const float DEFAULT_ATTACK_RANGE = 1000.f;
-
 //TODO: Move this to utils and refactor in other systems
 float CalculateDistance(const sf::Vector2f& point1, const sf::Vector2f& point2)
 {
