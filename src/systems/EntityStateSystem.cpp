@@ -3,14 +3,7 @@
 #include "../components/components.h"
 #include "../components/tagComponents.h"
 
-//TODO: Move this to utils and refactor in other systems
-float CalculateDistance(const sf::Vector2f& point1, const sf::Vector2f& point2)
-{
-    float dx = point2.x - point1.x;
-    float dy = point2.y - point1.y;
-    
-    return std::sqrt(dx * dx + dy * dy);
-}
+#include "../utils/MathOperations.h"
 
 void EntityStateSystem::updateEntityState(entt::registry& registry)
 {
