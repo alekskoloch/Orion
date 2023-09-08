@@ -11,10 +11,7 @@ inline float lerp(float a, float b, float f)
 
 inline float CalculateDistance(const sf::Vector2f& point1, const sf::Vector2f& point2)
 {
-    float dx = point2.x - point1.x;
-    float dy = point2.y - point1.y;
-    
-    return std::sqrt(dx * dx + dy * dy);
+    return std::hypot(point1.x - point2.x, point1.y - point2.y);
 }
 
 inline float DistanceToMouse(const sf::Vector2f& mousePosition, const Position& position)
