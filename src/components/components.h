@@ -91,6 +91,7 @@ struct Shield
     float currentDuration;
 
     float loadTime;
+    float currentLoadTime;
 
     bool active = false;
 };

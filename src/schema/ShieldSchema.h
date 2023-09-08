@@ -12,7 +12,6 @@ struct ShieldSchema
 
     std::string shieldTextureName;
     std::string shieldIconTextureName;
-
 };
 
 static ShieldSchema basicShield =
