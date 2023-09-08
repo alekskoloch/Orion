@@ -94,6 +94,8 @@ struct Shield
     float currentDuration;
     float currentLoadTime;
 
+    float energyUsed = 0.f;
+
     bool active = false;
 };
 
