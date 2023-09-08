@@ -54,6 +54,8 @@ struct Input
     bool right;
 
     bool shoot;
+
+    bool isGettingShield;
     bool getShield;
 };
 
