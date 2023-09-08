@@ -48,8 +48,6 @@ void ShieldSystem::updateShield(entt::registry& registry, sf::Time deltaTime)
         auto& shield = view.get<Shield>(entity);
         auto& energy = view.get<Energy>(entity);
 
-        std::cout << energy.currentEnergyValue << std::endl;
-
         if (input.isGettingShield)
         {
             if (shield.energyUsed < shield.energyCost)
