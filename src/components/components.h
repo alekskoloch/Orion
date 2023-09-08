@@ -86,13 +86,12 @@ struct Shield
     float durability;
     float energyCost;
     float duration;
+    float loadTime;
 
     std::string shieldTextureName;
     std::string shieldIconTextureName;
     
     float currentDuration;
-
-    float loadTime;
     float currentLoadTime;
 
     bool active = false;
