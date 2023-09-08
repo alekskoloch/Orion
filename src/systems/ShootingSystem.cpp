@@ -6,21 +6,17 @@
 #include "../components/components.h"
 #include "../components/tagComponents.h"
 
+#include "../utils/MathOperations.h"
+
 template <typename BulletOwnerTag>
 void createBullet(entt::registry& registry, entt::entity& entity, sf::Vector2f targetPosition, float offset = 0.f)
 {
     auto weapon = registry.get<Weapon>(entity);
     auto position = registry.get<Position>(entity);
 
-    sf::Vector2f direction = targetPosition - position.position;
-    float length = std::sqrt(direction.x * direction.x + direction.y * direction.y);
-    sf::Vector2f normalizedDirection = direction / length;
+    sf::Vector2f newDirection(CalculateDirectionBetweenPoints(position.position, targetPosition, offset));
 
-    float angleInRadians = std::atan2(normalizedDirection.y, normalizedDirection.x);
-    angleInRadians += offset * (M_PI / 180.f);
-    sf::Vector2f newDirection(std::cos(angleInRadians), std::sin(angleInRadians));
-
-    float rotation = std::atan2(newDirection.y, newDirection.x) * (180.f / M_PI) + 90.f;
+    float rotation = TargetAngle(targetPosition, position);
 
     sf::Sprite sprite(TextureManager::getInstance().getTexture(weapon.bulletTextureName));
     sprite.setOrigin(sprite.getGlobalBounds().width / 2.f, sprite.getGlobalBounds().height / 2.f);
