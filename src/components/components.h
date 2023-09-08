@@ -89,6 +89,9 @@ struct Shield
     std::string shieldIconTextureName;
     
     float currentDuration;
+
+    float loadTime;
+
     bool active = false;
 };
 
