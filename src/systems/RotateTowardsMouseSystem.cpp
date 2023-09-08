@@ -27,7 +27,7 @@ void RotateTowardsMouseSystem::rotateTowardsMouse(entt::registry& registry, sf::
 
             if (distanceToMouse > rotation.minimalActivationDistance)
             {
-                float targetAngle = TargetAngle(mousePosition, position);
+                float targetAngle = CalculateAzimuthAngleInDegrees(mousePosition - position.position, 90.f);
                 float currentAngle = renderable.sprite.getRotation();
                 float angleDifference = AngleDifference(targetAngle, currentAngle);
 

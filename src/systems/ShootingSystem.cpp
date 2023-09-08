@@ -16,7 +16,7 @@ void createBullet(entt::registry& registry, entt::entity& entity, sf::Vector2f t
 
     sf::Vector2f newDirection(CalculateDirectionBetweenPoints(position.position, targetPosition, offset));
 
-    float rotation = TargetAngle(targetPosition, position);
+    float rotation = CalculateAzimuthAngleInDegrees(newDirection, 90.f);
 
     sf::Sprite sprite(TextureManager::getInstance().getTexture(weapon.bulletTextureName));
     sprite.setOrigin(sprite.getGlobalBounds().width / 2.f, sprite.getGlobalBounds().height / 2.f);
