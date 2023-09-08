@@ -67,6 +67,8 @@ void ShieldSystem::updateShield(entt::registry& registry, sf::Time deltaTime)
         {
             energy.energyRegenerationRate = 10.f;
             energy.currentEnergyValue += shield.energyUsed;
+            if (energy.currentEnergyValue > energy.maxEnergyValue)
+                energy.currentEnergyValue = energy.maxEnergyValue;
             shield.energyUsed = 0.f;
             shield.currentLoadTime = 0;
         }
