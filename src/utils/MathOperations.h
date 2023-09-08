@@ -19,7 +19,7 @@ inline float CalculateDistance(const sf::Vector2f& point1, const sf::Vector2f& p
 
 inline float DistanceToMouse(const sf::Vector2f& mousePosition, const Position& position)
 {
-    return std::sqrt(std::pow(mousePosition.x - position.position.x, 2) + std::pow(mousePosition.y - position.position.y, 2));
+    return CalculateDistance(mousePosition, position.position);
 }
 
 inline float TargetAngle(const sf::Vector2f& mousePosition, const Position& position, float offset = 90.0f)
