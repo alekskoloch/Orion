@@ -120,6 +120,8 @@ struct Weapon
     bool autofire = false;
     float currentCooldownTime = 0.0f;
     bool shootLastFrame = false;
+
+    void SetCooldown() { currentCooldownTime = cooldownTime; }
 };
 
 struct WaypointMovement

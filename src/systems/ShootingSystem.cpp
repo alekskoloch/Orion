@@ -78,7 +78,7 @@ void handlePlayerShooting(entt::registry& registry, sf::Time deltaTime, sf::Rend
         {
             energy.currentEnergyValue -= weapon.energyCost;
             handleShoot<PlayerBullet>(registry, entity, window.mapPixelToCoords(sf::Mouse::getPosition(window)));
-            weapon.currentCooldownTime = weapon.cooldownTime;
+            weapon.SetCooldown();
         }
 
         weapon.shootLastFrame = input.shoot;
@@ -100,7 +100,7 @@ void handleEnemyShooting(entt::registry& registry, sf::Time deltaTime)
             if (enemyWeapon.currentCooldownTime == 0.f)
             {
                 handleShoot<EnemyBullet>(registry, enemyEntity, playerPosition);
-                enemyWeapon.currentCooldownTime = enemyWeapon.cooldownTime;
+                enemyWeapon.SetCooldown();
             }
         }
     }
