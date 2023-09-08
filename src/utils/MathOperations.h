@@ -47,3 +47,9 @@ inline sf::Vector2f NormalizeVector(const sf::Vector2f& vector)
     else
         return vector;
 }
+
+inline double CalculateAzimuthAngle(const sf::Vector2f vector, float offsetInDegrees = 0.0f)
+{
+    sf::Vector2f normalizedVector = NormalizeVector(vector);
+    return std::atan2(normalizedVector.y, normalizedVector.x) + offsetInDegrees * (M_PI / 180.f);
+}
