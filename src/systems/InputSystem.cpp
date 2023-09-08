@@ -18,11 +18,11 @@ void InputSystem::processInput(entt::registry& registry, sf::Event& event)
         input.shoot = sf::Mouse::isButtonPressed(sf::Mouse::Button::Left);
 
         if (!input.getShield)
-            input.isGettingShield = sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Q);
+            input.isGettingShield = sf::Mouse::isButtonPressed(sf::Mouse::Button::Right);
         else
             input.isGettingShield = false;
 
-        if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::Q)
+        if (event.type == sf::Event::MouseButtonReleased && event.mouseButton.button == sf::Mouse::Button::Right)
             input.getShield = true;
         else
             input.getShield = false;
