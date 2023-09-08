@@ -48,6 +48,8 @@ void ShieldSystem::updateShield(entt::registry& registry, sf::Time deltaTime)
         auto& shield = view.get<Shield>(entity);
         auto& energy = view.get<Energy>(entity);
 
+        std::cout << energy.currentEnergyValue << std::endl;
+
         if (input.isGettingShield)
         {
             if (shield.energyUsed < shield.energyCost)
@@ -56,10 +58,18 @@ void ShieldSystem::updateShield(entt::registry& registry, sf::Time deltaTime)
                 energy.energyRegenerationRate = 0;
                 if (energy.currentEnergyValue > 0)
                 {
+                    float correction = 0.f;
                     shield.energyUsed += shield.energyCost * (deltaTime.asSeconds() / shield.loadTime);
                     if (shield.energyUsed > shield.energyCost)
+                    {
+                        correction = shield.energyUsed - shield.energyCost;
                         shield.energyUsed = shield.energyCost;
+                    }
+                    
                     energy.currentEnergyValue -= shield.energyCost * (deltaTime.asSeconds() / shield.loadTime);
+                    if (energy.currentEnergyValue > 0)
+                        energy.currentEnergyValue += correction;
+
                     if (energy.currentEnergyValue < 0)
                         energy.currentEnergyValue = 0;
                 }
