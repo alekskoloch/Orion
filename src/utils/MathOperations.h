@@ -37,3 +37,13 @@ inline float AngleDifference(float targetAngle, float currentAngle)
     }
     return angleDifference;
 }
+
+inline sf::Vector2f NormalizeVector(const sf::Vector2f& vector)
+{
+    float length = std::hypot(vector.x, vector.y);
+    
+    if (length != 0.f)
+        return sf::Vector2f(vector.x / length, vector.y / length);
+    else
+        return vector;
+}
