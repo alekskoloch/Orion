@@ -10,7 +10,7 @@ void ShieldSystem::loadShield(entt::registry& registry, const ShieldSchema& shie
 {
     TextureManager::getInstance().loadTexture(shieldSchema.shieldTextureName, ASSETS_PATH + shieldSchema.shieldTextureName + ".png");
     TextureManager::getInstance().loadTexture(shieldSchema.shieldIconTextureName, ASSETS_PATH + shieldSchema.shieldIconTextureName + ".png");
-    registry.emplace<Shield>(ownerEntity, shieldSchema.durability, shieldSchema.energyCost, shieldSchema.duration, shieldSchema.shieldTextureName, shieldSchema.shieldIconTextureName);
+    registry.emplace<Shield>(ownerEntity, shieldSchema.durability, shieldSchema.energyCost, shieldSchema.duration, shieldSchema.shieldTextureName, shieldSchema.shieldIconTextureName, shieldSchema.loadTime);
 }
 
 void ShieldSystem::changeShield(entt::registry& registry, ShieldSchema shield)
@@ -22,6 +22,7 @@ void ShieldSystem::changeShield(entt::registry& registry, ShieldSchema shield)
         shieldComponent.durability = shield.durability;
         shieldComponent.energyCost = shield.energyCost;
         shieldComponent.duration = shield.duration;
+        shieldComponent.loadTime = shield.loadTime;
 
         TextureManager::getInstance().loadTexture(shield.shieldTextureName, ASSETS_PATH + shield.shieldTextureName + ".png");
         shieldComponent.shieldTextureName = shield.shieldTextureName;
