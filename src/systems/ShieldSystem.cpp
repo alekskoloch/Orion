@@ -40,9 +40,20 @@ void ShieldSystem::updateShield(entt::registry& registry, sf::Time deltaTime)
         auto& input = view.get<Input>(entity);
         auto& shield = view.get<Shield>(entity);
 
-        if (input.getShield)
+        if (input.isGettingShield)
         {
-           getShield(registry);
+            if (shield.currentLoadTime < shield.loadTime)
+                shield.currentLoadTime += deltaTime.asSeconds();
+        }
+        else if (shield.currentLoadTime != 0 && !input.getShield)
+        {
+            shield.currentLoadTime = 0;
+        }
+
+        if (shield.currentLoadTime >= shield.loadTime && input.getShield)
+        {
+            shield.currentLoadTime = 0;
+            getShield(registry);
         }
 
         if (shield.active)
