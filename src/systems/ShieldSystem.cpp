@@ -26,8 +26,9 @@ void ShieldSystem::changeShield(entt::registry& registry, ShieldSchema shield)
         shieldComponent.loadTime = shield.loadTime;
 
         energy.currentEnergyValue += shieldComponent.energyUsed;
+        if (energy.currentEnergyValue > energy.maxEnergyValue)
+            energy.currentEnergyValue = energy.maxEnergyValue;
         shieldComponent.energyUsed = 0.f;
-        shieldComponent.currentLoadTime = 0.f;
         shieldComponent.currentDuration = 0.f;
 
         TextureManager::getInstance().loadTexture(shield.shieldTextureName, ASSETS_PATH + shield.shieldTextureName + ".png");
@@ -49,34 +50,33 @@ void ShieldSystem::updateShield(entt::registry& registry, sf::Time deltaTime)
 
         if (input.isGettingShield)
         {
-            if (shield.currentLoadTime < shield.loadTime)
+            if (shield.energyUsed < shield.energyCost)
             {
                 //TODO: Temporary energy regeneration management
                 energy.energyRegenerationRate = 0;
                 if (energy.currentEnergyValue > 0)
                 {
                     shield.energyUsed += shield.energyCost * (deltaTime.asSeconds() / shield.loadTime);
+                    if (shield.energyUsed > shield.energyCost)
+                        shield.energyUsed = shield.energyCost;
                     energy.currentEnergyValue -= shield.energyCost * (deltaTime.asSeconds() / shield.loadTime);
                     if (energy.currentEnergyValue < 0)
                         energy.currentEnergyValue = 0;
                 }
-                shield.currentLoadTime += deltaTime.asSeconds();
             }
         }
-        else if (shield.currentLoadTime != 0 && !input.getShield)
+        else if (shield.energyUsed != 0 && !input.getShield)
         {
             energy.energyRegenerationRate = 10.f;
             energy.currentEnergyValue += shield.energyUsed;
             if (energy.currentEnergyValue > energy.maxEnergyValue)
                 energy.currentEnergyValue = energy.maxEnergyValue;
             shield.energyUsed = 0.f;
-            shield.currentLoadTime = 0;
         }
 
-        if (shield.currentLoadTime >= shield.loadTime && input.getShield)
+        if (shield.energyUsed >= shield.energyCost && input.getShield)
         {
             energy.energyRegenerationRate = 10.f;
-            shield.currentLoadTime = 0;
             if (shield.energyUsed >= shield.energyCost)
             {
                 getShield(registry);
