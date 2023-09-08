@@ -58,3 +58,10 @@ inline sf::Vector2f CalculateVectorFromAngle(float angleInRadians)
 {
     return sf::Vector2f(std::cos(angleInRadians), std::sin(angleInRadians));
 }
+
+inline sf::Vector2f CalculateDirectionBetweenPoints(const sf::Vector2f& startPoint, const sf::Vector2f& targetPoint, float offset = 0.0f)
+{
+    sf::Vector2f direction = NormalizeVector(targetPoint - startPoint);
+    float angleInRadians = CalculateAzimuthAngle(direction, offset);
+    return CalculateVectorFromAngle(angleInRadians);
+}
