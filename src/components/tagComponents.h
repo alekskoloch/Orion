@@ -1,7 +1,17 @@
 #pragma once
 
-struct Player {};
-struct Enemy {};
+#include "../pch.h"
+
+#include <type_traits>
+
+struct UniqueTag {};
+
+struct Player : UniqueTag {};
+
+template <typename Tag>
+concept UniqueTagConcept = std::is_base_of_v<UniqueTag, Tag>;
+
+struct Enemy{};
 
 struct Bullet {};
 struct PlayerBullet{};
