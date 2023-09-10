@@ -51,7 +51,7 @@ void ShieldSystem::interruptShieldLoading(entt::registry& registry, Shield& shie
     shield.energyUsed = 0.f;
 }
 
-void ShieldSystem::shieldActivaton(entt::registry& registry, Shield& shield, Energy& energy)
+void ShieldSystem::shieldActivaton(entt::registry& registry, Shield& shield)
 {
     EnergySystem::enableEnergyRegeneration<Player>(registry);
     if (shield.energyUsed >= shield.energyCost)
@@ -76,10 +76,9 @@ void ShieldSystem::handleShieldDuration(entt::registry& registry, Shield& shield
 
 void ShieldSystem::changeShield(entt::registry& registry, ShieldSchema shield)
 {
-    auto player = registry.view<Player, Shield, Energy>();
+    auto player = registry.view<Player, Shield>();
     for (auto& entity : player)
     {
-        auto& energy = player.get<Energy>(entity);
         auto& shieldComponent = player.get<Shield>(entity);
 
         EnergySystem::addEnergy<Player>(registry, shieldComponent.energyUsed);
@@ -89,13 +88,12 @@ void ShieldSystem::changeShield(entt::registry& registry, ShieldSchema shield)
 
 void ShieldSystem::updateShield(entt::registry& registry, sf::Time deltaTime)
 {
-    auto view = registry.view<Player, Shield, Input, Energy>();
+    auto view = registry.view<Player, Shield, Input>();
 
     for (auto entity : view)
     {
         auto& input = view.get<Input>(entity);
         auto& shield = view.get<Shield>(entity);
-        auto& energy = view.get<Energy>(entity);
 
         if (input.isGettingShield)
             ShieldSystem::shieldLoading(registry, shield, deltaTime);
@@ -103,7 +101,7 @@ void ShieldSystem::updateShield(entt::registry& registry, sf::Time deltaTime)
             ShieldSystem::interruptShieldLoading(registry, shield);
 
         if (shield.energyUsed >= shield.energyCost && input.getShield)
-            ShieldSystem::shieldActivaton(registry, shield, energy);
+            ShieldSystem::shieldActivaton(registry, shield);
 
         if (shield.active)
         {

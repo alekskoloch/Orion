@@ -19,6 +19,6 @@ private:
 
     static void shieldLoading(entt::registry& registry, Shield& shield, sf::Time deltaTime);
     static void interruptShieldLoading(entt::registry& registry, Shield& shield);
-    static void shieldActivaton(entt::registry& registry, Shield& shield, Energy& energy);
+    static void shieldActivaton(entt::registry& registry, Shield& shield);
     static void handleShieldDuration(entt::registry& registry, Shield& shield, sf::Time deltaTime);
 };
