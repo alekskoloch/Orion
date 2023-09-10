@@ -1,1 +1,12 @@
 #pragma once
+
+#include "../pch.h"
+
+#include "../managers/TextureManager.h"
+
+inline sf::Sprite CreateSprite(const std::string& textureName)
+{
+    sf::Sprite sprite(TextureManager::getInstance().getTexture(textureName));
+    sprite.setOrigin(sprite.getGlobalBounds().width / 2.f, sprite.getGlobalBounds().height / 2.f);
+    return sprite;
+}
