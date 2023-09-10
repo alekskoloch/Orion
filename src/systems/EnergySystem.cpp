@@ -1,7 +1,5 @@
 #include "EnergySystem.h"
 
-#include "../components/components.h"
-
 void EnergySystem::updateEnergy(entt::registry& registry, sf::Time deltaTime)
 {
     auto view = registry.view<Energy>();
@@ -10,12 +8,15 @@ void EnergySystem::updateEnergy(entt::registry& registry, sf::Time deltaTime)
     {
         auto& energyComponent = view.get<Energy>(entity);
 
-        if (energyComponent.currentEnergyValue < energyComponent.maxEnergyValue)
+        if (energyComponent.regeneration)
         {
-            energyComponent.currentEnergyValue += energyComponent.energyRegenerationRate * deltaTime.asSeconds();
-            if (energyComponent.currentEnergyValue > energyComponent.maxEnergyValue)
+            if (energyComponent.currentEnergyValue < energyComponent.maxEnergyValue)
             {
-                energyComponent.currentEnergyValue = energyComponent.maxEnergyValue;
+                energyComponent.currentEnergyValue += energyComponent.energyRegenerationRate * deltaTime.asSeconds();
+                if (energyComponent.currentEnergyValue > energyComponent.maxEnergyValue)
+                {
+                    energyComponent.currentEnergyValue = energyComponent.maxEnergyValue;
+                }
             }
         }
     }
