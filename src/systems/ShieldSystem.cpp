@@ -9,13 +9,6 @@
 
 #include "../utils/GraphicsOperations.h"
 
-void ShieldSystem::restoreUnusedEnergy(Energy& energy, Shield& shield)
-{
-    energy.currentEnergyValue += shield.energyUsed;
-        if (energy.currentEnergyValue > energy.maxEnergyValue)
-            energy.currentEnergyValue = energy.maxEnergyValue;
-}
-
 void ShieldSystem::updateShieldPosition(entt::registry& registry)
 {
     auto shieldView = registry.view<PlayerShield, Position>();
@@ -51,10 +44,10 @@ void ShieldSystem::shieldLoading(entt::registry& registry, Shield& shield, sf::T
     }
 }
 
-void ShieldSystem::interruptShieldLoading(entt::registry& registry, Input& input, Shield& shield, Energy& energy)
+void ShieldSystem::interruptShieldLoading(entt::registry& registry, Shield& shield)
 {
     EnergySystem::enableEnergyRegeneration<Player>(registry);
-    ShieldSystem::restoreUnusedEnergy(energy, shield);
+    EnergySystem::addEnergy<Player>(registry, shield.energyUsed);
     shield.energyUsed = 0.f;
 }
 
@@ -89,7 +82,7 @@ void ShieldSystem::changeShield(entt::registry& registry, ShieldSchema shield)
         auto& energy = player.get<Energy>(entity);
         auto& shieldComponent = player.get<Shield>(entity);
 
-        ShieldSystem::restoreUnusedEnergy(energy, shieldComponent);
+        EnergySystem::addEnergy<Player>(registry, shieldComponent.energyUsed);
         shieldComponent.Set(shield);
     }
 }
@@ -107,7 +100,7 @@ void ShieldSystem::updateShield(entt::registry& registry, sf::Time deltaTime)
         if (input.isGettingShield)
             ShieldSystem::shieldLoading(registry, shield, deltaTime);
         else if (shield.energyUsed != 0 && !input.getShield)
-            ShieldSystem::interruptShieldLoading(registry, input, shield, energy);
+            ShieldSystem::interruptShieldLoading(registry, shield);
 
         if (shield.energyUsed >= shield.energyCost && input.getShield)
             ShieldSystem::shieldActivaton(registry, shield, energy);
