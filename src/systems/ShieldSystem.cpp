@@ -29,7 +29,7 @@ void ShieldSystem::updateShieldPosition(entt::registry& registry)
     }
 }
 
-void ShieldSystem::shieldLoading(entt::registry& registry, Shield& shield, Energy& energy, sf::Time deltaTime)
+void ShieldSystem::shieldLoading(entt::registry& registry, Shield& shield, sf::Time deltaTime)
 {
     if (shield.energyUsed < shield.energyCost)
     {
@@ -44,12 +44,9 @@ void ShieldSystem::shieldLoading(entt::registry& registry, Shield& shield, Energ
                 shield.energyUsed = shield.energyCost;
             }
             
-            energy.currentEnergyValue -= shield.energyCost * (deltaTime.asSeconds() / shield.loadTime);
+            EnergySystem::removeEnergy<Player>(registry, shield.energyCost * (deltaTime.asSeconds() / shield.loadTime));
             if (EnergySystem::hasAnyEnergy<Player>(registry))
-                energy.currentEnergyValue += correction;
-
-            if (energy.currentEnergyValue < 0)
-                energy.currentEnergyValue = 0;
+                EnergySystem::addEnergy<Player>(registry, correction);
         }
     }
 }
@@ -108,7 +105,7 @@ void ShieldSystem::updateShield(entt::registry& registry, sf::Time deltaTime)
         auto& energy = view.get<Energy>(entity);
 
         if (input.isGettingShield)
-            ShieldSystem::shieldLoading(registry, shield, energy, deltaTime);
+            ShieldSystem::shieldLoading(registry, shield, deltaTime);
         else if (shield.energyUsed != 0 && !input.getShield)
             ShieldSystem::interruptShieldLoading(registry, input, shield, energy);
 
