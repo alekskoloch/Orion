@@ -38,14 +38,10 @@ public:
     requires UniqueTagConcept<EnergyOwnerTag>
     static bool hasAnyEnergy(entt::registry& registry)
     {
-        auto view = registry.view<Energy, EnergyOwnerTag>();
-
-        for (auto entity : view)
-        {
-            auto& energyComponent = view.template get<Energy>(entity);
-            if (energyComponent.currentEnergyValue > 0)
-                return true;
-        }
+        auto& energyComponent = registry.get<Energy>(registry.view<Energy, EnergyOwnerTag>().front());
+        
+        if (energyComponent.currentEnergyValue > 0)
+            return true;
 
         return false;
     }
