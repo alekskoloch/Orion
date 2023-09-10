@@ -95,7 +95,7 @@ struct Shield
     std::string shieldTextureName;
     std::string shieldIconTextureName;
     
-    float currentDuration = 0.f;
+    float currentDuration;
     float energyUsed = 0.f;
 
     bool active = false;
@@ -108,7 +108,6 @@ struct Shield
         loadTime = shield.loadTime;
 
         energyUsed = 0.f;
-        currentDuration = 0.f;
 
         TextureManager::getInstance().loadTexture(shield.shieldTextureName, ASSETS_PATH + shield.shieldTextureName + ".png");
         shieldTextureName = shield.shieldTextureName;
