@@ -2,6 +2,8 @@
 
 #include "../managers/TextureManager.h"
 
+#include "../systems/EnergySystem.h"
+
 #include "../components/components.h"
 #include "../components/tagComponents.h"
 
@@ -31,8 +33,7 @@ void ShieldSystem::shieldLoading(entt::registry& registry, Shield& shield, Energ
 {
     if (shield.energyUsed < shield.energyCost)
     {
-        //TODO: Temporary energy regeneration management
-        energy.energyRegenerationRate = 0;
+        EnergySystem::disableEnergyRegeneration<Player>(registry);
         if (energy.currentEnergyValue > 0)
         {
             float correction = 0.f;
@@ -55,14 +56,14 @@ void ShieldSystem::shieldLoading(entt::registry& registry, Shield& shield, Energ
 
 void ShieldSystem::interruptShieldLoading(entt::registry& registry, Input& input, Shield& shield, Energy& energy)
 {
-    energy.energyRegenerationRate = 10.f;
+    EnergySystem::enableEnergyRegeneration<Player>(registry);
     ShieldSystem::restoreUnusedEnergy(energy, shield);
     shield.energyUsed = 0.f;
 }
 
 void ShieldSystem::shieldActivaton(entt::registry& registry, Shield& shield, Energy& energy)
 {
-    energy.energyRegenerationRate = 10.f;
+    EnergySystem::enableEnergyRegeneration<Player>(registry);
     if (shield.energyUsed >= shield.energyCost)
         getShield(registry);
     shield.energyUsed = 0.f;
