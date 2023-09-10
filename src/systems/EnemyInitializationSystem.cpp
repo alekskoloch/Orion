@@ -9,6 +9,8 @@
 
 #include "../schema/WeaponsSchema.h"
 
+#include "../utils/GraphicsOperations.h"
+
 //const number of enemies
 const int ENEMIES = 6;
 
@@ -51,8 +53,7 @@ void EnemyInitializationSystem::createEnemy(entt::registry& registry, const Enem
     enemyState.attackRange = enemySchema.attackRange;
     enemyState.idleRange = enemySchema.idleRange;
 
-    sf::Sprite sprite(TextureManager::getInstance().getTexture(enemySchema.textureName));
-    sprite.setOrigin(sprite.getGlobalBounds().width / 2.f, sprite.getGlobalBounds().height / 2.f);
+    sf::Sprite sprite = CreateSprite(enemySchema.textureName);
     registry.emplace<Collision>(enemy, sprite.getGlobalBounds());
     registry.emplace<Renderable>(enemy, sprite);
 

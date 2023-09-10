@@ -5,6 +5,8 @@
 #include "../../components/components.h"
 #include "../../components/tagComponents.h"
 
+#include "../../utils/GraphicsOperations.h"
+
 GUIMinimap::GUIMinimap(sf::RenderWindow& window, entt::registry& registry)
     : window(window), registry(registry)
 {
@@ -74,7 +76,6 @@ void GUIMinimap::initializationMinimap()
     backgroundMap.setOutlineColor(sf::Color::White);
     backgroundMap.setPosition(3340, 100);
 
-    playerMinimapSprite.setTexture(TextureManager::getInstance().getTexture("PLAYER_MINIMAP_TEXTURE"));
-    playerMinimapSprite.setOrigin(playerMinimapSprite.getTextureRect().width / 2, playerMinimapSprite.getTextureRect().height / 2);
+    playerMinimapSprite = CreateSprite("PLAYER_MINIMAP_TEXTURE");
     playerMinimapSprite.setPosition(backgroundMap.getPosition().x + backgroundMap.getRadius(), backgroundMap.getPosition().y + backgroundMap.getRadius());
 }

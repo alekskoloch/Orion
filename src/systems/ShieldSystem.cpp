@@ -5,6 +5,8 @@
 #include "../components/components.h"
 #include "../components/tagComponents.h"
 
+#include "../utils/GraphicsOperations.h"
+
 //TODO: Make template function for loading schema
 void ShieldSystem::loadShield(entt::registry& registry, const ShieldSchema& shieldSchema, entt::entity ownerEntity)
 {
@@ -146,8 +148,7 @@ void ShieldSystem::getShield(entt::registry& registry)
         auto shieldEntity = registry.create();
         registry.emplace<PlayerShield>(shieldEntity);
 
-        sf::Sprite shieldSprite(TextureManager::getInstance().getTexture(shield.shieldTextureName));
-        shieldSprite.setOrigin(shieldSprite.getGlobalBounds().width / 2.f, shieldSprite.getGlobalBounds().height / 2.f);
+        sf::Sprite shieldSprite = CreateSprite(shield.shieldTextureName);
         registry.emplace<Renderable>(shieldEntity, shieldSprite);
 
         registry.emplace<Position>(shieldEntity, registry.get<Position>(entity).position);

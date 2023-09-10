@@ -7,6 +7,8 @@
 #include "../components/tagComponents.h"
 #include "../schema/WeaponsSchema.h"
 
+#include "../utils/GraphicsOperations.h"
+
 // TODO: Change start position
 static float playerStartPositionX = 0.f;
 static float playerStartPositionY = 0.f;
@@ -19,8 +21,7 @@ void PlayerInitializationSystem::initializePlayer(entt::registry& registry)
     registry.emplace<Player>(player);
     registry.emplace<Energy>(player, 100.f, 100.f, 10.f);
 
-    sf::Sprite sprite(TextureManager::getInstance().getTexture("PLAYER_TEXTURE"));
-    sprite.setOrigin(sprite.getGlobalBounds().width / 2.f, sprite.getGlobalBounds().height / 2.f);
+    sf::Sprite sprite = CreateSprite("PLAYER_TEXTURE");
     registry.emplace<Renderable>(player, sprite);
 
     sf::FloatRect globalBounds = sprite.getGlobalBounds();

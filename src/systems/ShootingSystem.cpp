@@ -7,6 +7,7 @@
 #include "../components/tagComponents.h"
 
 #include "../utils/MathOperations.h"
+#include "../utils/GraphicsOperations.h"
 
 template <typename BulletOwnerTag>
 void createBullet(entt::registry& registry, entt::entity& entity, sf::Vector2f targetPosition, float offset = 0.f)
@@ -17,8 +18,8 @@ void createBullet(entt::registry& registry, entt::entity& entity, sf::Vector2f t
     sf::Vector2f direction(CalculateDirectionBetweenPoints(position.position, targetPosition, offset));
     float rotation = CalculateAzimuthAngleInDegrees(direction, 90.f);
 
-    sf::Sprite sprite(TextureManager::getInstance().getTexture(weapon.bulletTextureName));
-    sprite.setOrigin(sprite.getGlobalBounds().width / 2.f, sprite.getGlobalBounds().height / 2.f);
+    sf::Sprite sprite = CreateSprite(weapon.bulletTextureName);
+
     sprite.setRotation(rotation);
 
     auto bulletEntity = registry.create();

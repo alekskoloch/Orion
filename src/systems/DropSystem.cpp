@@ -7,6 +7,8 @@
 
 #include "../systems/ProceduralGenerationSystem.h"
 
+#include "../utils/GraphicsOperations.h"
+
 void DropSystem::drop(entt::registry& registry, entt::entity& entity)
 {
     auto& entityDrop = registry.get<Drop>(entity);
@@ -27,29 +29,28 @@ void DropSystem::drop(entt::registry& registry, entt::entity& entity)
     switch (ProceduralGenerationSystem::GetRandomNumber(1, 7))
     {
         case 1:
-            dropSprite.setTexture(TextureManager::getInstance().getTexture("MONEY_10"));
+            dropSprite = CreateSprite("MONEY_10");
             break;
         case 2:
-            dropSprite.setTexture(TextureManager::getInstance().getTexture("MONEY_20"));
+            dropSprite = CreateSprite("MONEY_20");
             break;
         case 3:
-            dropSprite.setTexture(TextureManager::getInstance().getTexture("MONEY_50"));
+            dropSprite = CreateSprite("MONEY_50");
             break;
         case 4:
-            dropSprite.setTexture(TextureManager::getInstance().getTexture("MONEY_100"));
+            dropSprite = CreateSprite("MONEY_100");
             break;
         case 5:
-            dropSprite.setTexture(TextureManager::getInstance().getTexture("MONEY_200"));
+            dropSprite = CreateSprite("MONEY_200");
             break;
         case 6:
-            dropSprite.setTexture(TextureManager::getInstance().getTexture("MONEY_500"));
+            dropSprite = CreateSprite("MONEY_500");
             break;
         case 7:
-            dropSprite.setTexture(TextureManager::getInstance().getTexture("MONEY_1000"));
+            dropSprite = CreateSprite("MONEY_1000");
             break;
     }
 
-    dropSprite.setOrigin(dropSprite.getGlobalBounds().width / 2.f, dropSprite.getGlobalBounds().height / 2.f);
     dropSprite.setScale(0.5f, 0.5f);
     registry.emplace<Renderable>(drop, dropSprite);
 
