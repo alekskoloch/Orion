@@ -55,7 +55,7 @@ void handleShoot(entt::registry& registry, entt::entity& entity, sf::Vector2f ta
 
 void handlePlayerShooting(entt::registry& registry, sf::Time deltaTime, sf::RenderWindow& window)
 {
-    auto view = registry.view<Weapon, Input, Energy>();
+    auto view = registry.view<Weapon, Input>();
     for (auto entity : view)
     {
         auto& weapon = view.get<Weapon>(entity);
