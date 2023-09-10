@@ -34,7 +34,7 @@ void ShieldSystem::shieldLoading(entt::registry& registry, Shield& shield, Energ
     if (shield.energyUsed < shield.energyCost)
     {
         EnergySystem::disableEnergyRegeneration<Player>(registry);
-        if (energy.currentEnergyValue > 0)
+        if (EnergySystem::hasAnyEnergy<Player>(registry))
         {
             float correction = 0.f;
             shield.energyUsed += shield.energyCost * (deltaTime.asSeconds() / shield.loadTime);
@@ -45,7 +45,7 @@ void ShieldSystem::shieldLoading(entt::registry& registry, Shield& shield, Energ
             }
             
             energy.currentEnergyValue -= shield.energyCost * (deltaTime.asSeconds() / shield.loadTime);
-            if (energy.currentEnergyValue > 0)
+            if (EnergySystem::hasAnyEnergy<Player>(registry))
                 energy.currentEnergyValue += correction;
 
             if (energy.currentEnergyValue < 0)
