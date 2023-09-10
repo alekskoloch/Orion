@@ -7,6 +7,13 @@
 
 #include "../utils/GraphicsOperations.h"
 
+void ShieldSystem::restoreUnusedEnergy(Energy& energy, Shield& shield)
+{
+    energy.currentEnergyValue += shield.energyUsed;
+        if (energy.currentEnergyValue > energy.maxEnergyValue)
+            energy.currentEnergyValue = energy.maxEnergyValue;
+}
+
 //TODO: Make template function for loading schema
 void ShieldSystem::loadShield(entt::registry& registry, const ShieldSchema& shieldSchema, entt::entity ownerEntity)
 {
@@ -22,21 +29,9 @@ void ShieldSystem::changeShield(entt::registry& registry, ShieldSchema shield)
     {
         auto& energy = player.get<Energy>(entity);
         auto& shieldComponent = player.get<Shield>(entity);
-        shieldComponent.durability = shield.durability;
-        shieldComponent.energyCost = shield.energyCost;
-        shieldComponent.duration = shield.duration;
-        shieldComponent.loadTime = shield.loadTime;
 
-        energy.currentEnergyValue += shieldComponent.energyUsed;
-        if (energy.currentEnergyValue > energy.maxEnergyValue)
-            energy.currentEnergyValue = energy.maxEnergyValue;
-        shieldComponent.energyUsed = 0.f;
-        shieldComponent.currentDuration = 0.f;
-
-        TextureManager::getInstance().loadTexture(shield.shieldTextureName, ASSETS_PATH + shield.shieldTextureName + ".png");
-        shieldComponent.shieldTextureName = shield.shieldTextureName;
-        TextureManager::getInstance().loadTexture(shield.shieldIconTextureName, ASSETS_PATH + shield.shieldIconTextureName + ".png");
-        shieldComponent.shieldIconTextureName = shield.shieldIconTextureName;
+        ShieldSystem::restoreUnusedEnergy(energy, shieldComponent);
+        shieldComponent.Set(shield);
     }
 }
 
