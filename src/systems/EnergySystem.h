@@ -46,6 +46,18 @@ public:
         return false;
     }
 
+    template<typename EnergyOwnerTag>
+    requires UniqueTagConcept<EnergyOwnerTag>
+    static bool hasEnoughEnergy(entt::registry& registry, float energyValue)
+    {
+        auto& energyComponent = registry.get<Energy>(registry.view<Energy, EnergyOwnerTag>().front());
+
+        if (energyComponent.currentEnergyValue >= energyValue)
+            return true;
+
+        return false;
+    }
+
     template <typename EnergyOwnerTag>
     requires UniqueTagConcept<EnergyOwnerTag>
     static void addEnergy(entt::registry& registry, float energyValue)
