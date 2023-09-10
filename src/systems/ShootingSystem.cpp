@@ -14,9 +14,8 @@ void createBullet(entt::registry& registry, entt::entity& entity, sf::Vector2f t
     auto weapon = registry.get<Weapon>(entity);
     auto position = registry.get<Position>(entity);
 
-    sf::Vector2f newDirection(CalculateDirectionBetweenPoints(position.position, targetPosition, offset));
-
-    float rotation = CalculateAzimuthAngleInDegrees(newDirection, 90.f);
+    sf::Vector2f direction(CalculateDirectionBetweenPoints(position.position, targetPosition, offset));
+    float rotation = CalculateAzimuthAngleInDegrees(direction, 90.f);
 
     sf::Sprite sprite(TextureManager::getInstance().getTexture(weapon.bulletTextureName));
     sprite.setOrigin(sprite.getGlobalBounds().width / 2.f, sprite.getGlobalBounds().height / 2.f);
@@ -30,7 +29,7 @@ void createBullet(entt::registry& registry, entt::entity& entity, sf::Vector2f t
     //TODO: Get Collision from weaponSchema
     registry.emplace<Collision>(bulletEntity, sprite.getGlobalBounds());
 
-    registry.emplace<Velocity>(bulletEntity, newDirection * weapon.bulletSpeed);
+    registry.emplace<Velocity>(bulletEntity, direction * weapon.bulletSpeed);
     registry.emplace<Renderable>(bulletEntity, sprite);
 }
 
