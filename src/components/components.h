@@ -2,6 +2,10 @@
 
 #include "../pch.h"
 
+#include "../managers/TextureManager.h"
+
+#include "../schema/ShieldSchema.h"
+
 enum class WeaponType
 {
     SingleShot,
@@ -91,11 +95,26 @@ struct Shield
     std::string shieldTextureName;
     std::string shieldIconTextureName;
     
-    float currentDuration;
-
+    float currentDuration = 0.f;
     float energyUsed = 0.f;
 
     bool active = false;
+
+    void Set(ShieldSchema shield)
+    {
+        durability = shield.durability;
+        energyCost = shield.energyCost;
+        duration = shield.duration;
+        loadTime = shield.loadTime;
+
+        energyUsed = 0.f;
+        currentDuration = 0.f;
+
+        TextureManager::getInstance().loadTexture(shield.shieldTextureName, ASSETS_PATH + shield.shieldTextureName + ".png");
+        shieldTextureName = shield.shieldTextureName;
+        TextureManager::getInstance().loadTexture(shield.shieldIconTextureName, ASSETS_PATH + shield.shieldIconTextureName + ".png");
+        shieldIconTextureName = shield.shieldIconTextureName;
+    }
 };
 
 struct Speed
