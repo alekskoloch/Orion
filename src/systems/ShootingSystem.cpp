@@ -1,6 +1,7 @@
 #include "ShootingSystem.h"
 
 #include "../systems/CameraSystem.h"
+#include "../systems/EnergySystem.h"
 
 #include "../managers/TextureManager.h"
 #include "../components/components.h"
@@ -59,7 +60,6 @@ void handlePlayerShooting(entt::registry& registry, sf::Time deltaTime, sf::Rend
     {
         auto& weapon = view.get<Weapon>(entity);
         auto& input = view.get<Input>(entity);
-        auto& energy = view.get<Energy>(entity);
 
         bool canShoot = false;
 
@@ -68,9 +68,9 @@ void handlePlayerShooting(entt::registry& registry, sf::Time deltaTime, sf::Rend
         else
             canShoot = input.shoot && !weapon.shootLastFrame;
 
-        if (canShoot && energy.currentEnergyValue >= weapon.energyCost)
+        if (canShoot && EnergySystem::hasEnoughEnergy<Player>(registry, weapon.energyCost))
         {
-            energy.currentEnergyValue -= weapon.energyCost;
+            EnergySystem::removeEnergy<Player>(registry, weapon.energyCost);
             handleShoot<PlayerBullet>(registry, entity, window.mapPixelToCoords(sf::Mouse::getPosition(window)));
             weapon.SetCooldown();
         }
