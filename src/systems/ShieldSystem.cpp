@@ -83,14 +83,6 @@ void ShieldSystem::handleShieldDuration(entt::registry& registry, Shield& shield
     }
 }
 
-//TODO: Make template function for loading schema
-void ShieldSystem::loadShield(entt::registry& registry, const ShieldSchema& shieldSchema, entt::entity ownerEntity)
-{
-    TextureManager::getInstance().loadTexture(shieldSchema.shieldTextureName, ASSETS_PATH + shieldSchema.shieldTextureName + ".png");
-    TextureManager::getInstance().loadTexture(shieldSchema.shieldIconTextureName, ASSETS_PATH + shieldSchema.shieldIconTextureName + ".png");
-    registry.emplace<Shield>(ownerEntity, shieldSchema.durability, shieldSchema.energyCost, shieldSchema.duration, shieldSchema.loadTime, shieldSchema.shieldTextureName, shieldSchema.shieldIconTextureName);
-}
-
 void ShieldSystem::changeShield(entt::registry& registry, ShieldSchema shield)
 {
     auto player = registry.view<Player, Shield, Energy>();
