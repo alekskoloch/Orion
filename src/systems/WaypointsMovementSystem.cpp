@@ -2,24 +2,29 @@
 
 #include "../components/components.h"
 
+#include "../utils/MathOperations.h"
+
+const float DISTANCE_TOLERANCE = 5.f;
+
 void WaypointsMovementSystem::updateWaypoints(entt::registry& registry, sf::Time deltaTime)
 {
     auto view = registry.view<Velocity, WaypointMovement, Position, Speed>();
-    for (auto entity : view) {
-        auto& velocity = view.get<Velocity>(entity);
-        auto& waypointMovement = view.get<WaypointMovement>(entity);
-        auto& position = view.get<Position>(entity);
+    
+    for (auto entity : view)
+    {
+        auto& entityVelocity = view.get<Velocity>(entity).velocity;
+        auto& waypointMovementComponent = view.get<WaypointMovement>(entity);
+        auto& entityPosition = view.get<Position>(entity).position;
         auto& speed = view.get<Speed>(entity);
 
-        if (waypointMovement.currentWaypointIndex < waypointMovement.waypoints.size()) {
-            sf::Vector2f direction = waypointMovement.waypoints[waypointMovement.currentWaypointIndex] - position.position;
-            float distance = std::sqrt(direction.x * direction.x + direction.y * direction.y);
-            direction /= distance;
-            velocity.velocity = direction * speed.maxSpeedValue;
+        if (waypointMovementComponent.currentWaypointIndex < waypointMovementComponent.waypoints.size())
+        {
+            sf::Vector2f direction = CalculateDirectionBetweenPoints(entityPosition, waypointMovementComponent.waypoints[waypointMovementComponent.currentWaypointIndex]);
+            entityVelocity = direction * speed.maxSpeedValue;
 
-            if (distance < 5.f) {
-                waypointMovement.currentWaypointIndex = (waypointMovement.currentWaypointIndex + 1) % waypointMovement.waypoints.size();
-            }
+            float distance = CalculateDistance(entityPosition, waypointMovementComponent.waypoints[waypointMovementComponent.currentWaypointIndex]);
+            if (distance < DISTANCE_TOLERANCE)
+                waypointMovementComponent.currentWaypointIndex = (waypointMovementComponent.currentWaypointIndex + 1) % waypointMovementComponent.waypoints.size();
         }
     }
 }
