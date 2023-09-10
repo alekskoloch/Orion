@@ -45,4 +45,24 @@ public:
 
         return false;
     }
+
+    template <typename EnergyOwnerTag>
+    requires UniqueTagConcept<EnergyOwnerTag>
+    static void addEnergy(entt::registry& registry, float energyValue)
+    {
+        auto& energyComponent = registry.get<Energy>(registry.view<Energy, EnergyOwnerTag>().front());
+        energyComponent.currentEnergyValue += energyValue;
+        if (energyComponent.currentEnergyValue > energyComponent.maxEnergyValue)
+            energyComponent.currentEnergyValue = energyComponent.maxEnergyValue;
+    }
+
+    template <typename EnergyOwnerTag>
+    requires UniqueTagConcept<EnergyOwnerTag>
+    static void removeEnergy(entt::registry& registry, float energyValue)
+    {
+        auto& energyComponent = registry.get<Energy>(registry.view<Energy, EnergyOwnerTag>().front());
+        energyComponent.currentEnergyValue -= energyValue;
+        if (energyComponent.currentEnergyValue < 0)
+            energyComponent.currentEnergyValue = 0;
+    }
 };
