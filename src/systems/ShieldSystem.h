@@ -16,4 +16,10 @@ public:
 
 private:
     static void restoreUnusedEnergy(Energy& energy, Shield& shield);
+    static void updateShieldPosition(entt::registry& registry);
+
+    static void shieldLoading(entt::registry& registry, Shield& shield, Energy& energy, sf::Time deltaTime);
+    static void interruptShieldLoading(entt::registry& registry, Input& input, Shield& shield, Energy& energy);
+    static void shieldActivaton(entt::registry& registry, Shield& shield, Energy& energy);
+    static void handleShieldDuration(entt::registry& registry, Shield& shield, sf::Time deltaTime);
 };
