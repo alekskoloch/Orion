@@ -19,7 +19,7 @@ void GUIQuickMenu::update()
     sf::Vector2i mousePosition = sf::Mouse::getPosition(this->window);
     this->selectedTile = 0;
 
-    for (int i = 0; i < 8; i++)
+    for (int i = 0; i < TILES_NUMBER; i++)
     {
         if (utils::isMouseOverSprite(this->quickMenuTiles[i], mousePosition))
         {
@@ -30,6 +30,16 @@ void GUIQuickMenu::update()
         {
             this->quickMenuTiles[i].setTexture(TextureManager::getInstance().getTexture("INACTIVE_TILE"));
         }
+    }
+
+    if (utils::isMouseOverSprite(this->quickMenuTiles[TILES_NUMBER], mousePosition))
+    {
+        this->quickMenuTiles[TILES_NUMBER].setTexture(TextureManager::getInstance().getTexture("ACTIVE_MIDDLE_TILE"));
+        this->selectedTile = 9;
+    }
+    else
+    {
+        this->quickMenuTiles[TILES_NUMBER].setTexture(TextureManager::getInstance().getTexture("INACTIVE_MIDDLE_TILE"));
     }
 }
 
@@ -50,15 +60,17 @@ void GUIQuickMenu::initializeQuickMenu()
 {
     TextureManager::getInstance().loadTexture("ACTIVE_TILE", ASSETS_PATH + std::string("tileActive.png"));
     TextureManager::getInstance().loadTexture("INACTIVE_TILE", ASSETS_PATH + std::string("tileInactive.png"));
-    
+    TextureManager::getInstance().loadTexture("ACTIVE_MIDDLE_TILE", ASSETS_PATH + std::string("middleTileActive.png"));
+    TextureManager::getInstance().loadTexture("INACTIVE_MIDDLE_TILE", ASSETS_PATH + std::string("middleTileInactive.png"));
+
     //TODO: this is a temporary solution for loading bullet ico textures
     TextureManager::getInstance().loadTexture("red_weapon", ASSETS_PATH + std::string("red_weapon.png"));
     TextureManager::getInstance().loadTexture("blue_weapon", ASSETS_PATH + std::string("blue_weapon.png"));
     TextureManager::getInstance().loadTexture("basic_shield_ico", ASSETS_PATH + std::string("basic_shield_ico.png"));
     TextureManager::getInstance().loadTexture("advanced_shield_ico", ASSETS_PATH + std::string("advanced_shield_ico.png"));
 
-    this->quickMenuTiles.resize(TILES_NUMBER);
-    this->quickMenuIcons.resize(TILES_NUMBER);
+    this->quickMenuTiles.resize(TILES_NUMBER + 1);
+    this->quickMenuIcons.resize(TILES_NUMBER + 1);
 
     for (int i = 0; i < TILES_NUMBER; i++)
     {
@@ -86,4 +98,7 @@ void GUIQuickMenu::initializeQuickMenu()
 
         this->quickMenuIcons[i].setPosition(this->quickMenuTiles[i].getPosition());
     }
+
+    this->quickMenuTiles[TILES_NUMBER] = CreateSprite("INACTIVE_MIDDLE_TILE");
+    this->quickMenuTiles[TILES_NUMBER].setPosition(1920, 1080);
 }
