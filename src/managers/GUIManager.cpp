@@ -54,6 +54,10 @@ void GUIManager::toggleQuickMenu(bool value)
             break;
         case 4:
             ShieldSystem::changeShield(this->registry, advancedShield);
+            break;
+        case 9:
+            //TODO: Open skill tree
+            break;
         default:
             break;
         }
