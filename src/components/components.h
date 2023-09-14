@@ -136,6 +136,7 @@ struct Velocity
 struct Weapon
 {
     WeaponType weaponType;
+    float damage;
     float cooldownTime;
     float bulletSpeed;
     std::string bulletTextureName;
