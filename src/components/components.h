@@ -118,6 +118,11 @@ struct Shield
     }
 };
 
+struct Skills
+{
+    float weaponDamageMultipler = 1.f;
+};
+
 struct Speed
 {
     float maxSpeedValue;
