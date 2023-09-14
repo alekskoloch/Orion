@@ -2,6 +2,8 @@
 
 #include "../pch.h"
 
+#include "../managers/SceneManager.h"
+
 #include "BackgroundManager.h"
 
 // make this configurable
@@ -26,7 +28,7 @@ private:
     sf::RenderWindow& window;
     entt::registry& registry;
     sf::Event& event;
-
+    
     BackgroundManager backgroundManager;
 
     bool slowMotion = false;
