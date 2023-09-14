@@ -1,5 +1,7 @@
 #include "Game.h"
 
+#include "managers/SceneManager.h"
+
 #include "systems/PlayerInitializationSystem.h"
 #include "systems/EnemyInitializationSystem.h"
 
@@ -40,6 +42,12 @@ void Game::processEvents()
         {
             this->systemManager.disableSlowMotion();
             this->guiManager.toggleQuickMenu(false);
+        }
+
+        //TODO: Temporary solution for testing
+        if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape)
+        {
+            SceneManager::getInstance().setCurrentScene(Scene::Game);
         }
 
         //when ` key is pressed, toggle debug mode
