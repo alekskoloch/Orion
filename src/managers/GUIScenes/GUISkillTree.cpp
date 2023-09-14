@@ -154,8 +154,7 @@ void GUISkillTree::initializeSkills()
         "skillActive",
         [](entt::registry& registry)
         {
-            auto& playerSkillsComponent = registry.get<Skills>(registry.view<Player>().front());
-            playerSkillsComponent.weaponDamageMultiplier += 0.05f;
+            std::cout << "Orion protocol activated" << std::endl;
         }
     ));
 
@@ -171,8 +170,7 @@ void GUISkillTree::initializeSkills()
         "skillActive",
         [](entt::registry& registry)
         {
-            auto& playerSkillsComponent = registry.get<Skills>(registry.view<Player>().front());
-            playerSkillsComponent.weaponDamageMultiplier += 0.1f;
+            std::cout << "Second skill activated" << std::endl;
         }
     ));
 }
