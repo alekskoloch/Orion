@@ -4,7 +4,7 @@
 
 namespace utils
 {
-    bool isMouseOverSprite(const sf::Sprite& sprite, const sf::Vector2i& mousePosition)
+    inline bool isMouseOverSprite(const sf::Sprite& sprite, const sf::Vector2i& mousePosition)
     {
         sf::Vector2f localPosition = sprite.getInverseTransform().transformPoint(mousePosition.x, mousePosition.y);
         sf::IntRect textureRect = sprite.getTextureRect();
