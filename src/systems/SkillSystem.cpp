@@ -11,10 +11,8 @@ void SkillSystem::updateWeaponDamageMultiplier(entt::registry& registry, float m
 
 float SkillSystem::getWeaponDamage(entt::registry& registry, entt::entity entity)
 {
-    //calculate and return entity weapon damage
     auto& skillsComponent = registry.get<Skills>(entity);
     auto& weaponComponent = registry.get<Weapon>(entity);
 
-    //TODO: add damage value to weapon component
-    //return weaponComponent.damage * skillsComponent.weaponDamageMultiplier;
+    return weaponComponent.damage * skillsComponent.weaponDamageMultiplier;
 }
