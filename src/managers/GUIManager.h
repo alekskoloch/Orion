@@ -2,6 +2,8 @@
 
 #include "../pch.h"
 
+#include "GUIScenes/GUISkillTree.h"
+
 #include "GUIElements/GUIQuickMenu.h"
 #include "GUIElements/GUIEnergyBar.h"
 #include "GUIElements/GUIMinimap.h"
@@ -15,6 +17,7 @@ public:
     void draw();
 
     void toggleQuickMenu(bool value);
+
 private:
     entt::registry& registry;
     sf::RenderWindow& window;
@@ -22,6 +25,8 @@ private:
     GUIQuickMenu quickMenu;
     GUIEnergyBar energyBar;
     GUIMinimap minimap;
+
+    GUISkillTree skillTreeGUI;
 
     bool quickMenuActive = false;
 

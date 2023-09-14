@@ -4,34 +4,55 @@
 #include "../systems/ShieldSystem.h"
 
 #include "../managers/TextureManager.h"
+#include "../managers/SceneManager.h"
 #include "../systems/PlayerInitializationSystem.h"
 #include "../schema/WeaponsSchema.h"
 
-GUIManager::GUIManager(sf::RenderWindow& window, entt::registry& registry) : window(window), registry(registry), quickMenu(window, registry), energyBar(window, registry), minimap(window, registry)
+#include "../components/components.h"
+#include "../components/tagComponents.h"
+
+#include "../utils/GraphicsOperations.h"
+#include "../utils/Mouse.h"
+
+GUIManager::GUIManager(sf::RenderWindow& window, entt::registry& registry) : window(window), registry(registry), quickMenu(window, registry), energyBar(window, registry), minimap(window, registry), skillTreeGUI(registry, window)
 {
     this->initializeShader();
 }
 
 void GUIManager::update()
 {
-    if (this->quickMenuActive)
-        this->quickMenu.update();
+    if (SceneManager::getInstance().getCurrentScene() == Scene::Game)
+    {
+        if (this->quickMenuActive)
+            this->quickMenu.update();
 
-    this->energyBar.update();
-    this->minimap.update();
+        this->energyBar.update();
+        this->minimap.update();
+    }
+    else if (SceneManager::getInstance().getCurrentScene() == Scene::SkillTree)
+    {
+        this->skillTreeGUI.update();
+    }
 }
 
 void GUIManager::draw()
 {
-    this->energyBar.draw();
-    this->minimap.draw();
-    
-    if (this->quickMenuActive)
+    if (SceneManager::getInstance().getCurrentScene() == Scene::Game)
     {
-        this->shaderTexture.update(this->window);
-        this->window.draw(this->shaderSprite, &this->shader);
+        this->energyBar.draw();
+        this->minimap.draw();
+        
+        if (this->quickMenuActive)
+        {
+            this->shaderTexture.update(this->window);
+            this->window.draw(this->shaderSprite, &this->shader);
 
-        this->quickMenu.draw();
+            this->quickMenu.draw();
+        }
+    }
+    else if (SceneManager::getInstance().getCurrentScene() == Scene::SkillTree)
+    {
+        this->skillTreeGUI.draw();
     }
 }
 
@@ -56,7 +77,7 @@ void GUIManager::toggleQuickMenu(bool value)
             ShieldSystem::changeShield(this->registry, advancedShield);
             break;
         case 9:
-            //TODO: Open skill tree
+            SceneManager::getInstance().setCurrentScene(Scene::SkillTree);
             break;
         default:
             break;
