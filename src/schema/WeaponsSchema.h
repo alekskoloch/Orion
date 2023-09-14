@@ -5,6 +5,7 @@
 struct WeaponSchema
 {
     WeaponType weaponType;
+    float damage;
     float cooldownTime;
     float bulletSpeed;
     std::string bulletTextureName;
@@ -15,6 +16,7 @@ struct WeaponSchema
 static WeaponSchema redWeapon =
 {
     WeaponType::SingleShot,
+    1.f,
     0.2f,
     1300.f,
     "red_bullet",
@@ -25,6 +27,7 @@ static WeaponSchema redWeapon =
 static WeaponSchema blueWeapon =
 {
     WeaponType::TrippleShot,
+    1.f,
     0.4f,
     2000.f,
     "blue_bullet",
@@ -36,6 +39,7 @@ static WeaponSchema blueWeapon =
 static WeaponSchema basicEnemyWeapon =
 {
     WeaponType::SingleShot,
+    1.f,
     2.5f,
     800.f,
     "enemy_bullet",
@@ -45,6 +49,7 @@ static WeaponSchema basicEnemyWeapon =
 static WeaponSchema basicEnemyWeapon2 =
 {
     WeaponType::TrippleShot,
+    1.f,
     4.0f,
     500.f,
     "enemy_bullet2",
@@ -54,6 +59,7 @@ static WeaponSchema basicEnemyWeapon2 =
 static WeaponSchema basicEnemyWeapon3 =
 {
     WeaponType::SingleShot,
+    1.f,
     5.0f,
     2000.f,
     "enemy_bullet3",
@@ -63,6 +69,7 @@ static WeaponSchema basicEnemyWeapon3 =
 static WeaponSchema basicEnemyWeapon4 =
 {
     WeaponType::TrippleShot,
+    1.f,
     2.0f,
     800.f,
     "enemy_bullet4",
