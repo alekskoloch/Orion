@@ -52,6 +52,12 @@ struct EntityState
     float idleRange;
 };
 
+struct Health
+{
+    float maxHealthValue;
+    float currentHealthValue;
+};
+
 struct Input
 {
     bool up;
