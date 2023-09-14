@@ -120,7 +120,7 @@ struct Shield
 
 struct Skills
 {
-    float weaponDamageMultipler = 1.f;
+    float weaponDamageMultiplier = 1.f;
 };
 
 struct Speed
