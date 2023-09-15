@@ -20,5 +20,11 @@ float SkillSystem::getWeaponDamage(entt::registry& registry, entt::entity entity
     auto& skillsComponent = registry.get<Skills>(entity);
     auto& weaponComponent = registry.get<Weapon>(entity);
 
-    return weaponComponent.damage * skillsComponent.weaponDamageMultiplier;
+    float weaponDamage = weaponComponent.damage;
+    float damageMultiplier = skillsComponent.weaponDamageMultiplier;
+    
+    if (weaponComponent.weaponType == WeaponType::SingleShot)
+        damageMultiplier += skillsComponent.singleShotWeaponDamageMultiplier - 1;
+
+    return weaponDamage * damageMultiplier;
 }
