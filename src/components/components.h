@@ -126,6 +126,7 @@ struct Shield
 
 struct Skills
 {
+    float damageMultiplier = 1.f;
     float weaponDamageMultiplier = 1.f;
     float singleShotWeaponDamageMultiplier = 1.f;
 };
