@@ -6,6 +6,7 @@
 struct EnemySchema
 {
     std::string textureName;
+    float health;
     sf::Vector2f position;
     float speed;
     std::vector<sf::Vector2f> waypoints;
@@ -19,6 +20,7 @@ struct EnemySchema
 static EnemySchema enemy =
 {
     "enemy",
+    2.f,
     sf::Vector2f(100.f, 980.f),
     600.f,
     {
@@ -36,6 +38,7 @@ static EnemySchema enemy =
 static EnemySchema enemy2 =
 {
     "enemy2",
+    2.f,
     sf::Vector2f(100.f, 100.f),
     500.f,
     {
@@ -53,6 +56,7 @@ static EnemySchema enemy2 =
 static EnemySchema enemy3 =
 {
     "enemy3",
+    2.f,
     sf::Vector2f(1820.f, 100.f),
     400.f,
     {
@@ -70,6 +74,7 @@ static EnemySchema enemy3 =
 static EnemySchema enemy4 =
 {
     "enemy4",
+    2.f,
     sf::Vector2f(1820.f, 980.f),
     300.f,
     {
