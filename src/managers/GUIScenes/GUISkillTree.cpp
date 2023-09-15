@@ -142,35 +142,23 @@ void GUISkillTree::initializeSkillBackground()
 
 void GUISkillTree::initializeSkills()
 {
-    this->skills.push_back(Skill(
-        this->window,
-        this->registry,
-        this->font,
-        sf::Vector2f(1920.f, 1080.f),
-        "Orion protocol",
-        "all bullets deal damage increased by 5%",
-        "skill",
-        "skillHover",
-        "skillActive",
-        [](entt::registry& registry)
-        {
-            std::cout << "Orion protocol activated" << std::endl;
-        }
-    ));
+//TODO: skill manager
+    this->addSkill(OrionProtocol);
+    this->addSkill(LethalPrecision);
+}
 
+void GUISkillTree::addSkill(const SkillSchema& skill)
+{
     this->skills.push_back(Skill(
         this->window,
         this->registry,
         this->font,
-        sf::Vector2f(1920.f, 680.f),
-        "Second skill",
-        "all bullets deal damage increased by 10%",
-        "skill",
-        "skillHover",
-        "skillActive",
-        [](entt::registry& registry)
-        {
-            std::cout << "Second skill activated" << std::endl;
-        }
+        skill.position,
+        skill.name,
+        skill.description,
+        skill.textureName,
+        skill.hoverTextureName,
+        skill.activeTextureName,
+        skill.callback
     ));
 }

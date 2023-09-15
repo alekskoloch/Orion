@@ -2,6 +2,8 @@
 
 #include "../../pch.h"
 
+#include "../../schema/SkillSchema.h"
+
 class Skill
 {
 public:
@@ -56,4 +58,5 @@ private:
 
     std::vector<Skill> skills;
     void initializeSkills();
+    void addSkill(const SkillSchema& skill);
 };
