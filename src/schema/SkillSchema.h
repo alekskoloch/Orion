@@ -19,6 +19,20 @@ struct SkillSchema
     std::vector<SkillSchema> skillsToUnlock;
 };
 
+static SkillSchema SlaughterSurge
+{
+    sf::Vector2f(1520.f, 280.f),
+    "Slaughter Surge",
+    "Increases the damage inflicted by 5%",
+    "skill",
+    "skillHover",
+    "skillActive",
+    [](entt::registry& registry)
+    {
+        SkillSystem::addDamageMultiplier(registry, 0.05f);
+    }
+};
+
 static SkillSchema LethalPrecision
 {
     sf::Vector2f(1920.f, 680.f),
@@ -30,7 +44,8 @@ static SkillSchema LethalPrecision
     [](entt::registry& registry)
     {
         SkillSystem::addSingleShotWeaponDamageMultiplier(registry, 0.05f);
-    }
+    },
+    {SlaughterSurge}
 };
 
 static SkillSchema OrionProtocol
