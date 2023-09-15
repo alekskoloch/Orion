@@ -5,6 +5,8 @@
 #include "../components/components.h"
 #include "../components/tagComponents.h"
 
+#include "../systems/SkillSystem.h"
+
 struct SkillSchema
 {
     sf::Vector2f position;
@@ -26,8 +28,7 @@ static SkillSchema OrionProtocol
     "skillActive",
     [](entt::registry& registry)
     {
-        auto& playerSkillsComponent = registry.get<Skills>(registry.view<Player>().front());
-        playerSkillsComponent.weaponDamageMultiplier += 0.05f;
+        SkillSystem::addWeaponDamageMultiplier(registry, 0.05f);
     }
 };
 
@@ -41,7 +42,6 @@ static SkillSchema LethalPrecision
     "skillActive",
     [](entt::registry& registry)
     {
-        auto& playerSkillsComponent = registry.get<Skills>(registry.view<Player>().front());
-        playerSkillsComponent.singleShotWeaponDamageMultiplier += 0.05f;
+        SkillSystem::addSingleShotWeaponDamageMultiplier(registry, 0.05f);
     }
 };
