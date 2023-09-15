@@ -5,12 +5,6 @@
 
 const float MARGIN = 120.f;
 
-Skill::Skill(sf::RenderWindow& window, entt::registry& registry, sf::Font& font, sf::Vector2f iconPosition, std::string name, std::string description, std::string iconTextureName, std::string iconHoverTextureName, std::string iconActiveTextureName, std::function<void(entt::registry&)> onActivate)
- : window(window), registry(registry), font(font), iconPosition(iconPosition), name(name), description(description), iconTextureName(iconTextureName), iconHoverTextureName(iconHoverTextureName), iconActiveTextureName(iconActiveTextureName), onActivate(onActivate)
-{
-    this->initialize();
-}
-
 void Skill::initialize()
 {
     TextureManager::getInstance().loadTexture(this->iconTextureName, ASSETS_PATH + this->iconTextureName + std::string(".png"));
@@ -85,6 +79,7 @@ void Skill::update()
                 this->iconSprite.setTexture(TextureManager::getInstance().getTexture(this->iconActiveTextureName));
                 this->active = true;
                 this->onActivate(this->registry);
+                this->skillManager.unlockSkills(this->skillsToUnlock);
             }
         }
         else
@@ -126,19 +121,27 @@ void SkillManager::draw()
         skill.draw();
 }
 
+void SkillManager::unlockSkills(std::vector<SkillSchema> skillsToUnlock)
+{
+    for (const SkillSchema& skillSchema : skillsToUnlock)
+        this->addSkill(skillSchema);
+}
+
 void SkillManager::addSkill(const SkillSchema& skill)
 {
     this->skills.push_back(Skill(
         this->window,
         this->registry,
         this->font,
+        *this,
         skill.position,
         skill.name,
         skill.description,
         skill.textureName,
         skill.hoverTextureName,
         skill.activeTextureName,
-        skill.callback
+        skill.callback,
+        skill.skillsToUnlock
     ));
 }
 

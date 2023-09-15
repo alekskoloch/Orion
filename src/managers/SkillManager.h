@@ -5,16 +5,24 @@
 #include "../schema/SkillSchema.h"
 #include "../components/components.h"
 
+class SkillManager;
+
 class Skill
 {
 public:
-    Skill(sf::RenderWindow& window, entt::registry& registry, sf::Font& font, sf::Vector2f iconPosition, std::string name, std::string description, std::string iconTextureName, std::string iconHoverTextureName, std::string iconActiveTextureName, std::function<void(entt::registry&)> onActivate);
+    Skill(sf::RenderWindow& window, entt::registry& registry, sf::Font& font, SkillManager& skillManager, sf::Vector2f iconPosition, std::string name, std::string description, std::string iconTextureName, std::string iconHoverTextureName, std::string iconActiveTextureName, std::function<void(entt::registry&)> onActivate, std::vector<SkillSchema> skillToUnlock)
+    : window(window), registry(registry), font(font), skillManager(skillManager), iconPosition(iconPosition), name(name), description(description), iconTextureName(iconTextureName), iconHoverTextureName(iconHoverTextureName), iconActiveTextureName(iconActiveTextureName), onActivate(onActivate), skillsToUnlock(skillToUnlock)
+    {
+        this->initialize();
+    }
 
     void update();
     void draw();
+
 private:
     sf::RenderWindow& window;
     entt::registry& registry;
+    SkillManager& skillManager;
 
     void initialize();
 
@@ -39,6 +47,7 @@ private:
     bool hover = false;
 
     std::function<void(entt::registry&)> onActivate;
+    std::vector<SkillSchema> skillsToUnlock;
 };
 
 class SkillManager
@@ -48,6 +57,8 @@ public:
 
     void update();
     void draw();
+
+    void unlockSkills(std::vector<SkillSchema> skillsToUnlock);
 private:
     sf::RenderWindow& window;
     entt::registry& registry;
