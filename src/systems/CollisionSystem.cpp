@@ -54,7 +54,10 @@ void checkBulletCollitions(entt::registry& registry, std::unordered_set<entt::en
                 }
                 else if constexpr (std::is_same_v<TargetTag, Enemy>)
                 {
-                    entitiesToDestroy.insert(target);
+                    //entitiesToDestroy.insert(target);
+
+                    auto& enemyHealthComponent = registry.get<Health>(target);
+                    enemyHealthComponent.currentHealthValue -= 1.f;
 
                     //TODO: Handle it in a separate system
                     if (auto* dropComponent = registry.try_get<Drop>(target))
