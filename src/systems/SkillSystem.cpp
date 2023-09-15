@@ -9,6 +9,12 @@ void SkillSystem::addWeaponDamageMultiplier(entt::registry& registry, float mult
     playerSkillsComponent.weaponDamageMultiplier += multiplier;
 }
 
+void SkillSystem::addSingleShotWeaponDamageMultiplier(entt::registry& registry, float multiplier)
+{
+    auto& playerSkillsComponent = registry.get<Skills>(registry.view<Player>().front());
+    playerSkillsComponent.singleShotWeaponDamageMultiplier += multiplier;
+}
+
 float SkillSystem::getWeaponDamage(entt::registry& registry, entt::entity entity)
 {
     auto& skillsComponent = registry.get<Skills>(entity);
