@@ -19,6 +19,20 @@ struct SkillSchema
     std::vector<SkillSchema> skillsToUnlock;
 };
 
+static SkillSchema EnergyFrugality
+{
+    sf::Vector2f(2320, 280.f),
+    "Energy Frugality",
+    "Single shoot weapons use 5% less energy",
+    "skill",
+    "skillHover",
+    "skillActive",
+    [](entt::registry& registry)
+    {
+        SkillSystem::addSingleShotWeaponEnergyCostMultiplier(registry, -0.05f);
+    }
+};
+
 static SkillSchema SlaughterSurge
 {
     sf::Vector2f(1520.f, 280.f),
@@ -45,7 +59,7 @@ static SkillSchema LethalPrecision
     {
         SkillSystem::addSingleShotWeaponDamageMultiplier(registry, 0.05f);
     },
-    {SlaughterSurge}
+    {SlaughterSurge, EnergyFrugality}
 };
 
 static SkillSchema OrionProtocol
