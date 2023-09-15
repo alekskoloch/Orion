@@ -39,6 +39,7 @@ void PlayerInitializationSystem::initializePlayer(entt::registry& registry)
     registry.emplace<Acceleration>(player, 1000.f, 1000.f);
     registry.emplace<RotationTowardsMouse>(player, true, 600.f, 2.f);
     registry.emplace<Shield>(player);
+    registry.emplace<Skills>(player);
 
     WeaponsSystem::loadWeapon(registry, redWeapon, player);
     ShieldSystem::changeShield(registry, basicShield);
