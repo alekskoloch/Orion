@@ -30,3 +30,18 @@ static SkillSchema OrionProtocol
         playerSkillsComponent.weaponDamageMultiplier += 0.05f;
     }
 };
+
+static SkillSchema LethalPrecision
+{
+    sf::Vector2f(1920.f, 680.f),
+    "Lethal Precision",
+    "All single shot weapons deal damage increased by 5%",
+    "skill",
+    "skillHover",
+    "skillActive",
+    [](entt::registry& registry)
+    {
+        auto& playerSkillsComponent = registry.get<Skills>(registry.view<Player>().front());
+        playerSkillsComponent.singleShotWeaponDamageMultiplier += 0.05f;
+    }
+};
