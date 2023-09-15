@@ -17,6 +17,7 @@
 #include "../systems/AccelerationSystem.h"
 #include "../systems/MovementSystem.h"
 #include "../systems/WeaponsSystem.h"
+#include "../systems/HealthSystem.h"
 #include "../systems/CameraSystem.h"
 #include "../systems/DropSystem.h"
 
@@ -74,6 +75,7 @@ void SystemManager::executeUpdateSystems(sf::Time deltaTime)
         AccelerationSystem::accelerate(this->registry, deltaTime);
         MovementSystem::updateMovement(this->registry, deltaTime);
         ShieldSystem::updateShield(this->registry, deltaTime);
+        HealthSystem::updateHealth(this->registry);
         CollisionSystem::updateCollisionBoxes(this->registry);      
         CollisionSystem::checkCollisions(this->registry);
     }
