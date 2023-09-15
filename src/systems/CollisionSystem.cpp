@@ -3,6 +3,8 @@
 #include "EnemyInitializationSystem.h"
 #include "DropSystem.h"
 
+#include "../systems/SkillSystem.h"
+
 #include "../components/components.h"
 #include "../components/tagComponents.h"
 
@@ -57,7 +59,8 @@ void checkBulletCollitions(entt::registry& registry, std::unordered_set<entt::en
                     //entitiesToDestroy.insert(target);
 
                     auto& enemyHealthComponent = registry.get<Health>(target);
-                    enemyHealthComponent.currentHealthValue -= 1.f;
+                    auto player = registry.view<Player>().front();
+                    enemyHealthComponent.currentHealthValue -= SkillSystem::getWeaponDamage(registry, player);
 
                     //TODO: Handle it in a separate system
                     if (auto* dropComponent = registry.try_get<Drop>(target))
