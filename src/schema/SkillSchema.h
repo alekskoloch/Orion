@@ -16,20 +16,7 @@ struct SkillSchema
     std::string hoverTextureName;
     std::string activeTextureName;
     std::function<void(entt::registry& registry)> callback;
-};
-
-static SkillSchema OrionProtocol
-{
-    sf::Vector2f(1920.f, 1080.f),
-    "Orion protocol",
-    "All bullets deal damage increased by 5%",
-    "skill",
-    "skillHover",
-    "skillActive",
-    [](entt::registry& registry)
-    {
-        SkillSystem::addWeaponDamageMultiplier(registry, 0.05f);
-    }
+    std::vector<SkillSchema> skillsToUnlock;
 };
 
 static SkillSchema LethalPrecision
@@ -44,4 +31,19 @@ static SkillSchema LethalPrecision
     {
         SkillSystem::addSingleShotWeaponDamageMultiplier(registry, 0.05f);
     }
+};
+
+static SkillSchema OrionProtocol
+{
+    sf::Vector2f(1920.f, 1080.f),
+    "Orion protocol",
+    "All bullets deal damage increased by 5%",
+    "skill",
+    "skillHover",
+    "skillActive",
+    [](entt::registry& registry)
+    {
+        SkillSystem::addWeaponDamageMultiplier(registry, 0.05f);
+    },
+    {LethalPrecision}
 };
