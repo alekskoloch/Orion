@@ -79,6 +79,7 @@ void EnemyInitializationSystem::createEnemy(entt::registry& registry, const Enem
     registry.emplace<Speed>(enemy, enemySchema.speed);
     registry.emplace<Velocity>(enemy, enemySchema.velocity);
     registry.emplace<Name>(enemy, enemySchema.name);
+    registry.emplace<Health>(enemy, enemySchema.health, enemySchema.health);
 
     registry.emplace<Drop>(enemy, 100, 69);
 
