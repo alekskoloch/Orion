@@ -3,6 +3,7 @@
 #include "../pch.h"
 
 #include "SkillManager.h"
+#include "GUIElements/GUIDialogBox.h"
 
 #include "../schema/SkillSchema.h"
 #include "../components/components.h"
@@ -13,7 +14,7 @@ class Skill
 {
 public:
     Skill(sf::RenderWindow& window, entt::registry& registry, sf::Font& font, sf::Vector2f iconPosition, std::string name, std::string description, std::string iconTextureName, std::string iconHoverTextureName, std::string iconActiveTextureName, std::function<void(entt::registry&)> onActivate, std::vector<SkillSchema> skillToUnlock)
-    : window(window), registry(registry), font(font), iconPosition(iconPosition), name(name), description(description), iconTextureName(iconTextureName), iconHoverTextureName(iconHoverTextureName), iconActiveTextureName(iconActiveTextureName), onActivate(onActivate), skillsToUnlock(skillToUnlock)
+    : window(window), registry(registry), font(font), iconPosition(iconPosition), name(name), description(description), iconTextureName(iconTextureName), iconHoverTextureName(iconHoverTextureName), iconActiveTextureName(iconActiveTextureName), onActivate(onActivate), skillsToUnlock(skillToUnlock), dialogBox(window, "Are you sure you want to unlock this skill?", font)
     {
         this->initialize();
     }
@@ -49,4 +50,7 @@ private:
 
     std::function<void(entt::registry&)> onActivate;
     std::vector<SkillSchema> skillsToUnlock;
+
+    GUIDialogBox dialogBox;
+    bool dialogBoxActive = false;
 };

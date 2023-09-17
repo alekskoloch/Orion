@@ -61,30 +61,43 @@ void Skill::update()
     this->updateText();
 
     if (utils::isMouseOverSprite(this->iconSprite, sf::Mouse::getPosition(this->window)))
-    {
         this->hover = true;
-    }
     else
-    {
         this->hover = false;
-    }
 
     if (!this->active)
     {
         if (this->hover)
         {
             this->iconSprite.setTexture(TextureManager::getInstance().getTexture(this->iconHoverTextureName));
+            
             if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
-            {
-                this->iconSprite.setTexture(TextureManager::getInstance().getTexture(this->iconActiveTextureName));
-                this->active = true;
-                this->onActivate(this->registry);
-                SkillManager::getInstance(this->window, this->registry).unlockSkills(this->skillsToUnlock);
-            }
+                this->dialogBoxActive = true;    
         }
         else
         {
             this->iconSprite.setTexture(TextureManager::getInstance().getTexture(this->iconTextureName));
+        }
+    }
+
+    if (this->dialogBoxActive)
+    {
+        this->dialogBox.update();
+
+        if (this->dialogBox.getState() == GUIDialogBoxState::Yes)
+        {
+            this->dialogBox.setState(GUIDialogBoxState::Idle);
+            this->dialogBoxActive = false;
+
+            this->iconSprite.setTexture(TextureManager::getInstance().getTexture(this->iconActiveTextureName));
+            this->active = true;
+            this->onActivate(this->registry);
+            SkillManager::getInstance(this->window, this->registry).unlockSkills(this->skillsToUnlock);
+        }
+        else if (this->dialogBox.getState() == GUIDialogBoxState::No)
+        {
+            this->dialogBox.setState(GUIDialogBoxState::Idle);
+            this->dialogBoxActive = false;
         }
     }
 }
@@ -97,4 +110,7 @@ void Skill::draw()
 
     if (this->hover)
         this->window.draw(this->descriptionText);
+
+    if(this->dialogBoxActive)
+        this->dialogBox.draw();
 }
