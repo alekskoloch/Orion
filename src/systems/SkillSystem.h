@@ -10,6 +10,7 @@ public:
     static void addSingleShotWeaponDamageMultiplier(entt::registry& registry, float multiplier);
     static float getWeaponDamage(entt::registry& registry, entt::entity entity);
 
+    static void addWeaponEnergyCostMultiplier(entt::registry& registry, float multiplier);
     static void addSingleShotWeaponEnergyCostMultiplier(entt::registry& registry, float multiplier);
     static float getWeaponEnergyCost(entt::registry& registry, entt::entity entity);
 };

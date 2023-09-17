@@ -37,6 +37,12 @@ float SkillSystem::getWeaponDamage(entt::registry& registry, entt::entity entity
     return weaponDamage * damageMultiplier;
 }
 
+void SkillSystem::addWeaponEnergyCostMultiplier(entt::registry& registry, float multiplier)
+{
+    auto& playerSkillsComponent = registry.get<Skills>(registry.view<Player>().front());
+    playerSkillsComponent.weaponEnergyCostMultiplier += multiplier;
+}
+
 void SkillSystem::addSingleShotWeaponEnergyCostMultiplier(entt::registry& registry, float multiplier)
 {
     auto& playerSkillsComponent = registry.get<Skills>(registry.view<Player>().front());
