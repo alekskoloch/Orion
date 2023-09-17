@@ -12,13 +12,23 @@ class Skill;
 class SkillManager
 {
 public:
-    SkillManager(sf::RenderWindow& window, entt::registry& registry);
+    static SkillManager& getInstance(sf::RenderWindow& window, entt::registry& registry)
+    {
+        static SkillManager instance(window, registry);
+        return instance;
+    }
+
+    SkillManager(const SkillManager&) = delete;
+    void operator=(const SkillManager&) = delete;
 
     void update();
     void draw();
 
     void unlockSkills(std::vector<SkillSchema> skillsToUnlock);
+
 private:
+    SkillManager(sf::RenderWindow& window, entt::registry& registry);
+
     sf::RenderWindow& window;
     entt::registry& registry;
     std::vector<Skill> skills;

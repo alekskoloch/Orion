@@ -32,7 +32,6 @@ void SkillManager::addSkill(const SkillSchema& skill)
         this->window,
         this->registry,
         this->font,
-        *this,
         skill.position,
         skill.name,
         skill.descriptions[0],

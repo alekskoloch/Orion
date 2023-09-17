@@ -19,8 +19,6 @@ private:
 
     sf::Font font;
 
-    SkillManager skillManager;
-
     sf::Sprite skillBackground;
     void initializeSkillBackground();
 };

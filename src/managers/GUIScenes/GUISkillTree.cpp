@@ -8,25 +8,21 @@
 #include "../../utils/GraphicsOperations.h"
 #include "../../utils/Mouse.h"
 
-
-
-// ======================================================================================================
-
-GUISkillTree::GUISkillTree(entt::registry& registry, sf::RenderWindow& window) : registry(registry), window(window), skillManager(window, registry)
+GUISkillTree::GUISkillTree(entt::registry& registry, sf::RenderWindow& window) : registry(registry), window(window)
 {
     this->initializeSkillBackground();
 }
 
 void GUISkillTree::update()
 {
-    this->skillManager.update();
+    SkillManager::getInstance(this->window, this->registry).update();
 }
 
 void GUISkillTree::draw()
 {
     this->window.draw(this->skillBackground);
 
-    this->skillManager.draw();
+    SkillManager::getInstance(this->window, this->registry).draw();
 }
 
 void GUISkillTree::initializeSkillBackground()

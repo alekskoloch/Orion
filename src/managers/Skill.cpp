@@ -79,7 +79,7 @@ void Skill::update()
                 this->iconSprite.setTexture(TextureManager::getInstance().getTexture(this->iconActiveTextureName));
                 this->active = true;
                 this->onActivate(this->registry);
-                this->skillManager.unlockSkills(this->skillsToUnlock);
+                SkillManager::getInstance(this->window, this->registry).unlockSkills(this->skillsToUnlock);
             }
         }
         else
