@@ -26,14 +26,26 @@ static SkillSchema EnergyFrugality
 {
     sf::Vector2f(2320, 280.f),
     "Energy Frugality",
-    {"Single shoot weapons use 5% less energy"},
+    {
+        "Single shoot weapons use 5% less energy",
+        "Weapons use 5% less energy"
+    },
     "skill",
     "skillHover",
     "skillActive",
-    {[](entt::registry& registry)
+    {
+    [](entt::registry& registry)
     {
         SkillSystem::addSingleShotWeaponEnergyCostMultiplier(registry, -0.05f);
-    }}
+    },
+    [](entt::registry& registry)
+    {
+        SkillSystem::addSingleShotWeaponEnergyCostMultiplier(registry, 0.05f);
+        SkillSystem::addWeaponEnergyCostMultiplier(registry, -0.05f);
+    }
+    },
+    {},
+    2
 };
 
 static SkillSchema SlaughterSurge
