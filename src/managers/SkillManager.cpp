@@ -136,11 +136,11 @@ void SkillManager::addSkill(const SkillSchema& skill)
         *this,
         skill.position,
         skill.name,
-        skill.description,
+        skill.descriptions[0],
         skill.textureName,
         skill.hoverTextureName,
         skill.activeTextureName,
-        skill.callback,
+        skill.callbacks[0],
         skill.skillsToUnlock
     ));
 }
