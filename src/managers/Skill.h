@@ -13,8 +13,8 @@ class SkillManager;
 class Skill
 {
 public:
-    Skill(sf::RenderWindow& window, entt::registry& registry, sf::Font& font, sf::Vector2f iconPosition, std::string name, std::vector<std::string> descriptions, std::string iconTextureName, std::string iconHoverTextureName, std::string iconActiveTextureName, std::vector<std::function<void(entt::registry&)>> onActivateFunctions, std::vector<SkillSchema> skillToUnlock, unsigned int maxLevel, unsigned int currentLevel)
-    : window(window), registry(registry), font(font), iconPosition(iconPosition), name(name), descriptions(descriptions), iconTextureName(iconTextureName), iconHoverTextureName(iconHoverTextureName), iconActiveTextureName(iconActiveTextureName), onActivateFunctions(onActivateFunctions), skillsToUnlock(skillToUnlock), dialogBox(window, "Are you sure you want to unlock this skill?", font), maxLevel(maxLevel), currentLevel(currentLevel)
+    Skill(sf::RenderWindow& window, entt::registry& registry, sf::Font& font, sf::Vector2f iconPosition, std::string name, std::vector<std::string> descriptions, std::string iconTextureName, std::string iconHoverTextureName, std::string iconActiveTextureName, std::vector<std::function<void(entt::registry&)>> onActivateFunctions, std::vector<RequirementType> requirements, std::vector<SkillSchema> skillToUnlock, unsigned int maxLevel, unsigned int currentLevel)
+    : window(window), registry(registry), font(font), iconPosition(iconPosition), name(name), descriptions(descriptions), iconTextureName(iconTextureName), iconHoverTextureName(iconHoverTextureName), iconActiveTextureName(iconActiveTextureName), onActivateFunctions(onActivateFunctions), requirements(requirements), skillsToUnlock(skillToUnlock), dialogBox(window, "Are you sure you want to unlock this skill?", font), maxLevel(maxLevel), currentLevel(currentLevel)
     {
         this->initialize();
     }
@@ -49,6 +49,7 @@ private:
     bool hover = false;
 
     std::vector<std::function<void(entt::registry&)>> onActivateFunctions;
+    std::vector<RequirementType> requirements;
     std::vector<SkillSchema> skillsToUnlock;
 
     GUIDialogBox dialogBox;

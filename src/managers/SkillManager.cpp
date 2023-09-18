@@ -39,6 +39,7 @@ void SkillManager::addSkill(SkillSchema skill)
         skill.hoverTextureName,
         skill.activeTextureName,
         skill.callbacks,
+        skill.requirements,
         skill.skillsToUnlock,
         skill.maxLevel,
         skill.currentLevel

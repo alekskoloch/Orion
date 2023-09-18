@@ -7,6 +7,13 @@
 
 #include "../systems/SkillSystem.h"
 
+enum class RequirementType
+{
+    None,
+    OrangeStone,
+    GreenStone,
+};
+
 struct SkillSchema
 {
     sf::Vector2f position;
@@ -16,6 +23,7 @@ struct SkillSchema
     std::string hoverTextureName;
     std::string activeTextureName;
     std::vector<std::function<void(entt::registry& registry)>> callbacks;
+    std::vector<RequirementType> requirements;
     std::vector<SkillSchema> skillsToUnlock = {};
 
     unsigned int maxLevel = 1;
@@ -34,16 +42,17 @@ static SkillSchema EnergyFrugality
     "skillHover",
     "skillActive",
     {
-    [](entt::registry& registry)
-    {
-        SkillSystem::addSingleShotWeaponEnergyCostMultiplier(registry, -0.05f);
+        [](entt::registry& registry)
+        {
+            SkillSystem::addSingleShotWeaponEnergyCostMultiplier(registry, -0.05f);
+        },
+        [](entt::registry& registry)
+        {
+            SkillSystem::addSingleShotWeaponEnergyCostMultiplier(registry, 0.05f);
+            SkillSystem::addWeaponEnergyCostMultiplier(registry, -0.05f);
+        }
     },
-    [](entt::registry& registry)
-    {
-        SkillSystem::addSingleShotWeaponEnergyCostMultiplier(registry, 0.05f);
-        SkillSystem::addWeaponEnergyCostMultiplier(registry, -0.05f);
-    }
-    },
+    {RequirementType::None, RequirementType::None},
     {},
     2
 };
@@ -59,7 +68,8 @@ static SkillSchema SlaughterSurge
     {[](entt::registry& registry)
     {
         SkillSystem::addDamageMultiplier(registry, 0.05f);
-    }}
+    }},
+    {RequirementType::None}
 };
 
 static SkillSchema LethalPrecision
@@ -74,6 +84,7 @@ static SkillSchema LethalPrecision
     {
         SkillSystem::addSingleShotWeaponDamageMultiplier(registry, 0.05f);
     }},
+    {RequirementType::None},
     {SlaughterSurge, EnergyFrugality}
 };
 
@@ -103,6 +114,7 @@ static SkillSchema OrionProtocol
             SkillSystem::addEnergyRegenerationMultiplier(registry, 0.05f);
         }
     },
+    {RequirementType::None, RequirementType::None, RequirementType::None},
     {LethalPrecision},
     3
 };
