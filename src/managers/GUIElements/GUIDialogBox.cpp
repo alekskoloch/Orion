@@ -110,3 +110,9 @@ void GUIDialogBox::draw()
     this->window.draw(this->noText);
     this->window.draw(this->yesText);
 }
+
+void GUIDialogBox::setMessage(std::string message)
+{
+    this->message = message;
+    this->messageText.setString(this->message);
+}

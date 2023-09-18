@@ -19,6 +19,8 @@ public:
 
     GUIDialogBoxState getState() const { return this->state; }
     void setState(GUIDialogBoxState state) { this->state = state; }
+
+    void setMessage(std::string message);
 private:
     sf::RenderWindow& window;
     std::string message;
