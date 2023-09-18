@@ -25,15 +25,14 @@ public:
     void draw();
 
     void unlockSkills(std::vector<SkillSchema> skillsToUnlock);
-
+    void addSkill(SkillSchema skill);
 private:
     SkillManager(sf::RenderWindow& window, entt::registry& registry);
 
     sf::RenderWindow& window;
     entt::registry& registry;
-    std::vector<Skill> skills;
+    std::vector<std::unique_ptr<Skill>> skills;
     sf::Font font;
 
-    void addSkill(const SkillSchema& skill);
     void initializeFirstSkill();
 };

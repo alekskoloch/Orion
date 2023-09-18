@@ -27,7 +27,7 @@ void Skill::initializeText()
     this->nameText.setOutlineThickness(1);
     this->nameText.setOutlineColor(sf::Color::Black);
 
-    this->descriptionText.setString(this->description);
+    this->descriptionText.setString(this->descriptions[0]);
     this->descriptionText.setFont(this->font);
     this->descriptionText.setCharacterSize(40);
     this->descriptionText.setFillColor(sf::Color::White);
@@ -89,10 +89,20 @@ void Skill::update()
             this->dialogBox.setState(GUIDialogBoxState::Idle);
             this->dialogBoxActive = false;
 
-            this->iconSprite.setTexture(TextureManager::getInstance().getTexture(this->iconActiveTextureName));
-            this->active = true;
-            this->onActivate(this->registry);
+            this->onActivateFunctions[this->currentLevel](this->registry);
             SkillManager::getInstance(this->window, this->registry).unlockSkills(this->skillsToUnlock);
+
+            this->currentLevel++;
+
+            if (this->currentLevel >= this->maxLevel)
+            {
+                this->active = true;
+                this->iconSprite.setTexture(TextureManager::getInstance().getTexture(this->iconActiveTextureName));
+            }
+            else
+            {
+                this->descriptionText.setString(this->descriptions[this->currentLevel]);
+            }
         }
         else if (this->dialogBox.getState() == GUIDialogBoxState::No)
         {

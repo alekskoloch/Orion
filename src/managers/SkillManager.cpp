@@ -11,13 +11,13 @@ SkillManager::SkillManager(sf::RenderWindow& window, entt::registry& registry)
 void SkillManager::update()
 {
     for (auto& skill : this->skills)
-        skill.update();
+        skill->update();
 }
 
 void SkillManager::draw()
 {
     for (auto& skill : this->skills)
-        skill.draw();
+        skill->draw();
 }
 
 void SkillManager::unlockSkills(std::vector<SkillSchema> skillsToUnlock)
@@ -26,21 +26,23 @@ void SkillManager::unlockSkills(std::vector<SkillSchema> skillsToUnlock)
         this->addSkill(skillSchema);
 }
 
-void SkillManager::addSkill(const SkillSchema& skill)
+void SkillManager::addSkill(SkillSchema skill)
 {
-    this->skills.push_back(Skill(
+    this->skills.push_back(std::make_unique<Skill>(
         this->window,
         this->registry,
         this->font,
         skill.position,
         skill.name,
-        skill.descriptions[0],
+        skill.descriptions,
         skill.textureName,
         skill.hoverTextureName,
         skill.activeTextureName,
-        skill.callbacks[0],
-        skill.skillsToUnlock
-    ));
+        skill.callbacks,
+        skill.skillsToUnlock,
+        skill.maxLevel,
+        skill.currentLevel
+    ));  
 }
 
 void SkillManager::initializeFirstSkill()

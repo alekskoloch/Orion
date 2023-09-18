@@ -13,8 +13,8 @@ class SkillManager;
 class Skill
 {
 public:
-    Skill(sf::RenderWindow& window, entt::registry& registry, sf::Font& font, sf::Vector2f iconPosition, std::string name, std::string description, std::string iconTextureName, std::string iconHoverTextureName, std::string iconActiveTextureName, std::function<void(entt::registry&)> onActivate, std::vector<SkillSchema> skillToUnlock)
-    : window(window), registry(registry), font(font), iconPosition(iconPosition), name(name), description(description), iconTextureName(iconTextureName), iconHoverTextureName(iconHoverTextureName), iconActiveTextureName(iconActiveTextureName), onActivate(onActivate), skillsToUnlock(skillToUnlock), dialogBox(window, "Are you sure you want to unlock this skill?", font)
+    Skill(sf::RenderWindow& window, entt::registry& registry, sf::Font& font, sf::Vector2f iconPosition, std::string name, std::vector<std::string> descriptions, std::string iconTextureName, std::string iconHoverTextureName, std::string iconActiveTextureName, std::vector<std::function<void(entt::registry&)>> onActivateFunctions, std::vector<SkillSchema> skillToUnlock, unsigned int maxLevel, unsigned int currentLevel)
+    : window(window), registry(registry), font(font), iconPosition(iconPosition), name(name), descriptions(descriptions), iconTextureName(iconTextureName), iconHoverTextureName(iconHoverTextureName), iconActiveTextureName(iconActiveTextureName), onActivateFunctions(onActivateFunctions), skillsToUnlock(skillToUnlock), dialogBox(window, "Are you sure you want to unlock this skill?", font), maxLevel(maxLevel), currentLevel(currentLevel)
     {
         this->initialize();
     }
@@ -39,7 +39,7 @@ private:
     void updateText();
 
     std::string name;
-    std::string description;
+    std::vector<std::string> descriptions;
     
     sf::Font& font;
     sf::Text nameText;
@@ -48,9 +48,12 @@ private:
     bool active = false;
     bool hover = false;
 
-    std::function<void(entt::registry&)> onActivate;
+    std::vector<std::function<void(entt::registry&)>> onActivateFunctions;
     std::vector<SkillSchema> skillsToUnlock;
 
     GUIDialogBox dialogBox;
     bool dialogBoxActive = false;
+
+    unsigned int maxLevel;
+    unsigned int currentLevel;
 };
