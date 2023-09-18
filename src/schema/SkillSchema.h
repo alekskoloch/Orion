@@ -81,13 +81,28 @@ static SkillSchema OrionProtocol
 {
     sf::Vector2f(1920.f, 1080.f),
     "Orion protocol",
-    {"All bullets deal damage increased by 5%"},
+    {
+        "All bullets deal damage increased by 5%",
+        "All shields last 5% longer",
+        "Energy regeneration works 5% better"
+    },
     "skill",
     "skillHover",
     "skillActive",
-    {[](entt::registry& registry)
     {
-        SkillSystem::addWeaponDamageMultiplier(registry, 0.05f);
-    }},
-    {LethalPrecision}
+        [](entt::registry& registry)
+        {
+            SkillSystem::addWeaponDamageMultiplier(registry, 0.05f);
+        },
+        [](entt::registry& registry)
+        {
+            SkillSystem::addShieldTimeDurationMultiplier(registry, 0.05f);
+        },
+        [](entt::registry& registry)
+        {
+            SkillSystem::addEnergyRegenerationMultiplier(registry, 0.05f);
+        }
+    },
+    {LethalPrecision},
+    3
 };
