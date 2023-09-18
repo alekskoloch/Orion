@@ -90,7 +90,17 @@ void Skill::update()
             this->dialogBoxActive = false;
 
             this->onActivateFunctions[this->currentLevel](this->registry);
-            SkillManager::getInstance(this->window, this->registry).unlockSkills(this->skillsToUnlock);
+
+            //TODO: temporary solution for first skill
+            if (this->name == "Orion protocol")
+            {
+                if (this->currentLevel == this->maxLevel - 1)
+                    SkillManager::getInstance(this->window, this->registry).unlockSkills(this->skillsToUnlock);   
+            }
+            else if (this->currentLevel == 0)
+            {
+                SkillManager::getInstance(this->window, this->registry).unlockSkills(this->skillsToUnlock);
+            }
 
             this->currentLevel++;
 
