@@ -62,3 +62,37 @@ float SkillSystem::getWeaponEnergyCost(entt::registry& registry, entt::entity en
 
     return energyCost * energyCostMultiplier;
 }
+
+void SkillSystem::addEnergyRegenerationMultiplier(entt::registry& registry, float multiplier)
+{
+    auto& playerSkillsComponent = registry.get<Skills>(registry.view<Player>().front());
+    playerSkillsComponent.energyRegenerationMultiplier += multiplier;
+}
+
+float SkillSystem::getEnergyRegeneration(entt::registry& registry, entt::entity entity)
+{
+    auto& skillsComponent = registry.get<Skills>(entity);
+    auto& energyComponent = registry.get<Energy>(entity);
+
+    float energyRegeneration = energyComponent.energyRegenerationRate;
+    float energyRegenerationMultiplier = skillsComponent.energyRegenerationMultiplier;
+
+    return energyRegeneration * energyRegenerationMultiplier;
+}
+
+void SkillSystem::addShieldTimeDurationMultiplier(entt::registry& registry, float multiplier)
+{
+    auto& playerSkillsComponent = registry.get<Skills>(registry.view<Player>().front());
+    playerSkillsComponent.shieldTimeDurationMultiplier += multiplier;
+}
+
+float SkillSystem::getShieldTimeDuration(entt::registry& registry, entt::entity entity)
+{
+    auto& skillsComponent = registry.get<Skills>(entity);
+    auto& shieldComponent = registry.get<Shield>(entity);
+
+    float shieldTimeDuration = shieldComponent.duration;
+    float shieldTimeDurationMultiplier = skillsComponent.shieldTimeDurationMultiplier;
+
+    return shieldTimeDuration * shieldTimeDurationMultiplier;
+}
