@@ -132,6 +132,10 @@ struct Skills
 
     float weaponEnergyCostMultiplier = 1.f;
     float singleShotWeaponEnergyCostMultiplier = 1.f;
+
+    float energyRegenerationMultiplier = 1.f;
+
+    float shieldTimeDurationMultiplier = 1.f;
 };
 
 struct Speed
