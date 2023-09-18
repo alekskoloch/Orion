@@ -114,7 +114,7 @@ static SkillSchema OrionProtocol
             SkillSystem::addEnergyRegenerationMultiplier(registry, 0.05f);
         }
     },
-    {RequirementType::None, RequirementType::None, RequirementType::None},
+    {RequirementType::OrangeStone, RequirementType::GreenStone, RequirementType::OrangeStone},
     {LethalPrecision},
     3
 };

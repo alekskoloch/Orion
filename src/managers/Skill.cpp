@@ -72,7 +72,16 @@ void Skill::update()
             this->iconSprite.setTexture(TextureManager::getInstance().getTexture(this->iconHoverTextureName));
             
             if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
-                this->dialogBoxActive = true;    
+            {
+                if (this->requirements[this->currentLevel] == RequirementType::None)
+                    this->dialogBox.setMessage("Are you sure you want to unlock this skill?");
+                else if (this->requirements[this->currentLevel] == RequirementType::OrangeStone)
+                    this->dialogBox.setMessage(" This skill requires orange stone to unlock.\nAre you sure you want to unlock this skill?");
+                else if (this->requirements[this->currentLevel] == RequirementType::GreenStone)
+                    this->dialogBox.setMessage("  This skill requires green stone to unlock.\nAre you sure you want to unlock this skill?");
+
+                this->dialogBoxActive = true;
+            }
         }
         else
         {
