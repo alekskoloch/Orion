@@ -7,6 +7,8 @@
 #include "../schema/SkillSchema.h"
 #include "../components/components.h"
 
+#include "GUIElements/GUIDialogBox.h"
+
 class Skill;
 
 class SkillManager
@@ -33,6 +35,8 @@ private:
     entt::registry& registry;
     std::vector<std::unique_ptr<Skill>> skills;
     sf::Font font;
+
+    GUIDialogBox dialogBox;
 
     void initializeFirstSkill();
 };

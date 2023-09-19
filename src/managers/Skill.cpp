@@ -60,12 +60,12 @@ void Skill::update()
 {
     this->updateText();
 
-    if (utils::isMouseOverSprite(this->iconSprite, sf::Mouse::getPosition(this->window)))
+    if (utils::isMouseOverSprite(this->iconSprite, sf::Mouse::getPosition(this->window)) && this->dialogBox.getState() == GUIDialogBoxState::Hidden)
         this->hover = true;
     else
         this->hover = false;
 
-    if (!this->active)
+    if (!this->active && this->dialogBox.getState() == GUIDialogBoxState::Hidden)
     {
         if (this->hover)
         {
@@ -74,13 +74,14 @@ void Skill::update()
             if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
             {
                 if (this->requirements[this->currentLevel] == RequirementType::None)
-                    this->dialogBox.setMessage("Are you sure you want to unlock this skill?");
+                    this->dialogBox.setMessage("Are you sure you want to unlock " + this->name + "?");
                 else if (this->requirements[this->currentLevel] == RequirementType::OrangeStone)
-                    this->dialogBox.setMessage(" This skill requires orange stone to unlock.\nAre you sure you want to unlock this skill?");
+                    this->dialogBox.setMessage(this->name + " requires orange stone to unlock.\nAre you sure you want to unlock " + this->name + "?");
                 else if (this->requirements[this->currentLevel] == RequirementType::GreenStone)
-                    this->dialogBox.setMessage("  This skill requires green stone to unlock.\nAre you sure you want to unlock this skill?");
+                    this->dialogBox.setMessage(this->name + " requires green stone to unlock.\nAre you sure you want to unlock " + this->name + "?");
 
-                this->dialogBoxActive = true;
+                this->dialogBox.setState(GUIDialogBoxState::Idle);
+                this->dialogBox.setTarget(this->name);
             }
         }
         else
@@ -89,14 +90,11 @@ void Skill::update()
         }
     }
 
-    if (this->dialogBoxActive)
+    if (this->dialogBox.getState() != GUIDialogBoxState::Hidden && this->dialogBox.getTarget() == this->name)
     {
-        this->dialogBox.update();
-
         if (this->dialogBox.getState() == GUIDialogBoxState::Yes)
         {
-            this->dialogBox.setState(GUIDialogBoxState::Idle);
-            this->dialogBoxActive = false;
+            this->dialogBox.setState(GUIDialogBoxState::Hidden);
 
             auto& playerStones = this->registry.get<StoneInventory>(this->registry.view<Player>().front());
 
@@ -142,8 +140,7 @@ void Skill::update()
         }
         else if (this->dialogBox.getState() == GUIDialogBoxState::No)
         {
-            this->dialogBox.setState(GUIDialogBoxState::Idle);
-            this->dialogBoxActive = false;
+            this->dialogBox.setState(GUIDialogBoxState::Hidden);
         }
     }
 }
@@ -156,7 +153,4 @@ void Skill::draw()
 
     if (this->hover)
         this->window.draw(this->descriptionText);
-
-    if(this->dialogBoxActive)
-        this->dialogBox.draw();
 }
