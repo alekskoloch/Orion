@@ -6,8 +6,15 @@ enum class GUIDialogBoxState
 {
     Yes,
     No,
+    Ok,
     Idle,
     Hidden
+};
+
+enum class GUIDialogBoxType
+{
+    YesNo,
+    Ok
 };
 
 class GUIDialogBox
@@ -25,11 +32,13 @@ public:
     void setTarget(std::string target) { this->target = target; }
 
     void setMessage(std::string message);
+    void setType(GUIDialogBoxType type) { this->type = type; }
 private:
     sf::RenderWindow& window;
     std::string message;
     std::string target;
 
+    GUIDialogBoxType type = GUIDialogBoxType::YesNo;
     GUIDialogBoxState state = GUIDialogBoxState::Hidden;
 
     void initialize();
@@ -41,5 +50,6 @@ private:
     sf::Text messageText;
     sf::Text noText;
     sf::Text yesText;
+    sf::Text okText;
     sf::RectangleShape box;
 };

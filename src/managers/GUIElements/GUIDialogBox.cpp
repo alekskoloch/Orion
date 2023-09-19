@@ -44,6 +44,13 @@ void GUIDialogBox::initializeText()
     this->yesText.setFillColor(sf::Color::White);
     this->yesText.setOutlineThickness(1);
     this->yesText.setOutlineColor(sf::Color::Black);
+
+    this->okText.setString("Ok");
+    this->okText.setFont(this->font);
+    this->okText.setCharacterSize(30);
+    this->okText.setFillColor(sf::Color::White);
+    this->okText.setOutlineThickness(1);
+    this->okText.setOutlineColor(sf::Color::Black);
 }
 
 void GUIDialogBox::updateText()
@@ -74,32 +81,57 @@ void GUIDialogBox::updateText()
         this->box.getPosition().x + this->box.getSize().x / 4,
         this->box.getPosition().y + this->box.getSize().y / 2 - 60
     );
+
+    this->okText.setOrigin(
+        this->okText.getGlobalBounds().width / 2.f,
+        this->okText.getGlobalBounds().height / 2.f
+    );
+    this->okText.setPosition(
+        this->box.getPosition().x,
+        this->box.getPosition().y + this->box.getSize().y / 2 - 60
+    );
 }
 
 void GUIDialogBox::update()
 {
     this->updateText();
 
-    if (this->noText.getGlobalBounds().contains(sf::Vector2f(sf::Mouse::getPosition(this->window))))
+    if (this->type == GUIDialogBoxType::YesNo)
     {
-        this->noText.setFillColor(sf::Color::Red);
-        if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
-            this->state = GUIDialogBoxState::No;
-    }
-    else
-    {
-        this->noText.setFillColor(sf::Color::White);
-    }
+        if (this->noText.getGlobalBounds().contains(sf::Vector2f(sf::Mouse::getPosition(this->window))))
+        {
+            this->noText.setFillColor(sf::Color::Red);
+            if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+                this->state = GUIDialogBoxState::No;
+        }
+        else
+        {
+            this->noText.setFillColor(sf::Color::White);
+        }
 
-    if (this->yesText.getGlobalBounds().contains(sf::Vector2f(sf::Mouse::getPosition(this->window))))
-    {
-        this->yesText.setFillColor(sf::Color::Green);
-        if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
-            this->state = GUIDialogBoxState::Yes;
+        if (this->yesText.getGlobalBounds().contains(sf::Vector2f(sf::Mouse::getPosition(this->window))))
+        {
+            this->yesText.setFillColor(sf::Color::Green);
+            if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+                this->state = GUIDialogBoxState::Yes;
+        }
+        else
+        {
+            this->yesText.setFillColor(sf::Color::White);
+        }
     }
-    else
+    else if (this->type == GUIDialogBoxType::Ok)
     {
-        this->yesText.setFillColor(sf::Color::White);
+        if (this->okText.getGlobalBounds().contains(sf::Vector2f(sf::Mouse::getPosition(this->window))))
+        {
+            this->okText.setFillColor(sf::Color::Green);
+            if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+                this->state = GUIDialogBoxState::Ok;
+        }
+        else
+        {
+            this->okText.setFillColor(sf::Color::White);
+        }
     }
 }
 
@@ -107,8 +139,16 @@ void GUIDialogBox::draw()
 {
     this->window.draw(this->box);
     this->window.draw(this->messageText);
-    this->window.draw(this->noText);
-    this->window.draw(this->yesText);
+
+    if (this->type == GUIDialogBoxType::YesNo)
+    {
+        this->window.draw(this->noText);
+        this->window.draw(this->yesText);
+    }
+    else if (this->type == GUIDialogBoxType::Ok)
+    {
+        this->window.draw(this->okText);
+    }
 }
 
 void GUIDialogBox::setMessage(std::string message)
