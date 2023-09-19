@@ -97,10 +97,30 @@ void checkDropCollision(entt::registry& registry)
 
             if (dropCollision.collisionBox.intersects(playerCollision.collisionBox))
             {
-                registry.destroy(drop);
-                //TODO: Only temporary effect
-                auto& playerEnergy = registry.get<Energy>(player);
-                playerEnergy.currentEnergyValue = playerEnergy.maxEnergyValue;
+                auto dropName = registry.get<DropItem>(drop).name;
+
+                if (dropName == "stoneGreen")
+                {
+                    auto& playerStones = registry.get<StoneInventory>(player);
+                    playerStones.greenStones++;
+                    registry.destroy(drop);
+                }
+                else if (dropName == "stoneOrange")
+                {
+                    auto& playerStones = registry.get<StoneInventory>(player);
+                    playerStones.orangeStones++;
+                    registry.destroy(drop);
+                }
+                else
+                {
+                    registry.destroy(drop);
+                    //TODO: Only temporary effect
+                    auto& playerEnergy = registry.get<Energy>(player);
+                    playerEnergy.currentEnergyValue = playerEnergy.maxEnergyValue;
+                }
+
+
+
             }
         }
     }
