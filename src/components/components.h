@@ -52,6 +52,12 @@ struct EntityState
     float idleRange;
 };
 
+struct StoneInventory
+{
+    unsigned int greenStones = 0;
+    unsigned int orangeStones = 0;
+};
+
 struct Health
 {
     float maxHealthValue;
