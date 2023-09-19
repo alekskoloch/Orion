@@ -21,33 +21,49 @@ void DropSystem::drop(entt::registry& registry, entt::entity& entity)
     TextureManager::getInstance().loadTexture("MONEY_200", ASSETS_PATH + std::string("money200") + ".png");
     TextureManager::getInstance().loadTexture("MONEY_500", ASSETS_PATH + std::string("money500") + ".png");
     TextureManager::getInstance().loadTexture("MONEY_1000", ASSETS_PATH + std::string("money1000") + ".png");
+    TextureManager::getInstance().loadTexture("STONE_GREEN", ASSETS_PATH + std::string("greenStone") + ".png");
+    TextureManager::getInstance().loadTexture("STONE_ORANGE", ASSETS_PATH + std::string("orangeStone") + ".png");
 
     auto drop = registry.create();
-    registry.emplace<DropItem>(drop);
 
     sf::Sprite dropSprite;
-    switch (ProceduralGenerationSystem::GetRandomNumber(1, 7))
+    switch (ProceduralGenerationSystem::GetRandomNumber(1, 9))
     {
         case 1:
             dropSprite = CreateSprite("MONEY_10");
+            registry.emplace<DropItem>(drop, "money10");
             break;
         case 2:
             dropSprite = CreateSprite("MONEY_20");
+            registry.emplace<DropItem>(drop, "money20");
             break;
         case 3:
             dropSprite = CreateSprite("MONEY_50");
+            registry.emplace<DropItem>(drop, "money50");
             break;
         case 4:
             dropSprite = CreateSprite("MONEY_100");
+            registry.emplace<DropItem>(drop, "money100");
             break;
         case 5:
             dropSprite = CreateSprite("MONEY_200");
+            registry.emplace<DropItem>(drop, "money200");
             break;
         case 6:
             dropSprite = CreateSprite("MONEY_500");
+            registry.emplace<DropItem>(drop, "money500");
             break;
         case 7:
             dropSprite = CreateSprite("MONEY_1000");
+            registry.emplace<DropItem>(drop, "money1000");
+            break;
+        case 8:
+            dropSprite = CreateSprite("STONE_GREEN");
+            registry.emplace<DropItem>(drop, "stoneGreen");
+            break;
+        case 9:
+            dropSprite = CreateSprite("STONE_ORANGE");
+            registry.emplace<DropItem>(drop, "stoneOrange");
             break;
     }
 
