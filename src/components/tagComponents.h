@@ -19,4 +19,4 @@ struct EnemyBullet{};
 
 struct PlayerShield {};
 
-struct DropItem {};
+struct DropItem { std::string name; };
