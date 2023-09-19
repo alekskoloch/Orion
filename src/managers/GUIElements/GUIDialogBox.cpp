@@ -1,5 +1,7 @@
 #include "GUIDialogBox.h"
 
+#
+
 GUIDialogBox::GUIDialogBox(sf::RenderWindow& window, std::string message, sf::Font& font)
     : window(window), message(message), font(font)
 {
@@ -155,4 +157,21 @@ void GUIDialogBox::setMessage(std::string message)
 {
     this->message = message;
     this->messageText.setString(this->message);
+
+    this->box.setSize(sf::Vector2f(
+        this->messageText.getGlobalBounds().width + 100,
+        this->box.getSize().y
+    ));
+
+    this->box.setOrigin(sf::Vector2f(
+        this->box.getSize().x / 2,
+        this->box.getSize().y / 2
+    ));
+
+    this->box.setPosition(sf::Vector2f(
+        this->window.getSize().x / 2,
+        this->window.getSize().y / 2
+    ));
+
+    this->updateText();
 }
