@@ -2,8 +2,8 @@
 
 #
 
-GUIDialogBox::GUIDialogBox(sf::RenderWindow& window, std::string message, sf::Font& font)
-    : window(window), message(message), font(font)
+GUIDialogBox::GUIDialogBox(sf::RenderWindow& window, std::vector<std::string> messages, sf::Font& font)
+    : window(window), messages(messages), font(font)
 {
     this->initialize();
 }
@@ -26,12 +26,18 @@ void GUIDialogBox::initializeBox()
 
 void GUIDialogBox::initializeText()
 {
-    this->messageText.setString(this->message);
-    this->messageText.setFont(this->font);
-    this->messageText.setCharacterSize(30);
-    this->messageText.setFillColor(sf::Color::White);
-    this->messageText.setOutlineThickness(1);
-    this->messageText.setOutlineColor(sf::Color::Black);
+    for (auto line : this->messages)
+    {
+        sf::Text text;
+        text.setString(line);
+        text.setFont(this->font);
+        text.setCharacterSize(30);
+        text.setFillColor(sf::Color::White);
+        text.setOutlineThickness(1);
+        text.setOutlineColor(sf::Color::Black);
+
+        this->messageTexts.push_back(text);
+    }
 
     this->noText.setString("No");
     this->noText.setFont(this->font);
@@ -57,14 +63,17 @@ void GUIDialogBox::initializeText()
 
 void GUIDialogBox::updateText()
 {
-    this->messageText.setOrigin(
-        this->messageText.getGlobalBounds().width / 2.f,
-        this->messageText.getGlobalBounds().height / 2.f
-    );
-    this->messageText.setPosition(
-        this->box.getPosition().x,
-        this->box.getPosition().y - this->box.getSize().y / 2 + 40
-    );
+    for (int i = 0; i < this->messageTexts.size(); i++)
+    {
+        this->messageTexts[i].setOrigin(
+            this->messageTexts[i].getGlobalBounds().width / 2.f,
+            this->messageTexts[i].getGlobalBounds().height / 2.f
+        );
+        this->messageTexts[i].setPosition(
+            this->box.getPosition().x,
+            this->box.getPosition().y - this->box.getSize().y / 2 + 40 + i * 40
+        );
+    }
 
     this->noText.setOrigin(
         this->noText.getGlobalBounds().width / 2.f,
@@ -140,7 +149,8 @@ void GUIDialogBox::update()
 void GUIDialogBox::draw()
 {
     this->window.draw(this->box);
-    this->window.draw(this->messageText);
+    for (auto text : this->messageTexts)
+        this->window.draw(text);
 
     if (this->type == GUIDialogBoxType::YesNo)
     {
@@ -153,13 +163,40 @@ void GUIDialogBox::draw()
     }
 }
 
-void GUIDialogBox::setMessage(std::string message)
+void GUIDialogBox::setMessage(std::vector<std::string> message)
 {
-    this->message = message;
-    this->messageText.setString(this->message);
+    this->messages = message;
+
+    this->messageTexts.clear();
+
+    for (auto line : this->messages)
+    {
+        sf::Text text;
+        text.setString(line);
+        text.setFont(this->font);
+        text.setCharacterSize(30);
+        text.setFillColor(sf::Color::White);
+        text.setOutlineThickness(1);
+        text.setOutlineColor(sf::Color::Black);
+
+        this->messageTexts.push_back(text);
+    }
+
+    auto findLongestLine = [](std::vector<sf::Text> texts) -> sf::Text
+    {
+        sf::Text longestText = texts[0];
+
+        for (auto text : texts)
+        {
+            if (text.getGlobalBounds().width > longestText.getGlobalBounds().width)
+                longestText = text;
+        }
+
+        return longestText;
+    };
 
     this->box.setSize(sf::Vector2f(
-        this->messageText.getGlobalBounds().width + 100,
+        findLongestLine(this->messageTexts).getGlobalBounds().width + 100,
         this->box.getSize().y
     ));
 

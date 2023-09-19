@@ -1,7 +1,7 @@
 #include "SkillManager.h"
 
 SkillManager::SkillManager(sf::RenderWindow& window, entt::registry& registry)
-    : window(window), registry(registry), dialogBox(window, "Are you sure you want to unlock this skill?", this->font)
+    : window(window), registry(registry), dialogBox(window, {"Are you sure you want to unlock this skill?"}, this->font)
 {
     this->font.loadFromFile(ASSETS_PATH + std::string("fonts/font.ttf"));
 
