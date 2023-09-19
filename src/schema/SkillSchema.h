@@ -76,16 +76,26 @@ static SkillSchema LethalPrecision
 {
     sf::Vector2f(1920.f, 680.f),
     "Lethal Precision",
-    {"All single shot weapons deal damage increased by 5%"},
+    {
+        "All single shot weapons deal damage increased by 5%",
+        "All single shot weapons deal damage increased by 10%"    
+    },
     "skill",
     "skillHover",
     "skillActive",
-    {[](entt::registry& registry)
     {
-        SkillSystem::addSingleShotWeaponDamageMultiplier(registry, 0.05f);
-    }},
-    {RequirementType::None},
-    {SlaughterSurge, EnergyFrugality}
+        [](entt::registry& registry)
+        {
+            SkillSystem::addSingleShotWeaponDamageMultiplier(registry, 0.05f);
+        },
+        [](entt::registry& registry)
+        {
+            SkillSystem::addSingleShotWeaponDamageMultiplier(registry, 0.05f);
+        }
+    },
+    {RequirementType::None, RequirementType::OrangeStone},
+    {SlaughterSurge, EnergyFrugality},
+    2
 };
 
 static SkillSchema OrionProtocol
