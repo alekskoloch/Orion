@@ -1,8 +1,10 @@
 #include "EnergySystem.h"
 
+#include "../systems/SkillSystem.h"
+
 void EnergySystem::updateEnergy(entt::registry& registry, sf::Time deltaTime)
 {
-    auto view = registry.view<Energy>();
+    auto view = registry.view<Player, Energy>();
 
     for (auto entity : view)
     {
@@ -15,7 +17,7 @@ void EnergySystem::updateEnergy(entt::registry& registry, sf::Time deltaTime)
         {
             if (energyComponent.currentEnergyValue < energyComponent.maxEnergyValue)
             {
-                energyComponent.currentEnergyValue += energyComponent.energyRegenerationRate * deltaTime.asSeconds();
+                energyComponent.currentEnergyValue += SkillSystem::getEnergyRegeneration(registry, entity) * deltaTime.asSeconds();
                 if (energyComponent.currentEnergyValue > energyComponent.maxEnergyValue)
                 {
                     energyComponent.currentEnergyValue = energyComponent.maxEnergyValue;
