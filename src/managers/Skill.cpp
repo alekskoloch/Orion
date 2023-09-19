@@ -80,6 +80,7 @@ void Skill::update()
                 else if (this->requirements[this->currentLevel] == RequirementType::GreenStone)
                     this->dialogBox.setMessage(this->name + " requires green stone to unlock.\nAre you sure you want to unlock " + this->name + "?");
 
+                this->dialogBox.setType(GUIDialogBoxType::YesNo);
                 this->dialogBox.setState(GUIDialogBoxState::Idle);
                 this->dialogBox.setTarget(this->name);
             }
@@ -103,14 +104,24 @@ void Skill::update()
                 if (playerStones.orangeStones > 0)
                     playerStones.orangeStones--;
                 else
+                {
+                    this->dialogBox.setMessage("You don't have enough orange stones to unlock " + this->name + ".");
+                    this->dialogBox.setType(GUIDialogBoxType::Ok);
+                    this->dialogBox.setState(GUIDialogBoxState::Idle);
                     return;
+                }
             }
             else if (this->requirements[this->currentLevel] == RequirementType::GreenStone)
             {
                 if (playerStones.greenStones > 0)
                     playerStones.greenStones--;
                 else
+                {
+                    this->dialogBox.setMessage("You don't have enough green stones to unlock " + this->name + ".");
+                    this->dialogBox.setType(GUIDialogBoxType::Ok);
+                    this->dialogBox.setState(GUIDialogBoxState::Idle);
                     return;
+                }
             }
 
             this->onActivateFunctions[this->currentLevel](this->registry);
@@ -139,6 +150,10 @@ void Skill::update()
             }
         }
         else if (this->dialogBox.getState() == GUIDialogBoxState::No)
+        {
+            this->dialogBox.setState(GUIDialogBoxState::Hidden);
+        }
+        else if (this->dialogBox.getState() == GUIDialogBoxState::Ok)
         {
             this->dialogBox.setState(GUIDialogBoxState::Hidden);
         }
