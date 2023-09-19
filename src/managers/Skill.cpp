@@ -98,6 +98,23 @@ void Skill::update()
             this->dialogBox.setState(GUIDialogBoxState::Idle);
             this->dialogBoxActive = false;
 
+            auto& playerStones = this->registry.get<StoneInventory>(this->registry.view<Player>().front());
+
+            if (this->requirements[this->currentLevel] == RequirementType::OrangeStone)
+            {
+                if (playerStones.orangeStones > 0)
+                    playerStones.orangeStones--;
+                else
+                    return;
+            }
+            else if (this->requirements[this->currentLevel] == RequirementType::GreenStone)
+            {
+                if (playerStones.greenStones > 0)
+                    playerStones.greenStones--;
+                else
+                    return;
+            }
+
             this->onActivateFunctions[this->currentLevel](this->registry);
 
             //TODO: temporary solution for first skill
