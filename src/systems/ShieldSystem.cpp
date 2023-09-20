@@ -3,6 +3,7 @@
 #include "../managers/TextureManager.h"
 
 #include "../systems/EnergySystem.h"
+#include "../systems/SkillSystem.h"
 
 #include "../components/components.h"
 #include "../components/tagComponents.h"
@@ -127,7 +128,7 @@ void ShieldSystem::getShield(entt::registry& registry)
                 registry.destroy(entity);
         }
 
-        shield.currentDuration = shield.duration;
+        shield.currentDuration = shield.duration * SkillSystem::getShieldTimeDurationMultiplier(registry);
         shield.active = true;
 
         auto shieldEntity = registry.create();
