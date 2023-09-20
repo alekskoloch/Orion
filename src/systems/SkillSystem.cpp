@@ -86,13 +86,8 @@ void SkillSystem::addShieldTimeDurationMultiplier(entt::registry& registry, floa
     playerSkillsComponent.shieldTimeDurationMultiplier += multiplier;
 }
 
-float SkillSystem::getShieldTimeDuration(entt::registry& registry, entt::entity entity)
+float SkillSystem::getShieldTimeDurationMultiplier(entt::registry& registry)
 {
-    auto& skillsComponent = registry.get<Skills>(entity);
-    auto& shieldComponent = registry.get<Shield>(entity);
-
-    float shieldTimeDuration = shieldComponent.duration;
-    float shieldTimeDurationMultiplier = skillsComponent.shieldTimeDurationMultiplier;
-
-    return shieldTimeDuration * shieldTimeDurationMultiplier;
+    auto playerSkillsComponent = registry.get<Skills>(registry.view<Player>().front());
+    return playerSkillsComponent.shieldTimeDurationMultiplier;
 }

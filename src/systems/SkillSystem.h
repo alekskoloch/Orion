@@ -18,5 +18,5 @@ public:
     static float getEnergyRegeneration(entt::registry& registry, entt::entity entity);
 
     static void addShieldTimeDurationMultiplier(entt::registry& registry, float multiplier);
-    static float getShieldTimeDuration(entt::registry& registry, entt::entity entity);
+    static float getShieldTimeDurationMultiplier(entt::registry& registry);
 };
