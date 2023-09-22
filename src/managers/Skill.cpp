@@ -52,6 +52,7 @@ void Skill::updateText()
         this->descriptionText.getGlobalBounds().width / 2.f,
         this->descriptionText.getGlobalBounds().height / 2.f
     );
+
     this->descriptionText.setPosition(
         this->window.getSize().x / 2.f,
         this->window.getSize().y - MARGIN - this->descriptionText.getGlobalBounds().height
@@ -77,7 +78,12 @@ void Skill::update()
 {
     this->updateText();
 
-    if (utils::isMouseOverSprite(this->iconSprite, sf::Mouse::getPosition(this->window)) && this->dialogBox.getState() == GUIDialogBoxState::Hidden)
+    sf::Vector2i mousePosition = sf::Vector2i(
+        window.mapPixelToCoords(sf::Mouse::getPosition(this->window)).x,
+        window.mapPixelToCoords(sf::Mouse::getPosition(this->window)).y
+    );
+
+    if (utils::isMouseOverSprite(this->iconSprite, mousePosition) && this->dialogBox.getState() == GUIDialogBoxState::Hidden)
     {
         if (this->currentLevel < this->maxLevel)
             this->circleSegments[this->currentLevel]->setState(CircleSegmentState::Hover);
@@ -202,8 +208,14 @@ void Skill::draw()
 
     this->window.draw(this->nameText);
 
+    sf::View view = window.getView();
+
+    this->window.setView(this->window.getDefaultView());
+
     if (this->hover)
         this->window.draw(this->descriptionText);
+
+    this->window.setView(view);
 
     for (auto& circleSegment : this->circleSegments)
         this->window.draw(*circleSegment);
