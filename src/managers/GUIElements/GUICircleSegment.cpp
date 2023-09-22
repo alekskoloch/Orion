@@ -59,20 +59,18 @@ void GUICircleSegment::createCircleSegment()
     {
         float angle1 = startAngle + i * angleStep;
         float angle2 = startAngle + (i + 1) * angleStep;
-        float t = static_cast<float>(i) / numSegments; // Używamy t jako współczynnika interpolacji
+        float t = static_cast<float>(i) / numSegments;
 
         sf::Color color = interpolateColor(color1, color2, t);
 
         float midPoint = (angle1 + angle2) / 2.0f;
-        float alpha = std::abs(midPoint - currentAngle) / (currentAngle - startAngle); // Interpolacja przezroczystości
+        float alpha = std::abs(midPoint - currentAngle) / (currentAngle - startAngle);
 
-        for (float t = angle1; t < angle2; t += 0.5f) // Zmniejszamy krok na 0.1f
+        for (float t = angle1; t < angle2; t += 0.5f)
         {
             float angle = t * M_PI / 180.0f;
             sf::Vector2f outerPoint = center + sf::Vector2f(std::cos(angle), std::sin(angle)) * radius;
             sf::Vector2f innerPoint = center + sf::Vector2f(std::cos(angle), std::sin(angle)) * (radius - thickness);
-
-            color.a = static_cast<sf::Uint8>(alpha * color1.a);
 
             segmentVertices.emplace_back(outerPoint, color);
             segmentVertices.emplace_back(innerPoint, color);
