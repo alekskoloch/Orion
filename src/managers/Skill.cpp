@@ -15,6 +15,8 @@ void Skill::initialize()
     this->iconSprite.setPosition(this->iconPosition);
 
     this->initializeText();
+
+    this->addCircleSegment();
 }
 
 void Skill::initializeText()
@@ -56,14 +58,37 @@ void Skill::updateText()
     );
 }
 
+void Skill::addCircleSegment()
+{
+    sf::Color segmentColor;
+    if (this->requirements[this->currentLevel] == RequirementType::OrangeStone)
+        segmentColor = sf::Color(195, 82, 20);
+    else if (this->requirements[this->currentLevel] == RequirementType::GreenStone)
+        segmentColor = sf::Color(0, 75, 73);
+    else
+        segmentColor = sf::Color::White;
+
+    auto angle = 360.f / this->maxLevel;
+    GUICircleSegment circleSegment(this->iconPosition, 100.f, this->currentLevel * angle, angle + (this->currentLevel * angle), 20.f, segmentColor);
+    this->circleSegments.push_back(std::make_unique<GUICircleSegment>(circleSegment));
+}   
+
 void Skill::update()
 {
     this->updateText();
 
     if (utils::isMouseOverSprite(this->iconSprite, sf::Mouse::getPosition(this->window)) && this->dialogBox.getState() == GUIDialogBoxState::Hidden)
+    {
+        if (this->currentLevel < this->maxLevel)
+            this->circleSegments[this->currentLevel]->setState(CircleSegmentState::Hover);
         this->hover = true;
+    }
     else
+    {
+        if (this->currentLevel < this->maxLevel)
+            this->circleSegments[this->currentLevel]->setState(CircleSegmentState::Hidden);
         this->hover = false;
+    }
 
     if (!this->active && this->dialogBox.getState() == GUIDialogBoxState::Hidden)
     {
@@ -137,7 +162,12 @@ void Skill::update()
                 SkillManager::getInstance(this->window, this->registry).unlockSkills(this->skillsToUnlock);
             }
 
+            this->circleSegments.at(this->currentLevel)->setState(CircleSegmentState::Active);
+
             this->currentLevel++;
+
+            if (this->currentLevel < this->maxLevel)
+                this->addCircleSegment();
 
             if (this->currentLevel >= this->maxLevel)
             {
@@ -158,6 +188,12 @@ void Skill::update()
             this->dialogBox.setState(GUIDialogBoxState::Hidden);
         }
     }
+
+    //TODO: add dt
+    for (auto& circleSegment : this->circleSegments)
+    {
+        circleSegment->update(0.016f);
+    }
 }
 
 void Skill::draw()
@@ -168,4 +204,7 @@ void Skill::draw()
 
     if (this->hover)
         this->window.draw(this->descriptionText);
+
+    for (auto& circleSegment : this->circleSegments)
+        this->window.draw(*circleSegment);
 }

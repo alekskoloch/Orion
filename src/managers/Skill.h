@@ -4,6 +4,7 @@
 
 #include "SkillManager.h"
 #include "GUIElements/GUIDialogBox.h"
+#include "GUIElements/GUICircleSegment.h"
 
 #include "../schema/SkillSchema.h"
 #include "../components/components.h"
@@ -56,4 +57,7 @@ private:
 
     unsigned int maxLevel;
     unsigned int currentLevel;
+
+    std::vector<std::unique_ptr<GUICircleSegment>> circleSegments;
+    void addCircleSegment();
 };
