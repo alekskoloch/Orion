@@ -20,7 +20,4 @@ private:
     float moveSpeed = 20.0f;
 
     sf::Font font;
-
-    sf::Sprite skillBackground;
-    void initializeSkillBackground();
 };
