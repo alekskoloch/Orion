@@ -24,8 +24,14 @@ void SkillManager::draw()
     for (auto& skill : this->skills)
         skill->draw();
 
+    sf::View view = window.getView();
+
+    this->window.setView(this->window.getDefaultView());
+
     if (this->dialogBox.getState() != GUIDialogBoxState::Hidden)
         this->dialogBox.draw();
+
+    this->window.setView(view);
 }
 
 void SkillManager::unlockSkills(std::vector<SkillSchema> skillsToUnlock)
