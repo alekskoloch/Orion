@@ -109,7 +109,7 @@ void GUIDialogBox::update()
 
     if (this->type == GUIDialogBoxType::YesNo)
     {
-        if (this->noText.getGlobalBounds().contains(sf::Vector2f(sf::Mouse::getPosition(this->window))))
+        if (this->noText.getGlobalBounds().contains(this->window.mapPixelToCoords(sf::Mouse::getPosition(this->window))))
         {
             this->noText.setFillColor(sf::Color::Red);
             if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
@@ -120,7 +120,7 @@ void GUIDialogBox::update()
             this->noText.setFillColor(sf::Color::White);
         }
 
-        if (this->yesText.getGlobalBounds().contains(sf::Vector2f(sf::Mouse::getPosition(this->window))))
+        if (this->yesText.getGlobalBounds().contains(this->window.mapPixelToCoords(sf::Mouse::getPosition(this->window))))
         {
             this->yesText.setFillColor(sf::Color::Green);
             if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
@@ -133,7 +133,7 @@ void GUIDialogBox::update()
     }
     else if (this->type == GUIDialogBoxType::Ok)
     {
-        if (this->okText.getGlobalBounds().contains(sf::Vector2f(sf::Mouse::getPosition(this->window))))
+        if (this->okText.getGlobalBounds().contains(this->window.mapPixelToCoords(sf::Mouse::getPosition(this->window))))
         {
             this->okText.setFillColor(sf::Color::Green);
             if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
