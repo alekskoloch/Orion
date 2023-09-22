@@ -16,6 +16,8 @@ public:
 private:
     entt::registry& registry;
     sf::RenderWindow& window;
+    sf::View view;
+    float moveSpeed = 20.0f;
 
     sf::Font font;
 
