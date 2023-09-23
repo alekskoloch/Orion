@@ -18,6 +18,11 @@ struct Acceleration
     float decelerationValue;
 };
 
+struct Cooldown
+{
+    std::unordered_map<std::string, float> cooldowns;
+};
+
 struct Collision
 {
     sf::FloatRect collisionBox;
