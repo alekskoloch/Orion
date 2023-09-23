@@ -18,6 +18,7 @@ struct SkillSchema
 {
     sf::Vector2f position;
     std::string name;
+    bool multiLevel;
     std::vector<std::string> descriptions;
     std::string textureName;
     std::string hoverTextureName;
@@ -34,6 +35,7 @@ static SkillSchema EnergyFrugality
 {
     sf::Vector2f(2320, 280.f),
     "Energy Frugality",
+    false,
     {
         "Single shoot weapons use 5% less energy",
         "Weapons use 5% less energy"
@@ -61,6 +63,7 @@ static SkillSchema SlaughterSurge
 {
     sf::Vector2f(1920.f, 280.f),
     "Slaughter Surge",
+    false,
     {"Increases the damage inflicted by 5%"},
     "skill",
     "skillHover",
@@ -76,6 +79,7 @@ static SkillSchema SingularStrikeMastery
 {
     sf::Vector2f(1520.f, 280.f),
     "Singular Strike Mastery",
+    true,
     {
         "Allows special shot for single shoot weapons",
         "A special shoot from single shoot weapons costs 50% less energy",
@@ -107,6 +111,7 @@ static SkillSchema LethalPrecision
 {
     sf::Vector2f(1920.f, 680.f),
     "Lethal Precision",
+    false,
     {
         "All single shot weapons deal damage increased by 5%",
         "All single shot weapons deal damage increased by 10%"    
@@ -133,6 +138,7 @@ static SkillSchema OrionProtocol
 {
     sf::Vector2f(1920.f, 1080.f),
     "Orion protocol",
+    true,
     {
         "All bullets deal damage increased by 5%",
         "All shields last 5% longer",
