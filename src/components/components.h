@@ -148,6 +148,10 @@ struct Skills
     float energyRegenerationMultiplier = 1.f;
 
     float shieldTimeDurationMultiplier = 1.f;
+
+    bool singleShotWeaponSpecialShot = false;
+    bool tripleShotWeaponSpecialShot = false;
+    bool allWeaponsSpecialShot = false;
 };
 
 struct Speed
