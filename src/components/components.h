@@ -72,6 +72,7 @@ struct Input
     bool right;
 
     bool shoot;
+    bool specialShot;
 
     bool isGettingShield;
     bool getShield;
