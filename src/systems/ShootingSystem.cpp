@@ -78,7 +78,16 @@ void handlePlayerShooting(entt::registry& registry, sf::Time deltaTime, sf::Rend
         else
             canShoot = input.shoot && !weapon.shootLastFrame && !input.specialShot;
 
-        if (input.specialShot)
+        bool canSpecialShoot = false;
+
+        if (weapon.weaponType == WeaponType::SingleShot)
+            canSpecialShoot = SkillSystem::isSingleShotWeaponSpecialShotEnabled(registry);
+        else if (weapon.weaponType == WeaponType::TrippleShot)
+            canSpecialShoot = SkillSystem::isTripleShotWeaponSpecialShotEnabled(registry);
+        else
+            canSpecialShoot = SkillSystem::isAllWeaponsSpecialShotEnabled(registry);
+            
+        if (input.specialShot && canSpecialShoot)
             if (CooldownSystem::getCooldown(registry, entity, "specialShot") == 0.f)
             {
                 CooldownSystem::setCooldown(registry, entity, "specialShot", 5.f);
