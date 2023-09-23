@@ -8,6 +8,7 @@
 #include "../systems/InputSystem.h"
 
 #include "../systems/CollisionSystem.h"
+#include "../systems/CooldownSystem.h"
 #include "../systems/EnergySystem.h"
 #include "../systems/RotateTowardsMouseSystem.h"
 #include "../systems/WaypointsMovementSystem.h"
@@ -67,6 +68,7 @@ void SystemManager::executeUpdateSystems(sf::Time deltaTime)
         backgroundManager.update();
         
         WaypointsMovementSystem::updateWaypoints(this->registry, deltaTime);
+        CooldownSystem::updateCooldowns(this->registry, deltaTime);
         EnergySystem::updateEnergy(this->registry, deltaTime);
         WeaponsSystem::updateWeaponCooldown(this->registry, deltaTime);
         EntityStateSystem::updateEntityState(this->registry);
