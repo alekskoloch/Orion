@@ -5,6 +5,7 @@
 #include "SkillManager.h"
 #include "GUIElements/GUIDialogBox.h"
 #include "GUIElements/GUICircleSegment.h"
+#include "GUIElements/GUIStar.h"
 
 #include "../schema/SkillSchema.h"
 #include "../components/components.h"
@@ -60,4 +61,10 @@ private:
 
     std::vector<std::unique_ptr<GUICircleSegment>> circleSegments;
     void addCircleSegment();
+
+    std::vector<std::unique_ptr<GUIStar>> activeStars;
+    std::vector<std::unique_ptr<GUIStar>> stars;
+    void addActiveStars();
+    void initStarsForSkill();
+    bool isStarExists = false;
 };

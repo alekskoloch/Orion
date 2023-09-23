@@ -3,6 +3,8 @@
 #include "../utils/Mouse.h"
 #include "../utils/GraphicsOperations.h"
 
+#include "../systems/ProceduralGenerationSystem.h"
+
 const float MARGIN = 120.f;
 
 void Skill::initialize()
@@ -74,6 +76,63 @@ void Skill::addCircleSegment()
     this->circleSegments.push_back(std::make_unique<GUICircleSegment>(circleSegment));
 }   
 
+void Skill::addActiveStars()
+{
+    for (auto& star : this->stars)
+    {
+        auto newStar = star->getStar();
+        this->activeStars.push_back(std::make_unique<GUIStar>(newStar));
+    }
+
+    this->stars.clear();
+}
+
+void Skill::initStarsForSkill()
+{
+    unsigned int numStars = ProceduralGenerationSystem::GetRandomNumber(10, 20);
+
+    for (int i = 0; i < numStars; i++)
+    {
+        float offset = 1.f;
+        
+        if(!ProceduralGenerationSystem::GetRandomNumber(0,2))
+            offset = ProceduralGenerationSystem::GetRandomNumber(1.1f, 2.f);
+
+
+        sf::Vector2f position(
+            this->iconPosition.x + (ProceduralGenerationSystem::GetRandomNumber(-300.f, 300.f) * offset),
+            this->iconPosition.y + (ProceduralGenerationSystem::GetRandomNumber(-300.f, 300.f) * offset)
+        );
+
+        bool flicker = ProceduralGenerationSystem::GetRandomNumber(0, 2);
+        sf::Color color = sf::Color::White;
+
+        if (i == 0 || ProceduralGenerationSystem::GetRandomNumber(1,5) == 5)
+        {
+            if (this->requirements[this->currentLevel] == RequirementType::OrangeStone)
+            {
+                color = sf::Color(195, 82, 20);
+            }
+            else if (this->requirements[this->currentLevel] == RequirementType::OrangeStone)
+            {
+                color = sf::Color(0, 75, 73);
+            } 
+        }
+
+        GUIStar star(
+            position,
+            color,
+            ProceduralGenerationSystem::GetRandomNumber(1.f, 4.f),
+            !flicker,
+            ProceduralGenerationSystem::GetRandomNumber(2.f, 10.f)
+        );
+
+        this->stars.push_back(std::make_unique<GUIStar>(star));
+    }
+
+    this->isStarExists = true;
+}
+
 void Skill::update()
 {
     this->updateText();
@@ -100,6 +159,9 @@ void Skill::update()
     {
         if (this->hover)
         {
+            if (!this->isStarExists && !this->active)
+                this->initStarsForSkill();
+
             this->iconSprite.setTexture(TextureManager::getInstance().getTexture(this->iconHoverTextureName));
             
             if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
@@ -118,6 +180,12 @@ void Skill::update()
         }
         else
         {
+            if (this->isStarExists && !this->active)
+            {
+                this->isStarExists = false;
+                this->stars.clear();
+            }
+
             this->iconSprite.setTexture(TextureManager::getInstance().getTexture(this->iconTextureName));
         }
     }
@@ -157,6 +225,8 @@ void Skill::update()
 
             this->onActivateFunctions[this->currentLevel](this->registry);
 
+            
+
             //TODO: temporary solution for first skill
             if (this->name == "Orion protocol")
             {
@@ -169,6 +239,8 @@ void Skill::update()
             }
 
             this->circleSegments.at(this->currentLevel)->setState(CircleSegmentState::Active);
+
+            this->addActiveStars();
 
             this->currentLevel++;
 
@@ -200,10 +272,26 @@ void Skill::update()
     {
         circleSegment->update(0.016f);
     }
+
+    for (auto& star : this->stars)
+    {
+        star->update(0.016f);
+    }
+
+    for (auto& star : this->activeStars)
+    {
+        star->update(0.016f);
+    }
 }
 
 void Skill::draw()
 {
+    for (auto& star : this->stars)
+        this->window.draw(*star);
+
+    for (auto& star : this->activeStars)
+        this->window.draw(*star);
+
     this->window.draw(this->iconSprite);
 
     this->window.draw(this->nameText);
