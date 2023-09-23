@@ -40,7 +40,8 @@ void PlayerInitializationSystem::initializePlayer(entt::registry& registry)
     registry.emplace<RotationTowardsMouse>(player, true, 600.f, 2.f);
     registry.emplace<Shield>(player);
     registry.emplace<Skills>(player);
-    registry.emplace<StoneInventory>(player);
+    //TODO: Remove stones
+    registry.emplace<StoneInventory>(player, 3, 3);
 
     WeaponsSystem::loadWeapon(registry, redWeapon, player);
     ShieldSystem::changeShield(registry, basicShield);
