@@ -19,4 +19,11 @@ public:
 
     static void addShieldTimeDurationMultiplier(entt::registry& registry, float multiplier);
     static float getShieldTimeDurationMultiplier(entt::registry& registry);
+
+    static void enableSingleShotWeaponSpecialShot(entt::registry& registry);
+    static void enableTripleShotWeaponSpecialShot(entt::registry& registry);
+    static void enableAllWeaponsSpecialShot(entt::registry& registry);
+    static bool isSingleShotWeaponSpecialShotEnabled(entt::registry& registry);
+    static bool isTripleShotWeaponSpecialShotEnabled(entt::registry& registry);
+    static bool isAllWeaponsSpecialShotEnabled(entt::registry& registry);
 };

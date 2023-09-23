@@ -91,3 +91,39 @@ float SkillSystem::getShieldTimeDurationMultiplier(entt::registry& registry)
     auto playerSkillsComponent = registry.get<Skills>(registry.view<Player>().front());
     return playerSkillsComponent.shieldTimeDurationMultiplier;
 }
+
+void SkillSystem::enableSingleShotWeaponSpecialShot(entt::registry& registry)
+{
+    auto& playerSkillsComponent = registry.get<Skills>(registry.view<Player>().front());
+    playerSkillsComponent.singleShotWeaponSpecialShot = true;
+}
+
+void SkillSystem::enableTripleShotWeaponSpecialShot(entt::registry& registry)
+{
+    auto& playerSkillsComponent = registry.get<Skills>(registry.view<Player>().front());
+    playerSkillsComponent.tripleShotWeaponSpecialShot = true;
+}
+
+void SkillSystem::enableAllWeaponsSpecialShot(entt::registry& registry)
+{
+    auto& playerSkillsComponent = registry.get<Skills>(registry.view<Player>().front());
+    playerSkillsComponent.allWeaponsSpecialShot = true;
+}
+
+bool SkillSystem::isSingleShotWeaponSpecialShotEnabled(entt::registry& registry)
+{
+    auto playerSkillsComponent = registry.get<Skills>(registry.view<Player>().front());
+    return playerSkillsComponent.singleShotWeaponSpecialShot;
+}
+
+bool SkillSystem::isTripleShotWeaponSpecialShotEnabled(entt::registry& registry)
+{
+    auto playerSkillsComponent = registry.get<Skills>(registry.view<Player>().front());
+    return playerSkillsComponent.tripleShotWeaponSpecialShot;
+}
+
+bool SkillSystem::isAllWeaponsSpecialShotEnabled(entt::registry& registry)
+{
+    auto playerSkillsComponent = registry.get<Skills>(registry.view<Player>().front());
+    return playerSkillsComponent.allWeaponsSpecialShot;
+}
