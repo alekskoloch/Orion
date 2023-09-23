@@ -49,6 +49,7 @@ void SkillManager::addSkill(SkillSchema skill)
         this->dialogBox,
         skill.position,
         skill.name,
+        skill.multiLevel,
         skill.descriptions,
         skill.textureName,
         skill.hoverTextureName,

@@ -256,7 +256,7 @@ void Skill::update()
 
             if (this->currentLevel >= this->maxLevel)
             {
-                if (this->name != "Orion protocol")
+                if (!this->multiLevel)
                     if (this->descriptionTexts.size() > 1)
                         this->descriptionTexts.erase(this->descriptionTexts.begin(), this->descriptionTexts.begin() + 1);
 
@@ -266,7 +266,7 @@ void Skill::update()
             }
             else
             {
-                if (this->name != "Orion protocol")
+                if (!this->multiLevel)
                     if (this->descriptionTexts.size() > 1)
                         this->descriptionTexts.erase(this->descriptionTexts.begin(), this->descriptionTexts.begin() + 1);
 

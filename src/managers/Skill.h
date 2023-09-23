@@ -15,8 +15,8 @@ class SkillManager;
 class Skill
 {
 public:
-    Skill(sf::RenderWindow& window, entt::registry& registry, sf::Font& font, GUIDialogBox& dialogBox, sf::Vector2f iconPosition, std::string name, std::vector<std::string> descriptions, std::string iconTextureName, std::string iconHoverTextureName, std::string iconActiveTextureName, std::vector<std::function<void(entt::registry&)>> onActivateFunctions, std::vector<RequirementType> requirements, std::vector<SkillSchema> skillToUnlock, unsigned int maxLevel, unsigned int currentLevel)
-    : window(window), registry(registry), font(font), dialogBox(dialogBox), iconPosition(iconPosition), name(name), descriptions(descriptions), iconTextureName(iconTextureName), iconHoverTextureName(iconHoverTextureName), iconActiveTextureName(iconActiveTextureName), onActivateFunctions(onActivateFunctions), requirements(requirements), skillsToUnlock(skillToUnlock), maxLevel(maxLevel), currentLevel(currentLevel)
+    Skill(sf::RenderWindow& window, entt::registry& registry, sf::Font& font, GUIDialogBox& dialogBox, sf::Vector2f iconPosition, std::string name, bool multiLevel, std::vector<std::string> descriptions, std::string iconTextureName, std::string iconHoverTextureName, std::string iconActiveTextureName, std::vector<std::function<void(entt::registry&)>> onActivateFunctions, std::vector<RequirementType> requirements, std::vector<SkillSchema> skillToUnlock, unsigned int maxLevel, unsigned int currentLevel)
+    : window(window), registry(registry), font(font), dialogBox(dialogBox), iconPosition(iconPosition), name(name), multiLevel(multiLevel), descriptions(descriptions), iconTextureName(iconTextureName), iconHoverTextureName(iconHoverTextureName), iconActiveTextureName(iconActiveTextureName), onActivateFunctions(onActivateFunctions), requirements(requirements), skillsToUnlock(skillToUnlock), maxLevel(maxLevel), currentLevel(currentLevel)
     {
         this->initialize();
     }
@@ -42,6 +42,7 @@ private:
 
     std::string name;
     std::vector<std::string> descriptions;
+    bool multiLevel;
     
     sf::Font& font;
     sf::Text nameText;
