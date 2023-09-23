@@ -59,7 +59,7 @@ static SkillSchema EnergyFrugality
 
 static SkillSchema SlaughterSurge
 {
-    sf::Vector2f(1520.f, 280.f),
+    sf::Vector2f(1920.f, 280.f),
     "Slaughter Surge",
     {"Increases the damage inflicted by 5%"},
     "skill",
@@ -70,6 +70,37 @@ static SkillSchema SlaughterSurge
         SkillSystem::addDamageMultiplier(registry, 0.05f);
     }},
     {RequirementType::None}
+};
+
+static SkillSchema SingularStrikeMastery
+{
+    sf::Vector2f(1520.f, 280.f),
+    "Singular Strike Mastery",
+    {
+        "Allows special shot for single shoot weapons",
+        "A special shoot from single shoot weapons costs 50% less energy",
+        "A special shoot from single shoot weapons has a small chance of activating Basic Shield"
+    },
+    "skill",
+    "skillHover",
+    "skillActive",
+    {
+        [](entt::registry& registry)
+        {
+            
+        },
+        [](entt::registry& registry)
+        {
+            
+        },
+        [](entt::registry& registry)
+        {
+            
+        }
+    },
+    {RequirementType::None, RequirementType::OrangeStone, RequirementType::GreenStone},
+    {},
+    3
 };
 
 static SkillSchema LethalPrecision
@@ -94,7 +125,7 @@ static SkillSchema LethalPrecision
         }
     },
     {RequirementType::None, RequirementType::OrangeStone},
-    {SlaughterSurge, EnergyFrugality},
+    {SingularStrikeMastery, SlaughterSurge, EnergyFrugality},
     2
 };
 
