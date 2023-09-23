@@ -31,12 +31,15 @@ void Skill::initializeText()
     this->nameText.setOutlineThickness(1);
     this->nameText.setOutlineColor(sf::Color::Black);
 
-    this->descriptionText.setString(this->descriptions[0]);
-    this->descriptionText.setFont(this->font);
-    this->descriptionText.setCharacterSize(40);
-    this->descriptionText.setFillColor(sf::Color::White);
-    this->descriptionText.setOutlineThickness(1);
-    this->descriptionText.setOutlineColor(sf::Color::Black);
+    sf::Text text;
+    text.setString(this->descriptions[0]);
+    text.setFont(this->font);
+    text.setCharacterSize(40);
+    text.setFillColor(sf::Color(150, 150, 150));
+    text.setOutlineThickness(1);
+    text.setOutlineColor(sf::Color::Black);
+
+    this->descriptionTexts.push_back(text);
 }
 
 void Skill::updateText()
@@ -50,15 +53,19 @@ void Skill::updateText()
         this->iconSprite.getPosition().y + MARGIN
     );
 
-    this->descriptionText.setOrigin(
-        this->descriptionText.getGlobalBounds().width / 2.f,
-        this->descriptionText.getGlobalBounds().height / 2.f
-    );
+    for (auto& descriptionText : this->descriptionTexts)
+        descriptionText.setOrigin(
+            descriptionText.getGlobalBounds().width / 2.f,
+            descriptionText.getGlobalBounds().height / 2.f
+        );
 
-    this->descriptionText.setPosition(
-        this->window.getSize().x / 2.f,
-        this->window.getSize().y - MARGIN - this->descriptionText.getGlobalBounds().height
-    );
+    for (int i = 0; i < this->descriptionTexts.size(); i++)
+    {
+        this->descriptionTexts[i].setPosition(
+            this->window.getSize().x / 2.f,
+            this->window.getSize().y - MARGIN - (this->descriptionTexts[i].getGlobalBounds().height * (i + 1))
+        );
+    }
 }
 
 void Skill::addCircleSegment()
@@ -249,12 +256,31 @@ void Skill::update()
 
             if (this->currentLevel >= this->maxLevel)
             {
+                if (this->name != "Orion protocol")
+                    if (this->descriptionTexts.size() > 1)
+                        this->descriptionTexts.erase(this->descriptionTexts.begin(), this->descriptionTexts.begin() + 1);
+
                 this->active = true;
                 this->iconSprite.setTexture(TextureManager::getInstance().getTexture(this->iconActiveTextureName));
+                this->descriptionTexts[this->descriptionTexts.size() - 1].setFillColor(sf::Color::White);
             }
             else
             {
-                this->descriptionText.setString(this->descriptions[this->currentLevel]);
+                if (this->name != "Orion protocol")
+                    if (this->descriptionTexts.size() > 1)
+                        this->descriptionTexts.erase(this->descriptionTexts.begin(), this->descriptionTexts.begin() + 1);
+
+                this->descriptionTexts[this->descriptionTexts.size() - 1].setFillColor(sf::Color::White);
+
+                sf::Text text;
+                text.setString(this->descriptions[this->currentLevel]);
+                text.setFont(this->font);
+                text.setCharacterSize(40);
+                text.setFillColor(sf::Color(150, 150, 150));
+                text.setOutlineThickness(1);
+                text.setOutlineColor(sf::Color::Black);
+
+                this->descriptionTexts.push_back(text);
             }
         }
         else if (this->dialogBox.getState() == GUIDialogBoxState::No)
@@ -301,7 +327,8 @@ void Skill::draw()
     this->window.setView(this->window.getDefaultView());
 
     if (this->hover)
-        this->window.draw(this->descriptionText);
+        for (auto& descriptionText : this->descriptionTexts)
+            this->window.draw(descriptionText);
 
     this->window.setView(view);
 

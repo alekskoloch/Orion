@@ -45,7 +45,7 @@ private:
     
     sf::Font& font;
     sf::Text nameText;
-    sf::Text descriptionText;
+    std::vector<sf::Text> descriptionTexts;
 
     bool active = false;
     bool hover = false;
