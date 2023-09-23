@@ -87,7 +87,7 @@ static SkillSchema SingularStrikeMastery
     {
         [](entt::registry& registry)
         {
-            
+            SkillSystem::enableSingleShotWeaponSpecialShot(registry);
         },
         [](entt::registry& registry)
         {
