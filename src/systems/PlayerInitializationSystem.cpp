@@ -43,6 +43,8 @@ void PlayerInitializationSystem::initializePlayer(entt::registry& registry)
     //TODO: Remove stones
     registry.emplace<StoneInventory>(player, 3, 3);
 
+    registry.emplace<Cooldown>(player, std::unordered_map<std::string, float>{ {"specialShot", 0.f} });
+
     WeaponsSystem::loadWeapon(registry, redWeapon, player);
     ShieldSystem::changeShield(registry, basicShield);
 }
