@@ -49,6 +49,12 @@ void SkillSystem::addSingleShotWeaponEnergyCostMultiplier(entt::registry& regist
     playerSkillsComponent.singleShotWeaponEnergyCostMultiplier += multiplier;
 }
 
+void SkillSystem::addSingleShotWeaponSpecialShotEnergyCostMultiplier(entt::registry& registry, float multiplier)
+{
+    auto& playerSkillsComponent = registry.get<Skills>(registry.view<Player>().front());
+    playerSkillsComponent.singleSpecialShotWeaponEnergyCostMultiplier += multiplier;
+}
+
 float SkillSystem::getWeaponEnergyCost(entt::registry& registry, entt::entity entity)
 {
     auto& skillsComponent = registry.get<Skills>(entity);
@@ -59,6 +65,20 @@ float SkillSystem::getWeaponEnergyCost(entt::registry& registry, entt::entity en
 
     if (weaponComponent.weaponType == WeaponType::SingleShot)
         energyCostMultiplier += skillsComponent.singleShotWeaponEnergyCostMultiplier - 1;
+
+    return energyCost * energyCostMultiplier;
+}
+
+float SkillSystem::getWeaponSpecialShotEnergyCost(entt::registry& registry, entt::entity entity)
+{
+    auto& skillsComponent = registry.get<Skills>(entity);
+    auto& weaponComponent = registry.get<Weapon>(entity);
+
+    float energyCost = weaponComponent.energyCostForSpecialShot;
+    float energyCostMultiplier = 1.f;
+
+    if (weaponComponent.weaponType == WeaponType::SingleShot)
+        energyCostMultiplier += skillsComponent.singleSpecialShotWeaponEnergyCostMultiplier - 1;
 
     return energyCost * energyCostMultiplier;
 }
