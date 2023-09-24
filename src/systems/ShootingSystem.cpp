@@ -4,6 +4,8 @@
 #include "../systems/EnergySystem.h"
 #include "../systems/SkillSystem.h"
 #include "../systems/CooldownSystem.h"
+#include "../systems/ProceduralGenerationSystem.h"
+#include "../systems/ShieldSystem.h"
 
 #include "../managers/TextureManager.h"
 #include "../components/components.h"
@@ -101,6 +103,9 @@ void handlePlayerShooting(entt::registry& registry, sf::Time deltaTime, sf::Rend
                 EnergySystem::removeEnergy<Player>(registry, SkillSystem::getWeaponSpecialShotEnergyCost(registry, entity));
                 CooldownSystem::setCooldown(registry, entity, "specialShot", weapon.specialShotCooldownTime);
                 handleSpecialShoot(registry, entity, window.mapPixelToCoords(sf::Mouse::getPosition(window)));
+                //TODO: Chance should be configurable
+                if (ProceduralGenerationSystem::GetRandomNumber(1,15) == 1)
+                    ShieldSystem::getShield(registry);
             }
 
         if (canShoot && EnergySystem::hasEnoughEnergy<Player>(registry, SkillSystem::getWeaponEnergyCost(registry, entity)))
