@@ -147,3 +147,20 @@ bool SkillSystem::isAllWeaponsSpecialShotEnabled(entt::registry& registry)
     auto playerSkillsComponent = registry.get<Skills>(registry.view<Player>().front());
     return playerSkillsComponent.allWeaponsSpecialShot;
 }
+
+void SkillSystem::enableShieldChanceForSingleSpecialShot(entt::registry& registry)
+{
+    auto& playerSkillsComponent = registry.get<Skills>(registry.view<Player>().front());
+    playerSkillsComponent.singleSpecialShotWeaponShieldChance = true;
+}
+
+bool SkillSystem::getShieldChance(entt::registry& registry, entt::entity entity)
+{
+    auto& skillsComponent = registry.get<Skills>(entity);
+    auto& weaponComponent = registry.get<Weapon>(entity);
+
+    if (weaponComponent.weaponType == WeaponType::SingleShot)
+        return skillsComponent.singleSpecialShotWeaponShieldChance;
+    else
+        return false;
+}
