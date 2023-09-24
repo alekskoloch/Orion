@@ -6,6 +6,12 @@
 
 #include "../schema/ShieldSchema.h"
 
+enum class SpecialShotType
+{
+    FullCircleShoot,
+    None
+};
+
 enum class WeaponType
 {
     SingleShot,
@@ -145,6 +151,8 @@ struct Skills
     float weaponEnergyCostMultiplier = 1.f;
     float singleShotWeaponEnergyCostMultiplier = 1.f;
 
+    float singleSpecialShotWeaponEnergyCostMultiplier = 1.f;
+
     float energyRegenerationMultiplier = 1.f;
 
     float shieldTimeDurationMultiplier = 1.f;
@@ -173,6 +181,9 @@ struct Weapon
     std::string bulletTextureName;
     std::string weaponIconTextureName;
     float energyCost;
+
+    SpecialShotType specialShotType;
+    float energyCostForSpecialShot;
     
     bool autofire = false;
     float currentCooldownTime = 0.0f;
