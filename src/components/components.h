@@ -184,6 +184,7 @@ struct Weapon
 
     SpecialShotType specialShotType;
     float energyCostForSpecialShot;
+    float specialShotCooldownTime;
     
     bool autofire = false;
     float currentCooldownTime = 0.0f;
