@@ -99,7 +99,7 @@ static SkillSchema SingularStrikeMastery
         },
         [](entt::registry& registry)
         {
-            
+            SkillSystem::enableShieldChanceForSingleSpecialShot(registry);
         }
     },
     {RequirementType::None, RequirementType::OrangeStone, RequirementType::GreenStone},
