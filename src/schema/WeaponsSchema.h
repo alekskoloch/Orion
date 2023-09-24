@@ -13,6 +13,7 @@ struct WeaponSchema
     SpecialShotType specialShotType = SpecialShotType::None;
     float energyCost = 0.f;
     float energyCostForSpecialShot = 0.f;
+    float specialShotCooldownTime = 0.f;
 };
 
 static WeaponSchema redWeapon =
@@ -25,7 +26,8 @@ static WeaponSchema redWeapon =
     "red_weapon",
     SpecialShotType::FullCircleShoot,
     10.f,
-    100.f
+    100.f,
+    5.f
 };
 
 static WeaponSchema blueWeapon =
@@ -38,7 +40,8 @@ static WeaponSchema blueWeapon =
     "blue_weapon",
     SpecialShotType::FullCircleShoot,
     35.f,
-    100.f
+    100.f,
+    5.f
 };
 
 
