@@ -99,7 +99,7 @@ void handlePlayerShooting(entt::registry& registry, sf::Time deltaTime, sf::Rend
             if (CooldownSystem::getCooldown(registry, entity, "specialShot") == 0.f)
             {
                 EnergySystem::removeEnergy<Player>(registry, SkillSystem::getWeaponSpecialShotEnergyCost(registry, entity));
-                CooldownSystem::setCooldown(registry, entity, "specialShot", 5.f);
+                CooldownSystem::setCooldown(registry, entity, "specialShot", weapon.specialShotCooldownTime);
                 handleSpecialShoot(registry, entity, window.mapPixelToCoords(sf::Mouse::getPosition(window)));
             }
 
