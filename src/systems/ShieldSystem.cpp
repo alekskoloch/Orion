@@ -139,3 +139,30 @@ void ShieldSystem::getShield(entt::registry& registry)
         registry.emplace<Position>(shieldEntity, registry.get<Position>(entity).position);
     }
 }
+
+void ShieldSystem::getShield(entt::registry& registry, ShieldSchema shieldSchema)
+{
+    auto view = registry.view<Player, Shield>();
+
+    for (auto entity : view)
+    {
+        auto& shield = view.get<Shield>(entity);
+
+        if (shield.active)
+        {
+            auto shieldView = registry.view<PlayerShield>();
+            for (auto entity : shieldView)
+                registry.destroy(entity);
+        }
+
+        shield.currentDuration = shieldSchema.duration * SkillSystem::getShieldTimeDurationMultiplier(registry);
+        shield.active = true;
+
+        auto shieldEntity = registry.create();
+        registry.emplace<PlayerShield>(shieldEntity);
+
+        sf::Sprite shieldSprite = CreateSprite(shieldSchema.shieldTextureName);
+        registry.emplace<Renderable>(shieldEntity, shieldSprite);
+        registry.emplace<Position>(shieldEntity, registry.get<Position>(entity).position);
+    }
+}
