@@ -105,7 +105,7 @@ void handlePlayerShooting(entt::registry& registry, sf::Time deltaTime, sf::Rend
                 handleSpecialShoot(registry, entity, window.mapPixelToCoords(sf::Mouse::getPosition(window)));
                 //TODO: Chance should be configurable
                 if (ProceduralGenerationSystem::GetRandomNumber(1,15) == 1)
-                    ShieldSystem::getShield(registry);
+                    ShieldSystem::getShield(registry, basicShield);
             }
 
         if (canShoot && EnergySystem::hasEnoughEnergy<Player>(registry, SkillSystem::getWeaponEnergyCost(registry, entity)))
