@@ -95,7 +95,7 @@ static SkillSchema SingularStrikeMastery
         },
         [](entt::registry& registry)
         {
-            
+            SkillSystem::addSingleShotWeaponSpecialShotEnergyCostMultiplier(registry, -0.5f);
         },
         [](entt::registry& registry)
         {
