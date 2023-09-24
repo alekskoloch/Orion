@@ -10,7 +10,9 @@ struct WeaponSchema
     float bulletSpeed;
     std::string bulletTextureName;
     std::string weaponIconTextureName;
+    SpecialShotType specialShotType = SpecialShotType::None;
     float energyCost = 0.f;
+    float energyCostForSpecialShot = 0.f;
 };
 
 static WeaponSchema redWeapon =
@@ -21,7 +23,9 @@ static WeaponSchema redWeapon =
     1300.f,
     "red_bullet",
     "red_weapon",
-    10.f
+    SpecialShotType::FullCircleShoot,
+    10.f,
+    100.f
 };
 
 static WeaponSchema blueWeapon =
@@ -32,7 +36,9 @@ static WeaponSchema blueWeapon =
     2000.f,
     "blue_bullet",
     "blue_weapon",
-    35.f
+    SpecialShotType::FullCircleShoot,
+    35.f,
+    100.f
 };
 
 
