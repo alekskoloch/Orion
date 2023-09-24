@@ -58,9 +58,17 @@ void handleShoot(entt::registry& registry, entt::entity& entity, sf::Vector2f ta
 void handleSpecialShoot(entt::registry& registry, entt::entity& entity, sf::Vector2f targetPosition)
 {
     auto weapon = registry.get<Weapon>(entity);
-    float angleOffset[] = {  0.f, 45.f, 90.f, 135.f, 180.f, 225.f, 270.f, 315.f };
-    for (auto offset : angleOffset)
-        createBullet<PlayerBullet>(registry, entity, targetPosition, offset);
+
+    if (weapon.specialShotType == SpecialShotType::None)
+    {
+        return;
+    }
+    else if (weapon.specialShotType == SpecialShotType::FullCircleShoot)
+    {
+        float angleOffset[] = {  0.f, 45.f, 90.f, 135.f, 180.f, 225.f, 270.f, 315.f };
+        for (auto offset : angleOffset)
+            createBullet<PlayerBullet>(registry, entity, targetPosition, offset);
+    }
 }
 
 void handlePlayerShooting(entt::registry& registry, sf::Time deltaTime, sf::RenderWindow& window)
@@ -87,9 +95,10 @@ void handlePlayerShooting(entt::registry& registry, sf::Time deltaTime, sf::Rend
         else
             canSpecialShoot = SkillSystem::isAllWeaponsSpecialShotEnabled(registry);
             
-        if (input.specialShot && canSpecialShoot)
+        if (input.specialShot && canSpecialShoot && EnergySystem::hasEnoughEnergy<Player>(registry, SkillSystem::getWeaponSpecialShotEnergyCost(registry, entity)))
             if (CooldownSystem::getCooldown(registry, entity, "specialShot") == 0.f)
             {
+                EnergySystem::removeEnergy<Player>(registry, SkillSystem::getWeaponSpecialShotEnergyCost(registry, entity));
                 CooldownSystem::setCooldown(registry, entity, "specialShot", 5.f);
                 handleSpecialShoot(registry, entity, window.mapPixelToCoords(sf::Mouse::getPosition(window)));
             }
