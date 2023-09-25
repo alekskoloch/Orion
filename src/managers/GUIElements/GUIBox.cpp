@@ -1,8 +1,48 @@
 #include "GUIBox.h"
 
-GUIBox::GUIBox(float width, float height, sf::Vector2f position, sf::Color fillColor, sf::Color outlineColor, float outlineThickness, float bevel)
+GUIBox::GUIBox(float width, float height, sf::Vector2f position, sf::Font& font, sf::Color fillColor, sf::Color outlineColor, float outlineThickness, float bevel) : font(font)
 {
+    this->position = position;
+    this->width = width;
+    this->height = height;
+
     this->initializeBox(width, height, position, fillColor, outlineColor, outlineThickness, bevel);
+}
+
+void GUIBox::update()
+{
+    if (!this->textUpdated)
+    {
+        for (int i = 0; i < this->texts.size(); i++)
+        {
+            this->texts[i]->setOrigin(
+                this->texts[i]->getGlobalBounds().width / 2.f,
+                this->texts[i]->getGlobalBounds().height / 2.f
+            );
+
+            this->texts[i]->setPosition(
+                this->position.x,
+                this->position.y - this->height / 2 + 40 + i * 40
+            );
+        }
+
+        this->textUpdated = true;
+    }
+}
+
+void GUIBox::addText(std::string text)
+{
+    sf::Text textToAdd;
+    textToAdd.setString(text);
+    textToAdd.setFont(this->font);
+    textToAdd.setCharacterSize(30);
+    textToAdd.setFillColor(sf::Color::White);
+    textToAdd.setOutlineColor(sf::Color::Black);
+    textToAdd.setOutlineThickness(2.f);
+
+    this->texts.push_back(std::make_unique<sf::Text>(textToAdd));
+
+    this->textUpdated = false;
 }
 
 void GUIBox::initializeBox(float width, float height, sf::Vector2f position, sf::Color fillColor, sf::Color outlineColor, float outlineThickness, float bevel)
@@ -24,4 +64,7 @@ void GUIBox::initializeBox(float width, float height, sf::Vector2f position, sf:
 void GUIBox::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
     target.draw(this->box, states);
+
+    for (auto& text : this->texts)
+        target.draw(*text, states);    
 }

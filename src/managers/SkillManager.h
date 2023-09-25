@@ -30,6 +30,8 @@ public:
 
     void unlockSkills(std::vector<SkillSchema> skillsToUnlock);
     void addSkill(SkillSchema skill);
+
+    void updateBox();
 private:
     SkillManager(sf::RenderWindow& window, entt::registry& registry);
 
@@ -40,6 +42,9 @@ private:
     sf::Font font;
 
     GUIBox box;
+    void initBox();
+
+
     GUIDialogBox dialogBox;
 
     void initializeFirstSkill();

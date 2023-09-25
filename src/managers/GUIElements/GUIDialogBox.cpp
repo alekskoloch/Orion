@@ -1,7 +1,5 @@
 #include "GUIDialogBox.h"
 
-#
-
 GUIDialogBox::GUIDialogBox(sf::RenderWindow& window, std::vector<std::string> messages, sf::Font& font)
     : window(window), messages(messages), font(font)
 {

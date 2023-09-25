@@ -1,17 +1,22 @@
 #include "SkillManager.h"
 
+#include "../systems/StoneSystem.h"
+
 SkillManager::SkillManager(sf::RenderWindow& window, entt::registry& registry)
-    : window(window), registry(registry), dialogBox(window, {"Are you sure you want to unlock this skill?"}, this->font), box(600.f, 300.f, sf::Vector2f(350.f, 200.f))
+    : window(window), registry(registry), dialogBox(window, {"Are you sure you want to unlock this skill?"}, this->font), box(600.f, 300.f, sf::Vector2f(350.f, 200.f), this->font)
 {
     this->font.loadFromFile(ASSETS_PATH + std::string("fonts/font.ttf"));
 
     this->dialogBox.setState(GUIDialogBoxState::Hidden);
     
     this->initializeFirstSkill();
+    this->initBox();
 }
 
 void SkillManager::update()
 {
+    this->updateBox();
+    this->box.update();
     //TODO: deltaTime
     for (auto& star : this->activeStars)
         star->update(0.016f);
@@ -75,4 +80,16 @@ void SkillManager::addSkill(SkillSchema skill)
 void SkillManager::initializeFirstSkill()
 {
     this->addSkill(OrionProtocol);
+}
+
+void SkillManager::initBox()
+{
+    this->box.addText("Orange Stones: "+ std::to_string(StoneSystem::getStoneNumber(this->registry, std::string("Orange Stone"))));
+    this->box.addText("Green Stones: " + std::to_string(StoneSystem::getStoneNumber(this->registry, std::string("Green Stone"))));
+}
+
+void SkillManager::updateBox()
+{
+    this->box.clearTexts();
+    this->initBox();
 }
