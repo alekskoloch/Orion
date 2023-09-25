@@ -7,6 +7,9 @@
 
 #include "../systems/SkillSystem.h"
 
+const float FIRST_SKILL_POSITION_X = 1920.f;
+const float FIRST_SKILL_POSITION_Y = 1080.f;
+
 enum class RequirementType
 {
     None,
@@ -33,7 +36,7 @@ struct SkillSchema
 
 static SkillSchema EnergyFrugality
 {
-    sf::Vector2f(2320, 280.f),
+    sf::Vector2f(FIRST_SKILL_POSITION_X + 640.f, FIRST_SKILL_POSITION_Y - 840.f),
     "Energy Frugality",
     false,
     {
@@ -61,7 +64,7 @@ static SkillSchema EnergyFrugality
 
 static SkillSchema SlaughterSurge
 {
-    sf::Vector2f(1920.f, 280.f),
+    sf::Vector2f(FIRST_SKILL_POSITION_X - 20.f, FIRST_SKILL_POSITION_Y - 900.f),
     "Slaughter Surge",
     false,
     {"Increases the damage inflicted by 5%"},
@@ -77,7 +80,7 @@ static SkillSchema SlaughterSurge
 
 static SkillSchema SingularStrikeMastery
 {
-    sf::Vector2f(1520.f, 280.f),
+    sf::Vector2f(FIRST_SKILL_POSITION_X - 600.f, FIRST_SKILL_POSITION_Y - 840.f),
     "Singular Strike Mastery",
     true,
     {
@@ -109,7 +112,7 @@ static SkillSchema SingularStrikeMastery
 
 static SkillSchema LethalPrecision
 {
-    sf::Vector2f(1920.f, 680.f),
+    sf::Vector2f(FIRST_SKILL_POSITION_X + 40.f, FIRST_SKILL_POSITION_Y - 400.f),
     "Lethal Precision",
     false,
     {
@@ -136,7 +139,7 @@ static SkillSchema LethalPrecision
 
 static SkillSchema OrionProtocol
 {
-    sf::Vector2f(1920.f, 1080.f),
+    sf::Vector2f(FIRST_SKILL_POSITION_X, FIRST_SKILL_POSITION_Y),
     "Orion protocol",
     true,
     {
