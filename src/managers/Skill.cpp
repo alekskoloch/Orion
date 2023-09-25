@@ -116,16 +116,20 @@ void Skill::initStarsForSkill()
         bool flicker = ProceduralGenerationSystem::GetRandomNumber(0, 2);
         sf::Color color = sf::Color::White;
 
-        if (i == 0 || ProceduralGenerationSystem::GetRandomNumber(1,5) == 5)
+        if (i == 0 || ProceduralGenerationSystem::GetRandomNumber(1,4) == 4)
         {
             if (this->requirements[this->currentLevel] == RequirementType::OrangeStone)
             {
                 color = sf::Color(195, 82, 20);
             }
-            else if (this->requirements[this->currentLevel] == RequirementType::OrangeStone)
+            else if (this->requirements[this->currentLevel] == RequirementType::GreenStone)
             {
                 color = sf::Color(0, 75, 73);
-            } 
+            }
+            else if (this->requirements[this->currentLevel] == RequirementType::OrangeAndGreenStone)
+            {
+                color = sf::Color(195, 82, 150, 100);
+            }
         }
 
         GUIStar star(
