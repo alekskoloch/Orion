@@ -75,6 +75,8 @@ void Skill::addCircleSegment()
         segmentColor = sf::Color(195, 82, 20);
     else if (this->requirements[this->currentLevel] == RequirementType::GreenStone)
         segmentColor = sf::Color(0, 75, 73);
+    else if (this->requirements[this->currentLevel] == RequirementType::OrangeAndGreenStone)
+        segmentColor = sf::Color(195, 82, 150, 100);
     else
         segmentColor = sf::Color::White;
 
@@ -179,6 +181,8 @@ void Skill::update()
                     this->dialogBox.setMessage({std::string(this->name + " require Orange Stone") ,"Are you sure you want to unlock " + std::string(this->name + "?")});
                 else if (this->requirements[this->currentLevel] == RequirementType::GreenStone)
                     this->dialogBox.setMessage({std::string(this->name + " require Green Stone") ,"Are you sure you want to unlock " + std::string(this->name + "?")});
+                else if (this->requirements[this->currentLevel] == RequirementType::OrangeAndGreenStone)
+                    this->dialogBox.setMessage({std::string(this->name + " require Orange and Green Stone") ,"Are you sure you want to unlock " + std::string(this->name + "?")});
 
                 this->dialogBox.setType(GUIDialogBoxType::YesNo);
                 this->dialogBox.setState(GUIDialogBoxState::Idle);
@@ -224,6 +228,21 @@ void Skill::update()
                 else
                 {
                     this->dialogBox.setMessage({"You don't have the Green Stone to unlock " + this->name});
+                    this->dialogBox.setType(GUIDialogBoxType::Ok);
+                    this->dialogBox.setState(GUIDialogBoxState::Idle);
+                    return;
+                }
+            }
+            else if (this->requirements[this->currentLevel] == RequirementType::OrangeAndGreenStone)
+            {
+                if (playerStones.orangeStones > 0 && playerStones.greenStones > 0)
+                {
+                    playerStones.orangeStones--;
+                    playerStones.greenStones--;
+                }
+                else
+                {
+                    this->dialogBox.setMessage({"You don't have the Orange and Green Stone to unlock " + this->name});
                     this->dialogBox.setType(GUIDialogBoxType::Ok);
                     this->dialogBox.setState(GUIDialogBoxState::Idle);
                     return;

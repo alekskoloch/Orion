@@ -15,6 +15,7 @@ enum class RequirementType
     None,
     OrangeStone,
     GreenStone,
+    OrangeAndGreenStone
 };
 
 struct SkillSchema
@@ -105,7 +106,7 @@ static SkillSchema SingularStrikeMastery
             SkillSystem::enableShieldChanceForSingleSpecialShot(registry);
         }
     },
-    {RequirementType::None, RequirementType::OrangeStone, RequirementType::GreenStone},
+    {RequirementType::None, RequirementType::OrangeStone, RequirementType::OrangeAndGreenStone},
     {},
     3
 };
