@@ -61,9 +61,9 @@ void Skill::updateText()
 
     for (int i = 0; i < this->descriptionTexts.size(); i++)
     {
-        this->descriptionTexts[i].setPosition(
+        this->descriptionTexts[this->descriptionTexts.size() - 1 - i].setPosition(
             this->window.getSize().x / 2.f,
-            this->window.getSize().y - MARGIN - (this->descriptionTexts[i].getGlobalBounds().height * (i + 1))
+            this->window.getSize().y - MARGIN - (this->descriptionTexts[this->descriptionTexts.size() - 1 - i].getGlobalBounds().height * (i + 1))
         );
     }
 }
