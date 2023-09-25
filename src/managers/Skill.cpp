@@ -81,7 +81,7 @@ void Skill::addCircleSegment()
         segmentColor = sf::Color::White;
 
     auto angle = 360.f / this->maxLevel;
-    GUICircleSegment circleSegment(this->iconPosition, 100.f, this->currentLevel * angle, angle + (this->currentLevel * angle), 20.f, segmentColor);
+    GUICircleSegment circleSegment(this->iconPosition, 90.f, this->currentLevel * angle, angle + (this->currentLevel * angle), 5.f, segmentColor);
     this->circleSegments.push_back(std::make_unique<GUICircleSegment>(circleSegment));
 }   
 
