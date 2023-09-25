@@ -12,6 +12,10 @@ SkillManager::SkillManager(sf::RenderWindow& window, entt::registry& registry)
 
 void SkillManager::update()
 {
+    //TODO: deltaTime
+    for (auto& star : this->activeStars)
+        star->update(0.016f);
+
     for (auto& skill : this->skills)
         skill->update();
 
@@ -21,6 +25,9 @@ void SkillManager::update()
 
 void SkillManager::draw()
 {
+    for (auto& star : this->activeStars)
+        this->window.draw(*star);
+
     for (auto& skill : this->skills)
         skill->draw();
 
@@ -58,7 +65,8 @@ void SkillManager::addSkill(SkillSchema skill)
         skill.requirements,
         skill.skillsToUnlock,
         skill.maxLevel,
-        skill.currentLevel
+        skill.currentLevel,
+        this->activeStars
     ));  
 }
 

@@ -303,19 +303,11 @@ void Skill::update()
     {
         star->update(0.016f);
     }
-
-    for (auto& star : this->activeStars)
-    {
-        star->update(0.016f);
-    }
 }
 
 void Skill::draw()
 {
     for (auto& star : this->stars)
-        this->window.draw(*star);
-
-    for (auto& star : this->activeStars)
         this->window.draw(*star);
 
     this->window.draw(this->iconSprite);

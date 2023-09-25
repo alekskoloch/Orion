@@ -8,6 +8,7 @@
 #include "../components/components.h"
 
 #include "GUIElements/GUIDialogBox.h"
+#include "GUIElements/GUIStar.h"
 
 class Skill;
 
@@ -34,6 +35,7 @@ private:
     sf::RenderWindow& window;
     entt::registry& registry;
     std::vector<std::unique_ptr<Skill>> skills;
+    std::vector<std::unique_ptr<GUIStar>> activeStars;
     sf::Font font;
 
     GUIDialogBox dialogBox;
