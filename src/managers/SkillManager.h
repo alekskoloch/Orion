@@ -9,6 +9,7 @@
 
 #include "GUIElements/GUIDialogBox.h"
 #include "GUIElements/GUIStar.h"
+#include "GUIElements/GUIBox.h"
 
 class Skill;
 
@@ -38,6 +39,7 @@ private:
     std::vector<std::unique_ptr<GUIStar>> activeStars;
     sf::Font font;
 
+    GUIBox box;
     GUIDialogBox dialogBox;
 
     void initializeFirstSkill();
