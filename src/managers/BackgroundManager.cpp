@@ -3,6 +3,9 @@
 #include "../components/components.h"
 #include "../components/tagComponents.h"
 
+#include "../systems/EnemyInitializationSystem.h"
+#include "../systems/ProceduralGenerationSystem.h"
+
 //TODO: Color for tiles is only for testing purposes
 
 BackgroundManager::BackgroundManager(entt::registry& registry, sf::RenderWindow& window) : registry(registry), window(window)
@@ -87,6 +90,10 @@ void BackgroundManager::updateBackgroundTiles(int playerTileX, int playerTileY)
 
             if (!tileExists)
             {
+                //TODO: Temporary solution for enemy spawning, this should be handled by a system
+                if (ProceduralGenerationSystem::GetRandomNumber(1, 40) == 1)
+                    EnemyInitializationSystem::createNewEnemy(registry, sf::Vector2f(x * backgroundTileSize, y * backgroundTileSize));
+
                 newBackgroundTiles.push_back(BackgroundTile(
                     sf::Vector2f(x * backgroundTileSize, y * backgroundTileSize),
                     sf::Vector2f(backgroundTileSize, backgroundTileSize),
