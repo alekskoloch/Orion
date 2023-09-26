@@ -54,7 +54,7 @@ void RemovalSystem::checkEnemyRemoval(entt::registry& registry)
     for (auto entity : view)
     {
         auto enemyPosition = view.get<Position>(entity);
-        if (CalculateDistance(enemyPosition.position, playerPosition) > 4000.f)
+        if (CalculateDistance(enemyPosition.position, playerPosition) > 5000.f)
             RemovalSystem::MarkEntityForDestruction(entity);
     }
 }

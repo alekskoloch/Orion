@@ -123,7 +123,7 @@ private:
 
     int tilesAroundPlayer = 5;
 
-    float backgroundTileSize = 400.f;
+    float backgroundTileSize = 800.f;
     std::vector<BackgroundTile> backgroundTiles;
 
     void updateBackgroundTiles(int playerTileX, int playerTileY);
