@@ -19,7 +19,7 @@ void EnemyInitializationSystem::initializeEnemy(entt::registry& registry)
     //TODO: Temporary solution for initialize enemy
     for (int i = 0; i < ENEMIES; i++)
     {
-        switch (ProceduralGenerationSystem::GetRandomNumber(1,4))
+        switch (ProceduralGenerationSystem::GetRandomNumber(1,8))
         {
         case 1:
             createEnemy(registry, enemy);
@@ -32,6 +32,18 @@ void EnemyInitializationSystem::initializeEnemy(entt::registry& registry)
             break;
         case 4:
             createEnemy(registry, enemy4);
+            break;
+        case 5:
+            createEnemy(registry, enemyRed1);
+            break;
+        case 6:
+            createEnemy(registry, enemyRed2);
+            break;
+        case 7:
+            createEnemy(registry, enemyRed3);
+            break;
+        case 8:
+            createEnemy(registry, enemyRed4);
             break;
         default:
             break;
