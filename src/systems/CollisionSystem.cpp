@@ -65,18 +65,6 @@ void checkBulletCollitions(entt::registry& registry, std::unordered_set<entt::en
                     //TODO: Handle it in a separate system
                     if (auto* dropComponent = registry.try_get<Drop>(target))
                         DropSystem::drop(registry, target);
-
-                    //TODO: Only for testing
-                    auto thisEnemy = registry.get<Name>(target);
-
-                    if (thisEnemy.name == "enemy")
-                        EnemyInitializationSystem::createEnemy(registry, enemy);
-                    else if (thisEnemy.name == "enemy2")
-                        EnemyInitializationSystem::createEnemy(registry, enemy2);
-                    else if (thisEnemy.name == "enemy3")
-                        EnemyInitializationSystem::createEnemy(registry, enemy3);
-                    else if (thisEnemy.name == "enemy4")
-                        EnemyInitializationSystem::createEnemy(registry, enemy4);
                 }
             }
         });
