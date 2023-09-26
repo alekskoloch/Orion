@@ -21,6 +21,7 @@
 #include "../systems/HealthSystem.h"
 #include "../systems/CameraSystem.h"
 #include "../systems/DropSystem.h"
+#include "../systems/RemovalSystem.h"
 
 #include "../systems/RenderSystem.h"
 #include "../systems/DebugSystem.h"
@@ -80,6 +81,7 @@ void SystemManager::executeUpdateSystems(sf::Time deltaTime)
         HealthSystem::updateHealth(this->registry);
         CollisionSystem::updateCollisionBoxes(this->registry);      
         CollisionSystem::checkCollisions(this->registry);
+        RemovalSystem::update(this->registry);
     }
 }
 
