@@ -84,3 +84,13 @@ static WeaponSchema basicEnemyWeapon4 =
     "enemy_bullet4",
     "empty"
 };
+
+static WeaponSchema Shuriken =
+{
+    WeaponType::SingleShot,
+    1.f,
+    2.0f,
+    1000.f,
+    "enemy_red_bullet",
+    "empty"
+};
