@@ -19,7 +19,7 @@ struct EnemySchema
 
 static EnemySchema enemy =
 {
-    "enemy",
+    "enemy1",
     2.f,
     sf::Vector2f(100.f, 980.f),
     600.f,
