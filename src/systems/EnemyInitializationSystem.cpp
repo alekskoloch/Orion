@@ -113,3 +113,78 @@ void EnemyInitializationSystem::createEnemy(entt::registry& registry, const Enem
 
     registry.emplace<WaypointMovement>(enemy, waypoints);
 }
+
+//TODO: Temporary solution for initialize enemy, refactor later
+void EnemyInitializationSystem::createNewEnemy(entt::registry& registry, sf::Vector2f position)
+{
+    EnemySchema enemySchema = enemy;
+    switch (ProceduralGenerationSystem::GetRandomNumber(1, 8))
+    {
+        case 1:
+            enemySchema = enemy;
+            break;
+        case 2:
+            enemySchema = enemy2;
+            break;
+        case 3:
+            enemySchema = enemy3;
+            break;
+        case 4:
+            enemySchema = enemy4;
+            break;
+        case 5:
+            enemySchema = enemyRed1;
+            break;
+        case 6:
+            enemySchema = enemyRed2;
+            break;
+        case 7:
+            enemySchema = enemyRed3;
+            break;
+        case 8:
+            enemySchema = enemyRed4;
+            break;
+    }
+
+    TextureManager::getInstance().loadTexture(enemySchema.textureName, ASSETS_PATH + enemySchema.textureName + ".png");
+    TextureManager::getInstance().loadTexture("enemy_bullet", ASSETS_PATH + std::string("enemy_bullet") + ".png");
+
+    auto enemy = registry.create();
+    registry.emplace<Enemy>(enemy);
+    registry.emplace<EntityState>(enemy);
+
+    //TODO: Temporary solution to set ranges
+    auto& enemyState = registry.get<EntityState>(enemy);
+    enemyState.attackRange = enemySchema.attackRange;
+    enemyState.idleRange = enemySchema.idleRange;
+
+    sf::Sprite sprite = CreateSprite(enemySchema.textureName);
+    registry.emplace<Collision>(enemy, sprite.getGlobalBounds());
+    registry.emplace<Renderable>(enemy, sprite);
+
+    registry.emplace<Position>(enemy, position);
+    registry.emplace<Speed>(enemy, enemySchema.speed);
+    registry.emplace<Velocity>(enemy, enemySchema.velocity);
+    registry.emplace<Name>(enemy, enemySchema.name);
+    registry.emplace<Health>(enemy, enemySchema.health, enemySchema.health);
+
+    registry.emplace<Drop>(enemy, 100, 69);
+
+    WeaponsSystem::loadWeapon(registry, enemySchema.weaponSchema, enemy);
+
+    //TODO: Temporary solution for waypoints
+    int numOfWaypoints = ProceduralGenerationSystem::GetRandomNumber(2, 6);
+    std::vector<sf::Vector2f> waypoints;
+
+    auto enemyPos = registry.get<Position>(enemy);
+
+    for (int i = 0; i < numOfWaypoints; i++)
+    {
+        float x = ProceduralGenerationSystem::GetRandomNumber(enemyPos.position.x - 500.f, enemyPos.position.x + 500.f);
+        float y = ProceduralGenerationSystem::GetRandomNumber(enemyPos.position.y - 500.f, enemyPos.position.y + 500.f);
+
+        waypoints.push_back(sf::Vector2f(x, y));
+    }
+
+    registry.emplace<WaypointMovement>(enemy, waypoints);
+}
