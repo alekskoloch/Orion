@@ -112,7 +112,7 @@ static EnemySchema enemyRed2 =
     "enemy_red_2",
     3.f,
     sf::Vector2f(100.f, 100.f),
-    100.f,
+    500.f,
     {
         sf::Vector2f(1820.f, 100.f),
         sf::Vector2f(1820.f, 980.f),
@@ -130,7 +130,7 @@ static EnemySchema enemyRed3 =
     "enemy_red_3",
     3.f,
     sf::Vector2f(1820.f, 100.f),
-    50.f,
+    600.f,
     {
         sf::Vector2f(1820.f, 980.f),
         sf::Vector2f(100.f, 980.f),
@@ -148,7 +148,7 @@ static EnemySchema enemyRed4 =
     "enemy_red_4",
     3.f,
     sf::Vector2f(1820.f, 980.f),
-    25.f,
+    700.f,
     {
         sf::Vector2f(100.f, 980.f),
         sf::Vector2f(100.f, 100.f),
