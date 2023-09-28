@@ -61,10 +61,6 @@ void checkBulletCollitions(entt::registry& registry, std::unordered_set<entt::en
                     auto& enemyHealthComponent = registry.get<Health>(target);
                     auto player = registry.view<Player>().front();
                     enemyHealthComponent.currentHealthValue -= SkillSystem::getWeaponDamage(registry, player);
-
-                    //TODO: Handle it in a separate system
-                    if (auto* dropComponent = registry.try_get<Drop>(target))
-                        DropSystem::drop(registry, target);
                 }
             }
         });

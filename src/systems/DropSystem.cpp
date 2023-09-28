@@ -88,6 +88,15 @@ void DropSystem::drop(entt::registry& registry, entt::entity& entity)
 
 void DropSystem::updateDrop(entt::registry& registry, sf::Time deltaTime)
 {
+    auto enemies = registry.view<Enemy, Health>();
+    for (auto enemy : enemies)
+    {
+        if (registry.get<Health>(enemy).currentHealthValue <= 0)
+        {
+            DropSystem::drop(registry, enemy);
+        }
+    }
+
     auto view = registry.view<DropItem, Velocity>();
     for (auto entity : view)
     {
