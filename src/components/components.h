@@ -16,7 +16,8 @@ enum class WeaponType
 {
     SingleShot,
     TrippleShot,
-    Shuriken
+    Shuriken,
+    DoubleShuriken,
 };
 
 struct Acceleration
