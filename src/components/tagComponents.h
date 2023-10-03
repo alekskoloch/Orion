@@ -17,6 +17,14 @@ struct Bullet {};
 struct PlayerBullet{};
 struct EnemyBullet{};
 
+struct ShurikenBullet {
+    sf::Vector2f enemyPositionWhenShot;
+    sf::Vector2f playerPositionWhenShot;
+    bool right;
+    float speed;
+    float currentTime = 0.f;
+};
+
 struct PlayerShield {};
 
 struct DropItem { std::string name; };
