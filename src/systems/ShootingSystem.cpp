@@ -30,6 +30,9 @@ void handleShoot(entt::registry& registry, entt::entity& entity, sf::Vector2f ta
         for (auto offset : angleOffset)
             BulletSystem::createBullet<BulletOwnerTag>(registry, entity, targetPosition, offset);
         break;
+    case WeaponType::Shuriken:
+        BulletSystem::createBullet<BulletOwnerTag>(registry, entity, targetPosition);
+        break;
     default:
         break;
     }

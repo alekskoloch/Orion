@@ -87,7 +87,7 @@ static WeaponSchema basicEnemyWeapon4 =
 
 static WeaponSchema Shuriken =
 {
-    WeaponType::SingleShot,
+    WeaponType::Shuriken,
     1.f,
     2.0f,
     1000.f,
