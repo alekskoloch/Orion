@@ -6,6 +6,7 @@
 #include "../systems/CooldownSystem.h"
 #include "../systems/ProceduralGenerationSystem.h"
 #include "../systems/ShieldSystem.h"
+#include "../systems/BulletSystem.h"
 
 #include "../managers/TextureManager.h"
 #include "../components/components.h"
@@ -13,29 +14,6 @@
 
 #include "../utils/MathOperations.h"
 #include "../utils/GraphicsOperations.h"
-
-template <typename BulletOwnerTag>
-void createBullet(entt::registry& registry, entt::entity& entity, sf::Vector2f targetPosition, float offset = 0.f)
-{
-    auto weapon = registry.get<Weapon>(entity);
-    auto position = registry.get<Position>(entity).position;
-
-    sf::Vector2f direction(CalculateDirectionBetweenPoints(position, targetPosition, offset));
-    float rotation = CalculateAzimuthAngleInDegrees(direction, 90.f);
-
-    sf::Sprite sprite = CreateSprite(weapon.bulletTextureName);
-    sprite.setRotation(rotation);
-
-    auto bulletEntity = registry.create();
-    registry.emplace<Bullet>(bulletEntity);
-    registry.emplace<BulletOwnerTag>(bulletEntity);
-
-    registry.emplace<Position>(bulletEntity, position);
-    //TODO: Get Collision from weaponSchema
-    registry.emplace<Collision>(bulletEntity, sprite.getGlobalBounds());
-    registry.emplace<Velocity>(bulletEntity, direction * weapon.bulletSpeed);
-    registry.emplace<Renderable>(bulletEntity, sprite);
-}
 
 template <typename BulletOwnerTag>
 void handleShoot(entt::registry& registry, entt::entity& entity, sf::Vector2f targetPosition)
@@ -46,11 +24,11 @@ void handleShoot(entt::registry& registry, entt::entity& entity, sf::Vector2f ta
     switch (weapon.weaponType)
     {
     case WeaponType::SingleShot:
-        createBullet<BulletOwnerTag>(registry, entity, targetPosition);
+        BulletSystem::createBullet<BulletOwnerTag>(registry, entity, targetPosition);
         break;
     case WeaponType::TrippleShot:
         for (auto offset : angleOffset)
-            createBullet<BulletOwnerTag>(registry, entity, targetPosition, offset);
+            BulletSystem::createBullet<BulletOwnerTag>(registry, entity, targetPosition, offset);
         break;
     default:
         break;
@@ -69,7 +47,7 @@ void handleSpecialShoot(entt::registry& registry, entt::entity& entity, sf::Vect
     {
         float angleOffset[] = {  0.f, 45.f, 90.f, 135.f, 180.f, 225.f, 270.f, 315.f };
         for (auto offset : angleOffset)
-            createBullet<PlayerBullet>(registry, entity, targetPosition, offset);
+            BulletSystem::createBullet<PlayerBullet>(registry, entity, targetPosition, offset);
     }
 }
 
