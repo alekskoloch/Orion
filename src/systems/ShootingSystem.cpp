@@ -34,7 +34,6 @@ void handleShoot(entt::registry& registry, entt::entity& entity, sf::Vector2f ta
         BulletSystem::createShurikenBullet<BulletOwnerTag>(registry, entity, targetPosition, ProceduralGenerationSystem::GetRandomNumber(0, 1) == 1);
         break;
     case WeaponType::DoubleShuriken:
-        std::cout << "Double shuriken" << std::endl;
         BulletSystem::createShurikenBullet<BulletOwnerTag>(registry, entity, targetPosition, false);
         BulletSystem::createShurikenBullet<BulletOwnerTag>(registry, entity, targetPosition, true);
         break;
