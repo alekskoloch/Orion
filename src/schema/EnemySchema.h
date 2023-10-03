@@ -138,9 +138,9 @@ static EnemySchema enemyRed3 =
         sf::Vector2f(1820.f, 100.f)
     },
     "enemy_red_3",
-    Shuriken,
-    1000.f,
-    1500.f
+    DoubleShuriken,
+    1700.f,
+    1800.f
 };
 
 static EnemySchema enemyRed4 =
@@ -156,7 +156,7 @@ static EnemySchema enemyRed4 =
         sf::Vector2f(1820.f, 980.f)
     },
     "enemy_red_4",
-    Shuriken,
-    500.f,
-    1000.f
+    DoubleShuriken,
+    1300.f,
+    1600.f
 };
