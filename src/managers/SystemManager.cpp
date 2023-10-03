@@ -15,6 +15,7 @@
 #include "../systems/EntityStateSystem.h"
 #include "../systems/ShieldSystem.h"
 #include "../systems/ShootingSystem.h"
+#include "../systems/BulletSystem.h"
 #include "../systems/AccelerationSystem.h"
 #include "../systems/MovementSystem.h"
 #include "../systems/WeaponsSystem.h"
@@ -74,6 +75,7 @@ void SystemManager::executeUpdateSystems(sf::Time deltaTime)
         WeaponsSystem::updateWeaponCooldown(this->registry, deltaTime);
         EntityStateSystem::updateEntityState(this->registry);
         ShootingSystem::shoot(this->registry, deltaTime, this->window);
+        BulletSystem::updateShurikenBullet(this->registry, deltaTime);
         DropSystem::updateDrop(this->registry, deltaTime);
         AccelerationSystem::accelerate(this->registry, deltaTime);
         MovementSystem::updateMovement(this->registry, deltaTime);
