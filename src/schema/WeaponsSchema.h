@@ -90,7 +90,17 @@ static WeaponSchema Shuriken =
     WeaponType::Shuriken,
     1.f,
     2.0f,
-    1000.f,
+    1800.f,
+    "enemy_red_bullet",
+    "empty"
+};
+
+static WeaponSchema DoubleShuriken =
+{
+    WeaponType::DoubleShuriken,
+    1.f,
+    3.0f,
+    1800.f,
     "enemy_red_bullet",
     "empty"
 };
