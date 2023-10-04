@@ -162,7 +162,9 @@ struct Skills
     bool allWeaponsSpecialShot = false;
 
     float singleSpecialShotWeaponEnergyCostMultiplier = 1.f;
+    float tripleSpecialShotWeaponEnergyCostMultiplier = 1.f;
     bool singleSpecialShotWeaponShieldChance = false;
+    bool tripleSpecialShotWeaponShieldChance = false;
 };
 
 struct Speed
