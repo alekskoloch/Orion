@@ -14,7 +14,7 @@ public:
     static void updateShurikenBullet(entt::registry& registry, sf::Time deltaTime);
 
     template <typename BulletOwnerTag>
-    static void createBullet(entt::registry& registry, entt::entity& entity, sf::Vector2f targetPosition, float offset = 0.f)
+    static void createBullet(entt::registry& registry, entt::entity& entity, sf::Vector2f targetPosition, bool right = false, float offset = 0.f)
     {
         auto weapon = registry.get<Weapon>(entity);
         auto position = registry.get<Position>(entity).position;
@@ -32,30 +32,22 @@ public:
         registry.emplace<Position>(bulletEntity, position);
         //TODO: Get Collision from weaponSchema
         registry.emplace<Collision>(bulletEntity, sprite.getGlobalBounds());
-        registry.emplace<Velocity>(bulletEntity, direction * weapon.bulletSpeed);
-        registry.emplace<Renderable>(bulletEntity, sprite);
-    }
 
-    template <typename BulletOwnerTag>
-    static void createShurikenBullet(entt::registry& registry, entt::entity& entity, sf::Vector2f targetPosition, bool right)
-    {
-        auto weapon = registry.get<Weapon>(entity);
-        auto position = registry.get<Position>(entity).position;
+        switch (weapon.weaponType)
+        {
+            case WeaponType::SingleShot:
+            case WeaponType::TrippleShot:
+                registry.emplace<Velocity>(bulletEntity, direction * weapon.bulletSpeed);
+                break;
+            case WeaponType::Shuriken:
+            case WeaponType::DoubleShuriken:
+                registry.emplace<Velocity>(bulletEntity, sf::Vector2f(0.f, 0.f));
+                registry.emplace<ShurikenBullet>(bulletEntity, targetPosition, position, right, weapon.bulletSpeed);
+                break;
+            default:
+                break;
+        }
 
-        sf::Vector2f direction(CalculateDirectionBetweenPoints(position, targetPosition));
-        float rotation = CalculateAzimuthAngleInDegrees(direction, 90.f);
-
-        sf::Sprite sprite = CreateSprite(weapon.bulletTextureName);
-        sprite.setRotation(rotation);
-
-        auto bulletEntity = registry.create();
-        registry.emplace<Bullet>(bulletEntity);
-        registry.emplace<BulletOwnerTag>(bulletEntity);
-        registry.emplace<ShurikenBullet>(bulletEntity, targetPosition, position, right, weapon.bulletSpeed);
-
-        registry.emplace<Position>(bulletEntity, position);
-        registry.emplace<Collision>(bulletEntity, sprite.getGlobalBounds());
-        registry.emplace<Velocity>(bulletEntity, sf::Vector2f(0.f, 0.f));
         registry.emplace<Renderable>(bulletEntity, sprite);
     }
 };

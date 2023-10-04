@@ -31,11 +31,11 @@ void handleShoot(entt::registry& registry, entt::entity& entity, sf::Vector2f ta
             BulletSystem::createBullet<BulletOwnerTag>(registry, entity, targetPosition, offset);
         break;
     case WeaponType::Shuriken:
-        BulletSystem::createShurikenBullet<BulletOwnerTag>(registry, entity, targetPosition, ProceduralGenerationSystem::GetRandomNumber(0, 1) == 1);
+        BulletSystem::createBullet<BulletOwnerTag>(registry, entity, targetPosition, ProceduralGenerationSystem::GetRandomNumber(0, 1) == 1);
         break;
     case WeaponType::DoubleShuriken:
-        BulletSystem::createShurikenBullet<BulletOwnerTag>(registry, entity, targetPosition, false);
-        BulletSystem::createShurikenBullet<BulletOwnerTag>(registry, entity, targetPosition, true);
+        BulletSystem::createBullet<BulletOwnerTag>(registry, entity, targetPosition, false);
+        BulletSystem::createBullet<BulletOwnerTag>(registry, entity, targetPosition, true);
         break;
     default:
         break;
