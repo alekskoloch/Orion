@@ -55,6 +55,12 @@ void SkillSystem::addSingleShotWeaponSpecialShotEnergyCostMultiplier(entt::regis
     playerSkillsComponent.singleSpecialShotWeaponEnergyCostMultiplier += multiplier;
 }
 
+void SkillSystem::addTripleShotWeaponSpecialShotEnergyCostMultiplier(entt::registry& registry, float multiplier)
+{
+    auto& playerSkillsComponent = registry.get<Skills>(registry.view<Player>().front());
+    playerSkillsComponent.tripleSpecialShotWeaponEnergyCostMultiplier += multiplier;
+}
+
 float SkillSystem::getWeaponEnergyCost(entt::registry& registry, entt::entity entity)
 {
     auto& skillsComponent = registry.get<Skills>(entity);

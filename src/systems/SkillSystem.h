@@ -13,6 +13,7 @@ public:
     static void addWeaponEnergyCostMultiplier(entt::registry& registry, float multiplier);
     static void addSingleShotWeaponEnergyCostMultiplier(entt::registry& registry, float multiplier);
     static void addSingleShotWeaponSpecialShotEnergyCostMultiplier(entt::registry& registry, float multiplier);
+    static void addTripleShotWeaponSpecialShotEnergyCostMultiplier(entt::registry& registry, float multiplier);
     static float getWeaponEnergyCost(entt::registry& registry, entt::entity entity);
     static float getWeaponSpecialShotEnergyCost(entt::registry& registry, entt::entity entity);
 
