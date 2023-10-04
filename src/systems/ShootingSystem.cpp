@@ -54,7 +54,7 @@ void handleSpecialShoot(entt::registry& registry, entt::entity& entity, sf::Vect
     {
         float angleOffset[] = {  0.f, 45.f, 90.f, 135.f, 180.f, 225.f, 270.f, 315.f };
         for (auto offset : angleOffset)
-            BulletSystem::createBullet<PlayerBullet>(registry, entity, targetPosition, offset);
+            BulletSystem::createBullet<PlayerBullet>(registry, entity, targetPosition, false, offset);
     }
 }
 
