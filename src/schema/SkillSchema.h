@@ -79,6 +79,38 @@ static SkillSchema SlaughterSurge
     {RequirementType::None}
 };
 
+static SkillSchema TripleThreatOrdnance
+{
+    sf::Vector2f(FIRST_SKILL_POSITION_X - 800.f, FIRST_SKILL_POSITION_Y - 1240.f),
+    "Triple Threat Ordnance",
+    true,
+    {
+        "Allows special shot for triple shot weapons",
+        "A special shoot from triple shot weapons costs 50% less energy",
+        "A special shoot from triple shot weapons has a small chance of activating Advanced Shield"
+    },
+    "skill",
+    "skillHover",
+    "skillActive",
+    {
+        [](entt::registry& registry)
+        {
+            
+        },
+        [](entt::registry& registry)
+        {
+            
+        },
+        [](entt::registry& registry)
+        {
+            
+        }
+    },
+    {RequirementType::None, RequirementType::OrangeStone, RequirementType::OrangeAndGreenStone},
+    {},
+    3
+};
+
 static SkillSchema SingularStrikeMastery
 {
     sf::Vector2f(FIRST_SKILL_POSITION_X - 600.f, FIRST_SKILL_POSITION_Y - 840.f),
@@ -107,7 +139,7 @@ static SkillSchema SingularStrikeMastery
         }
     },
     {RequirementType::None, RequirementType::OrangeStone, RequirementType::OrangeAndGreenStone},
-    {},
+    {TripleThreatOrdnance},
     3
 };
 
