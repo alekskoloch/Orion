@@ -95,15 +95,15 @@ static SkillSchema TripleThreatOrdnance
     {
         [](entt::registry& registry)
         {
-            
+            SkillSystem::enableTripleShotWeaponSpecialShot(registry);
         },
         [](entt::registry& registry)
         {
-            
+            SkillSystem::addTripleShotWeaponSpecialShotEnergyCostMultiplier(registry, -0.5f);
         },
         [](entt::registry& registry)
         {
-            
+            SkillSystem::enableShieldChanceForTripleSpecialShot(registry);
         }
     },
     {RequirementType::None, RequirementType::OrangeStone, RequirementType::OrangeAndGreenStone},

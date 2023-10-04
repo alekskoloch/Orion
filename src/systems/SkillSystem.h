@@ -30,5 +30,6 @@ public:
     static bool isTripleShotWeaponSpecialShotEnabled(entt::registry& registry);
     static bool isAllWeaponsSpecialShotEnabled(entt::registry& registry);
     static void enableShieldChanceForSingleSpecialShot(entt::registry& registry);
+    static void enableShieldChanceForTripleSpecialShot(entt::registry& registry);
     static bool getShieldChance(entt::registry& registry, entt::entity entity);
 };

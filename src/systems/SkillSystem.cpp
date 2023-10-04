@@ -160,6 +160,12 @@ void SkillSystem::enableShieldChanceForSingleSpecialShot(entt::registry& registr
     playerSkillsComponent.singleSpecialShotWeaponShieldChance = true;
 }
 
+void SkillSystem::enableShieldChanceForTripleSpecialShot(entt::registry& registry)
+{
+    auto& playerSkillsComponent = registry.get<Skills>(registry.view<Player>().front());
+    playerSkillsComponent.tripleSpecialShotWeaponShieldChance = true;
+}
+
 bool SkillSystem::getShieldChance(entt::registry& registry, entt::entity entity)
 {
     auto& skillsComponent = registry.get<Skills>(entity);
