@@ -92,6 +92,11 @@ struct Input
     bool getShield;
 };
 
+struct MoneyInventory
+{
+    unsigned int money = 0;
+};
+
 struct Name
 {
     std::string name;
