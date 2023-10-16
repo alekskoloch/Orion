@@ -20,7 +20,8 @@ GUIManager::GUIManager(sf::RenderWindow& window, entt::registry& registry) : win
     minimap(window, registry),
     skillTreeGUI(registry, window),
     weaponTile(window, registry),
-    shieldTile(window, registry)
+    shieldTile(window, registry),
+    moneyBar(window, registry)
 {
     this->initializeShader();
 }
@@ -47,6 +48,7 @@ void GUIManager::draw()
     {
         this->energyBar.draw();
         this->minimap.draw();
+        this->moneyBar.draw(this->window, sf::RenderStates::Default);
         this->shieldTile.draw(this->window, sf::RenderStates::Default);
         this->weaponTile.draw(this->window, sf::RenderStates::Default);
         

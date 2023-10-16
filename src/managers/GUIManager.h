@@ -26,6 +26,7 @@ private:
     GUIQuickMenu quickMenu;
     GUIEnergyBar energyBar;
     GUIMinimap minimap;
+    GUIMoneyBar moneyBar;
     GUIWeaponTile weaponTile;
     GUIShieldTile shieldTile;
 
