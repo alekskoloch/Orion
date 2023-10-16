@@ -27,6 +27,7 @@ private:
     GUIEnergyBar energyBar;
     GUIMinimap minimap;
     GUIWeaponTile weaponTile;
+    GUIShieldTile shieldTile;
 
     GUISkillTree skillTreeGUI;
 

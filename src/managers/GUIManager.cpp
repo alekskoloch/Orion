@@ -19,7 +19,8 @@ GUIManager::GUIManager(sf::RenderWindow& window, entt::registry& registry) : win
     energyBar(window, registry),
     minimap(window, registry),
     skillTreeGUI(registry, window),
-    weaponTile(window, registry)
+    weaponTile(window, registry),
+    shieldTile(window, registry)
 {
     this->initializeShader();
 }
@@ -46,6 +47,7 @@ void GUIManager::draw()
     {
         this->energyBar.draw();
         this->minimap.draw();
+        this->shieldTile.draw(this->window, sf::RenderStates::Default);
         this->weaponTile.draw(this->window, sf::RenderStates::Default);
         
         if (this->quickMenuActive)
@@ -81,9 +83,11 @@ void GUIManager::toggleQuickMenu(bool value)
             break;
         case 3:
             ShieldSystem::changeShield(this->registry, basicShield);
+            this->shieldTile.setShieldTexture("basic_shield_ico");
             break;
         case 4:
             ShieldSystem::changeShield(this->registry, advancedShield);
+            this->shieldTile.setShieldTexture("advanced_shield_ico");
             break;
         case 9:
             SceneManager::getInstance().setCurrentScene(Scene::SkillTree);
