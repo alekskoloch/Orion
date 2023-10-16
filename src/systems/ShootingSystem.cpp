@@ -44,7 +44,7 @@ void handleShoot(entt::registry& registry, entt::entity& entity, sf::Vector2f ta
 
 void handleSpecialShoot(entt::registry& registry, entt::entity& entity, sf::Vector2f targetPosition)
 {
-    auto weapon = registry.get<Weapon>(entity);
+    auto& weapon = registry.get<Weapon>(entity);
 
     if (weapon.specialShotType == SpecialShotType::None)
     {
@@ -55,6 +55,10 @@ void handleSpecialShoot(entt::registry& registry, entt::entity& entity, sf::Vect
         float angleOffset[] = {  0.f, 45.f, 90.f, 135.f, 180.f, 225.f, 270.f, 315.f };
         for (auto offset : angleOffset)
             BulletSystem::createBullet<PlayerBullet>(registry, entity, targetPosition, false, offset);
+    }
+    else if (weapon.specialShotType == SpecialShotType::TripleSalvo)
+    {
+        weapon.bulletsInQueue = weapon.bulletsInSalvo;
     }
 }
 
@@ -87,16 +91,21 @@ void handlePlayerShooting(entt::registry& registry, sf::Time deltaTime, sf::Rend
             {
                 EnergySystem::removeEnergy<Player>(registry, SkillSystem::getWeaponSpecialShotEnergyCost(registry, entity));
                 CooldownSystem::setCooldown(registry, entity, "specialShot", weapon.specialShotCooldownTime);
-                handleSpecialShoot(registry, entity, window.mapPixelToCoords(sf::Mouse::getPosition(window)));
+                weapon.specialShoot(registry, window, entity);
+                //handleSpecialShoot(registry, entity, window.mapPixelToCoords(sf::Mouse::getPosition(window)));
                 //TODO: Chance should be configurable
-                if (ProceduralGenerationSystem::GetRandomNumber(1,15) == 1)
-                    ShieldSystem::getShield(registry, basicShield);
+                if (SkillSystem::getShieldChance(registry, entity))
+                    if (weapon.weaponType == WeaponType::SingleShot)
+                        ShieldSystem::getShield(registry, basicShield);
+                    else if (weapon.weaponType == WeaponType::TrippleShot)
+                        ShieldSystem::getShield(registry, advancedShield);
             }
 
         if (canShoot && EnergySystem::hasEnoughEnergy<Player>(registry, SkillSystem::getWeaponEnergyCost(registry, entity)))
         {
             EnergySystem::removeEnergy<Player>(registry, SkillSystem::getWeaponEnergyCost(registry, entity));
-            handleShoot<PlayerBullet>(registry, entity, window.mapPixelToCoords(sf::Mouse::getPosition(window)));
+            weapon.shoot(registry, window, entity);
+            //handleShoot<PlayerBullet>(registry, entity, window.mapPixelToCoords(sf::Mouse::getPosition(window)));
             weapon.SetCooldown();
         }
 
@@ -104,7 +113,7 @@ void handlePlayerShooting(entt::registry& registry, sf::Time deltaTime, sf::Rend
     }
 }
 
-void handleEnemyShooting(entt::registry& registry, sf::Time deltaTime)
+void handleEnemyShooting(entt::registry& registry, sf::Time deltaTime, sf::RenderWindow& window)
 {
     auto enemyView = registry.view<Enemy, Weapon, Position, EntityState>();
     auto playerPosition = registry.view<Player, Position>().get<Position>(registry.view<Player, Position>().front()).position;
@@ -118,7 +127,8 @@ void handleEnemyShooting(entt::registry& registry, sf::Time deltaTime)
 
             if (enemyWeapon.currentCooldownTime == 0.f)
             {
-                handleShoot<EnemyBullet>(registry, enemyEntity, playerPosition);
+                //handleShoot<EnemyBullet>(registry, enemyEntity, playerPosition);
+                enemyWeapon.shoot(registry, window, enemyEntity);
                 enemyWeapon.SetCooldown();
             }
         }
@@ -130,7 +140,29 @@ void ShootingSystem::shoot(entt::registry& registry, sf::Time deltaTime, sf::Ren
     //TODO: Temporary solution for player camera
     CameraSystem::setPlayerCamera(registry, window);
     handlePlayerShooting(registry, deltaTime, window);
+    ShootingSystem::handleQueue(registry, deltaTime, window);
     CameraSystem::setDefaultCamera(window);
 
-    handleEnemyShooting(registry, deltaTime);
+    handleEnemyShooting(registry, deltaTime, window);
+}
+
+void ShootingSystem::handleQueue(entt::registry& registry, sf::Time deltaTime, sf::RenderWindow& window)
+{
+    auto playerView = registry.view<Player, Weapon>();
+    for (auto playerEntity : playerView)
+    {
+        auto& weapon = playerView.get<Weapon>(playerEntity);
+        if (weapon.bulletsInQueue > 0)
+        {
+            weapon.queueCooldownTime += deltaTime.asSeconds();
+            if (weapon.queueCooldownTime >= weapon.queueCooldown)
+            {
+                weapon.queueCooldownTime = 0.f;
+                weapon.bulletsInQueue--;
+                float angleOffset[] = { -10.f, 0.f, 10.f };
+                for (auto offset : angleOffset)
+                    BulletSystem::createBullet<PlayerBullet>(registry, playerEntity, window.mapPixelToCoords(sf::Mouse::getPosition(window)), false, offset);
+            }
+        }
+    }
 }

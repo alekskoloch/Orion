@@ -9,6 +9,7 @@
 enum class SpecialShotType
 {
     FullCircleShoot,
+    TripleSalvo,
     None
 };
 
@@ -190,6 +191,14 @@ struct Weapon
     SpecialShotType specialShotType;
     float energyCostForSpecialShot;
     float specialShotCooldownTime;
+
+    std::function<void(entt::registry& registry, sf::RenderWindow& window, entt::entity& entity)> shoot = [](entt::registry& registry, sf::RenderWindow& window, entt::entity& entity) {};
+    std::function<void(entt::registry& registry, sf::RenderWindow& window, entt::entity& entity)> specialShoot = [](entt::registry& registry, sf::RenderWindow& window, entt::entity& entity) {};
+
+    unsigned bulletsInSalvo = 0;
+    float queueCooldown = 0.0f;
+    unsigned bulletsInQueue = 0;
+    float queueCooldownTime = 0.f;
     
     bool autofire = false;
     float currentCooldownTime = 0.0f;
