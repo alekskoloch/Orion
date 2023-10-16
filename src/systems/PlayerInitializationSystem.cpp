@@ -40,8 +40,8 @@ void PlayerInitializationSystem::initializePlayer(entt::registry& registry)
     registry.emplace<RotationTowardsMouse>(player, true, 600.f, 2.f);
     registry.emplace<Shield>(player);
     registry.emplace<Skills>(player);
-    //TODO: Remove stones
-    registry.emplace<StoneInventory>(player, 3, 3);
+    //TODO: Remove stones, values only for testing
+    registry.emplace<StoneInventory>(player, 999, 999);
 
     registry.emplace<Cooldown>(player, std::unordered_map<std::string, float>{ {"specialShot", 0.f} });
 
