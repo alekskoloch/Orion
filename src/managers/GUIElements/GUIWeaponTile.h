@@ -36,3 +36,19 @@ private:
     sf::Texture shieldTexture;
     sf::Sprite shieldIcon;
 };
+
+class GUIMoneyBar : public sf::Drawable
+{
+public:
+    GUIMoneyBar(sf::RenderWindow& window, entt::registry& registry);
+
+    void setString(const std::string& string);
+
+    void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
+private:
+    sf::RenderWindow& window;
+    entt::registry& registry;
+
+    sf::RectangleShape bar;
+    sf::Text moneyText;
+};

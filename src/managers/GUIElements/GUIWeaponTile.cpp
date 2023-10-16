@@ -1,6 +1,7 @@
 #include "GUIWeaponTile.h"
 
 #include "../TextureManager.h"
+#include "../FontManager.h"
 
 #include "../../utils/GraphicsOperations.h"
 
@@ -53,4 +54,30 @@ void GUIShieldTile::draw(sf::RenderTarget& target, sf::RenderStates states) cons
 {
     target.draw(this->circle, states);
     target.draw(this->shieldIcon, states);
+}
+
+GUIMoneyBar::GUIMoneyBar(sf::RenderWindow& window, entt::registry& registry) : window(window), registry(registry)
+{
+    this->bar.setSize(sf::Vector2f(300, 50));
+    this->bar.setFillColor(sf::Color(225, 225, 225));
+    this->bar.setOutlineColor(sf::Color::White);
+    this->bar.setOutlineThickness(4.f);
+    this->bar.setPosition(100, 0);
+
+    this->moneyText.setFont(FontManager::getInstance().getFont("font"));
+    this->moneyText.setCharacterSize(50);
+    this->moneyText.setFillColor(sf::Color::White);
+    this->moneyText.setPosition(0, 0);
+    this->moneyText.setString("Money: 0");
+}
+
+void GUIMoneyBar::setString(const std::string& string)
+{
+    this->moneyText.setString(string);
+}
+
+void GUIMoneyBar::draw(sf::RenderTarget& target, sf::RenderStates states) const
+{
+    target.draw(this->bar, states);
+    target.draw(this->moneyText, states);
 }
