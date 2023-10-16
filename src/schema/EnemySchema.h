@@ -160,3 +160,93 @@ static EnemySchema enemyRed4 =
     1300.f,
     1600.f
 };
+
+static EnemySchema enemyZombie1 =
+{
+    "enemy_zombie_1",
+    3.f,
+    sf::Vector2f(100.f, 980.f),
+    200.f,
+    {
+        sf::Vector2f(100.f, 100.f),
+        sf::Vector2f(1820.f, 100.f),
+        sf::Vector2f(1820.f, 980.f),
+        sf::Vector2f(100.f, 980.f)
+    },
+    "enemy_zombie_1",
+    Nail,
+    1300.f,
+    1600.f
+};
+
+static EnemySchema enemyZombie2 =
+{
+    "enemy_zombie_2",
+    5.f,
+    sf::Vector2f(100.f, 980.f),
+    300.f,
+    {
+        sf::Vector2f(100.f, 100.f),
+        sf::Vector2f(1820.f, 100.f),
+        sf::Vector2f(1820.f, 980.f),
+        sf::Vector2f(100.f, 980.f)
+    },
+    "enemy_zombie_2",
+    Nail,
+    1500.f,
+    1800.f
+};
+
+static EnemySchema enemyZombie3 =
+{
+    "enemy_zombie_3",
+    2.f,
+    sf::Vector2f(100.f, 980.f),
+    900.f,
+    {
+        sf::Vector2f(100.f, 100.f),
+        sf::Vector2f(1820.f, 100.f),
+        sf::Vector2f(1820.f, 980.f),
+        sf::Vector2f(100.f, 980.f)
+    },
+    "enemy_zombie_3",
+    Nail,
+    1500.f,
+    1900.f
+};
+
+static EnemySchema enemyZombie4 =
+{
+    "enemy_zombie_4",
+    5.f,
+    sf::Vector2f(100.f, 980.f),
+    500.f,
+    {
+        sf::Vector2f(100.f, 100.f),
+        sf::Vector2f(1820.f, 100.f),
+        sf::Vector2f(1820.f, 980.f),
+        sf::Vector2f(100.f, 980.f)
+    },
+    "enemy_zombie_4",
+    Nail,
+    1500.f,
+    2200.f
+};
+
+static EnemySchema enemyZombie5 =
+{
+    "enemy_zombie_5",
+    2.f,
+    sf::Vector2f(100.f, 980.f),
+    900.f,
+    {
+        sf::Vector2f(100.f, 100.f),
+        sf::Vector2f(1820.f, 100.f),
+        sf::Vector2f(1820.f, 980.f),
+        sf::Vector2f(100.f, 980.f)
+    },
+    "enemy_zombie_5",
+    Nail,
+    1500.f,
+    1900.f
+};
