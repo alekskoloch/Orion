@@ -42,6 +42,7 @@ void PlayerInitializationSystem::initializePlayer(entt::registry& registry)
     registry.emplace<Skills>(player);
     //TODO: Remove stones, values only for testing
     registry.emplace<StoneInventory>(player, 999, 999);
+    registry.emplace<MoneyInventory>(player, 1000);
 
     registry.emplace<Cooldown>(player, std::unordered_map<std::string, float>{ {"specialShot", 0.f} });
 
