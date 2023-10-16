@@ -85,6 +85,8 @@ float SkillSystem::getWeaponSpecialShotEnergyCost(entt::registry& registry, entt
 
     if (weaponComponent.weaponType == WeaponType::SingleShot)
         energyCostMultiplier += skillsComponent.singleSpecialShotWeaponEnergyCostMultiplier - 1;
+    else if (weaponComponent.weaponType == WeaponType::TrippleShot)
+        energyCostMultiplier += skillsComponent.tripleSpecialShotWeaponEnergyCostMultiplier - 1;
 
     return energyCost * energyCostMultiplier;
 }
@@ -173,6 +175,8 @@ bool SkillSystem::getShieldChance(entt::registry& registry, entt::entity entity)
 
     if (weaponComponent.weaponType == WeaponType::SingleShot)
         return skillsComponent.singleSpecialShotWeaponShieldChance;
+    else if (weaponComponent.weaponType == WeaponType::TrippleShot)
+        return skillsComponent.tripleSpecialShotWeaponShieldChance;
     else
         return false;
 }
