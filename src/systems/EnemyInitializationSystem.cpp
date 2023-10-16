@@ -19,7 +19,7 @@ void EnemyInitializationSystem::initializeEnemy(entt::registry& registry)
     //TODO: Temporary solution for initialize enemy
     for (int i = 0; i < ENEMIES; i++)
     {
-        switch (ProceduralGenerationSystem::GetRandomNumber(1,8))
+        switch (ProceduralGenerationSystem::GetRandomNumber(1,9))
         {
         case 1:
             createEnemy(registry, enemy);
@@ -44,6 +44,21 @@ void EnemyInitializationSystem::initializeEnemy(entt::registry& registry)
             break;
         case 8:
             createEnemy(registry, enemyRed4);
+            break;
+        case 9:
+            createEnemy(registry, enemyZombie1);
+            break;
+        case 10:
+            createEnemy(registry, enemyZombie2);
+            break;
+        case 11:
+            createEnemy(registry, enemyZombie3);
+            break;
+        case 12:
+            createEnemy(registry, enemyZombie4);
+            break;
+        case 13:
+            createEnemy(registry, enemyZombie5);
             break;
         default:
             break;
@@ -118,7 +133,7 @@ void EnemyInitializationSystem::createEnemy(entt::registry& registry, const Enem
 void EnemyInitializationSystem::createNewEnemy(entt::registry& registry, sf::Vector2f position)
 {
     EnemySchema enemySchema = enemy;
-    switch (ProceduralGenerationSystem::GetRandomNumber(1, 8))
+    switch (ProceduralGenerationSystem::GetRandomNumber(1, 13))
     {
         case 1:
             enemySchema = enemy;
@@ -143,6 +158,23 @@ void EnemyInitializationSystem::createNewEnemy(entt::registry& registry, sf::Vec
             break;
         case 8:
             enemySchema = enemyRed4;
+            break;
+        case 9:
+            enemySchema = enemyZombie1;
+            break;
+        case 10:
+            enemySchema = enemyZombie2;
+            break;
+        case 11:
+            enemySchema = enemyZombie3;
+            break;
+        case 12:
+            enemySchema = enemyZombie4;
+            break;
+        case 13:
+            enemySchema = enemyZombie5;
+            break;
+        default:
             break;
     }
 
