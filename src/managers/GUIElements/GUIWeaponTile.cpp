@@ -8,7 +8,7 @@
 GUIWeaponTile::GUIWeaponTile(sf::RenderWindow& window, entt::registry& registry) : window(window), registry(registry)
 {
     this->circle.setRadius(200.f);
-    this->circle.setFillColor(sf::Color(225, 225, 225));
+    this->circle.setFillColor(sf::Color(0, 0, 0));
     this->circle.setOutlineColor(sf::Color::White);
     this->circle.setOutlineThickness(4.f);
     this->circle.setPointCount(50);
@@ -33,7 +33,7 @@ void GUIWeaponTile::draw(sf::RenderTarget& target, sf::RenderStates states) cons
 GUIShieldTile::GUIShieldTile(sf::RenderWindow& window, entt::registry& registry) : window(window), registry(registry)
 {
     this->circle.setRadius(150.f);
-    this->circle.setFillColor(sf::Color(225, 225, 225));
+    this->circle.setFillColor(sf::Color(0, 0, 0));
     this->circle.setOutlineColor(sf::Color::White);
     this->circle.setOutlineThickness(4.f);
     this->circle.setPointCount(50);
@@ -59,16 +59,17 @@ void GUIShieldTile::draw(sf::RenderTarget& target, sf::RenderStates states) cons
 GUIMoneyBar::GUIMoneyBar(sf::RenderWindow& window, entt::registry& registry) : window(window), registry(registry)
 {
     this->bar.setSize(sf::Vector2f(300, 50));
-    this->bar.setFillColor(sf::Color(225, 225, 225));
+    this->bar.setFillColor(sf::Color(0, 0, 0));
     this->bar.setOutlineColor(sf::Color::White);
     this->bar.setOutlineThickness(4.f);
     this->bar.setPosition(100, 0);
 
     this->moneyText.setFont(FontManager::getInstance().getFont("font"));
-    this->moneyText.setCharacterSize(50);
+    this->moneyText.setCharacterSize(30);
     this->moneyText.setFillColor(sf::Color::White);
-    this->moneyText.setPosition(0, 0);
-    this->moneyText.setString("Money: 0");
+    //TODO: change position
+    this->moneyText.setPosition(350, 15);
+    this->moneyText.setString("0$");
 }
 
 void GUIMoneyBar::setString(const std::string& string)
