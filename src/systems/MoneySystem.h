@@ -4,5 +4,6 @@
 
 class MoneySystem
 {
-
+public:
+    static void addMoney(entt::registry& registry, int amount);
 };
