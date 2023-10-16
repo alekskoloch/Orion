@@ -19,5 +19,8 @@ void TextureManager::loadTexture(const std::string& textureName, const std::stri
 
 sf::Texture& TextureManager::getTexture(const std::string& textureName)
 {
+    if(textures.find(textureName) == textures.end())
+        loadTexture(textureName, ASSETS_PATH + textureName + ".png");
+
     return textures.at(textureName);
 }
