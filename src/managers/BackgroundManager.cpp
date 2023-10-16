@@ -91,7 +91,7 @@ void BackgroundManager::updateBackgroundTiles(int playerTileX, int playerTileY)
             if (!tileExists)
             {
                 //TODO: Temporary solution for enemy spawning, this should be handled by a system
-                if (ProceduralGenerationSystem::GetRandomNumber(1, 40) == 1)
+                if (ProceduralGenerationSystem::GetRandomNumber(1, 30) == 1)
                     EnemyInitializationSystem::createNewEnemy(registry, sf::Vector2f(x * backgroundTileSize, y * backgroundTileSize));
 
                 newBackgroundTiles.push_back(BackgroundTile(
