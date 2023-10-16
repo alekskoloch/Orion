@@ -14,7 +14,12 @@
 #include "../utils/GraphicsOperations.h"
 #include "../utils/Mouse.h"
 
-GUIManager::GUIManager(sf::RenderWindow& window, entt::registry& registry) : window(window), registry(registry), quickMenu(window, registry), energyBar(window, registry), minimap(window, registry), skillTreeGUI(registry, window)
+GUIManager::GUIManager(sf::RenderWindow& window, entt::registry& registry) : window(window), registry(registry),
+    quickMenu(window, registry),
+    energyBar(window, registry),
+    minimap(window, registry),
+    skillTreeGUI(registry, window),
+    weaponTile(window, registry)
 {
     this->initializeShader();
 }
@@ -41,6 +46,7 @@ void GUIManager::draw()
     {
         this->energyBar.draw();
         this->minimap.draw();
+        this->weaponTile.draw(this->window, sf::RenderStates::Default);
         
         if (this->quickMenuActive)
         {
@@ -49,6 +55,7 @@ void GUIManager::draw()
 
             this->quickMenu.draw();
         }
+
     }
     else if (SceneManager::getInstance().getCurrentScene() == Scene::SkillTree)
     {
@@ -66,9 +73,11 @@ void GUIManager::toggleQuickMenu(bool value)
         {
         case 1:
             WeaponsSystem::changeWeapon(this->registry, redWeapon);
+            this->weaponTile.setWeaponTexture("red_weapon");
             break;
         case 2:
             WeaponsSystem::changeWeapon(this->registry, blueWeapon);
+            this->weaponTile.setWeaponTexture("blue_weapon");
             break;
         case 3:
             ShieldSystem::changeShield(this->registry, basicShield);

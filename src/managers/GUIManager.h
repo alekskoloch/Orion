@@ -7,6 +7,7 @@
 #include "GUIElements/GUIQuickMenu.h"
 #include "GUIElements/GUIEnergyBar.h"
 #include "GUIElements/GUIMinimap.h"
+#include "GUIElements/GUIWeaponTile.h"
 
 class GUIManager
 {
@@ -25,6 +26,7 @@ private:
     GUIQuickMenu quickMenu;
     GUIEnergyBar energyBar;
     GUIMinimap minimap;
+    GUIWeaponTile weaponTile;
 
     GUISkillTree skillTreeGUI;
 
