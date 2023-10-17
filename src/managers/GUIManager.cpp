@@ -35,6 +35,7 @@ void GUIManager::update()
 
         this->energyBar.update();
         this->minimap.update();
+        this->weaponTile.update();
         this->moneyBar.update();
     }
     else if (SceneManager::getInstance().getCurrentScene() == Scene::SkillTree)
