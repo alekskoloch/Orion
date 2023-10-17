@@ -38,5 +38,8 @@ float CooldownSystem::getCooldown(entt::registry& registry, entt::entity entity,
 
     auto& cooldownComponent = cooldownsView.get<Cooldown>(entity);
 
-    return cooldownComponent.cooldowns[cooldownName];
+    if (cooldownComponent.cooldowns.find(cooldownName) == cooldownComponent.cooldowns.end())
+        return -1.f;
+    else
+        return cooldownComponent.cooldowns[cooldownName];
 }
