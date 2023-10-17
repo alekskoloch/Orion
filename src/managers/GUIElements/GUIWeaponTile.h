@@ -37,6 +37,7 @@ private:
 
     sf::CircleShape circle;
     sf::CircleShape shiedlStateCircle;
+    float shieldDuration;
     sf::Texture shieldTexture;
     sf::Sprite shieldIcon;
 };

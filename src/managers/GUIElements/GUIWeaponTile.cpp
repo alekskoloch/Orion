@@ -90,15 +90,20 @@ void GUIShieldTile::update()
 {
     //TODO: make update shield state circle function
     auto playerEntity = this->registry.view<Player>()[0];
+
+    //TODO: find better way to do this
+    if (!this->registry.get<Shield>(playerEntity).active && this->shieldDuration != this->registry.get<Shield>(playerEntity).duration)
+    {
+        this->shieldDuration = this->registry.get<Shield>(playerEntity).duration;
+    }
     
     if (CooldownSystem::getCooldown(this->registry, playerEntity, "shieldCooldown") != -1.f)
     {
         float cooldown = CooldownSystem::getCooldown(this->registry, playerEntity, "shieldCooldown");
-        float maxCooldown = 3.f;
-        this->shiedlStateCircle.setRadius(150.f * (cooldown / maxCooldown));
+
+        this->shiedlStateCircle.setRadius(150.f * (cooldown / shieldDuration));
 
         this->shiedlStateCircle.setOrigin(this->shiedlStateCircle.getGlobalBounds().width / 2.f, this->shiedlStateCircle.getGlobalBounds().height / 2.f);
-        this->shiedlStateCircle.setPosition(0, 200);
     }
 }
 
