@@ -63,7 +63,7 @@ void checkBulletCollitions(entt::registry& registry, std::unordered_set<entt::en
                     if (enemyHealthComponent.currentHealthValue <= 0.f)
                     {
                         auto enemyExpValue = registry.get<Experience>(target).experience;
-                        ExperienceSystem::addExp(enemyExpValue);
+                        ExperienceSystem::addExp(registry, enemyExpValue);
                     }
                 }
             }

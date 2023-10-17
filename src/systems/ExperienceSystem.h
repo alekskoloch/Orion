@@ -4,5 +4,6 @@
 
 class ExperienceSystem
 {
-    static void addExp(entt::registry& registry, int exp);
+public:
+    static void addExp(entt::registry& registry, unsigned int exp);
 };
