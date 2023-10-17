@@ -4,5 +4,5 @@
 
 class ExperienceSystem
 {
-
+    static void addExp(entt::registry& registry, int exp);
 };
