@@ -5,6 +5,7 @@
 
 #include "../systems/SkillSystem.h"
 #include "../systems/CooldownSystem.h"
+#include "../systems/ExperienceSystem.h"
 
 #include "../components/components.h"
 #include "../components/tagComponents.h"
@@ -59,6 +60,11 @@ void checkBulletCollitions(entt::registry& registry, std::unordered_set<entt::en
                     auto& enemyHealthComponent = registry.get<Health>(target);
                     auto player = registry.view<Player>().front();
                     enemyHealthComponent.currentHealthValue -= SkillSystem::getWeaponDamage(registry, player);
+                    if (enemyHealthComponent.currentHealthValue <= 0.f)
+                    {
+                        auto enemyExpValue = registry.get<Experience>(target).experience;
+                        ExperienceSystem::addExp(enemyExpValue);
+                    }
                 }
             }
         });
