@@ -95,16 +95,52 @@ void checkDropCollision(entt::registry& registry)
                     playerStones.orangeStones++;
                     registry.destroy(drop);
                 }
+                else if (dropName == "money10")
+                {
+                    auto& playerMoney = registry.get<MoneyInventory>(player);
+                    playerMoney.money += 10;
+                    registry.destroy(drop);
+                }
+                else if (dropName == "money20")
+                {
+                    auto& playerMoney = registry.get<MoneyInventory>(player);
+                    playerMoney.money += 20;
+                    registry.destroy(drop);
+                }
+                else if (dropName == "money50")
+                {
+                    auto& playerMoney = registry.get<MoneyInventory>(player);
+                    playerMoney.money += 50;
+                    registry.destroy(drop);
+                }
+                else if (dropName == "money100")
+                {
+                    auto& playerMoney = registry.get<MoneyInventory>(player);
+                    playerMoney.money += 100;
+                    registry.destroy(drop);
+                }
+                else if (dropName == "money200")
+                {
+                    auto& playerMoney = registry.get<MoneyInventory>(player);
+                    playerMoney.money += 200;
+                    registry.destroy(drop);
+                }
+                else if (dropName == "money500")
+                {
+                    auto& playerMoney = registry.get<MoneyInventory>(player);
+                    playerMoney.money += 500;
+                    registry.destroy(drop);
+                }
+                else if (dropName == "money1000")
+                {
+                    auto& playerMoney = registry.get<MoneyInventory>(player);
+                    playerMoney.money += 1000;
+                    registry.destroy(drop);
+                }
                 else
                 {
-                    registry.destroy(drop);
-                    //TODO: Only temporary effect
-                    auto& playerEnergy = registry.get<Energy>(player);
-                    playerEnergy.currentEnergyValue = playerEnergy.maxEnergyValue;
+                    //TODO: Log error
                 }
-
-
-
             }
         }
     }
