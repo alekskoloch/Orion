@@ -4,6 +4,7 @@
 #include "../FontManager.h"
 
 #include "../../systems/MoneySystem.h"
+#include "../../systems/CooldownSystem.h"
 
 #include "../../components/components.h"
 #include "../../components/tagComponents.h"
@@ -20,9 +21,10 @@ GUIWeaponTile::GUIWeaponTile(sf::RenderWindow& window, entt::registry& registry)
     this->circle.setOrigin(this->circle.getGlobalBounds().width / 2.f, this->circle.getGlobalBounds().height / 2.f);
 
     this->loadingCircle.setRadius(100.f);
-    this->loadingCircle.setFillColor(sf::Color(255,0,0,150));
+    this->loadingCircle.setFillColor(sf::Color(255,0,0,50));
     this->circle.setPointCount(50);
     this->loadingCircle.setOrigin(this->loadingCircle.getGlobalBounds().width / 2.f, this->loadingCircle.getGlobalBounds().height / 2.f);
+    this->loadingCircle.setPosition(0, 0);
 
     this->setWeaponTexture("red_weapon");
 }
@@ -32,6 +34,23 @@ void GUIWeaponTile::setWeaponTexture(const std::string& textureName)
     this->weaponIcon = CreateSprite(textureName);
     float iconWidth = this->weaponIcon.getGlobalBounds().width;
     this->weaponIcon.setPosition(120 - iconWidth / 2, 120 - iconWidth / 2);
+}
+
+void GUIWeaponTile::update()
+{
+    //TODO: make update loading circle function
+    auto playerEntity = this->registry.view<Player>()[0];
+
+    if (CooldownSystem::getCooldown(this->registry, playerEntity, "specialShot") != -1.f)
+    {
+        float cooldown = CooldownSystem::getCooldown(this->registry, playerEntity, "specialShot");
+        //TODO: get this from weapon
+        float maxCooldown = 5.f;
+        this->loadingCircle.setRadius(200.f * (1 - cooldown / maxCooldown));
+
+        this->loadingCircle.setOrigin(this->loadingCircle.getGlobalBounds().width / 2.f, this->loadingCircle.getGlobalBounds().height / 2.f);
+        this->loadingCircle.setPosition(0, 0);
+    }
 }
 
 void GUIWeaponTile::draw(sf::RenderTarget& target, sf::RenderStates states) const

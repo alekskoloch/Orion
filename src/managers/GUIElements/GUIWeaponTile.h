@@ -9,6 +9,7 @@ public:
 
     void setWeaponTexture(const std::string& textureName);
 
+    void update();
     void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 private:
     sf::RenderWindow& window;
