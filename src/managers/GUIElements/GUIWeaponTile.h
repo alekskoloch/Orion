@@ -44,6 +44,7 @@ public:
 
     void setString(const std::string& string);
 
+    void update();
     void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 private:
     sf::RenderWindow& window;

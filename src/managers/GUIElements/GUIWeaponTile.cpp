@@ -3,6 +3,11 @@
 #include "../TextureManager.h"
 #include "../FontManager.h"
 
+#include "../../systems/MoneySystem.h"
+
+#include "../../components/components.h"
+#include "../../components/tagComponents.h"
+
 #include "../../utils/GraphicsOperations.h"
 
 GUIWeaponTile::GUIWeaponTile(sf::RenderWindow& window, entt::registry& registry) : window(window), registry(registry)
@@ -68,13 +73,19 @@ GUIMoneyBar::GUIMoneyBar(sf::RenderWindow& window, entt::registry& registry) : w
     this->moneyText.setCharacterSize(30);
     this->moneyText.setFillColor(sf::Color::White);
     //TODO: change position
-    this->moneyText.setPosition(350, 15);
+    this->moneyText.setPosition(250, 15);
     this->moneyText.setString("0$");
 }
 
 void GUIMoneyBar::setString(const std::string& string)
 {
     this->moneyText.setString(string);
+}
+
+void GUIMoneyBar::update()
+{
+    auto& playerMoney = this->registry.get<MoneyInventory>(this->registry.view<Player>()[0]);
+    this->moneyText.setString(std::to_string(playerMoney.money) + "$");
 }
 
 void GUIMoneyBar::draw(sf::RenderTarget& target, sf::RenderStates states) const
