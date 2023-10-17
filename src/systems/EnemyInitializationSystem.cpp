@@ -203,6 +203,8 @@ void EnemyInitializationSystem::createNewEnemy(entt::registry& registry, sf::Vec
     registry.emplace<Name>(enemy, enemySchema.name);
     registry.emplace<Health>(enemy, enemySchema.health, enemySchema.health);
 
+    unsigned int LEVEL = 1;
+    registry.emplace<Experience>(enemy, LEVEL, enemySchema.experience);
     registry.emplace<Drop>(enemy, 100, 69);
 
     WeaponsSystem::loadWeapon(registry, enemySchema.weaponSchema, enemy);
