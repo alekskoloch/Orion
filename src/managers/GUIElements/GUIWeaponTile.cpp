@@ -90,18 +90,16 @@ void GUIShieldTile::update()
 {
     //TODO: make update shield state circle function
     auto playerEntity = this->registry.view<Player>()[0];
-    auto& shieldComponent = this->registry.get<Shield>(playerEntity);
-
-    if (shieldComponent.active)
+    
+    if (CooldownSystem::getCooldown(this->registry, playerEntity, "shieldCooldown") != -1.f)
     {
-        float shieldDuration = shieldComponent.currentDuration;
-        float maxShieldDuration = shieldComponent.duration;
-        this->shiedlStateCircle.setRadius(150.f * (shieldDuration / maxShieldDuration));
+        float cooldown = CooldownSystem::getCooldown(this->registry, playerEntity, "shieldCooldown");
+        float maxCooldown = 3.f;
+        this->shiedlStateCircle.setRadius(150.f * (cooldown / maxCooldown));
 
         this->shiedlStateCircle.setOrigin(this->shiedlStateCircle.getGlobalBounds().width / 2.f, this->shiedlStateCircle.getGlobalBounds().height / 2.f);
         this->shiedlStateCircle.setPosition(0, 200);
     }
-    
 }
 
 void GUIShieldTile::draw(sf::RenderTarget& target, sf::RenderStates states) const

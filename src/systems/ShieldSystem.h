@@ -14,6 +14,7 @@ public:
     static void updateShield(entt::registry& registry, sf::Time deltaTime);
     static void getShield(entt::registry& registry);
     static void getShield(entt::registry& registry, ShieldSchema shieldSchema);
+    static void destroyShield(entt::registry& registry);
 
 private:
     static void updateShieldPosition(entt::registry& registry);

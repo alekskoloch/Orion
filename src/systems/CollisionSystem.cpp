@@ -4,6 +4,7 @@
 #include "DropSystem.h"
 
 #include "../systems/SkillSystem.h"
+#include "../systems/CooldownSystem.h"
 
 #include "../components/components.h"
 #include "../components/tagComponents.h"
@@ -35,12 +36,9 @@ void checkBulletCollitions(entt::registry& registry, std::unordered_set<entt::en
 
                     for (auto shield : shieldPlayerView)
                     {
-                        auto isActive = shieldPlayerView.get<Shield>(shield).active;
-
-                        if (isActive)
+                        if (shieldPlayerView.get<Shield>(shield).active)
                         {
-                            auto& shieldDuration = shieldPlayerView.get<Shield>(shield).currentDuration;
-                            shieldDuration = 0;
+                            CooldownSystem::setCooldown(registry, registry.view<Player>().front(), "shieldCooldown", 0.f);
                         }
                         else
                         {

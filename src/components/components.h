@@ -129,7 +129,6 @@ struct Shield
     std::string shieldTextureName;
     std::string shieldIconTextureName;
     
-    float currentDuration;
     float energyUsed = 0.f;
 
     bool active = false;

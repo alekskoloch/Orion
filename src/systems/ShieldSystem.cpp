@@ -4,6 +4,7 @@
 
 #include "../systems/EnergySystem.h"
 #include "../systems/SkillSystem.h"
+#include "../systems/CooldownSystem.h"
 
 #include "../components/components.h"
 #include "../components/tagComponents.h"
@@ -61,17 +62,11 @@ void ShieldSystem::shieldActivaton(entt::registry& registry, Shield& shield)
 }
 
 void ShieldSystem::handleShieldDuration(entt::registry& registry, Shield& shield, sf::Time deltaTime)
-{
-    shield.currentDuration -= deltaTime.asSeconds();
-            
-    if (shield.currentDuration <= 0)
+{         
+    if (CooldownSystem::getCooldown(registry, registry.view<Player>().front(), "shieldCooldown") == 0.f)
     {
         shield.active = false;
-        auto shieldView = registry.view<PlayerShield>();
-        for (auto entity : shieldView)
-        {
-            registry.destroy(entity);
-        }
+        destroyShield(registry);
     }
 }
 
@@ -123,12 +118,11 @@ void ShieldSystem::getShield(entt::registry& registry)
         
         if (shield.active)
         {
-            auto shieldView = registry.view<PlayerShield>();
-            for (auto entity : shieldView)
-                registry.destroy(entity);
+            ShieldSystem::destroyShield(registry);
         }
 
-        shield.currentDuration = shield.duration * SkillSystem::getShieldTimeDurationMultiplier(registry);
+        CooldownSystem::setCooldown(registry, entity, "shieldCooldown", shield.duration * SkillSystem::getShieldTimeDurationMultiplier(registry));
+    
         shield.active = true;
 
         auto shieldEntity = registry.create();
@@ -150,12 +144,11 @@ void ShieldSystem::getShield(entt::registry& registry, ShieldSchema shieldSchema
 
         if (shield.active)
         {
-            auto shieldView = registry.view<PlayerShield>();
-            for (auto entity : shieldView)
-                registry.destroy(entity);
+            ShieldSystem::destroyShield(registry);
         }
 
-        shield.currentDuration = shieldSchema.duration * SkillSystem::getShieldTimeDurationMultiplier(registry);
+        CooldownSystem::setCooldown(registry, entity, "shieldCooldown", shield.duration * SkillSystem::getShieldTimeDurationMultiplier(registry));
+
         shield.active = true;
 
         auto shieldEntity = registry.create();
@@ -165,4 +158,11 @@ void ShieldSystem::getShield(entt::registry& registry, ShieldSchema shieldSchema
         registry.emplace<Renderable>(shieldEntity, shieldSprite);
         registry.emplace<Position>(shieldEntity, registry.get<Position>(entity).position);
     }
+}
+
+void ShieldSystem::destroyShield(entt::registry& registry)
+{
+    auto view = registry.view<PlayerShield>();
+    for (auto entity : view)
+        registry.destroy(entity);
 }
