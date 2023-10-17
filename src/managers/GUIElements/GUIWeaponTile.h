@@ -29,12 +29,14 @@ public:
 
     void setShieldTexture(const std::string& textureName);
 
+    void update();
     void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 private:
     sf::RenderWindow& window;
     entt::registry& registry;
 
     sf::CircleShape circle;
+    sf::CircleShape shiedlStateCircle;
     sf::Texture shieldTexture;
     sf::Sprite shieldIcon;
 };

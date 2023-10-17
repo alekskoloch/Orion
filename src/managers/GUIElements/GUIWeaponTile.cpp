@@ -70,6 +70,12 @@ GUIShieldTile::GUIShieldTile(sf::RenderWindow& window, entt::registry& registry)
     this->circle.setOrigin(this->circle.getGlobalBounds().width / 2.f, this->circle.getGlobalBounds().height / 2.f);
     this->circle.setPosition(0, 200);
 
+    this->shiedlStateCircle.setRadius(0.f);
+    this->shiedlStateCircle.setFillColor(sf::Color(0,0,255,100));
+    this->circle.setPointCount(50);
+    this->shiedlStateCircle.setOrigin(this->shiedlStateCircle.getGlobalBounds().width / 2.f, this->shiedlStateCircle.getGlobalBounds().height / 2.f);
+    this->shiedlStateCircle.setPosition(0, 200);
+
     this->setShieldTexture("basic_shield_ico");
 }
 
@@ -80,9 +86,28 @@ void GUIShieldTile::setShieldTexture(const std::string& textureName)
     this->shieldIcon.setPosition(this->circle.getPosition().x + 55, this->circle.getPosition().y + 55);
 }
 
+void GUIShieldTile::update()
+{
+    //TODO: make update shield state circle function
+    auto playerEntity = this->registry.view<Player>()[0];
+    auto& shieldComponent = this->registry.get<Shield>(playerEntity);
+
+    if (shieldComponent.active)
+    {
+        float shieldDuration = shieldComponent.currentDuration;
+        float maxShieldDuration = shieldComponent.duration;
+        this->shiedlStateCircle.setRadius(150.f * (shieldDuration / maxShieldDuration));
+
+        this->shiedlStateCircle.setOrigin(this->shiedlStateCircle.getGlobalBounds().width / 2.f, this->shiedlStateCircle.getGlobalBounds().height / 2.f);
+        this->shiedlStateCircle.setPosition(0, 200);
+    }
+    
+}
+
 void GUIShieldTile::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
     target.draw(this->circle, states);
+    target.draw(this->shiedlStateCircle, states);
     target.draw(this->shieldIcon, states);
 }
 
