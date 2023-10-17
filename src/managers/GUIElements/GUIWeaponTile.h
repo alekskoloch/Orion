@@ -15,6 +15,7 @@ private:
     entt::registry& registry;
 
     sf::CircleShape circle;
+    sf::CircleShape loadingCircle;
     sf::Texture weaponTexture;
     sf::Sprite weaponIcon;
 };

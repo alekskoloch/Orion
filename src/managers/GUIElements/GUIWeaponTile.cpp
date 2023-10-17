@@ -19,6 +19,11 @@ GUIWeaponTile::GUIWeaponTile(sf::RenderWindow& window, entt::registry& registry)
     this->circle.setPointCount(50);
     this->circle.setOrigin(this->circle.getGlobalBounds().width / 2.f, this->circle.getGlobalBounds().height / 2.f);
 
+    this->loadingCircle.setRadius(100.f);
+    this->loadingCircle.setFillColor(sf::Color(255,0,0,150));
+    this->circle.setPointCount(50);
+    this->loadingCircle.setOrigin(this->loadingCircle.getGlobalBounds().width / 2.f, this->loadingCircle.getGlobalBounds().height / 2.f);
+
     this->setWeaponTexture("red_weapon");
 }
 
@@ -32,6 +37,7 @@ void GUIWeaponTile::setWeaponTexture(const std::string& textureName)
 void GUIWeaponTile::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
     target.draw(this->circle, states);
+    target.draw(this->loadingCircle, states);
     target.draw(this->weaponIcon, states);
 }
 
