@@ -9,6 +9,7 @@ struct EnemySchema
     float health;
     sf::Vector2f position;
     float speed;
+    unsigned int experience;
     std::vector<sf::Vector2f> waypoints;
     std::string name;
     WeaponSchema weaponSchema;
@@ -23,6 +24,7 @@ static EnemySchema enemy =
     2.f,
     sf::Vector2f(100.f, 980.f),
     600.f,
+    10u,
     {
         sf::Vector2f(100.f, 100.f),
         sf::Vector2f(1820.f, 100.f),
@@ -41,6 +43,7 @@ static EnemySchema enemy2 =
     2.f,
     sf::Vector2f(100.f, 100.f),
     500.f,
+    10u,
     {
         sf::Vector2f(1820.f, 100.f),
         sf::Vector2f(1820.f, 980.f),
@@ -59,6 +62,7 @@ static EnemySchema enemy3 =
     2.f,
     sf::Vector2f(1820.f, 100.f),
     400.f,
+    14u,
     {
         sf::Vector2f(1820.f, 980.f),
         sf::Vector2f(100.f, 980.f),
@@ -77,6 +81,7 @@ static EnemySchema enemy4 =
     2.f,
     sf::Vector2f(1820.f, 980.f),
     300.f,
+    13u,
     {
         sf::Vector2f(100.f, 980.f),
         sf::Vector2f(100.f, 100.f),
@@ -95,6 +100,7 @@ static EnemySchema enemyRed1 =
     3.f,
     sf::Vector2f(100.f, 980.f),
     200.f,
+    16u,
     {
         sf::Vector2f(100.f, 100.f),
         sf::Vector2f(1820.f, 100.f),
@@ -113,6 +119,7 @@ static EnemySchema enemyRed2 =
     3.f,
     sf::Vector2f(100.f, 100.f),
     500.f,
+    16u,
     {
         sf::Vector2f(1820.f, 100.f),
         sf::Vector2f(1820.f, 980.f),
@@ -131,6 +138,7 @@ static EnemySchema enemyRed3 =
     3.f,
     sf::Vector2f(1820.f, 100.f),
     600.f,
+    22u,
     {
         sf::Vector2f(1820.f, 980.f),
         sf::Vector2f(100.f, 980.f),
@@ -149,6 +157,7 @@ static EnemySchema enemyRed4 =
     3.f,
     sf::Vector2f(1820.f, 980.f),
     700.f,
+    22u,
     {
         sf::Vector2f(100.f, 980.f),
         sf::Vector2f(100.f, 100.f),
@@ -167,6 +176,7 @@ static EnemySchema enemyZombie1 =
     3.f,
     sf::Vector2f(100.f, 980.f),
     200.f,
+    14u,
     {
         sf::Vector2f(100.f, 100.f),
         sf::Vector2f(1820.f, 100.f),
@@ -185,6 +195,7 @@ static EnemySchema enemyZombie2 =
     5.f,
     sf::Vector2f(100.f, 980.f),
     300.f,
+    14u,
     {
         sf::Vector2f(100.f, 100.f),
         sf::Vector2f(1820.f, 100.f),
@@ -203,6 +214,7 @@ static EnemySchema enemyZombie3 =
     2.f,
     sf::Vector2f(100.f, 980.f),
     900.f,
+    16u,
     {
         sf::Vector2f(100.f, 100.f),
         sf::Vector2f(1820.f, 100.f),
@@ -221,6 +233,7 @@ static EnemySchema enemyZombie4 =
     5.f,
     sf::Vector2f(100.f, 980.f),
     500.f,
+    17u,
     {
         sf::Vector2f(100.f, 100.f),
         sf::Vector2f(1820.f, 100.f),
@@ -239,6 +252,7 @@ static EnemySchema enemyZombie5 =
     2.f,
     sf::Vector2f(100.f, 980.f),
     900.f,
+    19u,
     {
         sf::Vector2f(100.f, 100.f),
         sf::Vector2f(1820.f, 100.f),
