@@ -13,6 +13,7 @@ void ExperienceSystem::addExp(entt::registry& registry, unsigned int exp)
     while (playerExp >= expToNextLevel)
     {
         playerLevel++;
+        ExperienceSystem::addSkillPoint(registry);
         playerExp -= registry.get<Experience>(registry.view<Player>()[0]).experienceToNextLevel;
         expToNextLevel = (unsigned int)(expToNextLevel * 1.5f);
     }
