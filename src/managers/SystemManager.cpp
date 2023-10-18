@@ -23,6 +23,7 @@
 #include "../systems/CameraSystem.h"
 #include "../systems/DropSystem.h"
 #include "../systems/RemovalSystem.h"
+#include "../systems/InfoSystem.h"
 
 #include "../systems/RenderSystem.h"
 #include "../systems/DebugSystem.h"
@@ -84,6 +85,7 @@ void SystemManager::executeUpdateSystems(sf::Time deltaTime)
         CollisionSystem::updateCollisionBoxes(this->registry);      
         CollisionSystem::checkCollisions(this->registry);
         RemovalSystem::update(this->registry);
+        InfoSystem::update(this->registry, deltaTime);
     }
 }
 
@@ -96,6 +98,7 @@ void SystemManager::executeRenderSystems()
         backgroundManager.draw();
         
         RenderSystem::renderEntities(this->window, this->registry);
+        InfoSystem::draw(this->registry, this->window);
         if (this->debugMode)
         {
             DebugSystem::renderCollisionBoxes(this->registry, this->window);
