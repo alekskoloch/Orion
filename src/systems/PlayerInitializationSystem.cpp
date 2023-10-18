@@ -41,7 +41,7 @@ void PlayerInitializationSystem::initializePlayer(entt::registry& registry)
     registry.emplace<Shield>(player);
     registry.emplace<Skills>(player);
     //TODO: Remove stones, values only for testing
-    registry.emplace<Experience>(player);
+    registry.emplace<Experience>(player, 1, 0, 100, 50);
     registry.emplace<StoneInventory>(player, 999, 999);
     registry.emplace<MoneyInventory>(player, 1000);
 
