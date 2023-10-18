@@ -1,6 +1,7 @@
 #include "SkillManager.h"
 
 #include "../systems/StoneSystem.h"
+#include "../systems/ExperienceSystem.h"
 
 SkillManager::SkillManager(sf::RenderWindow& window, entt::registry& registry)
     : window(window), registry(registry), dialogBox(window, {"Are you sure you want to unlock this skill?"}, this->font), box(600.f, 300.f, sf::Vector2f(350.f, 200.f), this->font)
@@ -84,6 +85,7 @@ void SkillManager::initializeFirstSkill()
 
 void SkillManager::initBox()
 {
+    this->box.addText("Skill Points: " + std::to_string(ExperienceSystem::getSkillPoints(this->registry)));
     this->box.addText("Orange Stones: "+ std::to_string(StoneSystem::getStoneNumber(this->registry, std::string("Orange Stone"))));
     this->box.addText("Green Stones: " + std::to_string(StoneSystem::getStoneNumber(this->registry, std::string("Green Stone"))));
 }
