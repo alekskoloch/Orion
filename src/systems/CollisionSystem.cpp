@@ -1,5 +1,7 @@
 #include "CollisionSystem.h"
 
+#include <format>
+
 #include "EnemyInitializationSystem.h"
 #include "DropSystem.h"
 
@@ -60,12 +62,42 @@ void checkBulletCollitions(entt::registry& registry, std::unordered_set<entt::en
                     auto& enemyHealthComponent = registry.get<Health>(target);
                     auto player = registry.view<Player>().front();
                     enemyHealthComponent.currentHealthValue -= SkillSystem::getWeaponDamage(registry, player);
+                    auto damageInfo = registry.create();
+
+                    //TODO: Refactor this!
+                    double damage = SkillSystem::getWeaponDamage(registry, player);
+
+                    if (damage > 0.01)
+                    {
+                        std::string damageString;
+                        
+                        if (damage - static_cast<int>(damage) == 0.0)
+                        {
+                            damageString = std::format("{}", static_cast<int>(damage));
+                        }
+                        else
+                        {
+                            damageString = std::format("{:.2f}", damage);
+                            if (damageString.back() == '0')
+                            {
+                                damageString.pop_back();
+                                if (damageString.back() == '0')
+                                {
+                                    damageString.pop_back();
+                                }
+                            }
+                        }
+                        
+                        registry.emplace<Info>(damageInfo, damageString, registry.get<Position>(target).position, sf::Color::Red);
+                    }
+
                     if (enemyHealthComponent.currentHealthValue <= 0.f)
                     {
                         auto enemyExpValue = registry.get<Experience>(target).experience;
                         ExperienceSystem::addExp(registry, enemyExpValue);
 
                         auto expInfo = registry.create();
+                        //TODO: Randomize and animate info position
                         registry.emplace<Info>(expInfo, std::to_string(enemyExpValue), registry.get<Position>(target).position, sf::Color::Yellow);
                     }
                 }
