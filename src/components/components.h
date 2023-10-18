@@ -227,3 +227,12 @@ struct WaypointMovement
     WaypointMovement(std::vector<sf::Vector2f> waypoints, unsigned int currentWaypointIndex = 0)
         : waypoints(waypoints), currentWaypointIndex(currentWaypointIndex) {}
 };
+
+struct Info
+{
+    std::string info;
+    sf::Vector2f position;
+    sf::Color color;
+    sf::Text text;
+    float displayTime = 1.f;
+};
