@@ -8,6 +8,7 @@
 #include "GUIElements/GUIEnergyBar.h"
 #include "GUIElements/GUIMinimap.h"
 #include "GUIElements/GUIWeaponTile.h"
+#include "GUIElements/GUIExpInfo.h"
 
 class GUIManager
 {
@@ -29,6 +30,7 @@ private:
     GUIMoneyBar moneyBar;
     GUIWeaponTile weaponTile;
     GUIShieldTile shieldTile;
+    GUIExpInfo expInfo;
 
     GUISkillTree skillTreeGUI;
 

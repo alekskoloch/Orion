@@ -21,7 +21,8 @@ GUIManager::GUIManager(sf::RenderWindow& window, entt::registry& registry) : win
     skillTreeGUI(registry, window),
     weaponTile(window, registry),
     shieldTile(window, registry),
-    moneyBar(window, registry)
+    moneyBar(window, registry),
+    expInfo(window, registry)
 {
     this->initializeShader();
 }
@@ -38,6 +39,7 @@ void GUIManager::update()
         this->weaponTile.update();
         this->shieldTile.update();
         this->moneyBar.update();
+        this->expInfo.update();
     }
     else if (SceneManager::getInstance().getCurrentScene() == Scene::SkillTree)
     {
@@ -51,6 +53,7 @@ void GUIManager::draw()
     {
         this->energyBar.draw();
         this->minimap.draw();
+        this->expInfo.draw(this->window, sf::RenderStates::Default);
         this->moneyBar.draw(this->window, sf::RenderStates::Default);
         this->shieldTile.draw(this->window, sf::RenderStates::Default);
         this->weaponTile.draw(this->window, sf::RenderStates::Default);
