@@ -4,6 +4,7 @@
 #include "../utils/GraphicsOperations.h"
 
 #include "../systems/ProceduralGenerationSystem.h"
+#include "../systems/ExperienceSystem.h"
 
 const float MARGIN = 120.f;
 
@@ -179,18 +180,28 @@ void Skill::update()
             
             if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
             {
-                if (this->requirements[this->currentLevel] == RequirementType::None)
-                    this->dialogBox.setMessage({"Are you sure you want to unlock", std::string(this->name + "?")});
-                else if (this->requirements[this->currentLevel] == RequirementType::OrangeStone)
-                    this->dialogBox.setMessage({std::string(this->name + " require Orange Stone") ,"Are you sure you want to unlock " + std::string(this->name + "?")});
-                else if (this->requirements[this->currentLevel] == RequirementType::GreenStone)
-                    this->dialogBox.setMessage({std::string(this->name + " require Green Stone") ,"Are you sure you want to unlock " + std::string(this->name + "?")});
-                else if (this->requirements[this->currentLevel] == RequirementType::OrangeAndGreenStone)
-                    this->dialogBox.setMessage({std::string(this->name + " require Orange and Green Stone") ,"Are you sure you want to unlock " + std::string(this->name + "?")});
+                if (ExperienceSystem::getSkillPoints(this->registry) > 0)
+                {
+                    if (this->requirements[this->currentLevel] == RequirementType::None)
+                        this->dialogBox.setMessage({"Are you sure you want to unlock", std::string(this->name + "?")});
+                    else if (this->requirements[this->currentLevel] == RequirementType::OrangeStone)
+                        this->dialogBox.setMessage({std::string(this->name + " require Orange Stone") ,"Are you sure you want to unlock " + std::string(this->name + "?")});
+                    else if (this->requirements[this->currentLevel] == RequirementType::GreenStone)
+                        this->dialogBox.setMessage({std::string(this->name + " require Green Stone") ,"Are you sure you want to unlock " + std::string(this->name + "?")});
+                    else if (this->requirements[this->currentLevel] == RequirementType::OrangeAndGreenStone)
+                        this->dialogBox.setMessage({std::string(this->name + " require Orange and Green Stone") ,"Are you sure you want to unlock " + std::string(this->name + "?")});
 
-                this->dialogBox.setType(GUIDialogBoxType::YesNo);
-                this->dialogBox.setState(GUIDialogBoxState::Idle);
-                this->dialogBox.setTarget(this->name);
+                    this->dialogBox.setType(GUIDialogBoxType::YesNo);
+                    this->dialogBox.setState(GUIDialogBoxState::Idle);
+                    this->dialogBox.setTarget(this->name);
+                }
+                else
+                {
+                    this->dialogBox.setMessage({"You don't have any Skill Points"});
+                    this->dialogBox.setType(GUIDialogBoxType::Ok);
+                    this->dialogBox.setState(GUIDialogBoxState::Idle);
+                    this->dialogBox.setTarget(this->name);
+                }
             }
         }
         else
@@ -269,6 +280,8 @@ void Skill::update()
             }
 
             this->circleSegments.at(this->currentLevel)->setState(CircleSegmentState::Active);
+
+            ExperienceSystem::removeSkillPoint(this->registry);
 
             this->addActiveStars();
 
