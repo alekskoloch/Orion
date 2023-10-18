@@ -24,6 +24,11 @@ void ExperienceSystem::addSkillPoint(entt::registry& registry, unsigned int skil
     registry.get<Experience>(registry.view<Player>()[0]).skillPoints += skillPoints;
 }
 
+void ExperienceSystem::removeSkillPoint(entt::registry& registry, unsigned int skillPoints)
+{
+    registry.get<Experience>(registry.view<Player>()[0]).skillPoints -= skillPoints;
+}
+
 unsigned int ExperienceSystem::getSkillPoints(entt::registry& registry)
 {
     return registry.get<Experience>(registry.view<Player>()[0]).skillPoints;
