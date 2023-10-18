@@ -17,3 +17,8 @@ void ExperienceSystem::addExp(entt::registry& registry, unsigned int exp)
         expToNextLevel = (unsigned int)(expToNextLevel * 1.5f);
     }
 }
+
+void ExperienceSystem::addSkillPoint(entt::registry& registry, unsigned int skillPoints = 1)
+{
+    registry.get<Experience>(registry.view<Player>()[0]).skillPoints += skillPoints;
+}
