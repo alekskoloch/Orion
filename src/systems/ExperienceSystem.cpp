@@ -19,7 +19,7 @@ void ExperienceSystem::addExp(entt::registry& registry, unsigned int exp)
     }
 }
 
-void ExperienceSystem::addSkillPoint(entt::registry& registry, unsigned int skillPoints = 1)
+void ExperienceSystem::addSkillPoint(entt::registry& registry, unsigned int skillPoints)
 {
     registry.get<Experience>(registry.view<Player>()[0]).skillPoints += skillPoints;
 }
