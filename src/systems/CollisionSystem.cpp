@@ -64,6 +64,9 @@ void checkBulletCollitions(entt::registry& registry, std::unordered_set<entt::en
                     {
                         auto enemyExpValue = registry.get<Experience>(target).experience;
                         ExperienceSystem::addExp(registry, enemyExpValue);
+
+                        auto expInfo = registry.create();
+                        registry.emplace<Info>(expInfo, std::to_string(enemyExpValue), registry.get<Position>(target).position, sf::Color::Yellow);
                     }
                 }
             }
