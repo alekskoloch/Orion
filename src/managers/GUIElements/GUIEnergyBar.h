@@ -7,7 +7,7 @@ class GUIEnergyBar
 public:
     GUIEnergyBar(sf::RenderWindow& window, entt::registry& registry);
 
-    void update();
+    void update(sf::Time deltaTime);
     void draw();
 
 private:
@@ -18,4 +18,9 @@ private:
     sf::RectangleShape energyBarBackgroundSprite;
 
     void initializeEnergyBar();
+
+    bool isNotEnoughEnergy = false;
+    float notEnoughEnergyTimer = 1.f;
+    bool blink = false;
+    float blinkTimer = 0.2f;
 };

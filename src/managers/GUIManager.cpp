@@ -27,14 +27,14 @@ GUIManager::GUIManager(sf::RenderWindow& window, entt::registry& registry) : win
     this->initializeShader();
 }
 
-void GUIManager::update()
+void GUIManager::update(sf::Time deltaTime)
 {
     if (SceneManager::getInstance().getCurrentScene() == Scene::Game)
     {
         if (this->quickMenuActive)
             this->quickMenu.update();
 
-        this->energyBar.update();
+        this->energyBar.update(deltaTime);
         this->minimap.update();
         this->weaponTile.update();
         this->shieldTile.update();

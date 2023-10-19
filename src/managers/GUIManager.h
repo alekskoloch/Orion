@@ -15,7 +15,7 @@ class GUIManager
 public:
     GUIManager(sf::RenderWindow& window, entt::registry& registry);
 
-    void update();
+    void update(sf::Time deltaTime);
     void draw();
 
     void toggleQuickMenu(bool value);
