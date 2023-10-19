@@ -19,6 +19,8 @@ private:
     sf::CircleShape loadingCircle;
     sf::Texture weaponTexture;
     sf::Sprite weaponIcon;
+
+    bool specialShotAvailable = false;
 };
 
 //TODO: Refactor this to one tile class

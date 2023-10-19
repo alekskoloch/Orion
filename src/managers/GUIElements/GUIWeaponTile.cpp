@@ -5,6 +5,7 @@
 
 #include "../../systems/MoneySystem.h"
 #include "../../systems/CooldownSystem.h"
+#include "../../systems/SkillSystem.h"
 
 #include "../../components/components.h"
 #include "../../components/tagComponents.h"
@@ -38,25 +39,46 @@ void GUIWeaponTile::setWeaponTexture(const std::string& textureName)
 
 void GUIWeaponTile::update()
 {
-    //TODO: make update loading circle function
-    auto playerEntity = this->registry.view<Player>()[0];
-
-    if (CooldownSystem::getCooldown(this->registry, playerEntity, "specialShot") != -1.f)
+    //TODO: refactor this
+    auto playerWeaponComponent = this->registry.get<Weapon>(this->registry.view<Player>()[0]);
+    if (playerWeaponComponent.weaponType == WeaponType::SingleShot)
     {
-        float cooldown = CooldownSystem::getCooldown(this->registry, playerEntity, "specialShot");
-        //TODO: get this from weapon
-        float maxCooldown = 5.f;
-        this->loadingCircle.setRadius(200.f * (1 - cooldown / maxCooldown));
+        if (SkillSystem::isSingleShotWeaponSpecialShotEnabled(this->registry))
+            this->specialShotAvailable = true;
+        else
+            this->specialShotAvailable = false;
+    }
+    else if (playerWeaponComponent.weaponType == WeaponType::TrippleShot)
+    {
+        if (SkillSystem::isTripleShotWeaponSpecialShotEnabled(this->registry))
+            this->specialShotAvailable = true;
+        else
+            this->specialShotAvailable = false;
+    }
 
-        this->loadingCircle.setOrigin(this->loadingCircle.getGlobalBounds().width / 2.f, this->loadingCircle.getGlobalBounds().height / 2.f);
-        this->loadingCircle.setPosition(0, 0);
+    //TODO: make update loading circle function
+    if (this->specialShotAvailable)
+    {
+        auto playerEntity = this->registry.view<Player>()[0];
+
+        if (CooldownSystem::getCooldown(this->registry, playerEntity, "specialShot") != -1.f)
+        {
+            float cooldown = CooldownSystem::getCooldown(this->registry, playerEntity, "specialShot");
+            //TODO: get this from weapon
+            float maxCooldown = 5.f;
+            this->loadingCircle.setRadius(200.f * (1 - cooldown / maxCooldown));
+
+            this->loadingCircle.setOrigin(this->loadingCircle.getGlobalBounds().width / 2.f, this->loadingCircle.getGlobalBounds().height / 2.f);
+            this->loadingCircle.setPosition(0, 0);
+        }
     }
 }
 
 void GUIWeaponTile::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
     target.draw(this->circle, states);
-    target.draw(this->loadingCircle, states);
+    if (this->specialShotAvailable)
+        target.draw(this->loadingCircle, states);
     target.draw(this->weaponIcon, states);
 }
 
