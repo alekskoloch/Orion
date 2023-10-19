@@ -8,6 +8,7 @@
 #include "../systems/SkillSystem.h"
 #include "../systems/CooldownSystem.h"
 #include "../systems/ExperienceSystem.h"
+#include "../systems/ProceduralGenerationSystem.h"
 
 #include "../components/components.h"
 #include "../components/tagComponents.h"
@@ -87,8 +88,12 @@ void checkBulletCollitions(entt::registry& registry, std::unordered_set<entt::en
                                 }
                             }
                         }
+
+                        sf::Vector2f infoPosition;
+                        infoPosition.x = registry.get<Position>(target).position.x + ProceduralGenerationSystem::GetRandomNumber(-50.f, 50.f);
+                        infoPosition.y = registry.get<Position>(target).position.y + ProceduralGenerationSystem::GetRandomNumber(-50.f, 50.f);
                         
-                        registry.emplace<Info>(damageInfo, damageString, registry.get<Position>(target).position, sf::Color::Red);
+                        registry.emplace<Info>(damageInfo, damageString, infoPosition, sf::Color::Red);
                     }
 
                     if (enemyHealthComponent.currentHealthValue <= 0.f)
@@ -96,9 +101,13 @@ void checkBulletCollitions(entt::registry& registry, std::unordered_set<entt::en
                         auto enemyExpValue = registry.get<Experience>(target).experience;
                         ExperienceSystem::addExp(registry, enemyExpValue);
 
+                        sf::Vector2f infoPosition;
+                        infoPosition.x = registry.get<Position>(target).position.x + 50.f;
+                        infoPosition.y = registry.get<Position>(target).position.y - 50.f;
+
                         auto expInfo = registry.create();
                         //TODO: Randomize and animate info position
-                        registry.emplace<Info>(expInfo, std::to_string(enemyExpValue), registry.get<Position>(target).position, sf::Color::Yellow);
+                        registry.emplace<Info>(expInfo, std::to_string(enemyExpValue), infoPosition, sf::Color::Yellow);
                     }
                 }
             }
