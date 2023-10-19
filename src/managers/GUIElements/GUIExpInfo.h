@@ -15,4 +15,6 @@ private:
 
     sf::RectangleShape backgroundBar;
     sf::RectangleShape expBar;
+    bool skillPointsAvailableVisible = false;
+    sf::CircleShape skillPointsAvailable;
 };
