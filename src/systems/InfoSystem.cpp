@@ -17,7 +17,9 @@ void InfoSystem::update(entt::registry& registry, sf::Time deltaTime)
             infoComponent.text.setFont(FontManager::getInstance().getFont("font"));
             infoComponent.text.setPosition(infoComponent.position);
             infoComponent.text.setFillColor(infoComponent.color);
-            infoComponent.text.setCharacterSize(20);
+            infoComponent.text.setOutlineColor(sf::Color::Black);
+            infoComponent.text.setOutlineThickness(2.f);
+            infoComponent.text.setCharacterSize(25);
             infoComponent.text.setString(infoComponent.info);
         }
 
