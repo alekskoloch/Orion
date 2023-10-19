@@ -2,6 +2,8 @@
 
 #include "../pch.h"
 
+#include "../managers/EventManager.h"
+
 #include "../components/components.h"
 #include "../components/tagComponents.h"
 
@@ -54,6 +56,8 @@ public:
 
         if (energyComponent.currentEnergyValue >= energyValue)
             return true;
+        else
+            EventManager::getInstance().trigger(EventManager::Event::NotEnoughEnergy);
 
         return false;
     }
