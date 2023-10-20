@@ -98,6 +98,9 @@ struct Input
 
     bool isGettingShield;
     bool getShield;
+
+    bool readyForMovementBoost = false;
+    bool movementBoostActive = false;
 };
 
 struct MoneyInventory
