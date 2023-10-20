@@ -28,6 +28,13 @@ void InputSystem::processInput(entt::registry& registry, sf::Event& event)
             input.getShield = true;
         else
             input.getShield = false;
-        
+
+        if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Key::LAlt && input.movementBoostActive == false)
+            input.readyForMovementBoost = true;
+        else
+            input.readyForMovementBoost = false;
+
+        if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::Key::LAlt)
+            input.movementBoostActive = false;
     }
 }
