@@ -105,6 +105,12 @@ struct MoneyInventory
     unsigned int money = 0;
 };
 
+struct MovementBoost
+{
+    float boostValue;
+    float boostDecelerationValue;
+};
+
 struct Name
 {
     std::string name;
