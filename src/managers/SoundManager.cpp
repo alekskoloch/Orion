@@ -17,8 +17,6 @@ void SoundManager::loadSound(const std::string& soundName, const std::string& so
         throw std::runtime_error("Failed to load sound: " + soundPath);
 
     soundBuffers[soundName] = std::move(soundBuffer);
-
-    std::cout << "Loaded sound: " << soundName << std::endl;
 }
 
 void SoundManager::playSound(const std::string& soundName)
