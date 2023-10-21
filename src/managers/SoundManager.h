@@ -14,4 +14,6 @@ public:
 
     SoundManager(const SoundManager&) = delete;
     void operator=(const SoundManager&) = delete;
+
+    void loadSound(const std::string& soundName, const std::string& soundPath);
 };
