@@ -5,5 +5,5 @@
 class MusicSystem
 {
 public:
-
+    static void initializeMusic();
 };
