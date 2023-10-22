@@ -1,6 +1,7 @@
 #include "GUIQuickMenu.h"
 
 #include "../../managers/TextureManager.h"
+#include "../../managers/SoundManager.h"
 
 #include "../../utils/Mouse.h"
 #include "../../utils/GraphicsOperations.h"
@@ -17,29 +18,38 @@ GUIQuickMenu::GUIQuickMenu(sf::RenderWindow& window, entt::registry& registry) :
 void GUIQuickMenu::update()
 {
     sf::Vector2i mousePosition = sf::Mouse::getPosition(this->window);
-    this->selectedTile = 0;
 
     for (int i = 0; i < TILES_NUMBER; i++)
     {
         if (utils::isMouseOverSprite(this->quickMenuTiles[i], mousePosition))
         {
+            if (this->selectedTile != i + 1)
+                SoundManager::getInstance().playSound("MouseHover");
+                
             this->quickMenuTiles[i].setTexture(TextureManager::getInstance().getTexture("ACTIVE_TILE"));
             this->selectedTile = i + 1;
         }
         else
         {
             this->quickMenuTiles[i].setTexture(TextureManager::getInstance().getTexture("INACTIVE_TILE"));
+            if (this->selectedTile == i + 1)
+                this->selectedTile = 0;
         }
     }
 
     if (utils::isMouseOverSprite(this->quickMenuTiles[TILES_NUMBER], mousePosition))
     {
+        if (this->selectedTile != 9)
+            SoundManager::getInstance().playSound("MouseHover");
+
         this->quickMenuTiles[TILES_NUMBER].setTexture(TextureManager::getInstance().getTexture("ACTIVE_MIDDLE_TILE"));
         this->selectedTile = 9;
     }
     else
     {
         this->quickMenuTiles[TILES_NUMBER].setTexture(TextureManager::getInstance().getTexture("INACTIVE_MIDDLE_TILE"));
+        if (this->selectedTile == 9)
+            this->selectedTile = 0;
     }
 }
 
