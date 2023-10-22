@@ -31,56 +31,65 @@ void MovementSystem::updateMovementBoost(entt::registry& registry, sf::Time delt
         auto& input = view.get<Input>(entity);
         auto& movementBoost = view.get<MovementBoost>(entity);
 
-        if (input.readyForMovementBoost && EnergySystem::hasEnoughEnergy<Player>(registry, 30.f))
+        if (input.readyForMovementBoost)
         {
-            if (input.up || input.down || input.left || input.right)
+            if ((input.up || input.down || input.left || input.right) && EnergySystem::hasEnoughEnergy<Player>(registry, 30.f))
             {
                 boostMovementValue = sf::Vector2f(0.f, 0.f);
 
+                //TODO: Refactor this
                 input.movementBoostActive = true;
                 if (input.up && !input.down && !input.left && !input.right)
                 {
                     boostMovementValue.y -= movementBoost.boostValue;
                     EnergySystem::removeEnergy<Player>(registry, 30.f);
+                    SoundManager::getInstance().playSound("MovementBoost");
                 }
                 else if (input.down && !input.up && !input.left && !input.right)
                 {
                     boostMovementValue.y += movementBoost.boostValue;
                     EnergySystem::removeEnergy<Player>(registry, 30.f);
+                    SoundManager::getInstance().playSound("MovementBoost");
                 }
                 else if (input.left && !input.right && !input.up && !input.down)
                 {
                     boostMovementValue.x -= movementBoost.boostValue;
                     EnergySystem::removeEnergy<Player>(registry, 30.f);
+                    SoundManager::getInstance().playSound("MovementBoost");
                 }
                 else if (input.right && !input.left && !input.up && !input.down)
                 {
                     boostMovementValue.x += movementBoost.boostValue;
                     EnergySystem::removeEnergy<Player>(registry, 30.f);
+                    SoundManager::getInstance().playSound("MovementBoost");
                 }
                 else if (input.up && !input.down && input.left && !input.right)
                 {
                     boostMovementValue.y -= movementBoost.boostDecelerationValue;
                     boostMovementValue.x -= movementBoost.boostDecelerationValue;
                     EnergySystem::removeEnergy<Player>(registry, 30.f);
+                    SoundManager::getInstance().playSound("MovementBoost");
                 }
                 else if (input.up && !input.down && !input.left && input.right)
                 {
                     boostMovementValue.y -= movementBoost.boostDecelerationValue;
                     boostMovementValue.x += movementBoost.boostDecelerationValue;
                     EnergySystem::removeEnergy<Player>(registry, 30.f);
+                    SoundManager::getInstance().playSound("MovementBoost");
                 }
                 else if (!input.up && input.down && input.left && !input.right)
                 {
                     boostMovementValue.y += movementBoost.boostDecelerationValue;
                     boostMovementValue.x -= movementBoost.boostDecelerationValue;
                     EnergySystem::removeEnergy<Player>(registry, 30.f);
+                    SoundManager::getInstance().playSound("MovementBoost");
                 }
                 else if (!input.up && input.down && !input.left && input.right)
                 {
                     boostMovementValue.y += movementBoost.boostDecelerationValue;
                     boostMovementValue.x += movementBoost.boostDecelerationValue;
                     EnergySystem::removeEnergy<Player>(registry, 30.f);
+                    SoundManager::getInstance().playSound("MovementBoost");
                 }
 
                 input.readyForMovementBoost = false;
