@@ -9,6 +9,7 @@
 #include "../systems/BulletSystem.h"
 
 #include "../managers/TextureManager.h"
+#include "../managers/SoundManager.h"
 #include "../components/components.h"
 #include "../components/tagComponents.h"
 
@@ -105,6 +106,7 @@ void handlePlayerShooting(entt::registry& registry, sf::Time deltaTime, sf::Rend
         {
             EnergySystem::removeEnergy<Player>(registry, SkillSystem::getWeaponEnergyCost(registry, entity));
             weapon.shoot(registry, window, entity);
+            SoundManager::getInstance().playSound("Shot");
             //handleShoot<PlayerBullet>(registry, entity, window.mapPixelToCoords(sf::Mouse::getPosition(window)));
             weapon.SetCooldown();
         }
@@ -129,6 +131,7 @@ void handleEnemyShooting(entt::registry& registry, sf::Time deltaTime, sf::Rende
             {
                 //handleShoot<EnemyBullet>(registry, enemyEntity, playerPosition);
                 enemyWeapon.shoot(registry, window, enemyEntity);
+                SoundManager::getInstance().playSound("EnemyShot");
                 enemyWeapon.SetCooldown();
             }
         }
