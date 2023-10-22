@@ -26,3 +26,26 @@ void SoundManager::playSound(const std::string& soundName)
     sounds[soundName].setBuffer(soundBuffers.at(soundName));
     sounds[soundName].play();
 }
+
+void SoundManager::loadMusic(const std::string& musicName, const std::string& musicPath)
+{
+    std::unique_ptr<sf::Music> music = std::make_unique<sf::Music>();
+    if (!music->openFromFile(musicPath))
+        throw std::runtime_error("Failed to load music: " + musicPath);
+    this->music[musicName] = std::move(music);
+}
+
+void SoundManager::playMusic(const std::string& musicName)
+{
+    if (this->music.find(musicName) == this->music.end())
+        loadMusic(musicName, ASSETS_PATH + std::string("music/") + musicName + ".wav");
+    this->music[musicName]->play();
+}
+
+void SoundManager::setLoop(const std::string& soundName, bool loop)
+{
+    if (music.find(soundName) != music.end())
+        music[soundName]->setLoop(loop);
+    else
+        throw std::runtime_error("Sound not found: " + soundName);
+}

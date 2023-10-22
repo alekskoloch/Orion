@@ -8,6 +8,7 @@ private:
     SoundManager() = default;
     std::unordered_map<std::string, sf::SoundBuffer> soundBuffers;
     std::unordered_map<std::string, sf::Sound> sounds;
+    std::unordered_map<std::string, std::unique_ptr<sf::Music>> music;
 
 public:
     static SoundManager& getInstance();
@@ -17,4 +18,9 @@ public:
 
     void loadSound(const std::string& soundName, const std::string& soundPath);
     void playSound(const std::string& soundName);
+
+    void loadMusic(const std::string& musicName, const std::string& musicPath);
+    void playMusic(const std::string& musicName);
+
+    void setLoop(const std::string& soundName, bool loop);
 };
