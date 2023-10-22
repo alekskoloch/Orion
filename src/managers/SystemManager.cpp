@@ -4,6 +4,7 @@
 
 #include "../systems/PlayerInitializationSystem.h"
 #include "../systems/EnemyInitializationSystem.h"
+#include "../systems/MusicSystem.h"
 
 #include "../systems/InputSystem.h"
 
@@ -44,6 +45,7 @@ void SystemManager::executeInitializationSystems()
     ProceduralGenerationSystem::Initialize(1);
     PlayerInitializationSystem::initializePlayer(this->registry);
     EnemyInitializationSystem::initializeEnemy(this->registry);
+    MusicSystem::initializeMusic();
 }
 
 void SystemManager::executeEventSystems()
