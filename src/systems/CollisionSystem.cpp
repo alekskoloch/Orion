@@ -5,6 +5,8 @@
 #include "EnemyInitializationSystem.h"
 #include "DropSystem.h"
 
+#include "../managers/SoundManager.h"
+
 #include "../systems/SkillSystem.h"
 #include "../systems/CooldownSystem.h"
 #include "../systems/ExperienceSystem.h"
@@ -94,6 +96,7 @@ void checkBulletCollitions(entt::registry& registry, std::unordered_set<entt::en
                         infoPosition.y = registry.get<Position>(target).position.y + ProceduralGenerationSystem::GetRandomNumber(-50.f, 50.f);
                         
                         registry.emplace<Info>(damageInfo, damageString, infoPosition, sf::Color::Red);
+                        SoundManager::getInstance().playSound("Hit");
                     }
 
                     if (enemyHealthComponent.currentHealthValue <= 0.f)
