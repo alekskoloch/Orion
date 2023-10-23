@@ -1,5 +1,7 @@
 #include "Skill.h"
 
+#include "../managers/SoundManager.h"
+
 #include "../utils/Mouse.h"
 #include "../utils/GraphicsOperations.h"
 
@@ -174,7 +176,10 @@ void Skill::update()
         if (this->hover)
         {
             if (!this->isStarExists && !this->active)
+            {
                 this->initStarsForSkill();
+                SoundManager::getInstance().playSound("SkillHover");
+            }
 
             this->iconSprite.setTexture(TextureManager::getInstance().getTexture(this->iconHoverTextureName));
             
@@ -282,6 +287,7 @@ void Skill::update()
             this->circleSegments.at(this->currentLevel)->setState(CircleSegmentState::Active);
 
             ExperienceSystem::removeSkillPoint(this->registry);
+            SoundManager::getInstance().playSound("SkillUnlock");
 
             this->addActiveStars();
 
