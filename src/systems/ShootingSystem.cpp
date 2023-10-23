@@ -90,6 +90,7 @@ void handlePlayerShooting(entt::registry& registry, sf::Time deltaTime, sf::Rend
         if (input.specialShot && canSpecialShoot && EnergySystem::hasEnoughEnergy<Player>(registry, SkillSystem::getWeaponSpecialShotEnergyCost(registry, entity)))
             if (CooldownSystem::getCooldown(registry, entity, "specialShot") == 0.f)
             {
+                SoundManager::getInstance().playSound("SpecialShot");
                 EnergySystem::removeEnergy<Player>(registry, SkillSystem::getWeaponSpecialShotEnergyCost(registry, entity));
                 CooldownSystem::setCooldown(registry, entity, "specialShot", weapon.specialShotCooldownTime);
                 weapon.specialShoot(registry, window, entity);
