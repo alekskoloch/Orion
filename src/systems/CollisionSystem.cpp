@@ -48,13 +48,7 @@ void checkBulletCollitions(entt::registry& registry, std::unordered_set<entt::en
                         }
                         else
                         {
-                            //TODO: Temporary effect
-                            auto playerEnergyView = registry.view<Player, Energy>();
-                            for (auto player : playerEnergyView)
-                            {
-                                auto& playerEnergy = playerEnergyView.get<Energy>(player);
-                                playerEnergy.currentEnergyValue = 0.f;
-                            }
+                            SoundManager::getInstance().playSound("Death");
                         }
                     }
                 }
