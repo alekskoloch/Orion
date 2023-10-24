@@ -202,6 +202,7 @@ void Skill::update()
                 }
                 else
                 {
+                    SoundManager::getInstance().playSound("Error");
                     this->dialogBox.setMessage({"You don't have any Skill Points"});
                     this->dialogBox.setType(GUIDialogBoxType::Ok);
                     this->dialogBox.setState(GUIDialogBoxState::Idle);
