@@ -1,5 +1,7 @@
 #include "HealthSystem.h"
 
+#include "../managers/SoundManager.h"
+
 #include "../components/components.h"
 
 void HealthSystem::updateHealth(entt::registry& registry)
@@ -10,6 +12,7 @@ void HealthSystem::updateHealth(entt::registry& registry)
         auto& health = view.get<Health>(entity);
         if (health.currentHealthValue <= 0)
         {
+            SoundManager::getInstance().playSound("Death");
             registry.destroy(entity);
         }
     }
