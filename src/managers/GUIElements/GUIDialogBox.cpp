@@ -1,5 +1,7 @@
 #include "GUIDialogBox.h"
 
+#include "../../managers/SoundManager.h"
+
 GUIDialogBox::GUIDialogBox(sf::RenderWindow& window, std::vector<std::string> messages, sf::Font& font)
     : window(window), messages(messages), font(font)
 {
@@ -109,7 +111,11 @@ void GUIDialogBox::update()
     {
         if (this->noText.getGlobalBounds().contains(sf::Vector2f(sf::Mouse::getPosition(this->window))))
         {
-            this->noText.setFillColor(sf::Color::Red);
+            if (this->noText.getFillColor() != sf::Color::Red)
+            {
+                this->noText.setFillColor(sf::Color::Red);
+                SoundManager::getInstance().playSound("MouseHover");
+            }
             if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
                 this->state = GUIDialogBoxState::No;
         }
@@ -120,7 +126,11 @@ void GUIDialogBox::update()
 
         if (this->yesText.getGlobalBounds().contains(sf::Vector2f(sf::Mouse::getPosition(this->window))))
         {
-            this->yesText.setFillColor(sf::Color::Green);
+            if (this->yesText.getFillColor() != sf::Color::Green)
+            {
+                this->yesText.setFillColor(sf::Color::Green);
+                SoundManager::getInstance().playSound("MouseHover");
+            }
             if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
                 this->state = GUIDialogBoxState::Yes;
         }
@@ -133,7 +143,11 @@ void GUIDialogBox::update()
     {
         if (this->okText.getGlobalBounds().contains(sf::Vector2f(sf::Mouse::getPosition(this->window))))
         {
-            this->okText.setFillColor(sf::Color::Green);
+            if (this->okText.getFillColor() != sf::Color::Green)
+            {
+                this->okText.setFillColor(sf::Color::Green);
+                SoundManager::getInstance().playSound("MouseHover");
+            }
             if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
                 this->state = GUIDialogBoxState::Ok;
         }
