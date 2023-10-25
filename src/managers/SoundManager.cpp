@@ -27,6 +27,29 @@ void SoundManager::playSound(const std::string& soundName)
     sounds[soundName].play();
 }
 
+void SoundManager::playLoopedSound(const std::string& soundName)
+{
+    if(soundBuffers.find(soundName) == soundBuffers.end())
+        loadSound(soundName, ASSETS_PATH + std::string("sounds/") + soundName + ".wav");
+    sounds[soundName].setBuffer(soundBuffers.at(soundName));
+    sounds[soundName].setLoop(true);
+    sounds[soundName].play();
+}
+
+void SoundManager::stopLoopedSound(const std::string& soundName)
+{
+    if(soundBuffers.find(soundName) == soundBuffers.end())
+        return;
+    sounds[soundName].stop();
+}
+
+bool SoundManager::isLoopedSoundPlaying(const std::string& soundName)
+{
+    if(soundBuffers.find(soundName) == soundBuffers.end())
+        return false;
+    return sounds[soundName].getStatus() == sf::Sound::Playing;
+}
+
 void SoundManager::loadMusic(const std::string& musicName, const std::string& musicPath)
 {
     std::unique_ptr<sf::Music> music = std::make_unique<sf::Music>();

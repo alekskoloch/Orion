@@ -18,6 +18,9 @@ public:
 
     void loadSound(const std::string& soundName, const std::string& soundPath);
     void playSound(const std::string& soundName);
+    void playLoopedSound(const std::string& soundName);
+    void stopLoopedSound(const std::string& soundName);
+    bool isLoopedSoundPlaying(const std::string& soundName);
 
     void loadMusic(const std::string& musicName, const std::string& musicPath);
     void playMusic(const std::string& musicName);
