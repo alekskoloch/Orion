@@ -1,6 +1,7 @@
 #include "ShieldSystem.h"
 
 #include "../managers/TextureManager.h"
+#include "../managers/SoundManager.h"
 
 #include "../systems/EnergySystem.h"
 #include "../systems/SkillSystem.h"
@@ -28,6 +29,9 @@ void ShieldSystem::shieldLoading(entt::registry& registry, Shield& shield, sf::T
 {
     if (shield.energyUsed < shield.energyCost)
     {
+        //TODO: this sound effect is temporary, it should be replaced with a better one
+        if (SoundManager::getInstance().isLoopedSoundPlaying("ShieldLoading") == false && EnergySystem::hasAnyEnergy<Player>(registry))
+            SoundManager::getInstance().playLoopedSound("ShieldLoading");
         EnergySystem::disableEnergyRegeneration<Player>(registry);
         if (EnergySystem::hasAnyEnergy<Player>(registry))
         {
@@ -43,6 +47,14 @@ void ShieldSystem::shieldLoading(entt::registry& registry, Shield& shield, sf::T
             if (EnergySystem::hasAnyEnergy<Player>(registry))
                 EnergySystem::addEnergy<Player>(registry, correction);
         }
+        else
+        {
+            SoundManager::getInstance().stopLoopedSound("ShieldLoading");
+        }
+    }
+    else
+    {
+        SoundManager::getInstance().stopLoopedSound("ShieldLoading");
     }
 }
 
@@ -92,12 +104,19 @@ void ShieldSystem::updateShield(entt::registry& registry, sf::Time deltaTime)
         auto& shield = view.get<Shield>(entity);
 
         if (input.isGettingShield)
+        {
             ShieldSystem::shieldLoading(registry, shield, deltaTime);
+        }
         else if (shield.energyUsed != 0 && !input.getShield)
+        {
             ShieldSystem::interruptShieldLoading(registry, shield);
+            SoundManager::getInstance().stopLoopedSound("ShieldLoading");
+        }
 
         if (shield.energyUsed >= shield.energyCost && input.getShield)
+        {
             ShieldSystem::shieldActivaton(registry, shield);
+        }
 
         if (shield.active)
         {
