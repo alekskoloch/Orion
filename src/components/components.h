@@ -98,6 +98,7 @@ struct Input
 
     bool isGettingShield;
     bool getShield;
+    bool canGetShield = true;
 
     bool readyForMovementBoost = false;
     bool movementBoostActive = false;

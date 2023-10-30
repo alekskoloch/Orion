@@ -41,6 +41,13 @@ void ShieldSystem::shieldLoading(entt::registry& registry, Shield& shield, sf::T
             {
                 correction = shield.energyUsed - shield.energyCost;
                 shield.energyUsed = shield.energyCost;
+                SoundManager::getInstance().stopLoopedSound("ShieldLoading");
+                SoundManager::getInstance().playSound("ShieldUp");
+                ShieldSystem::shieldActivaton(registry, shield);
+
+                auto playerView = registry.view<Player, Input>();
+                auto& playerInput = playerView.get<Input>(playerView.front());
+                playerInput.canGetShield = false;
             }
             
             EnergySystem::removeEnergy<Player>(registry, shield.energyCost * (deltaTime.asSeconds() / shield.loadTime));
@@ -103,7 +110,7 @@ void ShieldSystem::updateShield(entt::registry& registry, sf::Time deltaTime)
         auto& input = view.get<Input>(entity);
         auto& shield = view.get<Shield>(entity);
 
-        if (input.isGettingShield)
+        if (input.isGettingShield && input.canGetShield)
         {
             ShieldSystem::shieldLoading(registry, shield, deltaTime);
         }
@@ -113,10 +120,10 @@ void ShieldSystem::updateShield(entt::registry& registry, sf::Time deltaTime)
             SoundManager::getInstance().stopLoopedSound("ShieldLoading");
         }
 
-        if (shield.energyUsed >= shield.energyCost && input.getShield)
-        {
-            ShieldSystem::shieldActivaton(registry, shield);
-        }
+        // if (shield.energyUsed >= shield.energyCost && input.getShield)
+        // {
+        //     ShieldSystem::shieldActivaton(registry, shield);
+        // }
 
         if (shield.active)
         {

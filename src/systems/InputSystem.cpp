@@ -25,7 +25,10 @@ void InputSystem::processInput(entt::registry& registry, sf::Event& event)
             input.isGettingShield = false;
 
         if (event.type == sf::Event::MouseButtonReleased && event.mouseButton.button == sf::Mouse::Button::Right)
+        {
             input.getShield = true;
+            input.canGetShield = true;
+        }
         else
             input.getShield = false;
 
