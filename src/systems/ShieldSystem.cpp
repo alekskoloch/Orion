@@ -69,6 +69,7 @@ void ShieldSystem::interruptShieldLoading(entt::registry& registry, Shield& shie
 {
     EnergySystem::enableEnergyRegeneration<Player>(registry);
     EnergySystem::addEnergy<Player>(registry, shield.energyUsed);
+    SoundManager::getInstance().playSound("ShieldInterrupt");
     shield.energyUsed = 0.f;
 }
 
