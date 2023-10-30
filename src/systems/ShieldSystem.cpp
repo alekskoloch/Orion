@@ -57,6 +57,7 @@ void ShieldSystem::shieldLoading(entt::registry& registry, Shield& shield, sf::T
         else
         {
             SoundManager::getInstance().stopLoopedSound("ShieldLoading");
+            ShieldSystem::interruptShieldLoading(registry, shield);
         }
     }
     else
@@ -71,6 +72,10 @@ void ShieldSystem::interruptShieldLoading(entt::registry& registry, Shield& shie
     EnergySystem::addEnergy<Player>(registry, shield.energyUsed);
     SoundManager::getInstance().playSound("ShieldInterrupt");
     shield.energyUsed = 0.f;
+
+    auto playerView = registry.view<Player, Input>();
+    auto& playerInput = playerView.get<Input>(playerView.front());
+    playerInput.canGetShield = false;
 }
 
 void ShieldSystem::shieldActivaton(entt::registry& registry, Shield& shield)
