@@ -20,3 +20,10 @@ void CameraSystem::setPlayerCamera(entt::registry& registry, sf::RenderWindow& w
         window.setView(view);
     }
 }
+
+void CameraSystem::setZoomFactor(float zoomFactor, sf::RenderWindow& window)
+{
+    sf::View view = window.getView();
+    view.zoom(zoomFactor);
+    window.setView(view);
+}
