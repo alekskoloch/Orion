@@ -59,17 +59,17 @@ void SystemManager::executeEventSystems()
     //TODO: Refactor this
     if (this->event.type == sf::Event::MouseWheelScrolled)
     {
-        if (this->event.mouseWheelScroll.delta > 0 && this->zoomFactor > 0.8f)
+        if (this->event.mouseWheelScroll.delta > 0 && this->zoomFactor > 1.f)
         {
             this->zoomFactor -= 0.05f;
-            if (this->zoomFactor < 0.8f)
-                this->zoomFactor = 0.8f;
+            if (this->zoomFactor < 1.f)
+                this->zoomFactor = 1.f;
         }
-        else if (this->event.mouseWheelScroll.delta < 0 && this->zoomFactor < 1.2f)
+        else if (this->event.mouseWheelScroll.delta < 0 && this->zoomFactor < 1.4f)
         {
             this->zoomFactor += 0.05f;
-            if (this->zoomFactor > 1.2f)
-                this->zoomFactor = 1.2f;
+            if (this->zoomFactor > 1.4f)
+                this->zoomFactor = 1.4f;
         }
     }
 }
