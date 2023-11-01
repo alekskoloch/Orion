@@ -33,4 +33,6 @@ private:
 
     bool slowMotion = false;
     float slowMotionFactor = 1.0f;
+
+    float zoomFactor = 1.0f;
 };
