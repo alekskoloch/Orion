@@ -55,6 +55,23 @@ void SystemManager::executeEventSystems()
         if (!this->slowMotion)
             InputSystem::processInput(this->registry, this->event);
     }
+
+    //TODO: Refactor this
+    if (this->event.type == sf::Event::MouseWheelScrolled)
+    {
+        if (this->event.mouseWheelScroll.delta > 0 && this->zoomFactor > 0.8f)
+        {
+            this->zoomFactor -= 0.05f;
+            if (this->zoomFactor < 0.8f)
+                this->zoomFactor = 0.8f;
+        }
+        else if (this->event.mouseWheelScroll.delta < 0 && this->zoomFactor < 1.2f)
+        {
+            this->zoomFactor += 0.05f;
+            if (this->zoomFactor > 1.2f)
+                this->zoomFactor = 1.2f;
+        }
+    }
 }
 
 void SystemManager::executeUpdateSystems(sf::Time deltaTime)
@@ -96,7 +113,8 @@ void SystemManager::executeRenderSystems()
     if (SceneManager::getInstance().getCurrentScene() == Scene::Game)
     {
         CameraSystem::setPlayerCamera(this->registry, this->window);
-
+        CameraSystem::setZoomFactor(this->zoomFactor, this->window);
+        
         backgroundManager.draw();
         
         RenderSystem::renderEntities(this->window, this->registry);
