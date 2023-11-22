@@ -17,6 +17,17 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(EnTT)
 
+#nlohmann_json
+include(FetchContent)
+FetchContent_Declare(
+    nlohmann_json
+    GIT_REPOSITORY https://github.com/nlohmann/json.git
+    GIT_TAG v3.10.0  # Wybierz odpowiednią wersję
+)
+FetchContent_MakeAvailable(nlohmann_json)
+
+set(NLOHMANN_JSON_INCLUDE_DIR "${nlohmann_json_SOURCE_DIR}/single_include")
+
 #GoogleTest
 FetchContent_Declare(
     googletest
@@ -38,6 +49,9 @@ target_link_libraries(main sfml-graphics sfml-audio)
 
 #EnTT
 target_link_libraries(main EnTT::EnTT)
+
+# Include directories for nlohmann/json
+include_directories(${NLOHMANN_JSON_INCLUDE_DIR})
 
 #GoogleTest
 enable_testing()
