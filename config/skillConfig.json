@@ -1,0 +1,25 @@
+{
+    "skills": [
+        {
+            "name": "Orion Protocol",
+            "position": {"x": 1920, "y": 1080},
+            "multiLevel": true,
+            "descriptions": [
+                "All bullets deal damage increased by 5%",
+                "All shields last 5% longer",
+                "Energy regeneration works 5% better"
+            ],
+            "textureName": "skill",
+            "hoverTextureName": "skillHover",
+            "activeTextureName": "skillActive",
+            "callbacks": [
+                "addWeaponDamageMultiplier(0.05f)",
+                "addShieldTimeDurationMultiplier(0.05f)",
+                "addEnergyRegenerationMultiplier(0.05f)"
+            ],
+            "requirements": ["OrangeStone", "GreenStone", "OrangeStone"],
+            "skillsToUnlock": ["LethalPrecision"],
+            "maxLevel": 3
+        }
+    ]
+}
