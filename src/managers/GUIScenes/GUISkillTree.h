@@ -2,8 +2,6 @@
 
 #include "../../pch.h"
 
-#include "../../schema/SkillSchema.h"
-
 #include "../SkillManager.h"
 
 class GUISkillTree

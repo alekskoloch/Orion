@@ -8,6 +8,8 @@
 #include "../systems/ProceduralGenerationSystem.h"
 #include "../systems/ExperienceSystem.h"
 
+#include "../components/tagComponents.h"
+
 const float MARGIN = 120.f;
 
 void Skill::initialize()

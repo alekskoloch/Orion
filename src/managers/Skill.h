@@ -2,12 +2,13 @@
 
 #include "../pch.h"
 
+#include "../systems/SkillSystem.h"
+
 #include "SkillManager.h"
 #include "GUIElements/GUIDialogBox.h"
 #include "GUIElements/GUICircleSegment.h"
 #include "GUIElements/GUIStar.h"
 
-#include "../schema/SkillSchema.h"
 #include "../components/components.h"
 
 class SkillManager;

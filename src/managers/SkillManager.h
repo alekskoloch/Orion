@@ -4,7 +4,6 @@
 
 #include "Skill.h"
 
-#include "../schema/SkillSchema.h"
 #include "../components/components.h"
 
 #include "GUIElements/GUIDialogBox.h"
