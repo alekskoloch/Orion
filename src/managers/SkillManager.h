@@ -47,4 +47,7 @@ private:
     GUIDialogBox dialogBox;
 
     void initializeFirstSkill();
+    
+    void loadSkillFromConfig(std::string skillName, std::ifstream& configFile);
+    std::vector<std::pair<SkillType, float>> loadOnActivateFunctions(std::ifstream& configFile, nlohmann::json skillJson);
 };

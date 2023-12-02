@@ -3,6 +3,8 @@
 #include "../systems/StoneSystem.h"
 #include "../systems/ExperienceSystem.h"
 
+#include "../utils/StringOperations.h"
+
 SkillManager::SkillManager(sf::RenderWindow& window, entt::registry& registry)
     : window(window), registry(registry), dialogBox(window, {"Are you sure you want to unlock this skill?"}, this->font), box(600.f, 300.f, sf::Vector2f(350.f, 200.f), this->font)
 {
@@ -63,60 +65,7 @@ void SkillManager::addSkill(std::string skillName)
     if (!configFile.is_open())
         throw std::runtime_error("Could not open config file");
     else
-    {
-        nlohmann::json configJson;
-        configFile >> configJson;
-
-        if (configJson.contains("skills") && configJson["skills"].is_array())
-        {
-            const auto& skillsArray = configJson["skills"];
-            
-            for (const auto& skillJson : skillsArray)
-            {
-                if (skillJson.contains("name") && skillJson["name"] == skillName)
-                {
-                    std::vector<std::pair<SkillType, float>> callbacks;
-                    auto callbacksJson = skillJson["callbacks"];
-                    for (const auto& callbackJson : callbacksJson)
-                    {
-                        callbacks.push_back(std::make_pair(
-                            callbackJson["skillID"].get<SkillType>(),
-                            callbackJson["value"].get<float>()
-                        ));
-                    }
-
-                    std::string textureName = skillJson["name"].get<std::string>();
-                    textureName.erase(std::remove_if(textureName.begin(), textureName.end(), [](char c) { return c == ' '; }), textureName.end());
-
-
-                    auto descriptions = skillJson["descriptions"].get<std::vector<std::string>>();
-                
-                    this->skills.push_back(std::make_unique<Skill>(
-                        this->window,
-                        this->registry,
-                        this->font,
-                        this->dialogBox,
-                        sf::Vector2f(
-                            skillJson["position"]["x"].get<float>(),
-                            skillJson["position"]["y"].get<float>()
-                        ),
-                        skillJson["name"].get<std::string>(),
-                        descriptions.size() > 1,
-                        descriptions,
-                        textureName,
-                        callbacks,
-                        skillJson["requirements"].get<std::vector<RequirementType>>(),
-                        skillJson["skillsToUnlock"].get<std::vector<std::string>>(),
-                        static_cast<unsigned int>(descriptions.size()),
-                        0,
-                        this->activeStars
-                    ));
-
-                    return;
-                }
-            }
-        }
-    }
+        this->loadSkillFromConfig(skillName, configFile);
 }
 
 void SkillManager::initializeFirstSkill()
@@ -127,7 +76,7 @@ void SkillManager::initializeFirstSkill()
 void SkillManager::initBox()
 {
     this->box.addText("Skill Points: " + std::to_string(ExperienceSystem::getSkillPoints(this->registry)));
-    this->box.addText("Orange Stones: "+ std::to_string(StoneSystem::getStoneNumber(this->registry, std::string("Orange Stone"))));
+    this->box.addText("Orange Stones: " + std::to_string(StoneSystem::getStoneNumber(this->registry, std::string("Orange Stone"))));
     this->box.addText("Green Stones: " + std::to_string(StoneSystem::getStoneNumber(this->registry, std::string("Green Stone"))));
 }
 
@@ -135,4 +84,60 @@ void SkillManager::updateBox()
 {
     this->box.clearTexts();
     this->initBox();
+}
+
+void SkillManager::loadSkillFromConfig(std::string skillName, std::ifstream& configFile)
+{
+    nlohmann::json configJson;
+    configFile >> configJson;
+
+    if (!configJson.contains("skills") || !configJson["skills"].is_array())
+        throw std::runtime_error("Could not find skills array in config file");
+    else
+    {
+        for (const auto& skillJson : configJson["skills"])
+        {
+            if (skillJson.contains("name") && skillJson["name"] == skillName)
+            {            
+                this->skills.push_back(std::make_unique<Skill>(
+                    this->window,
+                    this->registry,
+                    this->font,
+                    this->dialogBox,
+                    sf::Vector2f(
+                        skillJson["position"]["x"].get<float>(),
+                        skillJson["position"]["y"].get<float>()
+                    ),
+                    skillJson["name"].get<std::string>(),
+                    skillJson["descriptions"].get<std::vector<std::string>>().size() > 1,
+                    skillJson["descriptions"].get<std::vector<std::string>>(),
+                    removeWhitespace(skillJson["name"].get<std::string>()),
+                    this->loadOnActivateFunctions(configFile, skillJson),
+                    skillJson["requirements"].get<std::vector<RequirementType>>(),
+                    skillJson["skillsToUnlock"].get<std::vector<std::string>>(),
+                    static_cast<unsigned int>(skillJson["descriptions"].get<std::vector<std::string>>().size()),
+                    0,
+                    this->activeStars
+                ));
+
+                return;
+            }
+        }
+    }
+}
+
+std::vector<std::pair<SkillType, float>> SkillManager::loadOnActivateFunctions(std::ifstream& configFile, nlohmann::json skillJson)
+{
+    std::vector<std::pair<SkillType, float>> onActivateFunctions;
+
+    auto onActivateFunctionsJson = skillJson["callbacks"];
+    for (const auto& onActivateFunctionJson : onActivateFunctionsJson)
+    {
+        onActivateFunctions.push_back(std::make_pair(
+            onActivateFunctionJson["skillID"].get<SkillType>(),
+            onActivateFunctionJson["value"].get<float>()
+        ));
+    }
+
+    return onActivateFunctions;
 }
