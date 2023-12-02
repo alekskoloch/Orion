@@ -59,7 +59,7 @@ void SkillManager::unlockSkills(std::vector<std::string> skillsToUnlock)
 
 void SkillManager::addSkill(std::string skillName)
 {
-    std::ifstream configFile("../config/skillConfig.json");
+    std::ifstream configFile("config/skillConfig.json");
     if (!configFile.is_open())
         throw std::runtime_error("Could not open config file");
     else
