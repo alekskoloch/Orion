@@ -153,7 +153,7 @@ void ShieldSystem::getShield(entt::registry& registry)
             ShieldSystem::destroyShield(registry);
         }
 
-        CooldownSystem::setCooldown(registry, entity, "shieldCooldown", shield.duration * SkillSystem::getShieldTimeDurationMultiplier(registry));
+        CooldownSystem::setCooldown(registry, entity, "shieldCooldown", shield.duration * SkillSystem::getValue(registry, SkillType::ShieldTimeDurationMultiplierValue));
     
         shield.active = true;
 
@@ -179,7 +179,7 @@ void ShieldSystem::getShield(entt::registry& registry, ShieldSchema shieldSchema
             ShieldSystem::destroyShield(registry);
         }
 
-        CooldownSystem::setCooldown(registry, entity, "shieldCooldown", shield.duration * SkillSystem::getShieldTimeDurationMultiplier(registry));
+        CooldownSystem::setCooldown(registry, entity, "shieldCooldown", shield.duration * SkillSystem::getValue(registry, SkillType::ShieldTimeDurationMultiplierValue));
 
         shield.active = true;
 
