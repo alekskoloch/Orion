@@ -172,9 +172,11 @@ struct Skills
     float damageMultiplier = 1.f;
     float weaponDamageMultiplier = 1.f;
     float singleShotWeaponDamageMultiplier = 1.f;
+    float tripleShotWeaponDamageMultiplier = 1.f;
 
     float weaponEnergyCostMultiplier = 1.f;
     float singleShotWeaponEnergyCostMultiplier = 1.f;
+    float tripleShotWeaponEnergyCostMultiplier = 1.f;
 
     float energyRegenerationMultiplier = 1.f;
 
