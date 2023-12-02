@@ -17,7 +17,7 @@ void EnergySystem::updateEnergy(entt::registry& registry, sf::Time deltaTime)
         {
             if (energyComponent.currentEnergyValue < energyComponent.maxEnergyValue)
             {
-                energyComponent.currentEnergyValue += SkillSystem::getEnergyRegeneration(registry, entity) * deltaTime.asSeconds();
+                energyComponent.currentEnergyValue += energyComponent.energyRegenerationRate * SkillSystem::getValue(registry, SkillType::EnergyRegenerationMultiplierValue) * deltaTime.asSeconds();
                 if (energyComponent.currentEnergyValue > energyComponent.maxEnergyValue)
                 {
                     energyComponent.currentEnergyValue = energyComponent.maxEnergyValue;
