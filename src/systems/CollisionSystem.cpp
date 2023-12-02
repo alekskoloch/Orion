@@ -7,7 +7,7 @@
 
 #include "../managers/SoundManager.h"
 
-#include "../systems/SkillSystem.h"
+#include "../systems/WeaponsSystem.h"
 #include "../systems/CooldownSystem.h"
 #include "../systems/ExperienceSystem.h"
 #include "../systems/ProceduralGenerationSystem.h"
@@ -58,11 +58,11 @@ void checkBulletCollitions(entt::registry& registry, std::unordered_set<entt::en
 
                     auto& enemyHealthComponent = registry.get<Health>(target);
                     auto player = registry.view<Player>().front();
-                    enemyHealthComponent.currentHealthValue -= SkillSystem::getWeaponDamage(registry, player);
+                    enemyHealthComponent.currentHealthValue -= WeaponsSystem::getWeaponDamage(registry);
                     auto damageInfo = registry.create();
 
                     //TODO: Refactor this!
-                    double damage = SkillSystem::getWeaponDamage(registry, player);
+                    double damage = WeaponsSystem::getWeaponDamage(registry);
 
                     if (damage > 0.01)
                     {
