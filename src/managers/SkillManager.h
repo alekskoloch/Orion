@@ -28,8 +28,8 @@ public:
     void update();
     void draw();
 
-    void unlockSkills(std::vector<SkillSchema> skillsToUnlock);
-    void addSkill(SkillSchema skill);
+    void unlockSkills(std::vector<std::string> skillsToUnlock);
+    void addSkill(std::string skillName);
 
     void updateBox();
 private:

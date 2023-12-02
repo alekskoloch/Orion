@@ -49,38 +49,79 @@ void SkillManager::draw()
     this->window.setView(view);
 }
 
-void SkillManager::unlockSkills(std::vector<SkillSchema> skillsToUnlock)
+void SkillManager::unlockSkills(std::vector<std::string> skillsToUnlock)
 {
-    for (const SkillSchema& skillSchema : skillsToUnlock)
-        this->addSkill(skillSchema);
+    for (const std::string& skillName : skillsToUnlock)
+    {
+        this->addSkill(skillName);
+    }
 }
 
-void SkillManager::addSkill(SkillSchema skill)
+void SkillManager::addSkill(std::string skillName)
 {
-    this->skills.push_back(std::make_unique<Skill>(
-        this->window,
-        this->registry,
-        this->font,
-        this->dialogBox,
-        skill.position,
-        skill.name,
-        skill.multiLevel,
-        skill.descriptions,
-        skill.textureName,
-        skill.hoverTextureName,
-        skill.activeTextureName,
-        skill.callbacks,
-        skill.requirements,
-        skill.skillsToUnlock,
-        skill.maxLevel,
-        skill.currentLevel,
-        this->activeStars
-    ));  
+    std::ifstream configFile("../config/skillConfig.json");
+    if (!configFile.is_open())
+        throw std::runtime_error("Could not open config file");
+    else
+    {
+        nlohmann::json configJson;
+        configFile >> configJson;
+
+        if (configJson.contains("skills") && configJson["skills"].is_array())
+        {
+            const auto& skillsArray = configJson["skills"];
+            
+            for (const auto& skillJson : skillsArray)
+            {
+                if (skillJson.contains("name") && skillJson["name"] == skillName)
+                {
+                    std::vector<std::pair<SkillType, float>> callbacks;
+                    auto callbacksJson = skillJson["callbacks"];
+                    for (const auto& callbackJson : callbacksJson)
+                    {
+                        callbacks.push_back(std::make_pair(
+                            callbackJson["skillID"].get<SkillType>(),
+                            callbackJson["value"].get<float>()
+                        ));
+                    }
+
+                    std::string textureName = skillJson["name"].get<std::string>();
+                    textureName.erase(std::remove_if(textureName.begin(), textureName.end(), [](char c) { return c == ' '; }), textureName.end());
+
+
+                    auto descriptions = skillJson["descriptions"].get<std::vector<std::string>>();
+                
+                    this->skills.push_back(std::make_unique<Skill>(
+                        this->window,
+                        this->registry,
+                        this->font,
+                        this->dialogBox,
+                        sf::Vector2f(
+                            skillJson["position"]["x"].get<float>(),
+                            skillJson["position"]["y"].get<float>()
+                        ),
+                        skillJson["name"].get<std::string>(),
+                        descriptions.size() > 1,
+                        descriptions,
+                        textureName,
+                        callbacks,
+                        skillJson["requirements"].get<std::vector<RequirementType>>(),
+                        skillJson["skillsToUnlock"].get<std::vector<std::string>>(),
+                        static_cast<unsigned int>(descriptions.size()),
+                        0,
+                        this->activeStars
+                    ));
+
+                    return;
+                }
+            }
+        }
+    }
 }
 
 void SkillManager::initializeFirstSkill()
 {
-    this->addSkill(OrionProtocol);
+    this->addSkill("Orion Protocol");
 }
 
 void SkillManager::initBox()
