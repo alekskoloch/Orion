@@ -3,6 +3,7 @@
 #include "../systems/CameraSystem.h"
 #include "../systems/EnergySystem.h"
 #include "../systems/SkillSystem.h"
+#include "../systems/WeaponsSystem.h"
 #include "../systems/CooldownSystem.h"
 #include "../systems/ProceduralGenerationSystem.h"
 #include "../systems/ShieldSystem.h"
@@ -81,31 +82,31 @@ void handlePlayerShooting(entt::registry& registry, sf::Time deltaTime, sf::Rend
         bool canSpecialShoot = false;
 
         if (weapon.weaponType == WeaponType::SingleShot)
-            canSpecialShoot = SkillSystem::isSingleShotWeaponSpecialShotEnabled(registry);
+            canSpecialShoot = SkillSystem::isSkillEnabled(registry, SkillType::SingleShotWeaponSpecialShot);
         else if (weapon.weaponType == WeaponType::TrippleShot)
-            canSpecialShoot = SkillSystem::isTripleShotWeaponSpecialShotEnabled(registry);
+            canSpecialShoot = SkillSystem::isSkillEnabled(registry, SkillType::TripleShotWeaponSpecialShot);
         else
-            canSpecialShoot = SkillSystem::isAllWeaponsSpecialShotEnabled(registry);
+            canSpecialShoot = SkillSystem::isSkillEnabled(registry, SkillType::AllWeaponsSpecialShot);
             
-        if (input.specialShot && canSpecialShoot && EnergySystem::hasEnoughEnergy<Player>(registry, SkillSystem::getWeaponSpecialShotEnergyCost(registry, entity)))
+        if (input.specialShot && canSpecialShoot && EnergySystem::hasEnoughEnergy<Player>(registry, WeaponsSystem::getWeaponSpecialShotEnergyCost(registry)))
             if (CooldownSystem::getCooldown(registry, entity, "specialShot") == 0.f)
             {
                 SoundManager::getInstance().playSound("SpecialShot");
-                EnergySystem::removeEnergy<Player>(registry, SkillSystem::getWeaponSpecialShotEnergyCost(registry, entity));
+                EnergySystem::removeEnergy<Player>(registry, WeaponsSystem::getWeaponSpecialShotEnergyCost(registry));
                 CooldownSystem::setCooldown(registry, entity, "specialShot", weapon.specialShotCooldownTime);
                 weapon.specialShoot(registry, window, entity);
                 //handleSpecialShoot(registry, entity, window.mapPixelToCoords(sf::Mouse::getPosition(window)));
                 //TODO: Chance should be configurable
-                if (SkillSystem::getShieldChance(registry, entity))
+                if (SkillSystem::isSkillEnabled(registry, SkillType::ShieldChanceForSingleSpecialShot) || SkillSystem::isSkillEnabled(registry, SkillType::ShieldChanceForTripleSpecialShot))
                     if (weapon.weaponType == WeaponType::SingleShot)
                         ShieldSystem::getShield(registry, basicShield);
                     else if (weapon.weaponType == WeaponType::TrippleShot)
                         ShieldSystem::getShield(registry, advancedShield);
             }
 
-        if (canShoot && EnergySystem::hasEnoughEnergy<Player>(registry, SkillSystem::getWeaponEnergyCost(registry, entity)))
+        if (canShoot && EnergySystem::hasEnoughEnergy<Player>(registry, WeaponsSystem::getWeaponShotEnergyCost(registry)))
         {
-            EnergySystem::removeEnergy<Player>(registry, SkillSystem::getWeaponEnergyCost(registry, entity));
+            EnergySystem::removeEnergy<Player>(registry, WeaponsSystem::getWeaponShotEnergyCost(registry));
             weapon.shoot(registry, window, entity);
             SoundManager::getInstance().playSound("Shot");
             //handleShoot<PlayerBullet>(registry, entity, window.mapPixelToCoords(sf::Mouse::getPosition(window)));
