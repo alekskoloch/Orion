@@ -12,9 +12,9 @@ const float MARGIN = 120.f;
 
 void Skill::initialize()
 {
-    TextureManager::getInstance().loadTexture(this->iconTextureName, ASSETS_PATH + this->iconTextureName + std::string(".png"));
-    TextureManager::getInstance().loadTexture(this->iconHoverTextureName, ASSETS_PATH + this->iconHoverTextureName + std::string(".png"));
-    TextureManager::getInstance().loadTexture(this->iconActiveTextureName , ASSETS_PATH + this->iconActiveTextureName + std::string(".png"));
+    TextureManager::getInstance().loadTexture(this->iconTextureName, ASSETS_PATH + std::string("skillAssets/") + this->iconTextureName + std::string(".png"));
+    TextureManager::getInstance().loadTexture(std::string(this->iconTextureName + "Hover"), ASSETS_PATH + std::string("skillAssets/") + std::string(this->iconTextureName + "Hover") + std::string(".png"));
+    TextureManager::getInstance().loadTexture(std::string(this->iconTextureName + "Active"), ASSETS_PATH + std::string("skillAssets/") + std::string(this->iconTextureName + "Active") + std::string(".png"));
 
     this->iconSprite = CreateSprite(this->iconTextureName);
     this->iconSprite.setPosition(this->iconPosition);
@@ -78,7 +78,7 @@ void Skill::addCircleSegment()
         segmentColor = sf::Color(195, 82, 20);
     else if (this->requirements[this->currentLevel] == RequirementType::GreenStone)
         segmentColor = sf::Color(0, 75, 73);
-    else if (this->requirements[this->currentLevel] == RequirementType::OrangeAndGreenStone)
+    else if (this->requirements[this->currentLevel] == RequirementType::YellowStone)
         segmentColor = sf::Color(195, 82, 150, 100);
     else
         segmentColor = sf::Color::White;
@@ -129,7 +129,7 @@ void Skill::initStarsForSkill()
             {
                 color = sf::Color(0, 75, 73);
             }
-            else if (this->requirements[this->currentLevel] == RequirementType::OrangeAndGreenStone)
+            else if (this->requirements[this->currentLevel] == RequirementType::YellowStone)
             {
                 color = sf::Color(195, 82, 150, 100);
             }
@@ -181,7 +181,7 @@ void Skill::update()
                 SoundManager::getInstance().playSound("SkillHover");
             }
 
-            this->iconSprite.setTexture(TextureManager::getInstance().getTexture(this->iconHoverTextureName));
+            this->iconSprite.setTexture(TextureManager::getInstance().getTexture(std::string(this->iconTextureName + "Hover")));
             
             if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
             {
@@ -193,7 +193,7 @@ void Skill::update()
                         this->dialogBox.setMessage({std::string(this->name + " require Orange Stone") ,"Are you sure you want to unlock " + std::string(this->name + "?")});
                     else if (this->requirements[this->currentLevel] == RequirementType::GreenStone)
                         this->dialogBox.setMessage({std::string(this->name + " require Green Stone") ,"Are you sure you want to unlock " + std::string(this->name + "?")});
-                    else if (this->requirements[this->currentLevel] == RequirementType::OrangeAndGreenStone)
+                    else if (this->requirements[this->currentLevel] == RequirementType::YellowStone)
                         this->dialogBox.setMessage({std::string(this->name + " require Orange and Green Stone") ,"Are you sure you want to unlock " + std::string(this->name + "?")});
 
                     this->dialogBox.setType(GUIDialogBoxType::YesNo);
@@ -218,7 +218,10 @@ void Skill::update()
                 this->stars.clear();
             }
 
-            this->iconSprite.setTexture(TextureManager::getInstance().getTexture(this->iconTextureName));
+           // if (!this->active)
+                this->iconSprite.setTexture(TextureManager::getInstance().getTexture(this->iconTextureName));
+            //else
+              //  this->iconSprite.setTexture(TextureManager::getInstance().getTexture(std::string(this->iconTextureName + "Active")));
         }
     }
 
@@ -254,7 +257,7 @@ void Skill::update()
                     return;
                 }
             }
-            else if (this->requirements[this->currentLevel] == RequirementType::OrangeAndGreenStone)
+            else if (this->requirements[this->currentLevel] == RequirementType::YellowStone)
             {
                 if (playerStones.orangeStones > 0 && playerStones.greenStones > 0)
                 {
@@ -270,17 +273,9 @@ void Skill::update()
                 }
             }
 
-            this->onActivateFunctions[this->currentLevel](this->registry);
+            SkillSystem::modifySkill(this->registry, this->onActivateFunctions[this->currentLevel].first, this->onActivateFunctions[this->currentLevel].second);
 
-            
-
-            //TODO: temporary solution for first skill
-            if (this->name == "Orion protocol")
-            {
-                if (this->currentLevel == this->maxLevel - 1)
-                    SkillManager::getInstance(this->window, this->registry).unlockSkills(this->skillsToUnlock);   
-            }
-            else if (this->currentLevel == 0)
+            if (this->currentLevel == 0)
             {
                 SkillManager::getInstance(this->window, this->registry).unlockSkills(this->skillsToUnlock);
             }
@@ -304,7 +299,7 @@ void Skill::update()
                         this->descriptionTexts.erase(this->descriptionTexts.begin(), this->descriptionTexts.begin() + 1);
 
                 this->active = true;
-                this->iconSprite.setTexture(TextureManager::getInstance().getTexture(this->iconActiveTextureName));
+                this->iconSprite.setTexture(TextureManager::getInstance().getTexture(std::string(this->iconTextureName + "Active")));
                 this->descriptionTexts[this->descriptionTexts.size() - 1].setFillColor(sf::Color::White);
             }
             else

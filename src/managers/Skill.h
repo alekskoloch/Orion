@@ -15,8 +15,8 @@ class SkillManager;
 class Skill
 {
 public:
-    Skill(sf::RenderWindow& window, entt::registry& registry, sf::Font& font, GUIDialogBox& dialogBox, sf::Vector2f iconPosition, std::string name, bool multiLevel, std::vector<std::string> descriptions, std::string iconTextureName, std::string iconHoverTextureName, std::string iconActiveTextureName, std::vector<std::function<void(entt::registry&)>> onActivateFunctions, std::vector<RequirementType> requirements, std::vector<SkillSchema> skillToUnlock, unsigned int maxLevel, unsigned int currentLevel, std::vector<std::unique_ptr<GUIStar>>& activeStars)
-    : window(window), registry(registry), font(font), dialogBox(dialogBox), iconPosition(iconPosition), name(name), multiLevel(multiLevel), descriptions(descriptions), iconTextureName(iconTextureName), iconHoverTextureName(iconHoverTextureName), iconActiveTextureName(iconActiveTextureName), onActivateFunctions(onActivateFunctions), requirements(requirements), skillsToUnlock(skillToUnlock), maxLevel(maxLevel), currentLevel(currentLevel), activeStars(activeStars)
+    Skill(sf::RenderWindow& window, entt::registry& registry, sf::Font& font, GUIDialogBox& dialogBox, sf::Vector2f iconPosition, std::string name, bool multiLevel, std::vector<std::string> descriptions, std::string iconTextureName, std::vector<std::pair<SkillType, float>> onActivateFunctions, std::vector<RequirementType> requirements, std::vector<std::string> skillToUnlock, unsigned int maxLevel, unsigned int currentLevel, std::vector<std::unique_ptr<GUIStar>>& activeStars)
+    : window(window), registry(registry), font(font), dialogBox(dialogBox), iconPosition(iconPosition), name(name), multiLevel(multiLevel), descriptions(descriptions), iconTextureName(iconTextureName), onActivateFunctions(onActivateFunctions), requirements(requirements), skillsToUnlock(skillToUnlock), maxLevel(maxLevel), currentLevel(currentLevel), activeStars(activeStars)
     {
         this->initialize();
     }
@@ -34,8 +34,6 @@ private:
     sf::Vector2f iconPosition;
 
     std::string iconTextureName;
-    std::string iconHoverTextureName;
-    std::string iconActiveTextureName;
 
     void initializeText();
     void updateText();
@@ -51,9 +49,9 @@ private:
     bool active = false;
     bool hover = false;
 
-    std::vector<std::function<void(entt::registry&)>> onActivateFunctions;
+    std::vector<std::pair<SkillType, float>> onActivateFunctions;
     std::vector<RequirementType> requirements;
-    std::vector<SkillSchema> skillsToUnlock;
+    std::vector<std::string> skillsToUnlock;
 
     GUIDialogBox& dialogBox;
 
