@@ -102,7 +102,6 @@ void SkillManager::loadSkillFromConfig(std::string skillName, std::ifstream& con
                 this->skills.push_back(std::make_unique<Skill>(
                     this->window,
                     this->registry,
-                    this->font,
                     this->dialogBox,
                     sf::Vector2f(
                         skillJson["position"]["x"].get<float>(),

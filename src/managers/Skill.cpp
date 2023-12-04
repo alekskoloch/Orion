@@ -1,6 +1,7 @@
 #include "Skill.h"
 
 #include "../managers/SoundManager.h"
+#include "../managers/FontManager.h"
 
 #include "../utils/Mouse.h"
 #include "../utils/GraphicsOperations.h"
@@ -14,13 +15,8 @@ const float MARGIN = 120.f;
 
 void Skill::initialize()
 {
-    TextureManager::getInstance().loadTexture(this->iconTextureName, ASSETS_PATH + std::string("skillAssets/") + this->iconTextureName + std::string(".png"));
-    TextureManager::getInstance().loadTexture(std::string(this->iconTextureName + "Hover"), ASSETS_PATH + std::string("skillAssets/") + std::string(this->iconTextureName + "Hover") + std::string(".png"));
-    TextureManager::getInstance().loadTexture(std::string(this->iconTextureName + "Active"), ASSETS_PATH + std::string("skillAssets/") + std::string(this->iconTextureName + "Active") + std::string(".png"));
-
-    this->iconSprite = CreateSprite(this->iconTextureName);
-    this->iconSprite.setPosition(this->iconPosition);
-
+    this->loadTexturesIntoManager();
+    this->initializeIconSprite();
     this->initializeText();
 
     this->addCircleSegment();
@@ -28,41 +24,18 @@ void Skill::initialize()
 
 void Skill::initializeText()
 {
-//TODO: get font from manager
-    this->nameText.setString(this->name);
-    this->nameText.setFont(this->font);
-    this->nameText.setCharacterSize(30);
-    this->nameText.setFillColor(sf::Color::White);
-    this->nameText.setOutlineThickness(1);
-    this->nameText.setOutlineColor(sf::Color::Black);
-
-    sf::Text text;
-    text.setString(this->descriptions[0]);
-    text.setFont(this->font);
-    text.setCharacterSize(40);
-    text.setFillColor(sf::Color(150, 150, 150));
-    text.setOutlineThickness(1);
-    text.setOutlineColor(sf::Color::Black);
-
-    this->descriptionTexts.push_back(text);
+    this->nameText = this->getConfiguredText(this->name, 30);
+    this->centerText(this->nameText);
+    this->descriptionTexts.push_back(this->getConfiguredText(this->descriptions[0], 40));
+    this->centerText(this->descriptionTexts[0]);
 }
 
 void Skill::updateText()
 {
-    this->nameText.setOrigin(
-        this->nameText.getGlobalBounds().width / 2.f,
-        this->nameText.getGlobalBounds().height / 2.f
-    );
     this->nameText.setPosition(
         this->iconSprite.getPosition().x,
         this->iconSprite.getPosition().y + MARGIN
     );
-
-    for (auto& descriptionText : this->descriptionTexts)
-        descriptionText.setOrigin(
-            descriptionText.getGlobalBounds().width / 2.f,
-            descriptionText.getGlobalBounds().height / 2.f
-        );
 
     for (int i = 0; i < this->descriptionTexts.size(); i++)
     {
@@ -314,7 +287,7 @@ void Skill::update()
 
                 sf::Text text;
                 text.setString(this->descriptions[this->currentLevel]);
-                text.setFont(this->font);
+                text.setFont(FontManager::getInstance().getFont("font"));
                 text.setCharacterSize(40);
                 text.setFillColor(sf::Color(150, 150, 150));
                 text.setOutlineThickness(1);
@@ -366,4 +339,41 @@ void Skill::draw()
 
     for (auto& circleSegment : this->circleSegments)
         this->window.draw(*circleSegment);
+}
+
+void Skill::loadTexturesIntoManager()
+{
+    TextureManager::getInstance().loadTexture(this->iconTextureName, ASSETS_PATH + std::string("skillAssets/") + this->iconTextureName + ".png");
+    TextureManager::getInstance().loadTexture(this->iconTextureName + "Hover", ASSETS_PATH + std::string("skillAssets/") + this->iconTextureName + "Hover.png");
+    TextureManager::getInstance().loadTexture(this->iconTextureName + "Active", ASSETS_PATH + std::string("skillAssets/") + this->iconTextureName + "Active.png");
+}
+
+void Skill::initializeIconSprite()
+{
+    this->iconSprite = CreateSprite(this->iconTextureName);
+    this->iconSprite.setPosition(this->iconPosition);
+}
+
+sf::Text Skill::getConfiguredText(std::string string, unsigned int characterSize)
+{
+    sf::Text text;
+    text.setFont(FontManager::getInstance().getFont("font"));
+    text.setString(string);
+    text.setCharacterSize(characterSize);
+    text.setFillColor(sf::Color::White);
+    text.setOutlineThickness(1);
+    text.setOutlineColor(sf::Color::Black);
+    return text;
+}
+
+void Skill::centerText(sf::Text& text)
+{
+    text.setOrigin(
+        text.getGlobalBounds().width / 2.f,
+        text.getGlobalBounds().height / 2.f
+    );
+    text.setPosition(
+        this->window.getSize().x / 2.f,
+        this->window.getSize().y / 2.f
+    );
 }
