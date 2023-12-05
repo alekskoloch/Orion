@@ -11,7 +11,14 @@
 
 #include "../components/tagComponents.h"
 
+//TODO: Move to config
 const float MARGIN = 120.f;
+const unsigned int NAME_CHARACTER_SIZE = 30;
+const unsigned int DESCRIPTION_CHARACTER_SIZE = 40;
+const sf::Color ORANGE_STONE_COLOR = sf::Color(195, 82, 20);
+const sf::Color GREEN_STONE_COLOR = sf::Color(0, 75, 73);
+const sf::Color YELLOW_STONE_COLOR = sf::Color(195, 82, 150, 100);
+const sf::Color DEFAULT_STONE_COLOR = sf::Color::White;
 
 void Skill::initialize()
 {
@@ -24,9 +31,9 @@ void Skill::initialize()
 
 void Skill::initializeText()
 {
-    this->nameText = this->getConfiguredText(this->name, 30);
+    this->nameText = this->getConfiguredText(this->name, NAME_CHARACTER_SIZE);
     this->centerText(this->nameText);
-    this->descriptionTexts.push_back(this->getConfiguredText(this->descriptions[0], 40));
+    this->descriptionTexts.push_back(this->getConfiguredText(this->descriptions[0], DESCRIPTION_CHARACTER_SIZE));
     this->centerText(this->descriptionTexts[0]);
 }
 
@@ -48,18 +55,8 @@ void Skill::updateText()
 
 void Skill::addCircleSegment()
 {
-    sf::Color segmentColor;
-    if (this->requirements[this->currentLevel] == RequirementType::OrangeStone)
-        segmentColor = sf::Color(195, 82, 20);
-    else if (this->requirements[this->currentLevel] == RequirementType::GreenStone)
-        segmentColor = sf::Color(0, 75, 73);
-    else if (this->requirements[this->currentLevel] == RequirementType::YellowStone)
-        segmentColor = sf::Color(195, 82, 150, 100);
-    else
-        segmentColor = sf::Color::White;
-
     auto angle = 360.f / this->maxLevel;
-    GUICircleSegment circleSegment(this->iconPosition, 90.f, this->currentLevel * angle, angle + (this->currentLevel * angle), 5.f, segmentColor);
+    GUICircleSegment circleSegment(this->iconPosition, 90.f, this->currentLevel * angle, angle + (this->currentLevel * angle), 5.f, this->getStoneColor());
     this->circleSegments.push_back(std::make_unique<GUICircleSegment>(circleSegment));
 }   
 
@@ -96,18 +93,7 @@ void Skill::initStarsForSkill()
 
         if (i == 0 || ProceduralGenerationSystem::GetRandomNumber(1,4) == 4)
         {
-            if (this->requirements[this->currentLevel] == RequirementType::OrangeStone)
-            {
-                color = sf::Color(195, 82, 20);
-            }
-            else if (this->requirements[this->currentLevel] == RequirementType::GreenStone)
-            {
-                color = sf::Color(0, 75, 73);
-            }
-            else if (this->requirements[this->currentLevel] == RequirementType::YellowStone)
-            {
-                color = sf::Color(195, 82, 150, 100);
-            }
+            color = this->getStoneColor();
         }
 
         GUIStar star(
@@ -376,4 +362,16 @@ void Skill::centerText(sf::Text& text)
         this->window.getSize().x / 2.f,
         this->window.getSize().y / 2.f
     );
+}
+
+sf::Color Skill::getStoneColor()
+{
+    if (this->requirements[this->currentLevel] == RequirementType::OrangeStone)
+        return ORANGE_STONE_COLOR;
+    else if (this->requirements[this->currentLevel] == RequirementType::GreenStone)
+        return GREEN_STONE_COLOR;
+    else if (this->requirements[this->currentLevel] == RequirementType::YellowStone)
+        return YELLOW_STONE_COLOR;
+    else
+        return DEFAULT_STONE_COLOR;
 }

@@ -71,4 +71,6 @@ private:
     void initializeIconSprite();
     sf::Text getConfiguredText(std::string string, unsigned int characterSize);
     void centerText(sf::Text& text);
+
+    sf::Color getStoneColor();
 };
