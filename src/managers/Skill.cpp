@@ -84,17 +84,6 @@ void Skill::initStarsForSkill()
 
     for (int i = 0; i < numStars; i++)
     {
-        float offset = 1.f;
-        
-        if(!ProceduralGenerationSystem::GetRandomNumber(0,2))
-            offset = ProceduralGenerationSystem::GetRandomNumber(1.1f, 2.f);
-
-
-        sf::Vector2f position(
-            this->iconPosition.x + (ProceduralGenerationSystem::GetRandomNumber(-300.f, 300.f) * offset),
-            this->iconPosition.y + (ProceduralGenerationSystem::GetRandomNumber(-300.f, 300.f) * offset)
-        );
-
         bool flicker = ProceduralGenerationSystem::GetRandomNumber(0, 2);
         sf::Color color = sf::Color::White;
 
@@ -104,7 +93,7 @@ void Skill::initStarsForSkill()
         }
 
         GUIStar star(
-            position,
+            this->calculateStarPosition(),
             color,
             ProceduralGenerationSystem::GetRandomNumber(1.f, 4.f),
             !flicker,
@@ -381,4 +370,14 @@ sf::Color Skill::getStoneColor()
         return YELLOW_STONE_COLOR;
     else
         return DEFAULT_STONE_COLOR;
+}
+
+sf::Vector2f Skill::calculateStarPosition()
+{
+    float offset = !ProceduralGenerationSystem::GetRandomNumber(0,2) ? ProceduralGenerationSystem::GetRandomNumber(1.1f, 2.f) : 1.f;
+
+    return sf::Vector2f(
+                this->iconPosition.x + (ProceduralGenerationSystem::GetRandomNumber(-300.f, 300.f) * offset),
+                this->iconPosition.y + (ProceduralGenerationSystem::GetRandomNumber(-300.f, 300.f) * offset)
+            );
 }

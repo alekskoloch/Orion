@@ -73,4 +73,5 @@ private:
     void centerText(sf::Text& text);
 
     sf::Color getStoneColor();
+    sf::Vector2f calculateStarPosition();
 };
