@@ -13,6 +13,7 @@
 
 //TODO: Move to config
 const float MARGIN = 120.f;
+const float SEGMENT_THICKNESS = 5.f;
 const unsigned int NAME_CHARACTER_SIZE = 30;
 const unsigned int DESCRIPTION_CHARACTER_SIZE = 40;
 const sf::Color ORANGE_STONE_COLOR = sf::Color(195, 82, 20);
@@ -56,8 +57,14 @@ void Skill::updateText()
 void Skill::addCircleSegment()
 {
     auto angle = 360.f / this->maxLevel;
-    GUICircleSegment circleSegment(this->iconPosition, 90.f, this->currentLevel * angle, angle + (this->currentLevel * angle), 5.f, this->getStoneColor());
-    this->circleSegments.push_back(std::make_unique<GUICircleSegment>(circleSegment));
+    this->circleSegments.push_back(std::make_unique<GUICircleSegment>(
+        this->iconPosition,
+        90.f,
+        this->currentLevel * angle,
+        angle + (this->currentLevel * angle),
+        SEGMENT_THICKNESS,
+        this->getStoneColor()
+    ));
 }   
 
 void Skill::addActiveStars()
