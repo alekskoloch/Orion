@@ -83,12 +83,7 @@ void Skill::initStarsForSkill()
 
 void Skill::update()
 {
-    sf::Vector2i mousePosition = sf::Vector2i(
-        window.mapPixelToCoords(sf::Mouse::getPosition(this->window)).x,
-        window.mapPixelToCoords(sf::Mouse::getPosition(this->window)).y
-    );
-
-    if (utils::isMouseOverSprite(this->iconSprite, mousePosition) && this->dialogBox.getState() == GUIDialogBoxState::Hidden)
+    if (utils::isMouseOverSprite(this->iconSprite, utils::getMousePositionInWindow(this->window)) && this->dialogBox.getState() == GUIDialogBoxState::Hidden)
     {
         if (this->currentLevel < this->maxLevel)
             this->circleSegments[this->currentLevel]->setState(CircleSegmentState::Hover);
