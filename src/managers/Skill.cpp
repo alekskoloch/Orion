@@ -83,18 +83,7 @@ void Skill::initStarsForSkill()
 
 void Skill::update()
 {
-    if (utils::isMouseOverSprite(this->iconSprite, utils::getMousePositionInWindow(this->window)) && this->dialogBox.getState() == GUIDialogBoxState::Hidden)
-    {
-        if (this->currentLevel < this->maxLevel)
-            this->circleSegments[this->currentLevel]->setState(CircleSegmentState::Hover);
-        this->hover = true;
-    }
-    else
-    {
-        if (this->currentLevel < this->maxLevel)
-            this->circleSegments[this->currentLevel]->setState(CircleSegmentState::Hidden);
-        this->hover = false;
-    }
+    this->updateHoverState();
 
     if (!this->active && this->dialogBox.getState() == GUIDialogBoxState::Hidden)
     {
@@ -353,5 +342,21 @@ void Skill::addDescriptionLine(const std::string descriptionTextLine)
             this->window.getSize().x / 2.f,
             this->window.getSize().y - MARGIN - (this->descriptionTexts[this->descriptionTexts.size() - 1 - i].getGlobalBounds().height * (i + 1))
         );
+    }
+}
+
+void Skill::updateHoverState()
+{
+    if (utils::isMouseOverSprite(this->iconSprite, utils::getMousePositionInWindow(this->window)) && this->dialogBox.getState() == GUIDialogBoxState::Hidden)
+    {
+        if (this->currentLevel < this->maxLevel)
+            this->circleSegments[this->currentLevel]->setState(CircleSegmentState::Hover);
+        this->hover = true;
+    }
+    else
+    {
+        if (this->currentLevel < this->maxLevel)
+            this->circleSegments[this->currentLevel]->setState(CircleSegmentState::Hidden);
+        this->hover = false;
     }
 }

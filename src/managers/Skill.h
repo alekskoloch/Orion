@@ -87,4 +87,5 @@ private:
     sf::Color getStoneColor();
     sf::Vector2f calculateStarPosition();
     void addDescriptionLine(const std::string descriptionTextLine);
+    void updateHoverState();
 };
