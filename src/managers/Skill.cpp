@@ -85,11 +85,16 @@ void Skill::update()
 {
     this->updateHoverState();
 
-    if (!this->active && this->dialogBox.getState() == GUIDialogBoxState::Hidden)
+    if (!this->isMaxLevelReached)
+    {
+        
+    }
+
+    if (!this->isMaxLevelReached && this->dialogBox.getState() == GUIDialogBoxState::Hidden)
     {
         if (this->hover)
         {
-            if (!this->isStarExists && !this->active)
+            if (!this->isStarExists && !this->isMaxLevelReached)
             {
                 this->initStarsForSkill();
                 SoundManager::getInstance().playSound("SkillHover");
@@ -101,14 +106,7 @@ void Skill::update()
             {
                 if (ExperienceSystem::getSkillPoints(this->registry) > 0)
                 {
-                    if (this->requirements[this->currentLevel] == RequirementType::None)
-                        this->dialogBox.setMessage({"Are you sure you want to unlock", std::string(this->name + "?")});
-                    else if (this->requirements[this->currentLevel] == RequirementType::OrangeStone)
-                        this->dialogBox.setMessage({std::string(this->name + " require Orange Stone") ,"Are you sure you want to unlock " + std::string(this->name + "?")});
-                    else if (this->requirements[this->currentLevel] == RequirementType::GreenStone)
-                        this->dialogBox.setMessage({std::string(this->name + " require Green Stone") ,"Are you sure you want to unlock " + std::string(this->name + "?")});
-                    else if (this->requirements[this->currentLevel] == RequirementType::YellowStone)
-                        this->dialogBox.setMessage({std::string(this->name + " require Orange and Green Stone") ,"Are you sure you want to unlock " + std::string(this->name + "?")});
+                    this->dialogBox.setMessage(this->getMessagesForRequirements(this->requirements[this->currentLevel]));
 
                     this->dialogBox.setType(GUIDialogBoxType::YesNo);
                     this->dialogBox.setState(GUIDialogBoxState::Idle);
@@ -126,16 +124,13 @@ void Skill::update()
         }
         else
         {
-            if (this->isStarExists && !this->active)
+            if (this->isStarExists && !this->isMaxLevelReached)
             {
                 this->isStarExists = false;
                 this->stars.clear();
             }
 
-           // if (!this->active)
-                this->iconSprite.setTexture(TextureManager::getInstance().getTexture(this->iconTextureName));
-            //else
-              //  this->iconSprite.setTexture(TextureManager::getInstance().getTexture(std::string(this->iconTextureName + "Active")));
+            this->iconSprite.setTexture(TextureManager::getInstance().getTexture(this->iconTextureName));
         }
     }
 
@@ -212,7 +207,7 @@ void Skill::update()
                     if (this->descriptionTexts.size() > 1)
                         this->descriptionTexts.erase(this->descriptionTexts.begin(), this->descriptionTexts.begin() + 1);
 
-                this->active = true;
+                this->isMaxLevelReached = true;
                 this->iconSprite.setTexture(TextureManager::getInstance().getTexture(std::string(this->iconTextureName + "Active")));
                 this->descriptionTexts[this->descriptionTexts.size() - 1].setFillColor(sf::Color::White);
             }
@@ -359,4 +354,51 @@ void Skill::updateHoverState()
             this->circleSegments[this->currentLevel]->setState(CircleSegmentState::Hidden);
         this->hover = false;
     }
+}
+
+std::vector<std::string> Skill::getMessagesForRequirements(RequirementType requirementType)
+{
+    std::vector<std::string> messages;
+    messages.push_back("Are you sure you want to unlock " + std::string(this->name + "?"));
+
+    switch (requirementType)
+    {
+    case RequirementType::None:
+        break;
+    case RequirementType::OrangeStone:
+        messages.insert(messages.begin(), std::string(this->name + " require Orange Stone"));
+        break;
+    case RequirementType::GreenStone:
+        messages.insert(messages.begin(), std::string(this->name + " require Green Stone"));
+        break;
+    case RequirementType::YellowStone:
+        messages.insert(messages.begin(), std::string(this->name + " require Orange and Green Stone"));
+        break;
+    case RequirementType::RedStone:
+        throw std::invalid_argument("Red Stone is not implemented");
+        break;
+    case RequirementType::BlueStone:
+        throw std::invalid_argument("Blue Stone is not implemented");
+        break;
+    case RequirementType::PowerfulOrangeStone:
+        throw std::invalid_argument("Powerful Orange Stone is not implemented");
+        break;
+    case RequirementType::PowerfulGreenStone:
+        throw std::invalid_argument("Powerful Green Stone is not implemented");
+        break;
+    case RequirementType::PowerfulYelowStone:
+        throw std::invalid_argument("Powerful Yellow Stone is not implemented");
+        break;
+    case RequirementType::PowerfulRedStone:
+        throw std::invalid_argument("Powerful Red Stone is not implemented");
+        break;
+    case RequirementType::PowerfulBlueStone:
+        throw std::invalid_argument("Powerful Blue Stone is not implemented");
+        break;
+    default:
+        throw std::invalid_argument("Invalid requirement type");
+        break;
+    }
+
+    return messages;
 }

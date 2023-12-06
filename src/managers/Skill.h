@@ -58,7 +58,7 @@ private:
     sf::Text nameText;
     std::vector<sf::Text> descriptionTexts;
 
-    bool active = false;
+    bool isMaxLevelReached = false;
     bool hover = false;
 
     std::vector<std::pair<SkillType, float>> onActivateFunctions;
@@ -88,4 +88,5 @@ private:
     sf::Vector2f calculateStarPosition();
     void addDescriptionLine(const std::string descriptionTextLine);
     void updateHoverState();
+    std::vector<std::string> getMessagesForRequirements(RequirementType requirementType);
 };
