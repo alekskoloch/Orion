@@ -11,16 +11,6 @@
 
 #include "../components/tagComponents.h"
 
-//TODO: Move to config
-const float MARGIN = 120.f;
-const float SEGMENT_THICKNESS = 5.f;
-const unsigned int NAME_CHARACTER_SIZE = 30;
-const unsigned int DESCRIPTION_CHARACTER_SIZE = 40;
-const sf::Color ORANGE_STONE_COLOR = sf::Color(195, 82, 20);
-const sf::Color GREEN_STONE_COLOR = sf::Color(0, 75, 73);
-const sf::Color YELLOW_STONE_COLOR = sf::Color(195, 82, 150, 100);
-const sf::Color DEFAULT_STONE_COLOR = sf::Color::White;
-
 void Skill::initialize()
 {
     this->loadTexturesIntoManager();
@@ -34,24 +24,9 @@ void Skill::initializeText()
 {
     this->nameText = this->getConfiguredText(this->name, NAME_CHARACTER_SIZE);
     this->centerText(this->nameText);
-    this->descriptionTexts.push_back(this->getConfiguredText(this->descriptions[0], DESCRIPTION_CHARACTER_SIZE));
-    this->centerText(this->descriptionTexts[0]);
-}
+    this->nameText.setPosition(this->iconSprite.getPosition().x, this->iconSprite.getPosition().y + MARGIN);
 
-void Skill::updateText()
-{
-    this->nameText.setPosition(
-        this->iconSprite.getPosition().x,
-        this->iconSprite.getPosition().y + MARGIN
-    );
-
-    for (int i = 0; i < this->descriptionTexts.size(); i++)
-    {
-        this->descriptionTexts[this->descriptionTexts.size() - 1 - i].setPosition(
-            this->window.getSize().x / 2.f,
-            this->window.getSize().y - MARGIN - (this->descriptionTexts[this->descriptionTexts.size() - 1 - i].getGlobalBounds().height * (i + 1))
-        );
-    }
+    this->addDescriptionLine(this->descriptions[0]);
 }
 
 void Skill::addCircleSegment()
@@ -108,8 +83,6 @@ void Skill::initStarsForSkill()
 
 void Skill::update()
 {
-    this->updateText();
-
     sf::Vector2i mousePosition = sf::Vector2i(
         window.mapPixelToCoords(sf::Mouse::getPosition(this->window)).x,
         window.mapPixelToCoords(sf::Mouse::getPosition(this->window)).y
@@ -267,15 +240,7 @@ void Skill::update()
 
                 this->descriptionTexts[this->descriptionTexts.size() - 1].setFillColor(sf::Color::White);
 
-                sf::Text text;
-                text.setString(this->descriptions[this->currentLevel]);
-                text.setFont(FontManager::getInstance().getFont("font"));
-                text.setCharacterSize(40);
-                text.setFillColor(sf::Color(150, 150, 150));
-                text.setOutlineThickness(1);
-                text.setOutlineColor(sf::Color::Black);
-
-                this->descriptionTexts.push_back(text);
+                this->addDescriptionLine(this->descriptions[this->currentLevel]);
             }
         }
         else if (this->dialogBox.getState() == GUIDialogBoxState::No)
@@ -336,13 +301,13 @@ void Skill::initializeIconSprite()
     this->iconSprite.setPosition(this->iconPosition);
 }
 
-sf::Text Skill::getConfiguredText(std::string string, unsigned int characterSize)
+sf::Text Skill::getConfiguredText(std::string string, unsigned int characterSize, sf::Color textColor)
 {
     sf::Text text;
     text.setFont(FontManager::getInstance().getFont("font"));
     text.setString(string);
     text.setCharacterSize(characterSize);
-    text.setFillColor(sf::Color::White);
+    text.setFillColor(textColor);
     text.setOutlineThickness(1);
     text.setOutlineColor(sf::Color::Black);
     return text;
@@ -380,4 +345,18 @@ sf::Vector2f Skill::calculateStarPosition()
                 this->iconPosition.x + (ProceduralGenerationSystem::GetRandomNumber(-300.f, 300.f) * offset),
                 this->iconPosition.y + (ProceduralGenerationSystem::GetRandomNumber(-300.f, 300.f) * offset)
             );
+}
+
+void Skill::addDescriptionLine(const std::string descriptionTextLine)
+{
+    this->descriptionTexts.push_back(this->getConfiguredText(descriptionTextLine, DESCRIPTION_CHARACTER_SIZE, INACTIVE_DESCRIPTION_COLOR));
+    this->centerText(this->descriptionTexts[this->descriptionTexts.size() - 1]);
+
+    for (int i = 0; i < this->descriptionTexts.size(); i++)
+    {
+        this->descriptionTexts[this->descriptionTexts.size() - 1 - i].setPosition(
+            this->window.getSize().x / 2.f,
+            this->window.getSize().y - MARGIN - (this->descriptionTexts[this->descriptionTexts.size() - 1 - i].getGlobalBounds().height * (i + 1))
+        );
+    }
 }

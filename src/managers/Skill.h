@@ -11,6 +11,19 @@
 
 #include "../components/components.h"
 
+//TODO: Move to config
+const float MARGIN = 120.f;
+const float SEGMENT_THICKNESS = 5.f;
+const unsigned int NAME_CHARACTER_SIZE = 30;
+const unsigned int DESCRIPTION_CHARACTER_SIZE = 40;
+const sf::Color ORANGE_STONE_COLOR = sf::Color(195, 82, 20);
+const sf::Color GREEN_STONE_COLOR = sf::Color(0, 75, 73);
+const sf::Color YELLOW_STONE_COLOR = sf::Color(195, 82, 150, 100);
+const sf::Color DEFAULT_STONE_COLOR = sf::Color::White;
+const sf::Color DEFAULT_TEXT_COLOR = sf::Color::White;
+const sf::Color ACTIVE_DESCRIPTION_COLOR = sf::Color::White;
+const sf::Color INACTIVE_DESCRIPTION_COLOR = sf::Color(150, 150, 150);
+
 class SkillManager;
 
 class Skill
@@ -37,7 +50,6 @@ private:
     std::string iconTextureName;
 
     void initializeText();
-    void updateText();
 
     std::string name;
     std::vector<std::string> descriptions;
@@ -69,9 +81,10 @@ private:
 
     void loadTexturesIntoManager();
     void initializeIconSprite();
-    sf::Text getConfiguredText(std::string string, unsigned int characterSize);
+    sf::Text getConfiguredText(std::string string, unsigned int characterSize, sf::Color textColor = DEFAULT_TEXT_COLOR);
     void centerText(sf::Text& text);
 
     sf::Color getStoneColor();
     sf::Vector2f calculateStarPosition();
+    void addDescriptionLine(const std::string descriptionTextLine);
 };
