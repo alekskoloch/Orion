@@ -17,4 +17,12 @@ namespace utils
 
         return image.getPixel(static_cast<unsigned int>(localPosition.x) + textureRect.left, static_cast<unsigned int>(localPosition.y) + textureRect.top).a > 0;
     }
+
+    inline sf::Vector2i getMousePositionInWindow(const sf::RenderWindow& window)
+    {
+        return sf::Vector2i(
+            window.mapPixelToCoords(sf::Mouse::getPosition(window)).x,
+            window.mapPixelToCoords(sf::Mouse::getPosition(window)).y
+        );
+    }
 }
