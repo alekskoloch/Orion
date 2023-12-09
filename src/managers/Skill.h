@@ -29,8 +29,8 @@ class SkillManager;
 class Skill
 {
 public:
-    Skill(sf::RenderWindow& window, entt::registry& registry, GUIDialogBox& dialogBox, sf::Vector2f iconPosition, std::string name, bool multiLevel, std::vector<std::string> descriptions, std::string iconTextureName, std::vector<std::pair<SkillType, float>> onActivateFunctions, std::vector<RequirementType> requirements, std::vector<std::string> skillToUnlock, unsigned int maxLevel, unsigned int currentLevel, std::vector<std::unique_ptr<GUIStar>>& activeStars)
-    : window(window), registry(registry), dialogBox(dialogBox), iconPosition(iconPosition), name(name), multiLevel(multiLevel), descriptions(descriptions), iconTextureName(iconTextureName), onActivateFunctions(onActivateFunctions), requirements(requirements), skillsToUnlock(skillToUnlock), maxLevel(maxLevel), currentLevel(currentLevel), activeStars(activeStars)
+    Skill(sf::RenderWindow& window, entt::registry& registry, GUIDialogBox& dialogBox, sf::Vector2f iconPosition, std::string name, std::vector<std::string> descriptions, std::string iconTextureName, std::vector<std::pair<SkillType, float>> onActivateFunctions, std::vector<RequirementType> requirements, std::vector<std::string> skillToUnlock, unsigned int maxLevel, unsigned int currentLevel, std::vector<std::unique_ptr<GUIStar>>& activeStars)
+    : window(window), registry(registry), dialogBox(dialogBox), iconPosition(iconPosition), name(name), descriptions(descriptions), iconTextureName(iconTextureName), onActivateFunctions(onActivateFunctions), requirements(requirements), skillsToUnlock(skillToUnlock), maxLevel(maxLevel), currentLevel(currentLevel), activeStars(activeStars)
     {
         this->initialize();
     }
@@ -53,7 +53,6 @@ private:
 
     std::string name;
     std::vector<std::string> descriptions;
-    bool multiLevel;
 
     sf::Text nameText;
     std::vector<sf::Text> descriptionTexts;
@@ -100,4 +99,5 @@ private:
     bool decrementStone(unsigned int& stoneCount);
 
     void applySkill();
+    void updateDescription();
 };

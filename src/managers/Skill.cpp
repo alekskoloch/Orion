@@ -429,28 +429,16 @@ void Skill::handleSkillActivation()
     this->currentLevel++;
 
     if (this->currentLevel < this->maxLevel)
-        this->addCircleSegment();
-
-    if (this->currentLevel >= this->maxLevel)
     {
-        if (!this->multiLevel)
-            if (this->descriptionTexts.size() > 1)
-                this->descriptionTexts.erase(this->descriptionTexts.begin(), this->descriptionTexts.begin() + 1);
-
+        this->addCircleSegment();
+    }
+    else if (this->currentLevel == this->maxLevel)
+    {
         this->isMaxLevelReached = true;
         this->iconSprite.setTexture(TextureManager::getInstance().getTexture(std::string(this->iconTextureName + "Active")));
-        this->descriptionTexts[this->descriptionTexts.size() - 1].setFillColor(sf::Color::White);
     }
-    else
-    {
-        if (!this->multiLevel)
-            if (this->descriptionTexts.size() > 1)
-                this->descriptionTexts.erase(this->descriptionTexts.begin(), this->descriptionTexts.begin() + 1);
 
-        this->descriptionTexts[this->descriptionTexts.size() - 1].setFillColor(sf::Color::White);
-
-        this->addDescriptionLine(this->descriptions[this->currentLevel]);
-    }
+    this->updateDescription();
 }
 
 bool Skill::decrementStone(unsigned int& stoneCount)
@@ -473,4 +461,11 @@ void Skill::applySkill()
         SkillManager::getInstance(this->window, this->registry).unlockSkills(this->skillsToUnlock);
 
     SkillSystem::modifySkill(this->registry, this->onActivateFunctions[this->currentLevel].first, this->onActivateFunctions[this->currentLevel].second);
+}
+
+void Skill::updateDescription()
+{
+    this->descriptionTexts[this->descriptionTexts.size() - 1].setFillColor(ACTIVE_DESCRIPTION_COLOR);
+    if (this->currentLevel < this->maxLevel)
+        this->addDescriptionLine(this->descriptions[this->currentLevel]);
 }
