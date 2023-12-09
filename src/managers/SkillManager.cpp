@@ -61,7 +61,7 @@ void SkillManager::unlockSkills(std::vector<std::string> skillsToUnlock)
 
 void SkillManager::addSkill(std::string skillName)
 {
-    std::ifstream configFile("config/skillConfig.json");
+    std::ifstream configFile(CONFIG_PATH + std::string("skillConfig.json"));
     if (!configFile.is_open())
         throw std::runtime_error("Could not open config file");
     else
@@ -108,7 +108,6 @@ void SkillManager::loadSkillFromConfig(std::string skillName, std::ifstream& con
                         skillJson["position"]["y"].get<float>()
                     ),
                     skillJson["name"].get<std::string>(),
-                    skillJson["descriptions"].get<std::vector<std::string>>().size() > 1,
                     skillJson["descriptions"].get<std::vector<std::string>>(),
                     removeWhitespace(skillJson["name"].get<std::string>()),
                     this->loadOnActivateFunctions(configFile, skillJson),
