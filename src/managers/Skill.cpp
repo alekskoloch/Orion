@@ -11,13 +11,43 @@
 
 #include "../components/tagComponents.h"
 
+Skill::Skill(sf::RenderWindow& window, entt::registry& registry, GUIDialogBox& dialogBox, sf::Vector2f iconPosition, std::string name, std::vector<std::string> descriptions, std::string iconTextureName, std::vector<std::pair<SkillType, float>> onActivateFunctions, std::vector<RequirementType> requirements, std::vector<std::string> skillToUnlock, unsigned int maxLevel, unsigned int currentLevel, std::vector<std::unique_ptr<GUIStar>>& activeStars)
+    :   window(window),
+        registry(registry),
+        dialogBox(dialogBox),
+        iconPosition(iconPosition),
+        name(name),
+        descriptions(descriptions),
+        iconTextureName(iconTextureName),
+        onActivateFunctions(onActivateFunctions),
+        requirements(requirements),
+        skillsToUnlock(skillToUnlock),
+        maxLevel(maxLevel),
+        currentLevel(currentLevel),
+        activeStars(activeStars)
+    {
+        this->initialize();
+    }
+
 void Skill::initialize()
 {
     this->loadTexturesIntoManager();
     this->initializeIconSprite();
     this->initializeText();
-
     this->addCircleSegment();
+}
+
+void Skill::loadTexturesIntoManager()
+{
+    TextureManager::getInstance().loadTexture(this->iconTextureName, ASSETS_PATH + std::string("skillAssets/") + this->iconTextureName + ".png");
+    TextureManager::getInstance().loadTexture(this->iconTextureName + "Hover", ASSETS_PATH + std::string("skillAssets/") + this->iconTextureName + "Hover.png");
+    TextureManager::getInstance().loadTexture(this->iconTextureName + "Active", ASSETS_PATH + std::string("skillAssets/") + this->iconTextureName + "Active.png");
+}
+
+void Skill::initializeIconSprite()
+{
+    this->iconSprite = CreateSprite(this->iconTextureName);
+    this->iconSprite.setPosition(this->iconPosition);
 }
 
 void Skill::initializeText()
@@ -55,14 +85,14 @@ void Skill::addActiveStars()
 
 void Skill::initStarsForSkill()
 {
-    unsigned int numStars = ProceduralGenerationSystem::GetRandomNumber(10, 20);
+    unsigned int numStars = ProceduralGenerationSystem::GetRandomNumber(MIN_STARS, MAX_STARS);
 
     for (int i = 0; i < numStars; i++)
     {
-        bool flicker = ProceduralGenerationSystem::GetRandomNumber(0, 2);
+        bool flicker = (ProceduralGenerationSystem::GetRandomNumber(0.f, 1.f) <= FLICKER_STAR_CHANCE);
         sf::Color color = sf::Color::White;
 
-        if (i == 0 || ProceduralGenerationSystem::GetRandomNumber(1,4) == 4)
+        if (i == 0 || ProceduralGenerationSystem::GetRandomNumber(0.f, 1.f) <= COLOR_STAR_CHANCE)
         {
             color = this->getStoneColor();
         }
@@ -70,9 +100,9 @@ void Skill::initStarsForSkill()
         GUIStar star(
             this->calculateStarPosition(),
             color,
-            ProceduralGenerationSystem::GetRandomNumber(1.f, 4.f),
+            ProceduralGenerationSystem::GetRandomNumber(MIN_BACKGROUND_STAR_RADIUS, MAX_BACKGROUND_STAR_RADIUS),
             !flicker,
-            ProceduralGenerationSystem::GetRandomNumber(2.f, 10.f)
+            ProceduralGenerationSystem::GetRandomNumber(MIN_IDLE_STAR_TIME, MAX_IDLE_STAR_TIME)
         );
 
         this->stars.push_back(std::make_unique<GUIStar>(star));
@@ -144,19 +174,6 @@ void Skill::draw()
         this->window.draw(*circleSegment);
 }
 
-void Skill::loadTexturesIntoManager()
-{
-    TextureManager::getInstance().loadTexture(this->iconTextureName, ASSETS_PATH + std::string("skillAssets/") + this->iconTextureName + ".png");
-    TextureManager::getInstance().loadTexture(this->iconTextureName + "Hover", ASSETS_PATH + std::string("skillAssets/") + this->iconTextureName + "Hover.png");
-    TextureManager::getInstance().loadTexture(this->iconTextureName + "Active", ASSETS_PATH + std::string("skillAssets/") + this->iconTextureName + "Active.png");
-}
-
-void Skill::initializeIconSprite()
-{
-    this->iconSprite = CreateSprite(this->iconTextureName);
-    this->iconSprite.setPosition(this->iconPosition);
-}
-
 sf::Text Skill::getConfiguredText(std::string string, unsigned int characterSize, sf::Color textColor)
 {
     sf::Text text;
@@ -193,6 +210,7 @@ sf::Color Skill::getStoneColor()
         return DEFAULT_STONE_COLOR;
 }
 
+//TODO: Load values from config 
 sf::Vector2f Skill::calculateStarPosition()
 {
     float offset = !ProceduralGenerationSystem::GetRandomNumber(0,2) ? ProceduralGenerationSystem::GetRandomNumber(1.1f, 2.f) : 1.f;
@@ -223,6 +241,64 @@ void Skill::updateHoverState()
         this->hover = true;
     else
         this->hover = false;
+}
+
+void Skill::handleHover()
+{
+    SoundManager::getInstance().playSound("SkillHover");
+
+    if (this->currentLevel < this->maxLevel)
+    {
+        this->circleSegments[this->currentLevel]->setState(CircleSegmentState::Hover);
+        this->iconSprite.setTexture(TextureManager::getInstance().getTexture(std::string(this->iconTextureName + "Hover")));
+    
+        if (!this->isStarExists)
+            this->initStarsForSkill();
+    }
+}
+
+void Skill::handleBackgroundStars()
+{
+    
+}
+
+void Skill::handleLeftClick()
+{
+    if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && !this->isMaxLevelReached)
+    {
+        if (ExperienceSystem::getSkillPoints(this->registry) > 0)
+        {
+            this->dialogBox.setMessage(this->getMessagesForRequirements(this->requirements[this->currentLevel]));
+
+            this->dialogBox.setType(GUIDialogBoxType::YesNo);
+            this->dialogBox.setState(GUIDialogBoxState::Idle);
+            this->dialogBox.setTarget(this->name);
+        }
+        else
+        {
+            this->setErrorMessageInDialogBox();
+        }
+    }
+}
+
+void Skill::updateDialogBox()
+{
+    if (this->dialogBox.getState() != GUIDialogBoxState::Hidden && this->dialogBox.getTarget() == this->name)
+    {
+        if (this->dialogBox.getState() == GUIDialogBoxState::Yes)
+        {
+            this->dialogBox.setState(GUIDialogBoxState::Hidden);
+            this->handleSkillActivation();
+        }
+        else if (this->dialogBox.getState() == GUIDialogBoxState::No)
+        {
+            this->dialogBox.setState(GUIDialogBoxState::Hidden);
+        }
+        else if (this->dialogBox.getState() == GUIDialogBoxState::Ok)
+        {
+            this->dialogBox.setState(GUIDialogBoxState::Hidden);
+        }
+    }
 }
 
 std::vector<std::string> Skill::getMessagesForRequirements(RequirementType requirementType)
@@ -319,64 +395,6 @@ void Skill::setErrorMessageInDialogBox()
     this->dialogBox.setType(GUIDialogBoxType::Ok);
     this->dialogBox.setState(GUIDialogBoxState::Idle);
     this->dialogBox.setTarget(this->name);
-}
-
-void Skill::handleHover()
-{
-    SoundManager::getInstance().playSound("SkillHover");
-
-    if (this->currentLevel < this->maxLevel)
-    {
-        this->circleSegments[this->currentLevel]->setState(CircleSegmentState::Hover);
-        this->iconSprite.setTexture(TextureManager::getInstance().getTexture(std::string(this->iconTextureName + "Hover")));
-    
-        if (!this->isStarExists)
-            this->initStarsForSkill();
-    }
-}
-
-void Skill::handleBackgroundStars()
-{
-    
-}
-
-void Skill::handleLeftClick()
-{
-    if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && !this->isMaxLevelReached)
-    {
-        if (ExperienceSystem::getSkillPoints(this->registry) > 0)
-        {
-            this->dialogBox.setMessage(this->getMessagesForRequirements(this->requirements[this->currentLevel]));
-
-            this->dialogBox.setType(GUIDialogBoxType::YesNo);
-            this->dialogBox.setState(GUIDialogBoxState::Idle);
-            this->dialogBox.setTarget(this->name);
-        }
-        else
-        {
-            this->setErrorMessageInDialogBox();
-        }
-    }
-}
-
-void Skill::updateDialogBox()
-{
-    if (this->dialogBox.getState() != GUIDialogBoxState::Hidden && this->dialogBox.getTarget() == this->name)
-    {
-        if (this->dialogBox.getState() == GUIDialogBoxState::Yes)
-        {
-            this->dialogBox.setState(GUIDialogBoxState::Hidden);
-            this->handleSkillActivation();
-        }
-        else if (this->dialogBox.getState() == GUIDialogBoxState::No)
-        {
-            this->dialogBox.setState(GUIDialogBoxState::Hidden);
-        }
-        else if (this->dialogBox.getState() == GUIDialogBoxState::Ok)
-        {
-            this->dialogBox.setState(GUIDialogBoxState::Hidden);
-        }
-    }
 }
 
 void Skill::handleSkillActivation()
