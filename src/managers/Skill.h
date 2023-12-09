@@ -89,4 +89,15 @@ private:
     void addDescriptionLine(const std::string descriptionTextLine);
     void updateHoverState();
     std::vector<std::string> getMessagesForRequirements(RequirementType requirementType);
+    void setErrorMessageInDialogBox();
+
+    void handleHover();
+    void handleBackgroundStars();
+    void handleLeftClick();
+
+    void updateDialogBox();
+    void handleSkillActivation();
+    bool decrementStone(unsigned int& stoneCount);
+
+    void applySkill();
 };
