@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.10)
 
 project(Orion)
 add_definitions(-DASSETS_PATH=\"${CMAKE_SOURCE_DIR}/assets/\")
+add_definitions(-DCONFIG_PATH=\"${CMAKE_SOURCE_DIR}/config/\")
 
 set(CMAKE_CXX_STANDARD 23)
 
