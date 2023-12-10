@@ -364,7 +364,7 @@ void Skill::setErrorMessageInDialogBox()
             this->dialogBox.setMessage({"You don't have the Green Stone to unlock " + this->name});
             break;
         case RequirementType::YellowStone:
-            this->dialogBox.setMessage({"You don't have the Orange and Green Stone to unlock " + this->name});
+            this->dialogBox.setMessage({"You don't have the Yellow Stone to unlock " + this->name});
             break;
         case RequirementType::RedStone:
             throw std::invalid_argument("Red Stone is not implemented");
