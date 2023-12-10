@@ -5,6 +5,8 @@
 
 #include "../utils/StringOperations.h"
 
+#include "SkillBuilder.h"
+
 SkillManager::SkillManager(sf::RenderWindow& window, entt::registry& registry)
     : window(window), registry(registry), dialogBox(window, {"Are you sure you want to unlock this skill?"}, this->font), box(600.f, 300.f, sf::Vector2f(350.f, 200.f), this->font)
 {
@@ -98,25 +100,24 @@ void SkillManager::loadSkillFromConfig(std::string skillName, std::ifstream& con
         for (const auto& skillJson : configJson["skills"])
         {
             if (skillJson.contains("name") && skillJson["name"] == skillName)
-            {            
-                this->skills.push_back(std::make_unique<Skill>(
-                    this->window,
-                    this->registry,
-                    this->dialogBox,
-                    sf::Vector2f(
-                        skillJson["position"]["x"].get<float>(),
-                        skillJson["position"]["y"].get<float>()
-                    ),
-                    skillJson["name"].get<std::string>(),
-                    skillJson["descriptions"].get<std::vector<std::string>>(),
-                    removeWhitespace(skillJson["name"].get<std::string>()),
-                    this->loadOnActivateFunctions(configFile, skillJson),
-                    skillJson["requirements"].get<std::vector<RequirementType>>(),
-                    skillJson["skillsToUnlock"].get<std::vector<std::string>>(),
-                    static_cast<unsigned int>(skillJson["descriptions"].get<std::vector<std::string>>().size()),
-                    0,
-                    this->activeStars
-                ));
+            {   
+                this->skills.push_back(
+                    SkillBuilder()
+                        .addWindow(this->window)
+                        .addRegistry(this->registry)
+                        .addDialogBox(this->dialogBox)
+                        .addIconPosition(sf::Vector2f(skillJson["position"]["x"].get<float>(), skillJson["position"]["y"].get<float>()))
+                        .addName(skillJson["name"].get<std::string>())
+                        .addDescriptions(skillJson["descriptions"].get<std::vector<std::string>>())
+                        .addIconTextureName(removeWhitespace(skillJson["name"].get<std::string>()))
+                        .addOnActivateFunctions(this->loadOnActivateFunctions(configFile, skillJson))
+                        .addRequirements(skillJson["requirements"].get<std::vector<RequirementType>>())
+                        .addSkillsToUnlock(skillJson["skillsToUnlock"].get<std::vector<std::string>>())
+                        .addMaxLevel(static_cast<unsigned int>(skillJson["descriptions"].get<std::vector<std::string>>().size()))
+                        .addCurrentLevel(0)
+                        .addActiveStars(this->activeStars)
+                        .build()
+                        );
 
                 return;
             }
