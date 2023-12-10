@@ -43,7 +43,7 @@ void GUIManager::update(sf::Time deltaTime)
     }
     else if (SceneManager::getInstance().getCurrentScene() == Scene::SkillTree)
     {
-        this->skillTreeGUI.update();
+        this->skillTreeGUI.update(deltaTime);
     }
 }
 

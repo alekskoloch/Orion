@@ -24,7 +24,7 @@ public:
     SkillManager(const SkillManager&) = delete;
     void operator=(const SkillManager&) = delete;
 
-    void update();
+    void update(sf::Time& deltaTime);
     void draw();
 
     void unlockSkills(std::vector<std::string> skillsToUnlock);

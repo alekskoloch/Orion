@@ -9,7 +9,7 @@ class GUISkillTree
 public:
     GUISkillTree(entt::registry& registry, sf::RenderWindow& window);
 
-    void update();
+    void update(sf::Time& deltaTime);
     void draw();
 private:
     entt::registry& registry;

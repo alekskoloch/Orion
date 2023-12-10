@@ -13,9 +13,9 @@ GUISkillTree::GUISkillTree(entt::registry& registry, sf::RenderWindow& window) :
     this->view = this->window.getDefaultView();
 }
 
-void GUISkillTree::update()
+void GUISkillTree::update(sf::Time& deltaTime)
 {
-    SkillManager::getInstance(this->window, this->registry).update();
+    SkillManager::getInstance(this->window, this->registry).update(deltaTime);
 
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
         view.move(0, -moveSpeed);

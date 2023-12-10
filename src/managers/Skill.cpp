@@ -111,7 +111,7 @@ void Skill::initStarsForSkill()
     this->isStarExists = true;
 }
 
-void Skill::update()
+void Skill::update(sf::Time& deltaTime)
 {
     if (this->dialogBox.getState() == GUIDialogBoxState::Hidden)
     {
@@ -139,15 +139,14 @@ void Skill::update()
 
     this->updateDialogBox();
 
-    //TODO: add dt
     for (auto& circleSegment : this->circleSegments)
     {
-        circleSegment->update(0.016f);
+        circleSegment->update(deltaTime.asSeconds());
     }
 
     for (auto& star : this->stars)
     {
-        star->update(0.016f);
+        star->update(deltaTime.asSeconds());
     }
 }
 
