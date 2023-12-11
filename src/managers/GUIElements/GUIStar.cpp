@@ -1,6 +1,6 @@
 #include "GUIStar.h"
 
-GUIStar::GUIStar(sf::Vector2f position, sf::Color color, float radius, bool flicker, float idleTime)
+GUIStar::GUIStar(sf::Vector2f position, sf::Color color, float radius, bool flicker, float idleTime, float flickerTime)
 {
     this->position = position;
     this->color = color;
@@ -14,7 +14,7 @@ GUIStar::GUIStar(sf::Vector2f position, sf::Color color, float radius, bool flic
 
     this->idleTime = idleTime;
     this->flickerIdleTime = idleTime;
-    this->flickerTime = 5.f;
+    this->flickerTime = flickerTime;
 
     this->exists = false;
 }
@@ -23,12 +23,12 @@ void GUIStar::update(float deltaTime)
 {
     if (!this->exists)
     {
-        if (this->color.a < 255)
+        if (this->alphaChannel < 255)
         {
-            //TODO: adjust value with time
-            this->color.a += 200 * deltaTime;
-            if (this->color.a > 255)
-                this->color.a = 255;
+            this->alphaChannel += 255 / (this->flickerTime / deltaTime);
+            if (this->alphaChannel > 255.f)
+                this->alphaChannel = 255.f;
+            this->color.a = static_cast<sf::Uint8>(this->alphaChannel);
             this->star.setFillColor(this->color);
         }
         else
@@ -39,44 +39,39 @@ void GUIStar::update(float deltaTime)
     else if (this->flicker)
     {
         if (this->flickerIdleTime > 0.f)
+        {
             this->flickerIdleTime -= deltaTime;
-        else if (this->flickerIdleTime <= 0.f)
+        }
+        else
         {
             if (this->isDarker)
             {
-                this->flickerTime -= deltaTime;
-                if (this->flickerTime <= 0)
+                if (this->color.a > 0)
                 {
-                    this->flickerTime = 0;
-                    this->isDarker = false;
-                }
-                else if (this->color.a > 0)
-                {
-                    //TODO: adjust value with time
-                    this->color.a -= 100 * deltaTime;
-                    if (this->color.a < 0)
-                        this->color.a = 0;
+                    this->alphaChannel -= 255 / (this->flickerTime / deltaTime);
+                    if (this->alphaChannel < 0.f)
+                        this->alphaChannel = 0.f;
+                    this->color.a = static_cast<sf::Uint8>(this->alphaChannel);
                     this->star.setFillColor(this->color);
+                }
+                else
+                {
+                    this->isDarker = false;
                 }
             }
             else
             {
-                if (this->flickerTime < 5.f)
+                if (this->alphaChannel < 255)
                 {
-                    this->flickerTime += deltaTime;
-                    if (this->flickerTime >= 5.f)
-                    {
-                        this->isDarker = true;
-                        this->flickerIdleTime = this->idleTime;
-                    }
-                    else if (this->color.a < 255)
-                    {
-                        //TODO: adjust value with time
-                        this->color.a += 100 * deltaTime;
-                        if (this->color.a > 255)
-                            this->color.a = 255;
-                        this->star.setFillColor(this->color);
-                    }
+                    this->alphaChannel += 255 / (this->flickerTime / deltaTime);
+                    if (this->alphaChannel > 255.f)
+                        this->alphaChannel = 255.f;
+                    this->color.a = static_cast<sf::Uint8>(this->alphaChannel);
+                    this->star.setFillColor(this->color);
+                }
+                else
+                {
+                    this->isDarker = true;
                 }
             }
         }

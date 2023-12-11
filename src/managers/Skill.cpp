@@ -101,7 +101,7 @@ void Skill::initStarsForSkill()
             this->calculateStarPosition(),
             color,
             ProceduralGenerationSystem::GetRandomNumber(MIN_BACKGROUND_STAR_RADIUS, MAX_BACKGROUND_STAR_RADIUS),
-            !flicker,
+            flicker,
             ProceduralGenerationSystem::GetRandomNumber(MIN_IDLE_STAR_TIME, MAX_IDLE_STAR_TIME)
         );
 

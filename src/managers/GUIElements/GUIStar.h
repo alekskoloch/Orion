@@ -5,7 +5,7 @@
 class GUIStar : public sf::Drawable
 {
 public:
-    GUIStar(sf::Vector2f position, sf::Color color, float radius, bool flicker, float idleTime);
+    GUIStar(sf::Vector2f position, sf::Color color, float radius, bool flicker, float idleTime, float flickerTime = 2.f);
 
     void update(float deltaTime);
     void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
@@ -16,7 +16,6 @@ private:
     sf::CircleShape star;
     sf::Color color;
 
-    float appearTime = 2.f;
     bool exists;
 
     bool flicker;
@@ -24,4 +23,5 @@ private:
     float flickerIdleTime;
     float flickerTime;
     bool isDarker = true;
+    float alphaChannel = 0.f;
 };
