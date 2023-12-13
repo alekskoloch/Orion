@@ -5,7 +5,7 @@
 class GUIStar : public sf::Drawable
 {
 public:
-    GUIStar(sf::Vector2f position, sf::Color color, float radius, bool flicker, float idleTime, float flickerTime = 2.f);
+    explicit GUIStar(sf::Vector2f position, sf::Color color, float radius, bool flicker, float idleTime, float flickerTime = 2.f);
 
     void update(float deltaTime);
     void draw(sf::RenderTarget& target, sf::RenderStates states) const override;

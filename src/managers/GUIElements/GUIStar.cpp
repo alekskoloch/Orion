@@ -1,22 +1,13 @@
 #include "GUIStar.h"
 
 GUIStar::GUIStar(sf::Vector2f position, sf::Color color, float radius, bool flicker, float idleTime, float flickerTime)
+    : position(position), color(color), flicker(flicker), idleTime(idleTime), flickerIdleTime(idleTime), flickerTime(flickerTime), exists(false)
 {
-    this->position = position;
-    this->color = color;
-    this->flicker = flicker;
-
     this->star.setRadius(radius);
     this->star.setOrigin(radius, radius);
     this->star.setPosition(this->position);
     this->color.a = 0;
     this->star.setFillColor(this->color);
-
-    this->idleTime = idleTime;
-    this->flickerIdleTime = idleTime;
-    this->flickerTime = flickerTime;
-
-    this->exists = false;
 }
 
 void GUIStar::update(float deltaTime)
