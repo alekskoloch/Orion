@@ -48,6 +48,5 @@ void GUIStar::draw(sf::RenderTarget& target, sf::RenderStates states) const
 
 GUIStar GUIStar::getStar()
 {
-    GUIStar star(this->position, this->color, this->star.getRadius(), this->flicker, this->idleTime);
-    return star;
+    return *this;
 }
