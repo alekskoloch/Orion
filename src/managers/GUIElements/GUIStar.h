@@ -24,4 +24,8 @@ private:
     float flickerTime;
     bool isDarker = true;
     float alphaChannel = 0.f;
+
+    static constexpr sf::Uint8 MaxAlpha = 255;
+
+    void handleFlicker(float deltaTime);
 };
