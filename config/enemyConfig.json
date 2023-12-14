@@ -1,0 +1,14 @@
+{
+    "enemies":
+    [
+        {
+            "name": "enemy1",
+            "health": 2.0,
+            "speed": 600.0,
+            "exp": 10,
+            "weapon": "basicEnemyWeapon",
+            "attackRange": 1000.0,
+            "idleRange": 2000.0
+        }
+    ]
+}
