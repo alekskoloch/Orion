@@ -7,7 +7,6 @@ struct EnemySchema
 {
     std::string textureName;
     float health;
-    sf::Vector2f position;
     float speed;
     unsigned int experience;
     std::string name;
@@ -21,7 +20,6 @@ static EnemySchema enemy =
 {
     "enemy1",
     2.f,
-    sf::Vector2f(100.f, 980.f),
     600.f,
     10u,
     "enemy",
@@ -34,7 +32,6 @@ static EnemySchema enemy2 =
 {
     "enemy2",
     2.f,
-    sf::Vector2f(100.f, 100.f),
     500.f,
     10u,
     "enemy2",
@@ -47,7 +44,6 @@ static EnemySchema enemy3 =
 {
     "enemy3",
     2.f,
-    sf::Vector2f(1820.f, 100.f),
     400.f,
     14u,
     "enemy3",
@@ -60,7 +56,6 @@ static EnemySchema enemy4 =
 {
     "enemy4",
     2.f,
-    sf::Vector2f(1820.f, 980.f),
     300.f,
     13u,
     "enemy4",
@@ -73,7 +68,6 @@ static EnemySchema enemyRed1 =
 {
     "enemy_red_1",
     3.f,
-    sf::Vector2f(100.f, 980.f),
     200.f,
     16u,
     "enemy_red_1",
@@ -86,7 +80,6 @@ static EnemySchema enemyRed2 =
 {
     "enemy_red_2",
     3.f,
-    sf::Vector2f(100.f, 100.f),
     500.f,
     16u,
     "enemy_red_2",
@@ -99,7 +92,6 @@ static EnemySchema enemyRed3 =
 {
     "enemy_red_3",
     3.f,
-    sf::Vector2f(1820.f, 100.f),
     600.f,
     22u,
     "enemy_red_3",
@@ -112,7 +104,6 @@ static EnemySchema enemyRed4 =
 {
     "enemy_red_4",
     3.f,
-    sf::Vector2f(1820.f, 980.f),
     700.f,
     22u,
     "enemy_red_4",
@@ -125,7 +116,6 @@ static EnemySchema enemyZombie1 =
 {
     "enemy_zombie_1",
     3.f,
-    sf::Vector2f(100.f, 980.f),
     200.f,
     14u,
     "enemy_zombie_1",
@@ -138,7 +128,6 @@ static EnemySchema enemyZombie2 =
 {
     "enemy_zombie_2",
     5.f,
-    sf::Vector2f(100.f, 980.f),
     300.f,
     14u,
     "enemy_zombie_2",
@@ -151,7 +140,6 @@ static EnemySchema enemyZombie3 =
 {
     "enemy_zombie_3",
     2.f,
-    sf::Vector2f(100.f, 980.f),
     900.f,
     16u,
     "enemy_zombie_3",
@@ -164,7 +152,6 @@ static EnemySchema enemyZombie4 =
 {
     "enemy_zombie_4",
     5.f,
-    sf::Vector2f(100.f, 980.f),
     500.f,
     17u,
     "enemy_zombie_4",
@@ -177,7 +164,6 @@ static EnemySchema enemyZombie5 =
 {
     "enemy_zombie_5",
     2.f,
-    sf::Vector2f(100.f, 980.f),
     900.f,
     19u,
     "enemy_zombie_5",
