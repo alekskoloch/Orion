@@ -8,7 +8,6 @@ class EnemyInitializationSystem
 {
 public:
     static void initializeEnemy(entt::registry& registry);
-    static void createEnemy(entt::registry& registry, const EnemySchema& enemySchema);
     static void createNewEnemy(entt::registry& registry, sf::Vector2f position);
     static void loadEnemyFromConfig(entt::registry& registry, std::string enemyName, std::ifstream& configFile, sf::Vector2f position);
 };
