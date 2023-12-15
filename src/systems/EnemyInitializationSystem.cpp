@@ -19,50 +19,7 @@ void EnemyInitializationSystem::initializeEnemy(entt::registry& registry)
     //TODO: Temporary solution for initialize enemy
     for (int i = 0; i < ENEMIES; i++)
     {
-        switch (ProceduralGenerationSystem::GetRandomNumber(1,9))
-        {
-        case 1:
-            createEnemy(registry, enemy);
-            break;
-        case 2:
-            createEnemy(registry, enemy2);
-            break;
-        case 3:
-            createEnemy(registry, enemy3);
-            break;
-        case 4:
-            createEnemy(registry, enemy4);
-            break;
-        case 5:
-            createEnemy(registry, enemyRed1);
-            break;
-        case 6:
-            createEnemy(registry, enemyRed2);
-            break;
-        case 7:
-            createEnemy(registry, enemyRed3);
-            break;
-        case 8:
-            createEnemy(registry, enemyRed4);
-            break;
-        case 9:
-            createEnemy(registry, enemyZombie1);
-            break;
-        case 10:
-            createEnemy(registry, enemyZombie2);
-            break;
-        case 11:
-            createEnemy(registry, enemyZombie3);
-            break;
-        case 12:
-            createEnemy(registry, enemyZombie4);
-            break;
-        case 13:
-            createEnemy(registry, enemyZombie5);
-            break;
-        default:
-            break;
-        }
+        EnemyInitializationSystem::createNewEnemy(registry, sf::Vector2f(i * 100.f + 1000.f, i * 100.f + 1000.f));
     }
 }
 
