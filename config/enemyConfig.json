@@ -9,6 +9,15 @@
             "weapon": "basicEnemyWeapon",
             "attackRange": 1000.0,
             "idleRange": 2000.0
+        },
+        {
+            "name": "enemy2",
+            "health": 2.0,
+            "speed": 500.0,
+            "experience": 10,
+            "weapon": "basicEnemyWeapon2",
+            "attackRange": 600.0,
+            "idleRange": 1000.0
         }
     ]
 }
