@@ -44,24 +44,32 @@ void EnemyInitializationSystem::loadEnemyFromConfig(entt::registry& registry, st
 
     if (!configJson.contains("enemies") || !configJson["enemies"].is_array())
         throw std::runtime_error("Could not find enemies array in config file");
-    else
-    {
-        for (const auto& enemyJson : configJson["enemies"])
-        {
-            if (enemyJson.contains("name") && enemyJson["name"] == enemyName)
-            {
-                EnemyBuilder enemyBuilder(registry);
 
-                enemyBuilder.createEnemy(enemyJson["name"])
-                            .addEntityState(enemyJson["attackRange"], enemyJson["idleRange"])
-                            .addPosition(position)
-                            .addSpeed(enemyJson["speed"])
-                            .addHealth(enemyJson["health"])
-                            .addExperience(enemyJson["experience"])
-                            .addDrop(100, 69)
-                            .setWeapon(basicEnemyWeapon)
-                            .setWaypointMovement();
-            }
-        }
-    }
+    unsigned int enemiesCount = configJson["enemies"].size();
+    if (enemiesCount < 0)
+        throw std::runtime_error("Enemies array is empty");
+
+    auto enemyIndex = ProceduralGenerationSystem::GetRandomNumber(0u, enemiesCount - 1);
+    const auto& enemyJson = configJson["enemies"][enemyIndex];
+
+    //TODO: Temporary solution for mapping weapon
+    WeaponSchema enemyWeapon;
+    if (enemyJson["weapon"] == "basicEnemyWeapon")
+        enemyWeapon = basicEnemyWeapon;
+    else if (enemyJson["weapon"] == "basicEnemyWeapon2")
+        enemyWeapon = basicEnemyWeapon2;
+    else
+        throw std::runtime_error("Could not find weapon in config file");
+
+    EnemyBuilder enemyBuilder(registry);
+
+    enemyBuilder.createEnemy(enemyJson["name"])
+                .addEntityState(enemyJson["attackRange"], enemyJson["idleRange"])
+                .addPosition(position)
+                .addSpeed(enemyJson["speed"])
+                .addHealth(enemyJson["health"])
+                .addExperience(enemyJson["experience"])
+                .addDrop(100, 69)
+                .setWeapon(enemyWeapon)
+                .setWaypointMovement();
 }
