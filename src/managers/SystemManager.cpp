@@ -44,7 +44,6 @@ void SystemManager::executeInitializationSystems()
     //TODO: Seed should be random
     ProceduralGenerationSystem::Initialize(1);
     PlayerInitializationSystem::initializePlayer(this->registry);
-    EnemyInitializationSystem::initializeEnemy(this->registry);
     MusicSystem::initializeMusic();
 }
 

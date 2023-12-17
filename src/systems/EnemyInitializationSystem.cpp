@@ -13,18 +13,6 @@
 
 #include "../utils/GraphicsOperations.h"
 
-//const number of enemies
-const int ENEMIES = 6;
-
-void EnemyInitializationSystem::initializeEnemy(entt::registry& registry)
-{
-    //TODO: Temporary solution for initialize enemy
-    for (int i = 0; i < ENEMIES; i++)
-    {
-        EnemyInitializationSystem::createNewEnemy(registry, sf::Vector2f(i * 100.f + 1000.f, i * 100.f + 1000.f));
-    }
-}
-
 //TODO: Temporary solution for initialize enemy, refactor later
 void EnemyInitializationSystem::createNewEnemy(entt::registry& registry, sf::Vector2f position)
 {
