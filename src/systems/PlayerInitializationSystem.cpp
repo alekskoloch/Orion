@@ -19,7 +19,7 @@ void PlayerInitializationSystem::initializePlayer(entt::registry& registry)
 
     auto player = registry.create();
     registry.emplace<Player>(player);
-    registry.emplace<Energy>(player, 100.f, 100.f, 10.f);
+    registry.emplace<Energy>(player, 1000.f, 1000.f, 100.f);
 
     sf::Sprite sprite = CreateSprite("PLAYER_TEXTURE");
     registry.emplace<Renderable>(player, sprite);
