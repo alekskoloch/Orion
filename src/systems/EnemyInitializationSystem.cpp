@@ -16,16 +16,14 @@
 //TODO: Temporary solution for initialize enemy, refactor later
 void EnemyInitializationSystem::createNewEnemy(entt::registry& registry, sf::Vector2f position)
 {
-    std::string enemyName = "enemy1";
-
     std::ifstream configFile(CONFIG_PATH + std::string("enemyConfig.json"));
     if (!configFile.is_open())
         throw std::runtime_error("Could not open config file");
     else
-        EnemyInitializationSystem::loadEnemyFromConfig(registry, enemyName, configFile, position);
+        EnemyInitializationSystem::loadEnemyFromConfig(registry, configFile, position);
 }
 
-void EnemyInitializationSystem::loadEnemyFromConfig(entt::registry& registry, std::string enemyName, std::ifstream& configFile, sf::Vector2f position)
+void EnemyInitializationSystem::loadEnemyFromConfig(entt::registry& registry, std::ifstream& configFile, sf::Vector2f position)
 {
     nlohmann::json configJson;
     configFile >> configJson;
