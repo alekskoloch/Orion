@@ -72,6 +72,51 @@
             "weapon": "shuriken",
             "attackRange": 1300.0,
             "idleRange": 1600.0
+        },
+        {
+            "name": "enemy_zombie_1",
+            "health": 30.0,
+            "speed": 200.0,
+            "experience": 28,
+            "weapon": "nail",
+            "attackRange": 2000.0,
+            "idleRange": 2500.0
+        },
+        {
+            "name": "enemy_zombie_2",
+            "health": 20.0,
+            "speed": 500.0,
+            "experience": 22,
+            "weapon": "nail",
+            "attackRange": 1500.0,
+            "idleRange": 2000.0
+        },
+        {
+            "name": "enemy_zombie_3",
+            "health": 10.0,
+            "speed": 600.0,
+            "experience": 14,
+            "weapon": "nail",
+            "attackRange": 1700.0,
+            "idleRange": 1800.0
+        },
+        {
+            "name": "enemy_zombie_4",
+            "health": 10.0,
+            "speed": 800.0,
+            "experience": 22,
+            "weapon": "nail",
+            "attackRange": 1300.0,
+            "idleRange": 1600.0
+        },
+        {
+            "name": "enemy_zombie_5",
+            "health": 10.0,
+            "speed": 800.0,
+            "experience": 22,
+            "weapon": "nail",
+            "attackRange": 1300.0,
+            "idleRange": 1600.0
         }
     ]
 }
