@@ -44,6 +44,10 @@ void EnemyInitializationSystem::loadEnemyFromConfig(entt::registry& registry, st
         enemyWeapon = basicEnemyWeapon;
     else if (enemyJson["weapon"] == "basicEnemyWeapon2")
         enemyWeapon = basicEnemyWeapon2;
+    else if (enemyJson["weapon"] == "shuriken")
+        enemyWeapon = Shuriken;
+    else if (enemyJson["weapon"] == "doubleShuriken")
+        enemyWeapon = DoubleShuriken;
     else
         throw std::runtime_error("Could not find weapon in config file");
 
