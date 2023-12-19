@@ -1,6 +1,15 @@
 {
     "weapons":
     [
-        
+        {
+            "name": "Red Weapon",
+            "damage": 1.0,
+            "cooldown": 0.2,
+            "bulletSpeed": 1300.0,
+            "shot": 1,
+            "specialShot": 100,
+            "shotCost": 10.0,
+            "specialShotCost": 100.0
+        }
     ]
 }
