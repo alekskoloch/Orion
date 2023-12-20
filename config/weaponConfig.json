@@ -2,6 +2,7 @@
     "weapons":
     [
         {
+            "id": 0,
             "name": "Red Weapon",
             "damage": 1.0,
             "cooldown": 0.2,
