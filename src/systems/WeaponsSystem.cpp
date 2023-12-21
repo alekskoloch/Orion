@@ -23,7 +23,53 @@ void WeaponsSystem::loadWeapon(entt::registry& registry, const WeaponSchema& wea
 {
     TextureManager::getInstance().loadTexture(weaponSchema.bulletTextureName, ASSETS_PATH + weaponSchema.bulletTextureName + ".png");
     TextureManager::getInstance().loadTexture(weaponSchema.weaponIconTextureName, ASSETS_PATH + weaponSchema.weaponIconTextureName + ".png");
-    registry.emplace<Weapon>(ownerEntity, weaponSchema.weaponType, weaponSchema.damage, weaponSchema.cooldownTime, weaponSchema.bulletSpeed, weaponSchema.bulletTextureName, weaponSchema.weaponIconTextureName, weaponSchema.energyCost, weaponSchema.specialShotType, weaponSchema.energyCostForSpecialShot, weaponSchema.specialShotCooldownTime, weaponSchema.shoot, weaponSchema.specialShoot, weaponSchema.bulletsInSalvo, weaponSchema.queueCooldown);
+
+    if (weaponSchema.bulletTextureName == "red_bullet")
+        loadWeaponFromConfig(registry, ownerEntity, Weapons::RedWeapon);
+    else
+        registry.emplace<Weapon>(ownerEntity, weaponSchema.weaponType, weaponSchema.damage, weaponSchema.cooldownTime, weaponSchema.bulletSpeed, weaponSchema.bulletTextureName, weaponSchema.weaponIconTextureName, weaponSchema.energyCost, weaponSchema.specialShotType, weaponSchema.energyCostForSpecialShot, weaponSchema.specialShotCooldownTime, weaponSchema.shoot, weaponSchema.specialShoot, weaponSchema.bulletsInSalvo, weaponSchema.queueCooldown);
+}
+
+void WeaponsSystem::loadWeaponFromConfig(entt::registry& registry, entt::entity ownerEntity, Weapons weaponID)
+{
+    std::ifstream configFile(CONFIG_PATH + std::string("weaponConfig.json"));
+    if (!configFile.is_open())
+        throw std::runtime_error("Could not open config file");
+    
+    nlohmann::json configJson;
+    configFile >> configJson;
+
+    if (!configJson.contains("weapons") || !configJson["weapons"].is_array())
+        throw std::runtime_error("Could not find weapons array in config file");
+    else
+    {
+        for (const auto& weapon : configJson["weapons"])
+        {
+            if (static_cast<int>(weaponID) == weapon["id"])
+            {
+                registry.emplace<Weapon>(
+                    ownerEntity,
+                    WeaponType::SingleShot,
+                    weapon["damage"],
+                    weapon["cooldown"],
+                    weapon["bulletSpeed"],
+                    "red_bullet",
+                    "red_weapon",
+                    weapon["shotCost"],
+                    SpecialShotType::FullCircleShoot,
+                    weapon["specialShotCost"],
+                    5.f,
+                    WeaponsSystem::getWeaponShotFunction(static_cast<ShotType>(weapon["shot"])),
+                    WeaponsSystem::getWeaponShotFunction(static_cast<ShotType>(weapon["specialShot"])),
+                    0,
+                    0.f
+                );
+            }
+        }
+    }
+
+
+    
 }
 
 void WeaponsSystem::updateWeaponCooldown(entt::registry& registry, sf::Time deltaTime)
@@ -109,4 +155,85 @@ float WeaponsSystem::getWeaponSpecialShotEnergyCost(entt::registry& registry)
     }
 
     return energyCost * multiplier;
+}
+
+ShotFunction WeaponsSystem::getWeaponShotFunction(ShotType shotType)
+{
+    switch (shotType)
+    {
+    case ShotType::None:
+        throw std::runtime_error("None shot type is not allowed");
+    case ShotType::SingleShot:
+        return [](entt::registry& registry, sf::RenderWindow& window, entt::entity& entity)
+        {
+            sf::Vector2f targetPosition = window.mapPixelToCoords(sf::Mouse::getPosition(window));
+
+            BulletSystem::createBullet<PlayerBullet>(registry, entity, targetPosition);
+        };
+    case ShotType::TripleShot:
+        return [](entt::registry& registry, sf::RenderWindow& window, entt::entity& entity)
+        {
+            sf::Vector2f targetPosition = window.mapPixelToCoords(sf::Mouse::getPosition(window));
+
+            float angleOffset[] = { -10.f, 0.f, 10.f };
+
+            for (auto offset : angleOffset)
+                BulletSystem::createBullet<PlayerBullet>(registry, entity, targetPosition, false, offset);
+        };
+    case ShotType::Shuriken:
+        return [](entt::registry& registry, sf::RenderWindow& window, entt::entity& entity)
+        {
+            auto playerView = registry.view<Player>();
+            auto playerEntity = playerView.front();
+
+            sf::Vector2f targetPosition = registry.get<Position>(playerEntity).position;
+
+            BulletSystem::createBullet<EnemyBullet>(registry, entity, targetPosition, ProceduralGenerationSystem::GetRandomNumber(0, 1) == 1);
+        };
+    case ShotType::DoubleShuriken:
+        return [](entt::registry& registry, sf::RenderWindow& window, entt::entity& entity)
+        {
+            auto playerView = registry.view<Player>();
+            auto playerEntity = playerView.front();
+
+            sf::Vector2f targetPosition = registry.get<Position>(playerEntity).position;
+
+            float angleOffset[] = { -10.f, 0.f, 10.f };
+
+            for (auto offset : angleOffset)
+                BulletSystem::createBullet<EnemyBullet>(registry, entity, targetPosition, false, offset);
+        };
+    case ShotType::Nail:
+        return [](entt::registry& registry, sf::RenderWindow& window, entt::entity& entity)
+        {
+            auto playerView = registry.view<Player>();
+            auto playerEntity = playerView.front();
+
+            //target position = player position
+            sf::Vector2f targetPosition = registry.get<Position>(playerEntity).position;
+
+            BulletSystem::createBullet<EnemyBullet>(registry, entity, targetPosition);
+        };
+    case ShotType::FullCircle:
+        return [](entt::registry& registry, sf::RenderWindow& window, entt::entity& entity)
+        {
+            sf::Vector2f targetPosition = window.mapPixelToCoords(sf::Mouse::getPosition(window));
+
+            float angleOffset[] = { 0.f, 45.f, 90.f, 135.f, 180.f, 225.f, 270.f, 315.f };
+
+            for (auto offset : angleOffset)
+                BulletSystem::createBullet<PlayerBullet>(registry, entity, targetPosition, false, offset);
+        };
+    case ShotType::TripleSalvo:
+        return [](entt::registry& registry, sf::RenderWindow& window, entt::entity& entity)
+        {
+            auto& playerWeapon = registry.get<Weapon>(entity);
+
+            playerWeapon.bulletsInQueue = playerWeapon.bulletsInSalvo;
+        };
+    default:
+        throw std::runtime_error("Unknown shot type");
+    }
+
+    return nullptr;
 }

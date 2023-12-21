@@ -4,6 +4,8 @@
 
 #include "../schema/WeaponsSchema.h"
 
+using ShotFunction = std::function<void(entt::registry& registry, sf::RenderWindow& window, entt::entity& entity)>;
+
 enum class Weapons
 {
     RedWeapon
@@ -33,4 +35,5 @@ public:
     static float getWeaponDamage(entt::registry& registry);
     static float getWeaponShotEnergyCost(entt::registry& registry);
     static float getWeaponSpecialShotEnergyCost(entt::registry& registry);
+    static ShotFunction getWeaponShotFunction(ShotType shotType);
 };
