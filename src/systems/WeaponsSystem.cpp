@@ -166,70 +166,117 @@ ShotFunction WeaponsSystem::getWeaponShotFunction(ShotType shotType)
     case ShotType::SingleShot:
         return [](entt::registry& registry, sf::RenderWindow& window, entt::entity& entity)
         {
-            sf::Vector2f targetPosition = window.mapPixelToCoords(sf::Mouse::getPosition(window));
+            if (registry.any_of<Player>(entity))
+            {
+                sf::Vector2f targetPosition = window.mapPixelToCoords(sf::Mouse::getPosition(window));
 
-            BulletSystem::createBullet<PlayerBullet>(registry, entity, targetPosition);
+                BulletSystem::createBullet<PlayerBullet>(registry, entity, targetPosition);
+            }
+            else if (registry.any_of<Enemy>(entity))
+            {
+                auto playerView = registry.view<Player>();
+                auto playerEntity = playerView.front();
+
+                sf::Vector2f targetPosition = registry.get<Position>(playerEntity).position;
+
+                BulletSystem::createBullet<EnemyBullet>(registry, entity, targetPosition);
+            }
+            else
+            {
+                throw std::runtime_error("Wrong entity type for single shot");
+            }
         };
     case ShotType::TripleShot:
         return [](entt::registry& registry, sf::RenderWindow& window, entt::entity& entity)
         {
-            sf::Vector2f targetPosition = window.mapPixelToCoords(sf::Mouse::getPosition(window));
+            if (registry.any_of<Player>(entity))
+            {
+                sf::Vector2f targetPosition = window.mapPixelToCoords(sf::Mouse::getPosition(window));
 
-            float angleOffset[] = { -10.f, 0.f, 10.f };
+                float angleOffset[] = { -10.f, 0.f, 10.f };
 
-            for (auto offset : angleOffset)
-                BulletSystem::createBullet<PlayerBullet>(registry, entity, targetPosition, false, offset);
+                for (auto offset : angleOffset)
+                    BulletSystem::createBullet<PlayerBullet>(registry, entity, targetPosition, false, offset);
+            }
+            else if (registry.any_of<Enemy>(entity))
+            {
+                auto playerView = registry.view<Player>();
+                auto playerEntity = playerView.front();
+
+                sf::Vector2f targetPosition = registry.get<Position>(playerEntity).position;
+
+                float angleOffset[] = { -10.f, 0.f, 10.f };
+
+                for (auto offset : angleOffset)
+                    BulletSystem::createBullet<EnemyBullet>(registry, entity, targetPosition, false, offset);
+            }
+            else
+            {
+                throw std::runtime_error("Wrong entity type for triple shot");
+            }
         };
     case ShotType::Shuriken:
         return [](entt::registry& registry, sf::RenderWindow& window, entt::entity& entity)
         {
-            auto playerView = registry.view<Player>();
-            auto playerEntity = playerView.front();
-
-            sf::Vector2f targetPosition = registry.get<Position>(playerEntity).position;
-
-            BulletSystem::createBullet<EnemyBullet>(registry, entity, targetPosition, ProceduralGenerationSystem::GetRandomNumber(0, 1) == 1);
+            throw std::runtime_error("Shuriken shot type is not implemented");
         };
     case ShotType::DoubleShuriken:
         return [](entt::registry& registry, sf::RenderWindow& window, entt::entity& entity)
         {
-            auto playerView = registry.view<Player>();
-            auto playerEntity = playerView.front();
-
-            sf::Vector2f targetPosition = registry.get<Position>(playerEntity).position;
-
-            float angleOffset[] = { -10.f, 0.f, 10.f };
-
-            for (auto offset : angleOffset)
-                BulletSystem::createBullet<EnemyBullet>(registry, entity, targetPosition, false, offset);
+            throw std::runtime_error("Double shuriken shot type is not implemented");
         };
     case ShotType::Nail:
         return [](entt::registry& registry, sf::RenderWindow& window, entt::entity& entity)
         {
-            auto playerView = registry.view<Player>();
-            auto playerEntity = playerView.front();
-
-            //target position = player position
-            sf::Vector2f targetPosition = registry.get<Position>(playerEntity).position;
-
-            BulletSystem::createBullet<EnemyBullet>(registry, entity, targetPosition);
+            throw std::runtime_error("Nail shot type is not implemented");
         };
     case ShotType::FullCircle:
         return [](entt::registry& registry, sf::RenderWindow& window, entt::entity& entity)
         {
-            sf::Vector2f targetPosition = window.mapPixelToCoords(sf::Mouse::getPosition(window));
+            if (registry.any_of<Player>(entity))
+            {
+                sf::Vector2f targetPosition = window.mapPixelToCoords(sf::Mouse::getPosition(window));
 
-            float angleOffset[] = { 0.f, 45.f, 90.f, 135.f, 180.f, 225.f, 270.f, 315.f };
+                float angleOffset[] = { 0.f, 45.f, 90.f, 135.f, 180.f, 225.f, 270.f, 315.f };
 
-            for (auto offset : angleOffset)
-                BulletSystem::createBullet<PlayerBullet>(registry, entity, targetPosition, false, offset);
+                for (auto offset : angleOffset)
+                    BulletSystem::createBullet<PlayerBullet>(registry, entity, targetPosition, false, offset);
+            }
+            else if (registry.any_of<Enemy>(entity))
+            {
+                auto playerView = registry.view<Player>();
+                auto playerEntity = playerView.front();
+
+                sf::Vector2f targetPosition = registry.get<Position>(playerEntity).position;
+
+                float angleOffset[] = { 0.f, 45.f, 90.f, 135.f, 180.f, 225.f, 270.f, 315.f };
+
+                for (auto offset : angleOffset)
+                    BulletSystem::createBullet<EnemyBullet>(registry, entity, targetPosition, false, offset);
+            }
+            else
+            {
+                throw std::runtime_error("Wrong entity type for full circle shot");
+            }
         };
     case ShotType::TripleSalvo:
         return [](entt::registry& registry, sf::RenderWindow& window, entt::entity& entity)
         {
-            auto& playerWeapon = registry.get<Weapon>(entity);
+            if (registry.any_of<Player>(entity))
+            {
+                auto& playerWeapon = registry.get<Weapon>(entity);
 
-            playerWeapon.bulletsInQueue = playerWeapon.bulletsInSalvo;
+                playerWeapon.bulletsInQueue = 5;
+                playerWeapon.queueCooldown = 0.03f;
+            }
+            else if (registry.any_of<Enemy>(entity))
+            {
+                throw std::runtime_error("Triple salvo shot type is not implemented for enemies");
+            }
+            else
+            {
+                throw std::runtime_error("Wrong entity type for triple salvo shot");
+            }
         };
     default:
         throw std::runtime_error("Unknown shot type");
