@@ -48,6 +48,6 @@ void PlayerInitializationSystem::initializePlayer(entt::registry& registry)
 
     registry.emplace<Cooldown>(player, std::unordered_map<std::string, float>{ {"specialShot", 0.f} });
 
-    WeaponsSystem::loadWeapon(registry, redWeapon, player);
+    WeaponsSystem::loadWeapon(registry, Weapons::RedWeapon, player);
     ShieldSystem::changeShield(registry, basicShield);
 }
