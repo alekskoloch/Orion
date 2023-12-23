@@ -23,7 +23,7 @@ void handleShoot(entt::registry& registry, entt::entity& entity, sf::Vector2f ta
     auto weapon = registry.get<Weapon>(entity);
     //TODO: Make this configurable
     float angleOffset[] = { -10.f, 0.f, 10.f };
-    switch (weapon.weaponType)
+    switch (weapon.type)
     {
     case WeaponType::SingleShot:
         BulletSystem::createBullet<BulletOwnerTag>(registry, entity, targetPosition);
@@ -44,24 +44,11 @@ void handleShoot(entt::registry& registry, entt::entity& entity, sf::Vector2f ta
     }
 }
 
-void handleSpecialShoot(entt::registry& registry, entt::entity& entity, sf::Vector2f targetPosition)
+void handleSpecialShoot(entt::registry& registry, sf::RenderWindow& window, entt::entity& entity)
 {
     auto& weapon = registry.get<Weapon>(entity);
 
-    if (weapon.specialShotType == SpecialShotType::None)
-    {
-        return;
-    }
-    else if (weapon.specialShotType == SpecialShotType::FullCircleShoot)
-    {
-        float angleOffset[] = {  0.f, 45.f, 90.f, 135.f, 180.f, 225.f, 270.f, 315.f };
-        for (auto offset : angleOffset)
-            BulletSystem::createBullet<PlayerBullet>(registry, entity, targetPosition, false, offset);
-    }
-    else if (weapon.specialShotType == SpecialShotType::TripleSalvo)
-    {
-        weapon.bulletsInQueue = weapon.bulletsInSalvo;
-    }
+    weapon.specialShot(registry, window, entity);
 }
 
 void handlePlayerShooting(entt::registry& registry, sf::Time deltaTime, sf::RenderWindow& window)
@@ -81,9 +68,9 @@ void handlePlayerShooting(entt::registry& registry, sf::Time deltaTime, sf::Rend
 
         bool canSpecialShoot = false;
 
-        if (weapon.weaponType == WeaponType::SingleShot)
+        if (weapon.type == WeaponType::SingleShot)
             canSpecialShoot = SkillSystem::isSkillEnabled(registry, SkillType::SingleShotWeaponSpecialShot);
-        else if (weapon.weaponType == WeaponType::TrippleShot)
+        else if (weapon.type == WeaponType::TrippleShot)
             canSpecialShoot = SkillSystem::isSkillEnabled(registry, SkillType::TripleShotWeaponSpecialShot);
         else
             canSpecialShoot = SkillSystem::isSkillEnabled(registry, SkillType::AllWeaponsSpecialShot);
@@ -93,21 +80,21 @@ void handlePlayerShooting(entt::registry& registry, sf::Time deltaTime, sf::Rend
             {
                 SoundManager::getInstance().playSound("SpecialShot");
                 EnergySystem::removeEnergy<Player>(registry, WeaponsSystem::getWeaponSpecialShotEnergyCost(registry));
-                CooldownSystem::setCooldown(registry, entity, "specialShot", weapon.specialShotCooldownTime);
-                weapon.specialShoot(registry, window, entity);
+                CooldownSystem::setCooldown(registry, entity, "specialShot", weapon.specialShotCooldown);
+                weapon.specialShot(registry, window, entity);
                 //handleSpecialShoot(registry, entity, window.mapPixelToCoords(sf::Mouse::getPosition(window)));
                 //TODO: Chance should be configurable
                 if (SkillSystem::isSkillEnabled(registry, SkillType::ShieldChanceForSingleSpecialShot) || SkillSystem::isSkillEnabled(registry, SkillType::ShieldChanceForTripleSpecialShot))
-                    if (weapon.weaponType == WeaponType::SingleShot)
+                    if (weapon.type == WeaponType::SingleShot)
                         ShieldSystem::getShield(registry, basicShield);
-                    else if (weapon.weaponType == WeaponType::TrippleShot)
+                    else if (weapon.type == WeaponType::TrippleShot)
                         ShieldSystem::getShield(registry, advancedShield);
             }
 
         if (canShoot && EnergySystem::hasEnoughEnergy<Player>(registry, WeaponsSystem::getWeaponShotEnergyCost(registry)))
         {
             EnergySystem::removeEnergy<Player>(registry, WeaponsSystem::getWeaponShotEnergyCost(registry));
-            weapon.shoot(registry, window, entity);
+            weapon.shot(registry, window, entity);
             SoundManager::getInstance().playSound("Shot");
             //handleShoot<PlayerBullet>(registry, entity, window.mapPixelToCoords(sf::Mouse::getPosition(window)));
             weapon.SetCooldown();
@@ -132,7 +119,7 @@ void handleEnemyShooting(entt::registry& registry, sf::Time deltaTime, sf::Rende
             if (enemyWeapon.currentCooldownTime == 0.f)
             {
                 //handleShoot<EnemyBullet>(registry, enemyEntity, playerPosition);
-                enemyWeapon.shoot(registry, window, enemyEntity);
+                enemyWeapon.shot(registry, window, enemyEntity);
                 SoundManager::getInstance().playSound("EnemyShot");
                 enemyWeapon.SetCooldown();
             }
