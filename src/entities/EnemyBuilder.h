@@ -2,7 +2,7 @@
 
 #include "../pch.h"
 
-#include "../schema/WeaponsSchema.h"
+#include "../systems/WeaponsSystem.h"
 
 #include "../components/components.h"
 #include "../components/tagComponents.h"
@@ -19,7 +19,7 @@ public:
     EnemyBuilder& addHealth(float health);
     EnemyBuilder& addExperience(float experience);
     EnemyBuilder& addDrop(int dropChance, int dropRate);
-    EnemyBuilder& setWeapon(WeaponSchema weaponSchema);
+    EnemyBuilder& setWeapon(Weapons weapon);
     EnemyBuilder& setWaypointMovement();
 
 private:

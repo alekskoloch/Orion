@@ -71,9 +71,9 @@ EnemyBuilder& EnemyBuilder::addDrop(int dropChance, int dropRate)
     return *this;
 }
 
-EnemyBuilder& EnemyBuilder::setWeapon(WeaponSchema weaponSchema)
+EnemyBuilder& EnemyBuilder::setWeapon(Weapons weapon)
 {
-    WeaponsSystem::loadWeapon(this->registry, weaponSchema, this->enemy);
+    WeaponsSystem::loadWeapon(this->registry, weapon, this->enemy);
 
     return *this;
 }
