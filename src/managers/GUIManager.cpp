@@ -82,11 +82,11 @@ void GUIManager::toggleQuickMenu(bool value)
         switch (this->quickMenu.getSelectedTile())
         {
         case 1:
-            WeaponsSystem::changeWeapon(this->registry, redWeapon);
+            WeaponsSystem::changeWeapon(this->registry, Weapons::RedWeapon);
             this->weaponTile.setWeaponTexture("red_weapon");
             break;
         case 2:
-            WeaponsSystem::changeWeapon(this->registry, blueWeapon);
+            WeaponsSystem::changeWeapon(this->registry, Weapons::BlueWeapon);
             this->weaponTile.setWeaponTexture("blue_weapon");
             break;
         case 3:
