@@ -38,21 +38,6 @@ void EnemyInitializationSystem::loadEnemyFromConfig(entt::registry& registry, st
     auto enemyIndex = ProceduralGenerationSystem::GetRandomNumber(0u, enemiesCount - 1);
     const auto& enemyJson = configJson["enemies"][enemyIndex];
 
-    //TODO: Temporary solution for mapping weapon
-    WeaponSchema enemyWeapon;
-    if (enemyJson["weapon"] == "basicEnemyWeapon")
-        enemyWeapon = basicEnemyWeapon;
-    else if (enemyJson["weapon"] == "basicEnemyWeapon2")
-        enemyWeapon = basicEnemyWeapon2;
-    else if (enemyJson["weapon"] == "shuriken")
-        enemyWeapon = Shuriken;
-    else if (enemyJson["weapon"] == "doubleShuriken")
-        enemyWeapon = DoubleShuriken;
-    else if (enemyJson["weapon"] == "nail")
-        enemyWeapon = Nail;
-    else
-        throw std::runtime_error("Could not find weapon in config file");
-
     EnemyBuilder enemyBuilder(registry);
 
     enemyBuilder.createEnemy(enemyJson["name"])
@@ -62,6 +47,6 @@ void EnemyInitializationSystem::loadEnemyFromConfig(entt::registry& registry, st
                 .addHealth(enemyJson["health"])
                 .addExperience(enemyJson["experience"])
                 .addDrop(100, 69)
-                .setWeapon(enemyWeapon)
+                .setWeapon(enemyJson["weapon"])
                 .setWaypointMovement();
 }
