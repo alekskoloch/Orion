@@ -22,7 +22,7 @@ public:
         sf::Vector2f direction(CalculateDirectionBetweenPoints(position, targetPosition, offset));
         float rotation = CalculateAzimuthAngleInDegrees(direction, 90.f);
 
-        sf::Sprite sprite = CreateSprite(weapon.bulletTextureName);
+        sf::Sprite sprite = CreateSprite(weapon.name + "_bullet");
         sprite.setRotation(rotation);
 
         auto bulletEntity = registry.create();
@@ -33,7 +33,7 @@ public:
         //TODO: Get Collision from weaponSchema
         registry.emplace<Collision>(bulletEntity, sprite.getGlobalBounds());
 
-        switch (weapon.weaponType)
+        switch (weapon.type)
         {
             case WeaponType::SingleShot:
             case WeaponType::TrippleShot:
