@@ -204,31 +204,29 @@ struct Velocity
 
 struct Weapon
 {
-    WeaponType weaponType;
+    std::string name;
+    WeaponType type;
+
     float damage;
-    float cooldownTime;
     float bulletSpeed;
-    std::string bulletTextureName;
-    std::string weaponIconTextureName;
-    float energyCost;
+    float shotCost;
+    float specialShotCost;
+    float shotCooldown;
+    float specialShotCooldown;
+    std::function<void(entt::registry& registry, sf::RenderWindow& window, entt::entity& entity)> shot = [](entt::registry& registry, sf::RenderWindow& window, entt::entity& entity) {};
+    std::function<void(entt::registry& registry, sf::RenderWindow& window, entt::entity& entity)> specialShot = [](entt::registry& registry, sf::RenderWindow& window, entt::entity& entity) {};
 
-    SpecialShotType specialShotType;
-    float energyCostForSpecialShot;
-    float specialShotCooldownTime;
-
-    std::function<void(entt::registry& registry, sf::RenderWindow& window, entt::entity& entity)> shoot = [](entt::registry& registry, sf::RenderWindow& window, entt::entity& entity) {};
-    std::function<void(entt::registry& registry, sf::RenderWindow& window, entt::entity& entity)> specialShoot = [](entt::registry& registry, sf::RenderWindow& window, entt::entity& entity) {};
+//TODO: This should be handled in a different way
+    bool autofire = false;
 
     unsigned bulletsInSalvo = 0;
     float queueCooldown = 0.0f;
     unsigned bulletsInQueue = 0;
-    float queueCooldownTime = 0.f;
-    
-    bool autofire = false;
+    float queueCooldownTime = 0.f;    
     float currentCooldownTime = 0.0f;
     bool shootLastFrame = false;
 
-    void SetCooldown() { currentCooldownTime = cooldownTime; }
+    void SetCooldown() { currentCooldownTime = shotCooldown; }
 };
 
 struct WaypointMovement
