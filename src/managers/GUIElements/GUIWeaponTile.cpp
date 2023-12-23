@@ -41,14 +41,14 @@ void GUIWeaponTile::update()
 {
     //TODO: refactor this
     auto playerWeaponComponent = this->registry.get<Weapon>(this->registry.view<Player>()[0]);
-    if (playerWeaponComponent.weaponType == WeaponType::SingleShot)
+    if (playerWeaponComponent.type == WeaponType::SingleShot)
     {
         if (SkillSystem::isSkillEnabled(this->registry, SkillType::SingleShotWeaponSpecialShot))
             this->specialShotAvailable = true;
         else
             this->specialShotAvailable = false;
     }
-    else if (playerWeaponComponent.weaponType == WeaponType::TrippleShot)
+    else if (playerWeaponComponent.type == WeaponType::TrippleShot)
     {
         if (SkillSystem::isSkillEnabled(this->registry, SkillType::TripleShotWeaponSpecialShot))
             this->specialShotAvailable = true;
