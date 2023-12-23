@@ -5,10 +5,12 @@
 #include "../systems/PlayerInitializationSystem.h"
 #include "../systems/SkillSystem.h"
 
+#include "../entities/WeaponBuilder.h"
+
 #include "../components/components.h"
 #include "../components/tagComponents.h"
 
-void WeaponsSystem::changeWeapon(entt::registry& registry, WeaponSchema weapon)
+void WeaponsSystem::changeWeapon(entt::registry& registry, Weapons weapon)
 {
     auto player = registry.view<Player>();
     for (auto& entity : player)
@@ -19,18 +21,7 @@ void WeaponsSystem::changeWeapon(entt::registry& registry, WeaponSchema weapon)
 }
 
 //TODO: Make template function for loading schema
-void WeaponsSystem::loadWeapon(entt::registry& registry, const WeaponSchema& weaponSchema, entt::entity ownerEntity)
-{
-    TextureManager::getInstance().loadTexture(weaponSchema.bulletTextureName, ASSETS_PATH + weaponSchema.bulletTextureName + ".png");
-    TextureManager::getInstance().loadTexture(weaponSchema.weaponIconTextureName, ASSETS_PATH + weaponSchema.weaponIconTextureName + ".png");
-
-    if (weaponSchema.bulletTextureName == "red_bullet")
-        loadWeaponFromConfig(registry, ownerEntity, Weapons::RedWeapon);
-    else
-        registry.emplace<Weapon>(ownerEntity, weaponSchema.weaponType, weaponSchema.damage, weaponSchema.cooldownTime, weaponSchema.bulletSpeed, weaponSchema.bulletTextureName, weaponSchema.weaponIconTextureName, weaponSchema.energyCost, weaponSchema.specialShotType, weaponSchema.energyCostForSpecialShot, weaponSchema.specialShotCooldownTime, weaponSchema.shoot, weaponSchema.specialShoot, weaponSchema.bulletsInSalvo, weaponSchema.queueCooldown);
-}
-
-void WeaponsSystem::loadWeaponFromConfig(entt::registry& registry, entt::entity ownerEntity, Weapons weaponID)
+void WeaponsSystem::loadWeapon(entt::registry& registry, Weapons weaponID, entt::entity ownerEntity)
 {
     std::ifstream configFile(CONFIG_PATH + std::string("weaponConfig.json"));
     if (!configFile.is_open())
@@ -47,29 +38,23 @@ void WeaponsSystem::loadWeaponFromConfig(entt::registry& registry, entt::entity 
         {
             if (static_cast<int>(weaponID) == weapon["id"])
             {
-                registry.emplace<Weapon>(
-                    ownerEntity,
-                    WeaponType::SingleShot,
-                    weapon["damage"],
-                    weapon["cooldown"],
-                    weapon["bulletSpeed"],
-                    "red_bullet",
-                    "red_weapon",
-                    weapon["shotCost"],
-                    SpecialShotType::FullCircleShoot,
-                    weapon["specialShotCost"],
-                    5.f,
-                    WeaponsSystem::getWeaponShotFunction(static_cast<ShotType>(weapon["shot"])),
-                    WeaponsSystem::getWeaponShotFunction(static_cast<ShotType>(weapon["specialShot"])),
-                    0,
-                    0.f
-                );
+                WeaponBuilder weaponBuilder;
+                
+                weaponBuilder.addName(weapon["name"])
+                                .addType(static_cast<WeaponType>(weapon["type"]))
+                                .addDamage(weapon["damage"])
+                                .addBulletSpeed(weapon["bulletSpeed"])
+                                .addShotCost(weapon["shotCost"])
+                                .addSpecialShotCost(weapon["specialShotCost"])
+                                .addShotCooldown(weapon["shotCooldown"])
+                                .addSpecialShotCooldown(weapon["specialShotCooldown"])
+                                .addShotFunction(WeaponsSystem::getWeaponShotFunction(weapon["shot"]))
+                                .addSpecialShotFunction(WeaponsSystem::getWeaponShotFunction(weapon["specialShot"]));
+
+                registry.emplace<Weapon>(ownerEntity, weaponBuilder.build());
             }
         }
     }
-
-
-    
 }
 
 void WeaponsSystem::updateWeaponCooldown(entt::registry& registry, sf::Time deltaTime)
@@ -99,11 +84,11 @@ float WeaponsSystem::getWeaponDamage(entt::registry& registry)
     multiplier += playerSkillsComponent.damageMultiplier - 1.f;
     multiplier += playerSkillsComponent.weaponDamageMultiplier - 1.f;
 
-    if (playerWeapon.weaponType == WeaponType::SingleShot)
+    if (playerWeapon.type == WeaponType::SingleShot)
     {
         multiplier += playerSkillsComponent.singleShotWeaponDamageMultiplier - 1.f;
     }
-    else if (playerWeapon.weaponType == WeaponType::TrippleShot)
+    else if (playerWeapon.type == WeaponType::TrippleShot)
     {
         multiplier += playerSkillsComponent.tripleShotWeaponDamageMultiplier - 1.f;
     }
@@ -117,16 +102,16 @@ float WeaponsSystem::getWeaponShotEnergyCost(entt::registry& registry)
 
     auto& playerWeapon = registry.get<Weapon>(registry.view<Player>().front());
 
-    float energyCost = playerWeapon.energyCost;
+    float energyCost = playerWeapon.shotCost;
     float multiplier = 1.f;
 
     multiplier += playerSkillsComponent.weaponEnergyCostMultiplier - 1.f;
 
-    if (playerWeapon.weaponType == WeaponType::SingleShot)
+    if (playerWeapon.type == WeaponType::SingleShot)
     {
         multiplier += playerSkillsComponent.singleShotWeaponEnergyCostMultiplier - 1.f;
     }
-    else if (playerWeapon.weaponType == WeaponType::TrippleShot)
+    else if (playerWeapon.type == WeaponType::TrippleShot)
     {
         multiplier += playerSkillsComponent.tripleShotWeaponEnergyCostMultiplier - 1.f;
     }
@@ -140,16 +125,16 @@ float WeaponsSystem::getWeaponSpecialShotEnergyCost(entt::registry& registry)
 
     auto& playerWeapon = registry.get<Weapon>(registry.view<Player>().front());
 
-    float energyCost = playerWeapon.energyCostForSpecialShot;
+    float energyCost = playerWeapon.specialShotCost;
     float multiplier = 1.f;
 
     multiplier += playerSkillsComponent.weaponEnergyCostMultiplier - 1.f;
 
-    if (playerWeapon.weaponType == WeaponType::SingleShot)
+    if (playerWeapon.type == WeaponType::SingleShot)
     {
         multiplier += playerSkillsComponent.singleSpecialShotWeaponEnergyCostMultiplier - 1.f;
     }
-    else if (playerWeapon.weaponType == WeaponType::TrippleShot)
+    else if (playerWeapon.type == WeaponType::TrippleShot)
     {
         multiplier += playerSkillsComponent.tripleSpecialShotWeaponEnergyCostMultiplier - 1.f;
     }

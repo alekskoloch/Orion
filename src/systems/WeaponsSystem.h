@@ -8,7 +8,13 @@ using ShotFunction = std::function<void(entt::registry& registry, sf::RenderWind
 
 enum class Weapons
 {
-    RedWeapon
+    None = 0,
+    RedWeapon = 1,
+    BlueWeapon,
+    GreyPebble = 100,
+    SmallFireball,
+    GreenGunk,
+    Brain
 };
 
 enum class ShotType
@@ -28,8 +34,8 @@ enum class ShotType
 class WeaponsSystem
 {
 public:
-    static void changeWeapon(entt::registry& registry, WeaponSchema weapon);
-    static void loadWeapon(entt::registry& registry, const WeaponSchema& weaponSchema, entt::entity ownerEntity);
+    static void changeWeapon(entt::registry& registry, Weapons weapon);
+    static void loadWeapon(entt::registry& registry, Weapons weapon, entt::entity ownerEntity);
     static void loadWeaponFromConfig(entt::registry& registry, entt::entity ownerEntity, Weapons weaponID);
     static void updateWeaponCooldown(entt::registry& registry, sf::Time deltaTime);
     static float getWeaponDamage(entt::registry& registry);
