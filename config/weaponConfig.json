@@ -2,15 +2,95 @@
     "weapons":
     [
         {
-            "id": 0,
+            "id": 1,
             "name": "Red Weapon",
+            "type": 0,
             "damage": 1.0,
-            "cooldown": 0.2,
             "bulletSpeed": 1300.0,
             "shot": 1,
             "specialShot": 100,
             "shotCost": 10.0,
-            "specialShotCost": 100.0
+            "specialShotCost": 100.0,
+            "shotCooldown": 0.2,
+            "specialShotCooldown": 5.0
+        },
+        {
+            "id": 2,
+            "name": "Blue Weapon",
+            "type": 1,
+            "damage": 1.0,
+            "bulletSpeed": 1300.0,
+            "shot": 2,
+            "specialShot": 101,
+            "shotCost": 30.0,
+            "specialShotCost": 100.0,
+            "shotCooldown": 0.2,
+            "specialShotCooldown": 5.0
+        },
+        {
+            "id": 100,
+            "name": "Grey Pebble",
+            "type": 0,
+            "damage": 1.0,
+            "bulletSpeed": 700.0,
+            "shot": 1,
+            "specialShot": 5,
+            "shotCost": 0.0,
+            "specialShotCost": 0.0,
+            "shotCooldown": 2.0,
+            "specialShotCooldown": 0.0
+        },
+        {
+            "id": 101,
+            "name": "Small Fireball",
+            "type": 0,
+            "damage": 1.0,
+            "bulletSpeed": 1200.0,
+            "shot": 1,
+            "specialShot": 5,
+            "shotCost": 0.0,
+            "specialShotCost": 0.0,
+            "shotCooldown": 2.2,
+            "specialShotCooldown": 0.0
+        },
+        {
+            "id": 102,
+            "name": "Green Gunk",
+            "type": 0,
+            "damage": 1.0,
+            "bulletSpeed": 600.0,
+            "shot": 1,
+            "specialShot": 5,
+            "shotCost": 0.0,
+            "specialShotCost": 0.0,
+            "shotCooldown": 2.4,
+            "specialShotCooldown": 0.0
+        },
+        {
+            "id": 103,
+            "name": "Brain",
+            "type": 0,
+            "damage": 1.0,
+            "bulletSpeed": 1000.0,
+            "shot": 2,
+            "specialShot": 5,
+            "shotCost": 0.0,
+            "specialShotCost": 0.0,
+            "shotCooldown": 4.0,
+            "specialShotCooldown": 0.0
+        },
+        {
+            "id": 104,
+            "name": "Fireball Splash",
+            "type": 0,
+            "damage": 1.0,
+            "bulletSpeed": 1000.0,
+            "shot": 100,
+            "specialShot": 5,
+            "shotCost": 0.0,
+            "specialShotCost": 0.0,
+            "shotCooldown": 2.2,
+            "specialShotCooldown": 0.0
         }
     ]
 }
