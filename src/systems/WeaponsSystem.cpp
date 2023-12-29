@@ -289,6 +289,25 @@ ShotFunction WeaponsSystem::getWeaponShotFunction(ShotType shotType)
                 throw std::runtime_error("Wrong entity type for triple salvo shot");
             }
         };
+    case ShotType::SpinningShot:
+        return [](entt::registry& registry, sf::RenderWindow& window, entt::entity& entity)
+        {
+            if (registry.any_of<Player>(entity))
+            {
+                auto& playerWeapon = registry.get<Weapon>(entity);
+
+                playerWeapon.bulletsInQueue = 10;
+                playerWeapon.queueCooldown = 0.03f;
+            }
+            else if (registry.any_of<Enemy>(entity))
+            {
+                throw std::runtime_error("Spinning shot type is not implemented for enemies");
+            }
+            else
+            {
+                throw std::runtime_error("Wrong entity type for spinning shot");
+            }
+        };
     default:
         throw std::runtime_error("Unknown shot type");
     }
