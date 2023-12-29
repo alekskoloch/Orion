@@ -150,10 +150,27 @@ void ShootingSystem::handleQueue(entt::registry& registry, sf::Time deltaTime, s
             if (weapon.queueCooldownTime >= weapon.queueCooldown)
             {
                 weapon.queueCooldownTime = 0.f;
+
+                //TODO: Temporary solution, should support queue for each type of weapon
+                if (weapon.type == WeaponType::TrippleShot)
+                {
+                    float angleOffset[] = { -10.f, 0.f, 10.f };
+                    for (auto offset : angleOffset)
+                        BulletSystem::createBullet<PlayerBullet>(registry, playerEntity, window.mapPixelToCoords(sf::Mouse::getPosition(window)), false, offset);
+                }
+                else if (weapon.type == WeaponType::SingleShot)
+                {
+                    sf::Vector2f targetPosition = window.mapPixelToCoords(sf::Mouse::getPosition(window));
+
+                    float angleOffset[8];
+                    for (int i = 0; i < 8; i++)
+                        angleOffset[i] = i * 45.f + (weapon.bulletsInQueue * 10.f);
+
+                    for (auto offset : angleOffset)
+                        BulletSystem::createBullet<PlayerBullet>(registry, playerEntity, window.mapPixelToCoords(sf::Mouse::getPosition(window)), false, offset);
+                }
+
                 weapon.bulletsInQueue--;
-                float angleOffset[] = { -10.f, 0.f, 10.f };
-                for (auto offset : angleOffset)
-                    BulletSystem::createBullet<PlayerBullet>(registry, playerEntity, window.mapPixelToCoords(sf::Mouse::getPosition(window)), false, offset);
             }
         }
     }
