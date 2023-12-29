@@ -11,6 +11,7 @@ enum class Weapons
     None = 0,
     RedWeapon = 1,
     BlueWeapon,
+    QuadWeapon,
     GreyPebble = 100,
     SmallFireball,
     GreenGunk,
@@ -26,6 +27,7 @@ enum class ShotType
     /* 3 */     Shuriken,
     /* 4 */     DoubleShuriken,
     /* 5 */     Nail,
+    /* 6 */     QuadShot,
 //              SPECIAL TYPES OF SHOTS
     /* 100 */   FullCircle = 100,
     /* 101 */   TripleSalvo
