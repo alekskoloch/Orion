@@ -2,7 +2,7 @@
     "enemies":
     [
         {
-            "name": "enemy1",
+            "name": "Sparkle",
             "health": 10.0,
             "speed": 600.0,
             "experience": 10,
@@ -11,7 +11,7 @@
             "idleRange": 2000.0
         },
         {
-            "name": "enemy2",
+            "name": "Bubbly",
             "health": 20.0,
             "speed": 500.0,
             "experience": 10,
@@ -20,7 +20,7 @@
             "idleRange": 1000.0
         },
         {
-            "name": "enemy3",
+            "name": "Moonblink",
             "health": 5.0,
             "speed": 400.0,
             "experience": 14,
@@ -29,7 +29,7 @@
             "idleRange": 1500.0
         },
         {
-            "name": "enemy4",
+            "name": "Twinkletron",
             "health": 7.0,
             "speed": 300.0,
             "experience": 13,
@@ -38,7 +38,7 @@
             "idleRange": 1800.0
         },
         {
-            "name": "enemy_red_1",
+            "name": "Crimson_Cuddler",
             "health": 30.0,
             "speed": 200.0,
             "experience": 28,
@@ -47,7 +47,7 @@
             "idleRange": 2500.0
         },
         {
-            "name": "enemy_red_2",
+            "name": "Flamelet",
             "health": 20.0,
             "speed": 500.0,
             "experience": 22,
@@ -56,7 +56,7 @@
             "idleRange": 2000.0
         },
         {
-            "name": "enemy_red_3",
+            "name": "Crested_Jester",
             "health": 10.0,
             "speed": 600.0,
             "experience": 14,
@@ -65,7 +65,7 @@
             "idleRange": 1800.0
         },
         {
-            "name": "enemy_red_4",
+            "name": "Coral_Clown",
             "health": 10.0,
             "speed": 800.0,
             "experience": 22,
@@ -74,7 +74,7 @@
             "idleRange": 1600.0
         },
         {
-            "name": "enemy_zombie_1",
+            "name": "Putrid_Plop",
             "health": 30.0,
             "speed": 200.0,
             "experience": 28,
@@ -83,7 +83,7 @@
             "idleRange": 2500.0
         },
         {
-            "name": "enemy_zombie_2",
+            "name": "Prickle",
             "health": 20.0,
             "speed": 500.0,
             "experience": 22,
@@ -92,7 +92,7 @@
             "idleRange": 2000.0
         },
         {
-            "name": "enemy_zombie_3",
+            "name": "Star_Ghoul",
             "health": 10.0,
             "speed": 600.0,
             "experience": 14,
@@ -101,7 +101,7 @@
             "idleRange": 1800.0
         },
         {
-            "name": "enemy_zombie_4",
+            "name": "Gleeful_Goo",
             "health": 10.0,
             "speed": 800.0,
             "experience": 22,
@@ -110,7 +110,7 @@
             "idleRange": 1600.0
         },
         {
-            "name": "enemy_zombie_5",
+            "name": "Zombie_Buddy",
             "health": 10.0,
             "speed": 800.0,
             "experience": 22,
