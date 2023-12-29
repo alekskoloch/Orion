@@ -30,11 +30,11 @@
         {
             "id": 3,
             "name": "Quad Weapon",
-            "type": 1,
+            "type": 0,
             "damage": 2.0,
             "bulletSpeed": 2500.0,
             "shot": 6,
-            "specialShot": 101,
+            "specialShot": 102,
             "shotCost": 100.0,
             "specialShotCost": 300.0,
             "shotCooldown": 0.2,
