@@ -215,6 +215,32 @@ ShotFunction WeaponsSystem::getWeaponShotFunction(ShotType shotType)
         {
             throw std::runtime_error("Nail shot type is not implemented");
         };
+    case ShotType::QuadShot:
+        return [](entt::registry& registry, sf::RenderWindow& window, entt::entity& entity)
+        {
+            if (registry.any_of<Player>(entity))
+            {
+                sf::Vector2f targetPosition = window.mapPixelToCoords(sf::Mouse::getPosition(window));
+
+                BulletSystem::createBullet<PlayerBullet>(registry, entity, targetPosition, false, 0.f, sf::Vector2f(-45.f, 0.f));
+                BulletSystem::createBullet<PlayerBullet>(registry, entity, targetPosition, false, 0.f, sf::Vector2f(-15.f, 0.f));
+                BulletSystem::createBullet<PlayerBullet>(registry, entity, targetPosition, false, 0.f, sf::Vector2f(15.f, 0.f));
+                BulletSystem::createBullet<PlayerBullet>(registry, entity, targetPosition, false, 0.f, sf::Vector2f(45.f, 0.f));
+            }
+            else if (registry.any_of<Enemy>(entity))
+            {
+                auto playerView = registry.view<Player>();
+                auto playerEntity = playerView.front();
+
+                sf::Vector2f targetPosition = registry.get<Position>(playerEntity).position;
+
+                BulletSystem::createBullet<EnemyBullet>(registry, entity, targetPosition);
+            }
+            else
+            {
+                throw std::runtime_error("Wrong entity type for single shot");
+            }
+        };
     case ShotType::FullCircle:
         return [](entt::registry& registry, sf::RenderWindow& window, entt::entity& entity)
         {
