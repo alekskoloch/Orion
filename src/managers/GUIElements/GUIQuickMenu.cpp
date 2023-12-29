@@ -76,6 +76,7 @@ void GUIQuickMenu::initializeQuickMenu()
     //TODO: this is a temporary solution for loading bullet ico textures
     TextureManager::getInstance().loadTexture("red_weapon", ASSETS_PATH + std::string("red_weapon.png"));
     TextureManager::getInstance().loadTexture("blue_weapon", ASSETS_PATH + std::string("blue_weapon.png"));
+    TextureManager::getInstance().loadTexture("blue_weapon", ASSETS_PATH + std::string("quad_weapon.png"));
     TextureManager::getInstance().loadTexture("basic_shield_ico", ASSETS_PATH + std::string("basic_shield_ico.png"));
     TextureManager::getInstance().loadTexture("advanced_shield_ico", ASSETS_PATH + std::string("advanced_shield_ico.png"));
 
@@ -104,6 +105,10 @@ void GUIQuickMenu::initializeQuickMenu()
         else if (i == 3)
         {
             this->quickMenuIcons[i] = CreateSprite("advanced_shield_ico");
+        }
+        else if (i == 4)
+        {
+            this->quickMenuIcons[i] = CreateSprite("quad_weapon");
         }
 
         this->quickMenuIcons[i].setPosition(this->quickMenuTiles[i].getPosition());

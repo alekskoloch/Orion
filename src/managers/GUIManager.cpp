@@ -97,6 +97,10 @@ void GUIManager::toggleQuickMenu(bool value)
             ShieldSystem::changeShield(this->registry, advancedShield);
             this->shieldTile.setShieldTexture("advanced_shield_ico");
             break;
+        case 5:
+            WeaponsSystem::changeWeapon(this->registry, Weapons::QuadWeapon);
+            this->weaponTile.setWeaponTexture("quad_weapon");
+            break;
         case 9:
             SceneManager::getInstance().setCurrentScene(Scene::SkillTree);
             break;
