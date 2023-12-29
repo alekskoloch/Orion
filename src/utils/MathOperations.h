@@ -19,6 +19,15 @@ inline sf::Vector2f NormalizeVector(const sf::Vector2f& vector)
         return vector;
 }
 
+inline sf::Vector2f RotateVector(const sf::Vector2f& vector, float angleDegrees)
+{
+    float rad = angleDegrees * (M_PI / 180.0f);
+    return sf::Vector2f(
+        vector.x * cos(rad) - vector.y * sin(rad),
+        vector.x * sin(rad) + vector.y * cos(rad)
+    );
+}
+
 inline float CalculateDistance(const sf::Vector2f& point1, const sf::Vector2f& point2)
 {
     return std::hypot(point1.x - point2.x, point1.y - point2.y);
