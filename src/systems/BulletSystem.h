@@ -14,7 +14,7 @@ public:
     static void updateShurikenBullet(entt::registry& registry, sf::Time deltaTime);
 
     template <typename BulletOwnerTag>
-    static void createBullet(entt::registry& registry, entt::entity& entity, sf::Vector2f targetPosition, bool right = false, float offset = 0.f)
+    static void createBullet(entt::registry& registry, entt::entity& entity, sf::Vector2f targetPosition, bool right = false, float offset = 0.f, sf::Vector2f positionOffset = sf::Vector2f(0.f, 0.f))
     {
         auto weapon = registry.get<Weapon>(entity);
         auto position = registry.get<Position>(entity).position;
@@ -28,6 +28,9 @@ public:
         auto bulletEntity = registry.create();
         registry.emplace<Bullet>(bulletEntity);
         registry.emplace<BulletOwnerTag>(bulletEntity);
+
+        if (positionOffset != sf::Vector2f(0.f, 0.f))
+            position += RotateVector(positionOffset, rotation);
 
         registry.emplace<Position>(bulletEntity, position);
         //TODO: Get Collision from weaponSchema
