@@ -30,7 +30,8 @@ enum class ShotType
     /* 6 */     QuadShot,
 //              SPECIAL TYPES OF SHOTS
     /* 100 */   FullCircle = 100,
-    /* 101 */   TripleSalvo
+    /* 101 */   TripleSalvo,
+    /* 102 */   SpinningShot
 };
 
 class WeaponsSystem
