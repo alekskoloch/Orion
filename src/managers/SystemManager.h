@@ -34,5 +34,7 @@ private:
     bool slowMotion = false;
     float slowMotionFactor = 1.0f;
 
+    float zoomFactorTarget = 1.0f;
     float zoomFactor = 1.0f;
+    void updateZoomFactor(sf::Time deltaTime);
 };

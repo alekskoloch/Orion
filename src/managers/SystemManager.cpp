@@ -58,18 +58,28 @@ void SystemManager::executeEventSystems()
     //TODO: Refactor this
     if (this->event.type == sf::Event::MouseWheelScrolled)
     {
-        if (this->event.mouseWheelScroll.delta > 0 && this->zoomFactor > 1.f)
+        if (this->event.mouseWheelScroll.delta > 0 && this->zoomFactorTarget > 1.f)
         {
-            this->zoomFactor -= 0.05f;
-            if (this->zoomFactor < 1.f)
-                this->zoomFactor = 1.f;
+            this->zoomFactorTarget -= 0.05f;
+            if (this->zoomFactorTarget < 1.f)
+                this->zoomFactorTarget = 1.f;
         }
-        else if (this->event.mouseWheelScroll.delta < 0 && this->zoomFactor < 2.f)
+        else if (this->event.mouseWheelScroll.delta < 0 && this->zoomFactorTarget < 2.f)
         {
-            this->zoomFactor += 0.05f;
-            if (this->zoomFactor > 2.f)
-                this->zoomFactor = 2.f;
+            this->zoomFactorTarget += 0.05f;
+            if (this->zoomFactorTarget > 2.f)
+                this->zoomFactorTarget = 2.f;
         }
+    }
+}
+
+void SystemManager::updateZoomFactor(sf::Time deltaTime)
+{
+    if (this->zoomFactor != this->zoomFactorTarget)
+    {
+        float zoomFactorDelta = this->zoomFactorTarget - this->zoomFactor;
+        float zoomFactorChange = zoomFactorDelta * deltaTime.asSeconds() * 5.f;
+        this->zoomFactor += zoomFactorChange;
     }
 }
 
@@ -77,6 +87,8 @@ void SystemManager::executeUpdateSystems(sf::Time deltaTime)
 {
     if (SceneManager::getInstance().getCurrentScene() == Scene::Game)
     {
+        this->updateZoomFactor(deltaTime);
+
         if (this->slowMotion || this->slowMotionFactor != 1.0f)
         {
             TimeControlSystem::updateSlowMotion(this->slowMotionFactor, this->slowMotion, SLOW_MOTION_SPEED, TARGET_SLOW_MOTION_FACTOR, deltaTime.asSeconds());
