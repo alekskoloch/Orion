@@ -64,11 +64,11 @@ void SystemManager::executeEventSystems()
             if (this->zoomFactor < 1.f)
                 this->zoomFactor = 1.f;
         }
-        else if (this->event.mouseWheelScroll.delta < 0 && this->zoomFactor < 1.4f)
+        else if (this->event.mouseWheelScroll.delta < 0 && this->zoomFactor < 2.f)
         {
             this->zoomFactor += 0.05f;
-            if (this->zoomFactor > 1.4f)
-                this->zoomFactor = 1.4f;
+            if (this->zoomFactor > 2.f)
+                this->zoomFactor = 2.f;
         }
     }
 }
