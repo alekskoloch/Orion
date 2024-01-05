@@ -63,11 +63,11 @@ target_include_directories(texture_manager PUBLIC src/managers)
 target_link_libraries(texture_manager sfml-graphics EnTT::EnTT)
 
 file(GLOB TEST_SRC tests/*.cpp)
-add_executable(tests ${TEST_SRC})
-target_link_libraries(tests gtest_main texture_manager sfml-graphics)
+add_executable(unit_tests ${TEST_SRC})
+target_link_libraries(unit_tests gtest_main texture_manager sfml-graphics)
 
-target_precompile_headers(tests PRIVATE src/pch.h)
+target_precompile_headers(unit_tests PRIVATE src/pch.h)
 
 #GoogleTest discovery
 include(GoogleTest)
-gtest_discover_tests(tests)
+gtest_discover_tests(unit_tests)
