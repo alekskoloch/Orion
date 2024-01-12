@@ -2,8 +2,8 @@
 
 #include "../managers/TextureManager.h"
 
-#include "../Components/Components.h"
-#include "../Components/TagComponents.h"
+#include "../components/components.h"
+#include "../components/tagComponents.h"
 
 #include "../systems/ProceduralGenerationSystem.h"
 

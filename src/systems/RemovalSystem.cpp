@@ -1,6 +1,6 @@
 #include "RemovalSystem.h"
 
-#include "../components/Components.h"
+#include "../components/components.h"
 #include "../components/tagComponents.h"
 
 #include "../utils/MathOperations.h"
