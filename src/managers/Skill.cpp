@@ -239,12 +239,19 @@ void Skill::updateHoverState()
     if (utils::isMouseOverSprite(this->iconSprite, utils::getMousePositionInWindow(this->window)) && this->dialogBox.getState() == GUIDialogBoxState::Hidden)
         this->hover = true;
     else
+    {
+        this->hoverSoundPlayed = false;
         this->hover = false;
+    }
 }
 
 void Skill::handleHover()
 {
-    SoundManager::getInstance().playSound("SkillHover");
+    if (!this->hoverSoundPlayed)
+    {
+        this->hoverSoundPlayed = true;
+        SoundManager::getInstance().playSound("SkillHover");
+    }
 
     if (this->currentLevel < this->maxLevel)
     {

@@ -52,6 +52,7 @@ private:
     std::string iconTextureName;
 
     bool hover = false;
+    bool hoverSoundPlayed = false;
 
     std::string name;
     std::vector<std::string> descriptions;
