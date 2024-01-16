@@ -42,7 +42,7 @@
             "health": 30.0,
             "speed": 200.0,
             "experience": 28,
-            "weapon": 101,
+            "weapon": 102,
             "attackRange": 2000.0,
             "idleRange": 2500.0
         },
@@ -51,7 +51,7 @@
             "health": 20.0,
             "speed": 500.0,
             "experience": 22,
-            "weapon": 104,
+            "weapon": 105,
             "attackRange": 1500.0,
             "idleRange": 2000.0
         },
@@ -78,7 +78,7 @@
             "health": 30.0,
             "speed": 200.0,
             "experience": 28,
-            "weapon": 103,
+            "weapon": 104,
             "attackRange": 2000.0,
             "idleRange": 2500.0
         },
@@ -87,7 +87,7 @@
             "health": 20.0,
             "speed": 500.0,
             "experience": 22,
-            "weapon": 102,
+            "weapon": 103,
             "attackRange": 1500.0,
             "idleRange": 2000.0
         },
@@ -96,7 +96,7 @@
             "health": 10.0,
             "speed": 600.0,
             "experience": 14,
-            "weapon": 103,
+            "weapon": 104,
             "attackRange": 1700.0,
             "idleRange": 1800.0
         },
@@ -105,7 +105,7 @@
             "health": 10.0,
             "speed": 800.0,
             "experience": 22,
-            "weapon": 103,
+            "weapon": 104,
             "attackRange": 1300.0,
             "idleRange": 1600.0
         },
@@ -114,7 +114,7 @@
             "health": 10.0,
             "speed": 800.0,
             "experience": 22,
-            "weapon": 103,
+            "weapon": 104,
             "attackRange": 1300.0,
             "idleRange": 1600.0
         }

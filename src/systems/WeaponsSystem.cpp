@@ -203,12 +203,50 @@ ShotFunction WeaponsSystem::getWeaponShotFunction(ShotType shotType)
     case ShotType::Shuriken:
         return [](entt::registry& registry, sf::RenderWindow& window, entt::entity& entity)
         {
-            throw std::runtime_error("Shuriken shot type is not implemented");
+            if (registry.any_of<Player>(entity))
+            {
+                sf::Vector2f targetPosition = window.mapPixelToCoords(sf::Mouse::getPosition(window));
+
+                BulletSystem::createBullet<PlayerBullet>(registry, entity, targetPosition);
+            }
+            else if (registry.any_of<Enemy>(entity))
+            {
+                auto playerView = registry.view<Player>();
+                auto playerEntity = playerView.front();
+
+                sf::Vector2f targetPosition = registry.get<Position>(playerEntity).position;
+
+                BulletSystem::createBullet<EnemyBullet>(registry, entity, targetPosition);
+            }
+            else
+            {
+                throw std::runtime_error("Wrong entity type for single shot");
+            }
         };
     case ShotType::DoubleShuriken:
         return [](entt::registry& registry, sf::RenderWindow& window, entt::entity& entity)
         {
-            throw std::runtime_error("Double shuriken shot type is not implemented");
+            if (registry.any_of<Player>(entity))
+            {
+                sf::Vector2f targetPosition = window.mapPixelToCoords(sf::Mouse::getPosition(window));
+
+                BulletSystem::createBullet<PlayerBullet>(registry, entity, targetPosition, false);
+                BulletSystem::createBullet<PlayerBullet>(registry, entity, targetPosition, true);
+            }
+            else if (registry.any_of<Enemy>(entity))
+            {
+                auto playerView = registry.view<Player>();
+                auto playerEntity = playerView.front();
+
+                sf::Vector2f targetPosition = registry.get<Position>(playerEntity).position;
+
+                BulletSystem::createBullet<EnemyBullet>(registry, entity, targetPosition, false);
+                BulletSystem::createBullet<EnemyBullet>(registry, entity, targetPosition, true);
+            }
+            else
+            {
+                throw std::runtime_error("Wrong entity type for single shot");
+            }
         };
     case ShotType::Nail:
         return [](entt::registry& registry, sf::RenderWindow& window, entt::entity& entity)

@@ -14,6 +14,7 @@ enum class Weapons
     QuadWeapon,
     GreyPebble = 100,
     SmallFireball,
+    DoubleFireball,
     GreenGunk,
     Brain
 };
