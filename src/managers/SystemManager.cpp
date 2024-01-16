@@ -25,6 +25,7 @@
 #include "../systems/DropSystem.h"
 #include "../systems/RemovalSystem.h"
 #include "../systems/InfoSystem.h"
+#include "../systems/NotifySystem.h"
 
 #include "../systems/RenderSystem.h"
 #include "../systems/DebugSystem.h"
@@ -116,6 +117,7 @@ void SystemManager::executeUpdateSystems(sf::Time deltaTime)
         CollisionSystem::checkCollisions(this->registry);
         RemovalSystem::update(this->registry);
         InfoSystem::update(this->registry, deltaTime);
+        NotifySystem::update(deltaTime);
     }
 }
 
@@ -138,5 +140,7 @@ void SystemManager::executeRenderSystems()
         }
 
         CameraSystem::setDefaultCamera(this->window);
+
+        NotifySystem::draw(this->window);
     }
 }
