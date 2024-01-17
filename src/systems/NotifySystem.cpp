@@ -22,7 +22,6 @@ void NotifySystem::notify(const Type type, const std::string& message, float dis
         text.setOutlineColor(sf::Color::Red);
         text.setOutlineThickness(2.f);
 
-        //if bigInfo exist, delete it and add new one
         notifications.remove_if([](const Notification& notification)
         {
             return notification.text.getCharacterSize() == 48;
@@ -34,6 +33,18 @@ void NotifySystem::notify(const Type type, const std::string& message, float dis
     default:
         throw std::runtime_error("Unknown notification type");
     }
+}
+
+void NotifySystem::notifyDialogBox(sf::RenderWindow& window, const std::string& message, const std::string& buttonMessage, std::function<void()> callback)
+{
+    if (dialogBox != nullptr)
+        return;
+
+    std::vector<std::string> messages = { message };
+    dialogBox = std::make_unique<GUIDialogBox>(window, messages, FontManager::getInstance().getFont("font"));
+    dialogBox->setType(GUIDialogBoxType::Ok);
+    dialogBox->setState(GUIDialogBoxState::Idle);
+    dialogBox->setMessage({ message });
 }
 
 void NotifySystem::update(sf::Time deltaTime)
@@ -50,10 +61,25 @@ void NotifySystem::update(sf::Time deltaTime)
     {
         return notification.displayTime <= 0.f;
     });
+
+    if (dialogBox != nullptr)
+    {
+        dialogBox->update();
+
+        if (dialogBox->getState() == GUIDialogBoxState::Hidden)
+            dialogBox = nullptr;
+        else if (dialogBox->getState() == GUIDialogBoxState::Ok)
+        {
+            dialogBox->setState(GUIDialogBoxState::Hidden);
+        }
+    }
 }
 
 void NotifySystem::draw(sf::RenderWindow& window)
 {
     for (const auto& notification : notifications)
             window.draw(notification.text);
+
+    if (dialogBox != nullptr)
+        dialogBox->draw();
 }
