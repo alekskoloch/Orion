@@ -47,6 +47,11 @@ void NotifySystem::notifyDialogBox(sf::RenderWindow& window, const std::string& 
     dialogBox->setMessage({ message });
 }
 
+bool NotifySystem::isDialogBoxActive()
+{
+    return dialogBox != nullptr;
+}
+
 void NotifySystem::update(sf::Time deltaTime)
 {
     for (auto& notification : notifications)
