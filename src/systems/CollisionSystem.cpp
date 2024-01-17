@@ -11,6 +11,7 @@
 #include "../systems/CooldownSystem.h"
 #include "../systems/ExperienceSystem.h"
 #include "../systems/ProceduralGenerationSystem.h"
+#include "../systems/NotifySystem.h"
 
 #include "../components/components.h"
 #include "../components/tagComponents.h"
@@ -18,7 +19,7 @@
 #include "../schema/EnemySchema.h"
 
 template <typename BulletOwnerTag, typename TargetTag>
-void checkBulletCollitions(entt::registry& registry, std::unordered_set<entt::entity>& entitiesToDestroy)
+void checkBulletCollitions(entt::registry& registry, std::unordered_set<entt::entity>& entitiesToDestroy, sf::RenderWindow& window)
 {
     auto bullets = registry.view<Collision, BulletOwnerTag>();
     auto targets = registry.view<Collision, TargetTag>();
@@ -48,6 +49,12 @@ void checkBulletCollitions(entt::registry& registry, std::unordered_set<entt::en
                         }
                         else
                         {
+                            NotifySystem::notifyDialogBox(
+                                window,
+                                "You have been defeated. However, you can continue the game.",
+                                "Ok",
+                                []() {}
+                            );
                             SoundManager::getInstance().playSound("Death");
                         }
                     }
@@ -210,12 +217,12 @@ void CollisionSystem::updateCollisionBoxes(entt::registry& registry)
     }
 }
 
-void CollisionSystem::checkCollisions(entt::registry& registry)
+void CollisionSystem::checkCollisions(entt::registry& registry, sf::RenderWindow& window)
 {
     std::unordered_set<entt::entity> entitiesToDestroy;
 
-    checkBulletCollitions<PlayerBullet, Enemy>(registry, entitiesToDestroy);
-    checkBulletCollitions<EnemyBullet, Player>(registry, entitiesToDestroy);
+    checkBulletCollitions<PlayerBullet, Enemy>(registry, entitiesToDestroy, window);
+    checkBulletCollitions<EnemyBullet, Player>(registry, entitiesToDestroy, window);
 
     checkDropCollision(registry);
     
