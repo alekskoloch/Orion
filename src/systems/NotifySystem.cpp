@@ -1,15 +1,39 @@
 #include "NotifySystem.h"
 
-void NotifySystem::notify(const std::string& message, float displayTime)
+void NotifySystem::notify(const Type type, const std::string& message, float displayTime)
 {
-    sf::Text text(message, FontManager::getInstance().getFont("font"), 24); //TODO: set font size
-    text.setPosition(20.f, 1080.f);
+    sf::Text text;
+    switch (type)
+    {
+    case Type::Info:
+        text = sf::Text(message, FontManager::getInstance().getFont("font"), 24); //TODO: set font size
+        text.setPosition(20.f, 1080.f);
 
-    if (!notifications.empty())
-        for (auto& notification : notifications)
-            notification.text.move(0.f, notification.text.getGlobalBounds().height + 20.f); //TODO: set margin
+        if (!notifications.empty())
+            for (auto& notification : notifications)
+                if (notification.text.getCharacterSize() == 24)
+                    notification.text.move(0.f, notification.text.getGlobalBounds().height + 20.f); //TODO: set margin
 
-    notifications.push_back({ text });
+        notifications.push_back({ text, displayTime });
+        break;
+    case Type::BigInfo:
+        text = sf::Text(message, FontManager::getInstance().getFont("font"), 48); //TODO: set font size
+        text.setPosition(3840.f / 2.f - text.getGlobalBounds().width / 2.f, 200.f);
+        text.setOutlineColor(sf::Color::Red);
+        text.setOutlineThickness(2.f);
+
+        //if bigInfo exist, delete it and add new one
+        notifications.remove_if([](const Notification& notification)
+        {
+            return notification.text.getCharacterSize() == 48;
+        });
+
+        notifications.push_back({ text, displayTime });
+
+        break;
+    default:
+        throw std::runtime_error("Unknown notification type");
+    }
 }
 
 void NotifySystem::update(sf::Time deltaTime)
