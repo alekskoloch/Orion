@@ -120,6 +120,11 @@ struct Name
     std::string name;
 };
 
+struct PointOfInterest
+{
+    
+};
+
 struct Position
 {
     sf::Vector2f position;
