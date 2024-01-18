@@ -17,3 +17,17 @@ void PointSystem::addPointOfInterest(entt::registry& registry, sf::Vector2f poin
     sprite.setTexture(TextureManager::getInstance().getTexture("pointOfInterest"));
     registry.emplace<Renderable>(pointOfInterest, sprite);
 }
+
+void PointSystem::removePointOfInterest(entt::registry& registry, sf::Vector2f pointPosition)
+{
+    auto view = registry.view<PointOfInterest, Position>();
+    for (auto entity : view)
+    {
+        auto& position = view.get<Position>(entity);
+        if (position.position == pointPosition)
+        {
+            registry.destroy(entity);
+            return;
+        }
+    }
+}

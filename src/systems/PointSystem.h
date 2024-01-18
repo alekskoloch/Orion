@@ -6,4 +6,5 @@ class PointSystem
 {
 public:
     static void addPointOfInterest(entt::registry& registry, sf::Vector2f pointPosition);
+    static void removePointOfInterest(entt::registry& registry, sf::Vector2f pointPosition);
 };
