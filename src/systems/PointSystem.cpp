@@ -31,3 +31,23 @@ void PointSystem::removePointOfInterest(entt::registry& registry, sf::Vector2f p
         }
     }
 }
+
+void PointSystem::update(entt::registry& registry, sf::Time deltaTime)
+{    
+    auto view = registry.view<PointOfInterest, Position>();
+    for (auto entity : view)
+    {
+        auto& position = view.get<Position>(entity);
+
+        auto playerView = registry.view<Player, Position>();
+        for (auto playerEntity : playerView)
+        {
+            auto& playerPosition = playerView.get<Position>(playerEntity);
+            if (CalculateDistance(playerPosition.position, position.position) < 100.f) //TODO: Make this configurable
+            {
+                registry.destroy(entity);
+                return;
+            }
+        }
+    }
+}
