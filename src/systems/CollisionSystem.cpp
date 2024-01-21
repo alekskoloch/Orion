@@ -35,10 +35,11 @@ void checkBulletCollitions(entt::registry& registry, std::unordered_set<entt::en
                 entitiesToDestroy.find(target) == entitiesToDestroy.end() &&
                 bullets.template get<Collision>(bullet).collisionBox.intersects(targetCollision.collisionBox))
             {
-                entitiesToDestroy.insert(bullet);
                 //TODO: make onCollision method for each tag
                 if constexpr (std::is_same_v<TargetTag, Player>)
                 {
+                    entitiesToDestroy.insert(bullet);
+
                     auto shieldPlayerView = registry.view<Player, Shield>();
 
                     for (auto shield : shieldPlayerView)
@@ -61,9 +62,12 @@ void checkBulletCollitions(entt::registry& registry, std::unordered_set<entt::en
                 }
                 else if constexpr (std::is_same_v<TargetTag, Enemy>)
                 {
-                    //entitiesToDestroy.insert(target);
 
                     auto& enemyHealthComponent = registry.get<Health>(target);
+                    if (enemyHealthComponent.currentHealthValue <= 0.f)
+                        return;
+
+                    entitiesToDestroy.insert(bullet);
                     auto player = registry.view<Player>().front();
                     enemyHealthComponent.currentHealthValue -= WeaponsSystem::getWeaponDamage(registry);
                     auto damageInfo = registry.create();
