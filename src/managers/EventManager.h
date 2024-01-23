@@ -20,9 +20,11 @@ public:
 
     using EventCallback = std::function<void()>;
 
-    void subscribe(Event eventName, EventCallback callback);
+    unsigned int subscribe(Event eventName, EventCallback callback);
+    void unsubscribe(unsigned int subscriberId);
     void trigger(Event eventName);
 
 private:
-    std::unordered_map<Event, std::vector<EventCallback>> eventSubscribers;
+    std::unordered_map<unsigned int, std::unordered_map<Event, std::vector<EventCallback>>> eventSubscribers;
+    unsigned int eventSubscriberId = 0;
 };

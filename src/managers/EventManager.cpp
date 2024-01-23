@@ -6,18 +6,28 @@ EventManager& EventManager::getInstance()
     return instance;
 }
 
-void EventManager::subscribe(Event eventName, EventCallback callback)
+unsigned int EventManager::subscribe(Event eventName, EventCallback callback)
 {
-    this->eventSubscribers[eventName].push_back(callback);
+    this->eventSubscribers[this->eventSubscriberId][eventName].push_back(callback);
+    return this->eventSubscriberId++;
+}
+
+void EventManager::unsubscribe(unsigned int subscriberId)
+{
+    this->eventSubscribers.erase(subscriberId);
 }
 
 void EventManager::trigger(Event eventName)
 {
-    if (this->eventSubscribers.find(eventName) != this->eventSubscribers.end())
+    for (auto& subscriber : this->eventSubscribers)
     {
-        for (const auto& callback : this->eventSubscribers[eventName])
+        auto it = subscriber.second.find(eventName);
+        if (it != subscriber.second.end())
         {
-            callback();
+            for (auto& callback : it->second)
+            {
+                callback();
+            }
         }
     }
 }
