@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../pch.h"
+#include <queue> //TODO: add to pch
 
 #include "../components/components.h"
 
@@ -33,5 +34,7 @@ public:
 
 private:
     static inline std::list<Notification> notifications;
+    static inline std::queue<Notification> bigInfoQueue;
     static inline std::unique_ptr<GUIDialogBox> dialogBox = nullptr;
+    
 };

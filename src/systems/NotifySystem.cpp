@@ -22,13 +22,7 @@ void NotifySystem::notify(const Type type, const std::string& message, float dis
         text.setOutlineColor(sf::Color::Red);
         text.setOutlineThickness(2.f);
 
-        notifications.remove_if([](const Notification& notification)
-        {
-            return notification.text.getCharacterSize() == 48;
-        });
-
-        notifications.push_back({ text, displayTime });
-
+        bigInfoQueue.push({ text, displayTime });
         break;
     default:
         throw std::runtime_error("Unknown notification type");
@@ -67,6 +61,18 @@ void NotifySystem::update(sf::Time deltaTime)
         return notification.displayTime <= 0.f;
     });
 
+    if (!bigInfoQueue.empty())
+    {
+        auto& notification = bigInfoQueue.front();
+        notification.displayTime -= deltaTime.asSeconds();
+
+        if (notification.displayTime < 1.f)
+            notification.text.setFillColor(sf::Color(255, 255, 255, 255 * notification.displayTime));
+
+        if (notification.displayTime <= 0.f)
+            bigInfoQueue.pop();
+    }
+
     if (dialogBox != nullptr)
     {
         dialogBox->update();
@@ -84,6 +90,9 @@ void NotifySystem::draw(sf::RenderWindow& window)
 {
     for (const auto& notification : notifications)
             window.draw(notification.text);
+
+    if (!bigInfoQueue.empty())
+        window.draw(bigInfoQueue.front().text);
 
     if (dialogBox != nullptr)
         dialogBox->draw();
