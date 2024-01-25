@@ -122,7 +122,7 @@ struct Name
 
 struct PointOfInterest
 {
-    
+    std::string id;
 };
 
 struct Position
