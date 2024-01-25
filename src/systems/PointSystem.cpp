@@ -32,6 +32,18 @@ void PointSystem::removePointOfInterest(entt::registry& registry, sf::Vector2f p
     }
 }
 
+bool PointSystem::isPointOfInterestActive(entt::registry& registry, std::string id)
+{
+    auto view = registry.view<PointOfInterest>();
+    for (auto entity : view)
+    {
+        auto& pointOfInterest = view.get<PointOfInterest>(entity);
+        if (pointOfInterest.id == id)
+            return true;
+    }
+    return false;
+}
+
 void PointSystem::update(entt::registry& registry, sf::Time deltaTime)
 {    
     auto view = registry.view<PointOfInterest, Position>();
