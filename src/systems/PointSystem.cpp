@@ -7,10 +7,10 @@
 
 #include "../utils/MathOperations.h"
 
-void PointSystem::addPointOfInterest(entt::registry& registry, sf::Vector2f pointPosition)
+void PointSystem::addPointOfInterest(entt::registry& registry, sf::Vector2f pointPosition, std::string id)
 {
     auto pointOfInterest = registry.create();
-    registry.emplace<PointOfInterest>(pointOfInterest);
+    registry.emplace<PointOfInterest>(pointOfInterest, id);
     registry.emplace<Position>(pointOfInterest, pointPosition);
     sf::Sprite sprite;
     sprite.setPosition(pointPosition);
