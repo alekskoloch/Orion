@@ -2,6 +2,7 @@
 
 #include "../../pch.h"
 
+#include "../../managers/EventManager.h"
 #include "../PointSystem.h"
 
 class IQuestCondition
@@ -45,4 +46,36 @@ public:
 
 private:
     std::string pointOfInterestName;
+};
+
+class KillEnemiesCondition : public IQuestCondition
+{
+public:
+    KillEnemiesCondition(int requiredKills) : requiredKills(requiredKills) {}
+
+    void subscribeEvent() override
+    {
+        this->subscriberId = EventManager::getInstance().subscribe(EventManager::Event::EnemyKilled, [this]() {
+            currentKills++;
+        });
+    }
+
+    void unsubscribeEvent() override
+    {
+        EventManager::getInstance().unsubscribe(this->subscriberId);
+    }
+
+    bool check(entt::registry& registry) override
+    {
+        return currentKills >= requiredKills;
+    }
+
+    std::string getProgress()
+    {
+        return std::string("Enemy to kill: ") + std::to_string(currentKills) + "/" + std::to_string(requiredKills);
+    }
+
+private:
+    int requiredKills;
+    int currentKills = 0;
 };
