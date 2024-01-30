@@ -2,6 +2,8 @@
 
 #include "../../pch.h"
 
+#include "../PointSystem.h"
+
 class IQuestCondition
 {
 public:
@@ -14,4 +16,33 @@ public:
     virtual std::string getProgress() { return ""; }
 protected:
     unsigned int subscriberId;
+};
+
+class ReachPointOfInterestCondition : public IQuestCondition
+{
+public:
+    ReachPointOfInterestCondition(std::string pointOfInterestName) : pointOfInterestName(pointOfInterestName) {}
+
+    bool check(entt::registry& registry) override
+    {
+        return !PointSystem::isPointOfInterestActive(registry, pointOfInterestName);
+    }
+
+    void subscribeEvent() override
+    {
+        
+    }
+
+    void unsubscribeEvent() override
+    {
+        
+    }
+
+    std::string getProgress()
+    {
+        return "You must reach the point!";
+    }
+
+private:
+    std::string pointOfInterestName;
 };
