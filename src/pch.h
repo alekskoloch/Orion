@@ -6,6 +6,7 @@
 #include <unordered_map>
 #include <string>
 #include <random>
+#include <ranges>
 #include <concepts>
 
 #include <SFML/Graphics.hpp>
