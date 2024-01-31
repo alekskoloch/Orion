@@ -14,6 +14,7 @@ public:
     void addRandomQuest(entt::registry& registry);
 
     void update(entt::registry& registry, sf::Time deltaTime);
+    std::vector<Quest>& getQuests();
 private:
     std::vector<Quest> quests;
 };

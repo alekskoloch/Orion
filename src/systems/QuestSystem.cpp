@@ -87,3 +87,8 @@ void QuestSystem::update(entt::registry& registry, sf::Time deltaTime)
         }
     }
 }
+
+std::vector<Quest>& QuestSystem::getQuests()
+{
+    return this->quests;
+}
