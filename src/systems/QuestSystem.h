@@ -13,6 +13,7 @@ public:
     void startQuest(Quest quest);
     void addRandomQuest(entt::registry& registry);
 
+    void update(entt::registry& registry, sf::Time deltaTime);
 private:
     std::vector<Quest> quests;
 };

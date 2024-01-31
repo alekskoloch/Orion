@@ -44,3 +44,46 @@ void QuestSystem::addRandomQuest(entt::registry& registry)
     Quest quest = builder.build();
     this->startQuest(quest);
 }
+
+void QuestSystem::update(entt::registry& registry, sf::Time deltaTime)
+{
+    // Execute current stage action of each quest
+    for (auto& quest : quests)
+    {
+        if (!quest.completed)
+        {
+            auto& currentStage = quest.stages[quest.currentStage];
+            if (!currentStage.completed && !currentStage.actionExecuted)
+            {
+                currentStage.action(registry);
+                currentStage.actionExecuted = true;
+                currentStage.condition->subscribeEvent();
+            }
+        }
+    }
+
+    // Checking for completed quests
+    for (auto& quest : quests)
+    {
+        if (!quest.completed)
+        {
+            auto& currentStage = quest.stages[quest.currentStage];
+            if (!currentStage.completed && currentStage.condition->check(registry))
+            {
+                currentStage.completed = true;
+                currentStage.condition->unsubscribeEvent();
+                quest.currentStage++;
+                if (quest.currentStage == quest.stages.size())
+                {
+                    quest.completed = true;
+                    quest.active = false;
+                    NotifySystem::notify(NotifySystem::Type::BigInfo, "Quest completed: " + quest.name);
+                }
+                else
+                {
+                    NotifySystem::notify(NotifySystem::Type::Info, quest.name + ": New journal entry.");
+                }
+            }
+        }
+    }
+}
