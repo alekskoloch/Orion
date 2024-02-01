@@ -21,6 +21,7 @@ public:
 
     virtual std::string getProgress() { return ""; }
     virtual float getTargetDistance(entt::registry& registry) { return 0.0f; }
+    virtual sf::Vector2f getTargetPosition(entt::registry& registry) { return sf::Vector2f(); }
 protected:
     unsigned int subscriberId;
 };
@@ -68,6 +69,21 @@ public:
         return 0.0f;
     }
 
+    sf::Vector2f getTargetPosition(entt::registry& registry) override
+    {
+        auto view = registry.view<PointOfInterest, Position>();
+        for (auto entity : view)
+        {
+            auto& pointOfInterest = view.get<PointOfInterest>(entity);
+            if (pointOfInterest.id == pointOfInterestName)
+            {
+                auto& position = view.get<Position>(entity);
+                return position.position;
+            }
+        }
+        return sf::Vector2f();
+    }
+
 private:
     std::string pointOfInterestName;
 };
@@ -102,6 +118,11 @@ public:
     float getTargetDistance(entt::registry& registry) override
     {
         return 0.0f;
+    }
+
+    sf::Vector2f getTargetPosition(entt::registry& registry) override
+    {
+        return sf::Vector2f();
     }
 
 private:
