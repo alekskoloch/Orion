@@ -6,15 +6,13 @@
 #include "DropSystem.h"
 
 #include "../managers/SoundManager.h"
+#include "../managers/EventManager.h"
 
 #include "../systems/WeaponsSystem.h"
 #include "../systems/CooldownSystem.h"
 #include "../systems/ExperienceSystem.h"
 #include "../systems/ProceduralGenerationSystem.h"
 #include "../systems/NotifySystem.h"
-
-#include "../components/components.h"
-#include "../components/tagComponents.h"
 
 #include "../schema/EnemySchema.h"
 
@@ -106,6 +104,8 @@ void checkBulletCollitions(entt::registry& registry, std::unordered_set<entt::en
 
                     if (enemyHealthComponent.currentHealthValue <= 0.f)
                     {
+                        EventManager::getInstance().trigger(EventManager::Event::EnemyKilled);
+
                         auto enemyExpValue = registry.get<Experience>(target).experience;
                         ExperienceSystem::addExp(registry, enemyExpValue);
 

@@ -2,6 +2,9 @@
 
 #include "../pch.h"
 
+#include "../components/components.h"
+#include "../components/tagComponents.h"
+
 class CollisionSystem
 {
 public:
