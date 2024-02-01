@@ -18,7 +18,10 @@ private:
 
     sf::CircleShape backgroundMap;
     sf::Sprite playerMinimapSprite;
+    sf::Sprite activeQuestMinimapSprite;
+    bool drawQuestMarker = false;
     std::vector<sf::CircleShape> mapObjects;
+    void updateQuestMarker();
 
     void initializationMinimap();
 

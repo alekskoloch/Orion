@@ -59,6 +59,8 @@ void GUIMinimap::update()
         }
     }
 
+    this->updateQuestMarker();
+
     this->updatePlayerCoordinates();
     this->updateActiveQuestText();
 }
@@ -70,6 +72,9 @@ void GUIMinimap::draw()
     for (auto mapObject : mapObjects)
         window.draw(mapObject);
 
+    if (this->drawQuestMarker)
+        window.draw(activeQuestMinimapSprite);
+
     this->writePlayerCoordinates();
     this->drawActiveQuestText();
 }
@@ -77,6 +82,7 @@ void GUIMinimap::draw()
 void GUIMinimap::initializationMinimap()
 {
     TextureManager::getInstance().loadTexture("PLAYER_MINIMAP_TEXTURE", ASSETS_PATH + std::string("playerMinimap.png"));
+    TextureManager::getInstance().loadTexture("ACTIVE_QUEST_MINIMAP_TEXTURE", ASSETS_PATH + std::string("MapMarker.png"));
 
     //TODO: temporary solution, make this configurable
     backgroundMap.setRadius(200);
@@ -88,6 +94,8 @@ void GUIMinimap::initializationMinimap()
 
     playerMinimapSprite = CreateSprite("PLAYER_MINIMAP_TEXTURE");
     playerMinimapSprite.setPosition(backgroundMap.getPosition().x + backgroundMap.getRadius(), backgroundMap.getPosition().y + backgroundMap.getRadius());
+
+    activeQuestMinimapSprite = CreateSprite("ACTIVE_QUEST_MINIMAP_TEXTURE");
 }
 
 void GUIMinimap::initializePlayerCoordinatesText()
@@ -160,4 +168,49 @@ void GUIMinimap::drawActiveQuestText()
     window.draw(activeQuestTitleText);
     window.draw(activeQuestDescriptionText);
     window.draw(activeQuestDistanceText);
+}
+
+void GUIMinimap::updateQuestMarker()
+{
+    for (auto& quest : this->quests)
+    {
+        if (quest.active)
+        {
+            auto questMarkerPosition = quest.stages[quest.currentStage].condition->getTargetPosition(registry);
+            if (questMarkerPosition != sf::Vector2f())
+            {
+                this->drawQuestMarker = true;
+
+                sf::Vector2f playerPosition = registry.get<Position>(registry.view<Player, Renderable>().front()).position;
+                sf::Vector2f playerMinimapPosition = backgroundMap.getPosition() + sf::Vector2f(backgroundMap.getRadius(), backgroundMap.getRadius());
+
+                sf::Vector2f direction = questMarkerPosition - playerPosition;
+                float distance = std::sqrt(direction.x * direction.x + direction.y * direction.y);
+                float maxDistance = backgroundMap.getRadius();
+                
+                sf::Vector2f normalizedDirection = direction / distance;
+
+                if (distance > maxDistance * 20.0f)
+                {
+                    sf::Vector2f edgePosition = playerMinimapPosition + normalizedDirection * (maxDistance - 10);
+                    activeQuestMinimapSprite.setPosition(edgePosition);
+                }
+                else
+                {
+                    sf::Vector2f questMarkerMinimapPosition = playerMinimapPosition + (direction / 20.0f);
+                    activeQuestMinimapSprite.setPosition(questMarkerMinimapPosition);
+                }
+
+                activeQuestMinimapSprite.setOrigin(activeQuestMinimapSprite.getGlobalBounds().width / 2.f, activeQuestMinimapSprite.getGlobalBounds().height / 2.f);
+            }
+            else
+            {
+                this->drawQuestMarker = false;
+            }
+        }
+        else
+        {
+            this->drawQuestMarker = false;
+        }
+    }
 }
