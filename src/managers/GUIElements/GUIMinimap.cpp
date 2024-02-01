@@ -141,7 +141,15 @@ void GUIMinimap::updateActiveQuestText()
 
             activeQuestDescriptionText.setString(quest.stages[quest.currentStage].description);
             activeQuestDescriptionText.setOrigin(activeQuestDescriptionText.getGlobalBounds().width / 2.f, activeQuestDescriptionText.getGlobalBounds().height / 2.f);
-            
+
+            int distance = (int)(quest.stages[quest.currentStage].condition->getTargetDistance(registry)) / 100;
+            if (distance > 0)
+            {
+                activeQuestDistanceText.setString("Distance: " + std::to_string(distance));
+                activeQuestDistanceText.setOrigin(activeQuestDistanceText.getGlobalBounds().width / 2.f, activeQuestDistanceText.getGlobalBounds().height / 2.f);
+            }
+            else
+                activeQuestDistanceText.setString("");
             break;
         }
     }
@@ -151,5 +159,5 @@ void GUIMinimap::drawActiveQuestText()
 {
     window.draw(activeQuestTitleText);
     window.draw(activeQuestDescriptionText);
-    // window.draw(activeQuestDistanceText);
+    window.draw(activeQuestDistanceText);
 }
