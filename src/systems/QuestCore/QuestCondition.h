@@ -5,6 +5,11 @@
 #include "../../managers/EventManager.h"
 #include "../PointSystem.h"
 
+#include "../../components/components.h"
+#include "../../components/tagComponents.h"
+
+#include "../../utils/MathOperations.h"
+
 class IQuestCondition
 {
 public:
@@ -15,6 +20,7 @@ public:
     virtual void unsubscribeEvent() = 0;
 
     virtual std::string getProgress() { return ""; }
+    virtual float getTargetDistance(entt::registry& registry) { return 0.0f; }
 protected:
     unsigned int subscriberId;
 };
@@ -42,6 +48,24 @@ public:
     std::string getProgress()
     {
         return "You must reach the point!";
+    }
+
+    float getTargetDistance(entt::registry& registry) override
+    {
+        auto view = registry.view<PointOfInterest, Position>();
+        for (auto entity : view)
+        {
+            auto& pointOfInterest = view.get<PointOfInterest>(entity);
+            if (pointOfInterest.id == pointOfInterestName)
+            {
+                auto& position = view.get<Position>(entity);
+                auto playerEntity = registry.view<Player>()[0];
+                auto playerPosition = registry.get<Position>(playerEntity);
+
+                return CalculateDistance(position.position, playerPosition.position);
+            }
+        }
+        return 0.0f;
     }
 
 private:
@@ -73,6 +97,11 @@ public:
     std::string getProgress()
     {
         return std::string("Enemy to kill: ") + std::to_string(currentKills) + "/" + std::to_string(requiredKills);
+    }
+
+    float getTargetDistance(entt::registry& registry) override
+    {
+        return 0.0f;
     }
 
 private:
