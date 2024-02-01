@@ -2,15 +2,19 @@
 
 #include "../TextureManager.h"
 
+#include "../../managers/FontManager.h"
+
 #include "../../components/components.h"
 #include "../../components/tagComponents.h"
 
 #include "../../utils/GraphicsOperations.h"
 
-GUIMinimap::GUIMinimap(sf::RenderWindow& window, entt::registry& registry)
-    : window(window), registry(registry)
+GUIMinimap::GUIMinimap(sf::RenderWindow& window, entt::registry& registry, std::vector<Quest>& quests)
+    : window(window), registry(registry), font(FontManager::getInstance().getFont("font")), quests(quests)
 {
     initializationMinimap();
+    initializePlayerCoordinatesText();
+    initializeActiveQuestText();
 }
 
 void GUIMinimap::update()
@@ -54,6 +58,9 @@ void GUIMinimap::update()
             mapObjects.push_back(enemyDot);
         }
     }
+
+    this->updatePlayerCoordinates();
+    this->updateActiveQuestText();
 }
 
 void GUIMinimap::draw()
@@ -62,6 +69,9 @@ void GUIMinimap::draw()
     window.draw(playerMinimapSprite);
     for (auto mapObject : mapObjects)
         window.draw(mapObject);
+
+    this->writePlayerCoordinates();
+    this->drawActiveQuestText();
 }
 
 void GUIMinimap::initializationMinimap()
@@ -78,4 +88,68 @@ void GUIMinimap::initializationMinimap()
 
     playerMinimapSprite = CreateSprite("PLAYER_MINIMAP_TEXTURE");
     playerMinimapSprite.setPosition(backgroundMap.getPosition().x + backgroundMap.getRadius(), backgroundMap.getPosition().y + backgroundMap.getRadius());
+}
+
+void GUIMinimap::initializePlayerCoordinatesText()
+{
+    playerCoordinatesText.setFont(this->font);
+    playerCoordinatesText.setCharacterSize(20);
+    playerCoordinatesText.setFillColor(sf::Color::White);
+    playerCoordinatesText.setPosition(backgroundMap.getPosition().x + backgroundMap.getRadius(), backgroundMap.getPosition().y + backgroundMap.getRadius() + backgroundMap.getRadius() + 20);
+}
+
+void GUIMinimap::updatePlayerCoordinates()
+{
+    playerCoordinatesText.setString(std::to_string((int)registry.get<Position>(registry.view<Player, Renderable>().front()).position.x / 100) + "  " + std::to_string((int)registry.get<Position>(registry.view<Player, Renderable>().front()).position.y / 100));
+    playerCoordinatesText.setOrigin(playerCoordinatesText.getGlobalBounds().width / 2.f, playerCoordinatesText.getGlobalBounds().height / 2.f);
+}
+
+void GUIMinimap::writePlayerCoordinates()
+{
+    window.draw(playerCoordinatesText);
+}
+
+void GUIMinimap::initializeActiveQuestText()
+{
+    activeQuestTitleText.setFont(this->font);
+    activeQuestTitleText.setCharacterSize(20);
+    activeQuestTitleText.setFillColor(sf::Color::White);
+    activeQuestTitleText.setPosition(backgroundMap.getPosition().x + backgroundMap.getRadius(), backgroundMap.getPosition().y + backgroundMap.getRadius() + backgroundMap.getRadius() + 20 + this->playerCoordinatesText.getGlobalBounds().height + 30);
+
+    activeQuestDescriptionText.setFont(this->font);
+    activeQuestDescriptionText.setCharacterSize(20);
+    activeQuestDescriptionText.setFillColor(sf::Color::White);
+    activeQuestDescriptionText.setPosition(backgroundMap.getPosition().x + backgroundMap.getRadius(), backgroundMap.getPosition().y + backgroundMap.getRadius() + backgroundMap.getRadius() + 40 + this->playerCoordinatesText.getGlobalBounds().height + 30);
+
+    activeQuestDistanceText.setFont(this->font);
+    activeQuestDistanceText.setCharacterSize(20);
+    activeQuestDistanceText.setFillColor(sf::Color::White);
+    activeQuestDistanceText.setPosition(backgroundMap.getPosition().x + backgroundMap.getRadius(), backgroundMap.getPosition().y + backgroundMap.getRadius() + backgroundMap.getRadius() + 60 + this->playerCoordinatesText.getGlobalBounds().height + 30);
+}
+
+void GUIMinimap::updateActiveQuestText()
+{
+    activeQuestTitleText.setString("");
+    activeQuestDescriptionText.setString("");
+
+    for (auto& quest : this->quests)
+    {
+        if (quest.active)
+        {
+            activeQuestTitleText.setString(quest.name);
+            activeQuestTitleText.setOrigin(activeQuestTitleText.getGlobalBounds().width / 2.f, activeQuestTitleText.getGlobalBounds().height / 2.f);
+
+            activeQuestDescriptionText.setString(quest.stages[quest.currentStage].description);
+            activeQuestDescriptionText.setOrigin(activeQuestDescriptionText.getGlobalBounds().width / 2.f, activeQuestDescriptionText.getGlobalBounds().height / 2.f);
+            
+            break;
+        }
+    }
+}
+
+void GUIMinimap::drawActiveQuestText()
+{
+    window.draw(activeQuestTitleText);
+    window.draw(activeQuestDescriptionText);
+    // window.draw(activeQuestDistanceText);
 }

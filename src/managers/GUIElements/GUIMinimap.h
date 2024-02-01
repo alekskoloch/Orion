@@ -2,20 +2,37 @@
 
 #include "../../pch.h"
 
+#include "../../systems/QuestCore/Quest.h"
+
 class GUIMinimap
 {
 public:
-    GUIMinimap(sf::RenderWindow& window, entt::registry& registry);
+    GUIMinimap(sf::RenderWindow& window, entt::registry& registry, std::vector<Quest>& quests);
 
     void update();
     void draw();
 private:
     entt::registry& registry;
     sf::RenderWindow& window;
+    std::vector<Quest>& quests;
 
     sf::CircleShape backgroundMap;
     sf::Sprite playerMinimapSprite;
     std::vector<sf::CircleShape> mapObjects;
 
     void initializationMinimap();
+
+    void initializePlayerCoordinatesText();
+    void updatePlayerCoordinates();
+    void writePlayerCoordinates();
+    sf::Font& font;
+    sf::Text playerCoordinatesText;
+
+    sf::Text activeQuestTitleText;
+    sf::Text activeQuestDescriptionText;
+    sf::Text activeQuestDistanceText;
+
+    void initializeActiveQuestText();
+    void updateActiveQuestText();
+    void drawActiveQuestText();
 };
