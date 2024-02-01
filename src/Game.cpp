@@ -8,7 +8,7 @@
 #include "components/components.h"
 #include "components/tagComponents.h"
 
-Game::Game() : window(sf::VideoMode(3840u, 2160u), "Orion"), systemManager(this->window, this->registry, this->event), guiManager(this->window, this->registry)
+Game::Game() : window(sf::VideoMode(3840u, 2160u), "Orion"), systemManager(this->window, this->registry, this->event), guiManager(this->window, this->registry, this->event, this->systemManager.getQuests())    
 {
     //TODO: Frame rate should be configurable
     window.setFramerateLimit(144);
@@ -33,7 +33,7 @@ void Game::processEvents()
         if (event.type == sf::Event::Closed)
             window.close();
 
-        if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Tab)
+        if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Tab && !this->guiManager.pause())
         {
             this->systemManager.enableSlowMotion();
             this->guiManager.toggleQuickMenu(true);
@@ -56,15 +56,17 @@ void Game::processEvents()
             this->systemManager.debugMode = !this->systemManager.debugMode;
         }
     }
+
+    this->guiManager.processInput();
     
     this->systemManager.executeEventSystems();
-
 }
 
 void Game::update(sf::Time deltaTime)
 {
     this->guiManager.update(deltaTime);
-    this->systemManager.executeUpdateSystems(deltaTime);
+    if (!this->guiManager.pause())
+        this->systemManager.executeUpdateSystems(deltaTime);
 }
 
 void Game::render()

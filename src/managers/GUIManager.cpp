@@ -14,17 +14,23 @@
 #include "../utils/GraphicsOperations.h"
 #include "../utils/Mouse.h"
 
-GUIManager::GUIManager(sf::RenderWindow& window, entt::registry& registry) : window(window), registry(registry),
+GUIManager::GUIManager(sf::RenderWindow& window, entt::registry& registry, sf::Event& event, std::vector<Quest>& quests) : window(window), registry(registry), event(event),
     quickMenu(window, registry),
     energyBar(window, registry),
-    minimap(window, registry),
+    minimap(window, registry, quests),
     skillTreeGUI(registry, window),
     weaponTile(window, registry),
     shieldTile(window, registry),
     moneyBar(window, registry),
-    expInfo(window, registry)
+    expInfo(window, registry),
+    journal(window, registry, quests)
 {
     this->initializeShader();
+}
+
+void GUIManager::processInput()
+{
+    this->journal.processInput(this->event);
 }
 
 void GUIManager::update(sf::Time deltaTime)
@@ -34,12 +40,22 @@ void GUIManager::update(sf::Time deltaTime)
         if (this->quickMenuActive)
             this->quickMenu.update();
 
-        this->energyBar.update(deltaTime);
-        this->minimap.update();
-        this->weaponTile.update();
-        this->shieldTile.update();
-        this->moneyBar.update();
-        this->expInfo.update();
+        if (this->journal.isOpened())
+        {
+            this->pauseFromGUI = true;
+            this->journal.update(deltaTime);
+        }
+        else
+        {
+            this->pauseFromGUI = false;
+            
+            this->energyBar.update(deltaTime);
+            this->minimap.update();
+            this->weaponTile.update();
+            this->shieldTile.update();
+            this->moneyBar.update();
+            this->expInfo.update();
+        }
     }
     else if (SceneManager::getInstance().getCurrentScene() == Scene::SkillTree)
     {
@@ -57,6 +73,9 @@ void GUIManager::draw()
         this->moneyBar.draw(this->window, sf::RenderStates::Default);
         this->shieldTile.draw(this->window, sf::RenderStates::Default);
         this->weaponTile.draw(this->window, sf::RenderStates::Default);
+
+        if (this->journal.isOpened())
+            this->journal.draw(this->window, sf::RenderStates::Default);
         
         if (this->quickMenuActive)
         {
