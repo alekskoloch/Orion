@@ -25,6 +25,7 @@
 #include "../systems/DropSystem.h"
 #include "../systems/RemovalSystem.h"
 #include "../systems/InfoSystem.h"
+#include "../systems/PointSystem.h"
 #include "../systems/NotifySystem.h"
 
 #include "../systems/RenderSystem.h"
@@ -121,6 +122,7 @@ void SystemManager::executeUpdateSystems(sf::Time deltaTime)
             CollisionSystem::updateCollisionBoxes(this->registry);      
             CollisionSystem::checkCollisions(this->registry, this->window);
             RemovalSystem::update(this->registry);
+            PointSystem::update(this->registry, deltaTime);
             InfoSystem::update(this->registry, deltaTime);
         }
     }
