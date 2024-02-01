@@ -172,6 +172,7 @@ void GUIMinimap::drawActiveQuestText()
 
 void GUIMinimap::updateQuestMarker()
 {
+    this->drawQuestMarker = false;
     for (auto& quest : this->quests)
     {
         if (quest.active)
@@ -203,14 +204,8 @@ void GUIMinimap::updateQuestMarker()
 
                 activeQuestMinimapSprite.setOrigin(activeQuestMinimapSprite.getGlobalBounds().width / 2.f, activeQuestMinimapSprite.getGlobalBounds().height / 2.f);
             }
-            else
-            {
-                this->drawQuestMarker = false;
-            }
-        }
-        else
-        {
-            this->drawQuestMarker = false;
+
+            break;
         }
     }
 }
