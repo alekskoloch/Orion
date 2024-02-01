@@ -4,6 +4,8 @@
 
 #include "../managers/SceneManager.h"
 
+#include "../systems/QuestSystem.h"
+
 #include "BackgroundManager.h"
 
 // make this configurable
@@ -30,6 +32,8 @@ private:
     sf::Event& event;
     
     BackgroundManager backgroundManager;
+
+    QuestSystem questSystem;
 
     bool slowMotion = false;
     float slowMotionFactor = 1.0f;

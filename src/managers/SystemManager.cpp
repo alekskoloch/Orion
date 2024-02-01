@@ -27,6 +27,7 @@
 #include "../systems/InfoSystem.h"
 #include "../systems/PointSystem.h"
 #include "../systems/NotifySystem.h"
+#include "../systems/QuestSystem.h"
 
 #include "../systems/RenderSystem.h"
 #include "../systems/DebugSystem.h"
@@ -39,6 +40,8 @@ SystemManager::SystemManager(sf::RenderWindow& window, entt::registry& registry,
 {
     SceneManager::getInstance().setCurrentScene(Scene::Game);
     this->executeInitializationSystems();
+
+    this->questSystem.addRandomQuest(this->registry);
 }
 
 void SystemManager::executeInitializationSystems()
@@ -124,6 +127,7 @@ void SystemManager::executeUpdateSystems(sf::Time deltaTime)
             RemovalSystem::update(this->registry);
             PointSystem::update(this->registry, deltaTime);
             InfoSystem::update(this->registry, deltaTime);
+            this->questSystem.update(this->registry, deltaTime);
         }
     }
 }
