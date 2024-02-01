@@ -25,6 +25,8 @@ public:
     void enableSlowMotion() { this->slowMotion = true; }
     void disableSlowMotion() { this->slowMotion = false; }
 
+    std::vector<Quest>& getQuests() { return this->questSystem.getQuests(); }
+
     bool debugMode = false;
 private:
     sf::RenderWindow& window;
