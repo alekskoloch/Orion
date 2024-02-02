@@ -41,7 +41,9 @@ SystemManager::SystemManager(sf::RenderWindow& window, entt::registry& registry,
     SceneManager::getInstance().setCurrentScene(Scene::Game);
     this->executeInitializationSystems();
 
-    this->questSystem.addRandomQuest(this->registry);
+    this->questSystem.addRandomQuest(this->registry, "First Random Quest");
+    this->questSystem.addRandomQuest(this->registry, "Second Random Quest");
+    this->questSystem.addRandomQuest(this->registry, "Third Random Quest");
 }
 
 void SystemManager::executeInitializationSystems()
