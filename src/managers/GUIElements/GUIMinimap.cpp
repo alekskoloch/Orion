@@ -139,6 +139,7 @@ void GUIMinimap::updateActiveQuestText()
 {
     activeQuestTitleText.setString("");
     activeQuestDescriptionText.setString("");
+    activeQuestDistanceText.setString("");
 
     for (auto& quest : this->quests)
     {
@@ -156,8 +157,8 @@ void GUIMinimap::updateActiveQuestText()
                 activeQuestDistanceText.setString("Distance: " + std::to_string(distance));
                 activeQuestDistanceText.setOrigin(activeQuestDistanceText.getGlobalBounds().width / 2.f, activeQuestDistanceText.getGlobalBounds().height / 2.f);
             }
-            else
-                activeQuestDistanceText.setString("");
+
+            //assuming that only one quest can be active at a time
             break;
         }
     }
