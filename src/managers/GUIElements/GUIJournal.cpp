@@ -41,8 +41,37 @@ GUIJournal::GUIJournal(sf::RenderWindow& window, entt::registry& registry, std::
 
     for (auto& quest : this->quests)
     {
-        this->addButton(quest.name);
+        GUIButton button;
+        button = GUIButton(
+            sf::Vector2f(
+                this->selectBox.getPosition().x,
+                this->selectBox.getPosition().y - this->selectBox.getSize().y / 2.f + 25.f + 2.f + this->buttons.size() * 50.f
+            ),
+            sf::Vector2f(this->selectBox.getSize().x, 50.f),
+            quest.name,
+            20,
+            sf::Color(0, 0, 0, 200),
+            sf::Color(0, 100, 0, 200),
+            sf::Color(0, 200, 0, 200),
+            ButtonStyle::Borderless
+        );
+
+        button.setOnClick([this, &quest]()
+        {
+            for (auto& q : this->quests)
+            {
+                q.active = false;
+            }
+
+            quest.active = true;
+
+            this->setContentText();
+        });
+
+        this->buttons.push_back(button);
     }
+
+    this->maxVisibleButtons = std::floor(this->selectBox.getSize().y / 50.f);
 }
 
 void GUIJournal::processInput(sf::Event& event)
@@ -51,8 +80,6 @@ void GUIJournal::processInput(sf::Event& event)
     {
         this->isOpen = !this->isOpen;
         this->isButtonReleased = false;
-        this->selectedQuestIndex = -1;
-        this->setAllButtonsInactive();
         this->contentText.clear();
     }
 
@@ -61,12 +88,51 @@ void GUIJournal::processInput(sf::Event& event)
 
     if (!sf::Mouse::isButtonPressed(sf::Mouse::Left))
         this->isMouseReleased = true;
+
+    if (this->buttons.size() > this->maxVisibleButtons)
+    {
+        if (event.type == sf::Event::MouseWheelScrolled)
+        {
+            if (event.mouseWheelScroll.delta > 0 && this->scrollPosition > 0)
+            {
+                this->scrollPosition--;
+            }
+            else if (event.mouseWheelScroll.delta < 0 && this->scrollPosition < this->buttons.size() - this->maxVisibleButtons)
+            {
+                this->scrollPosition++;
+            }
+        }
+    }
 }
 
 void GUIJournal::update(sf::Time deltaTime)
 {
-    auto mousePosition = sf::Vector2f(sf::Mouse::getPosition(this->window));
-    this->updateButtons(mousePosition);
+    auto mousePosition = sf::Vector2f(sf::Mouse::getPosition(window));
+
+    if (this->buttons.size() > this->maxVisibleButtons)
+    {
+        for (int i = this->scrollPosition, j = 0; i < this->maxVisibleButtons + this->scrollPosition; i++, j++)
+        {
+            this->buttons[i].setPosition(
+                sf::Vector2f(
+                    this->selectBox.getPosition().x,
+                    this->selectBox.getPosition().y - this->selectBox.getSize().y / 2.f + 25.f + 2.f + j * 50.f
+                )
+            );
+        }
+
+        for (int i = scrollPosition; i < this->maxVisibleButtons + this->scrollPosition; i++)
+        {
+            this->buttons[i].update(mousePosition, this->isMouseReleased);
+        }
+    }
+    else
+    {
+        for (auto& button : this->buttons)
+        {
+            button.update(mousePosition, this->isMouseReleased);
+        }
+    }
 }
 
 void GUIJournal::draw(sf::RenderTarget& target, sf::RenderStates states) const
@@ -76,14 +142,23 @@ void GUIJournal::draw(sf::RenderTarget& target, sf::RenderStates states) const
     target.draw(this->bookmarkBar);
     target.draw(this->titleText);
 
-    for (auto& button : this->buttons)
-    {
-        target.draw(button.box);
-        target.draw(button.text);
-    }
-
     for (auto& text : this->contentText)
     {
         target.draw(text);
+    }
+
+    if (this->buttons.size() > this->maxVisibleButtons)
+    {
+        for (int i = scrollPosition; i < this->maxVisibleButtons + this->scrollPosition; i++)
+        {
+            target.draw(this->buttons[i]);
+        }
+    }
+    else
+    {
+        for (auto& button : this->buttons)
+        {
+            target.draw(button);
+        }
     }
 }
