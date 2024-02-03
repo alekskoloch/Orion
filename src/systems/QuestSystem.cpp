@@ -31,7 +31,6 @@ void QuestSystem::addRandomQuest(entt::registry& registry, std::string questName
                 .addAction([uniquePointID](entt::registry& reg) {
                     int x = ProceduralGenerationSystem::GetRandomNumber(-5000, 5000);
                     int y = ProceduralGenerationSystem::GetRandomNumber(-5000, 5000);
-                    std::cout << "Adding point of interest with id: " << uniquePointID << "in: " << x << " " << y << std::endl;
                     PointSystem::addPointOfInterest(reg, sf::Vector2f(x, y), uniquePointID);
                 })
                 .addCondition(reachCondition)
