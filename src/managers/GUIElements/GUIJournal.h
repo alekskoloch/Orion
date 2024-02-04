@@ -28,6 +28,7 @@ private:
     bool isMouseReleased = false;
 
     std::vector<Quest>& quests;
+    std::vector<std::reference_wrapper<Quest>> sortedQuests;
 
     sf::Vector2f position;
     sf::Vector2f size;
@@ -42,6 +43,16 @@ private:
     std::vector<sf::Text> contentText;
 
     std::vector<GUIButton> buttons;
+    std::vector<GUIButton> sortButtons;
+    enum class SortType
+    {
+        All,
+        Current,
+        Completed
+    };
+    SortType sortType = SortType::All;
+    void sortAndDisplayQuests();
+    void setButtons();
 
     int scrollPosition = 0;
     int maxVisibleButtons;
@@ -53,7 +64,7 @@ private:
         this->contentText.clear();
 
         if (this->quests.empty())
-            return;
+            return;        
 
         for (auto& quest : this->quests)
         {
@@ -61,6 +72,15 @@ private:
             {
                 if (!quest.completed)
                 {
+                    sf::Text titleText;
+                    titleText.setFont(this->font);
+                    titleText.setCharacterSize(40);
+                    titleText.setFillColor(sf::Color::White);
+                    titleText.setString(quest.name);
+                    titleText.setOrigin(titleText.getGlobalBounds().width / 2.f, titleText.getGlobalBounds().height / 2.f);
+                    titleText.setPosition(this->contentBox.getPosition().x + this->contentBox.getSize().x / 2.f - titleText.getGlobalBounds().width / 2.f - margin, this->contentBox.getPosition().y - this->contentBox.getSize().y / 2.f + titleText.getGlobalBounds().height / 2.f + margin);
+                    this->contentText.push_back(titleText);
+
                     for (int i = 0; i <= quest.currentStage; i++)
                     {
                         sf::Text text;
@@ -95,6 +115,15 @@ private:
                 }
                 else
                 {
+                    sf::Text titleText;
+                    titleText.setFont(this->font);
+                    titleText.setCharacterSize(40);
+                    titleText.setFillColor(sf::Color::White);
+                    titleText.setString(quest.name);
+                    titleText.setOrigin(titleText.getGlobalBounds().width / 2.f, titleText.getGlobalBounds().height / 2.f);
+                    titleText.setPosition(this->contentBox.getPosition().x + this->contentBox.getSize().x / 2.f - titleText.getGlobalBounds().width / 2.f - margin, this->contentBox.getPosition().y - this->contentBox.getSize().y / 2.f + titleText.getGlobalBounds().height / 2.f + margin);
+                    this->contentText.push_back(titleText);
+
                     for (int i = 0; i < quest.stages.size(); i++)
                     {
                         sf::Text text;
