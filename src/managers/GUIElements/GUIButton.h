@@ -22,6 +22,7 @@ public:
     void setPosition(const sf::Vector2f& position);
     void setText(const std::string& textString);
     void setOnClick(std::function<void()> onClick);
+    void setDefaultState();
 
     void update(const sf::Vector2f& mousePos, bool& mouseReleased);
     void draw(sf::RenderTarget& target, sf::RenderStates states) const override;

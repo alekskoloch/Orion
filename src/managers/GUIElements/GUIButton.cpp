@@ -43,6 +43,11 @@ void GUIButton::setOnClick(std::function<void()> onClick)
     this->onClick = onClick;
 }
 
+void GUIButton::setDefaultState()
+{
+    this->setFillColor(normalColor);
+}
+
 void GUIButton::update(const sf::Vector2f& mousePos, bool& mouseReleased)
 {
     if (this->getGlobalBounds().contains(static_cast<sf::Vector2f>(mousePos)))
