@@ -143,7 +143,7 @@ void GUIMinimap::updateActiveQuestText()
 
     for (auto& quest : this->quests)
     {
-        if (quest.active)
+        if (quest.active && !quest.completed)
         {
             activeQuestTitleText.setString(quest.name);
             activeQuestTitleText.setOrigin(activeQuestTitleText.getGlobalBounds().width / 2.f, activeQuestTitleText.getGlobalBounds().height / 2.f);
@@ -176,7 +176,7 @@ void GUIMinimap::updateQuestMarker()
     this->drawQuestMarker = false;
     for (auto& quest : this->quests)
     {
-        if (quest.active)
+        if (quest.active && !quest.completed)
         {
             auto questMarkerPosition = quest.stages[quest.currentStage].condition->getTargetPosition(registry);
             if (questMarkerPosition != sf::Vector2f())
