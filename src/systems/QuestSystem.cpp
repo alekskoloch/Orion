@@ -86,6 +86,7 @@ void QuestSystem::update(entt::registry& registry, sf::Time deltaTime)
                 quest.currentStage++;
                 if (quest.currentStage == quest.stages.size())
                 {
+                    quest.currentStage--;
                     quest.completed = true;
                     quest.active = false;
                     NotifySystem::notify(NotifySystem::Type::BigInfo, "Quest completed: " + quest.name);
