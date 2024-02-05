@@ -8,6 +8,36 @@
 
 #include "GUIButton.h"
 
+namespace journal
+{
+    float const WINDOW_POSITION_X_PERCENTAGE = 0.5f;
+    float const WINDOW_POSITION_Y_PERCENTAGE = 0.5f;
+
+    float const WINDOW_WIDTH_PERCENTAGE = 0.5f;
+    float const WINDOW_HEIGHT_PERCENTAGE = 0.5f;
+
+    float const BOOKMARK_BAR_HEIGHT_PERCENTAGE = 0.1f;
+    float const SELECT_BOX_WIDTH_PERCENTAGE = 0.2f;
+    float const CONTENT_BOX_WIDTH_PERCENTAGE = 0.8f;
+
+    float const MARGIN = 20.0f;
+
+    sf::Color const DEFAULT_BOX_COLOR = sf::Color(0, 0, 0, 200);
+    sf::Color const DEFAULT_OUTLINE_COLOR = sf::Color::White;
+    float const DEFAULT_OUTLINE_THICKNESS = 2.0f;
+
+    std::string const TITLE_TEXT = "Journal";
+    unsigned int const CHARACTER_SIZE = 40;
+    unsigned int const SMALL_CHARACTER_SIZE = 20;
+    sf::Color const DEFAULT_TEXT_COLOR = sf::Color::White;
+    sf::Color const POSITIVE_TEXT_COLOR = sf::Color::Green;
+
+    float const BUTTON_HEIGHT = 50.0f;
+    sf::Color const BUTTON_COLOR = sf::Color(0, 0, 0, 200);
+    sf::Color const BUTTON_HOVER_COLOR = sf::Color(0, 100, 0, 200);
+    sf::Color const BUTTON_ACTIVE_COLOR = sf::Color(0, 200, 0, 200);
+}
+
 class GUIJournal : public sf::Drawable
 {
 
@@ -20,6 +50,31 @@ public:
     void update(sf::Time deltaTime);
     void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 private:
+    void initializeGUIJournal();
+    void initializeGUIJournalSize();
+    void initializeGUIJournalPosition();
+
+    void initializeBoxes();
+    void initializeBookmarkBar();
+    void initializeContentBox();
+    void initializeSelectBox();
+    void initializeJournalBoxElement(sf::RectangleShape& element);
+
+    void initializeTitleText();
+    sf::Text getJournalStyleText(const std::string text, const unsigned int characterSize = journal::CHARACTER_SIZE, const sf::Color color = journal::DEFAULT_TEXT_COLOR);
+
+    void initializeMaxVisibleButtons();
+    unsigned int calculateMaxVisibleButtons();
+
+    void initializeButtons();
+    void initializeSortButtons();
+    GUIButton getJournalButtonStyle(const std::string text, const sf::Vector2f position, const sf::Vector2f size, ButtonStyle style = ButtonStyle::Borderless);
+
+    void sortAndDisplayQuests();
+    void setButtons();
+    void setContentText();
+    void setAllQuestsInactive();
+
     sf::RenderWindow& window;
     entt::registry& registry;
 
@@ -38,8 +93,8 @@ private:
     sf::RectangleShape bookmarkBar;
     sf::RectangleShape selectBox;
     sf::Font font;
+    
     sf::Text titleText;
-
     std::vector<sf::Text> contentText;
 
     std::vector<GUIButton> buttons;
@@ -48,181 +103,11 @@ private:
     {
         All,
         Current,
-        Completed
+        Completed,
+        SORT_TYPE_COUNT
     };
     SortType sortType = SortType::All;
-    void sortAndDisplayQuests();
-    void setButtons();
 
     int scrollPosition = 0;
     int maxVisibleButtons;
-
-    void setContentText()
-    {
-        float margin = 20.f;
-        
-        this->contentText.clear();
-
-        if (this->quests.empty())
-            return;        
-
-        for (auto& quest : this->quests)
-        {
-            if (quest.active)
-            {
-                if (!quest.completed)
-                {
-                    sf::Text titleText;
-                    titleText.setFont(this->font);
-                    titleText.setCharacterSize(40);
-                    titleText.setFillColor(sf::Color::White);
-                    titleText.setString(quest.name);
-                    titleText.setOrigin(titleText.getGlobalBounds().width / 2.f, titleText.getGlobalBounds().height / 2.f);
-                    titleText.setPosition(this->contentBox.getPosition().x + this->contentBox.getSize().x / 2.f - titleText.getGlobalBounds().width / 2.f - margin, this->contentBox.getPosition().y - this->contentBox.getSize().y / 2.f + titleText.getGlobalBounds().height / 2.f + margin);
-                    this->contentText.push_back(titleText);
-
-                    for (int i = 0; i <= quest.currentStage; i++)
-                    {
-                        sf::Text text;
-                        text.setFont(this->font);
-                        text.setCharacterSize(20);
-                        if (i == quest.currentStage)
-                            text.setFillColor(sf::Color::Green);
-                        else
-                            text.setFillColor(sf::Color::White);
-                        text.setString(quest.stages[i].description);
-                        text.setOrigin(text.getGlobalBounds().width / 2.f, text.getGlobalBounds().height / 2.f);
-                        auto bounds = text.getGlobalBounds();
-                        text.setPosition(this->contentBox.getPosition().x - this->contentBox.getSize().x / 2.f + bounds.getSize().x / 2.f + margin, this->contentBox.getPosition().y - this->contentBox.getSize().y / 2.f + bounds.getSize().y / 2.f + margin + i * 50.f);
-                        this->contentText.push_back(text);
-
-                        if (i == quest.currentStage)
-                        {
-                            sf::Text statusText;
-                            statusText.setFont(this->font);
-                            statusText.setCharacterSize(40);
-                            statusText.setFillColor(sf::Color::White);
-                            statusText.setString(quest.stages[i].condition->getProgress());
-                            statusText.setOrigin(statusText.getGlobalBounds().width / 2.f, statusText.getGlobalBounds().height / 2.f);
-                            auto statusBounds = statusText.getGlobalBounds();
-                            statusText.setPosition(
-                                this->contentBox.getPosition().x,
-                                this->contentBox.getPosition().y + this->contentBox.getSize().y / 2.f - statusBounds.getSize().y / 2.f - margin
-                            );
-                            this->contentText.push_back(statusText);
-                        }
-                    }
-                }
-                else
-                {
-                    sf::Text titleText;
-                    titleText.setFont(this->font);
-                    titleText.setCharacterSize(40);
-                    titleText.setFillColor(sf::Color::White);
-                    titleText.setString(quest.name);
-                    titleText.setOrigin(titleText.getGlobalBounds().width / 2.f, titleText.getGlobalBounds().height / 2.f);
-                    titleText.setPosition(this->contentBox.getPosition().x + this->contentBox.getSize().x / 2.f - titleText.getGlobalBounds().width / 2.f - margin, this->contentBox.getPosition().y - this->contentBox.getSize().y / 2.f + titleText.getGlobalBounds().height / 2.f + margin);
-                    this->contentText.push_back(titleText);
-
-                    for (int i = 0; i < quest.stages.size(); i++)
-                    {
-                        sf::Text text;
-                        text.setFont(this->font);
-                        text.setCharacterSize(20);
-                        text.setFillColor(sf::Color::White);
-                        text.setString(quest.stages[i].description);
-                        text.setOrigin(text.getGlobalBounds().width / 2.f, text.getGlobalBounds().height / 2.f);
-                        auto bounds = text.getGlobalBounds();
-                        text.setPosition(this->contentBox.getPosition().x - this->contentBox.getSize().x / 2.f + bounds.getSize().x / 2.f + margin, this->contentBox.getPosition().y - this->contentBox.getSize().y / 2.f + bounds.getSize().y / 2.f + margin + i * 50.f);
-                        this->contentText.push_back(text);
-                    }
-
-                    sf::Text statusText;
-                    statusText.setFont(this->font);
-                    statusText.setCharacterSize(40);
-                    statusText.setFillColor(sf::Color::Green);
-                    statusText.setString("Quest completed");
-                    statusText.setOrigin(statusText.getGlobalBounds().width / 2.f, statusText.getGlobalBounds().height / 2.f);
-                    auto bounds = statusText.getGlobalBounds();
-                    statusText.setPosition(
-                                this->contentBox.getPosition().x,
-                                this->contentBox.getPosition().y + this->contentBox.getSize().y / 2.f - bounds.getSize().y / 2.f - margin
-                            );
-                    this->contentText.push_back(statusText);
-                    
-                }
-            }
-        }
-
-        // if (!this->quests[this->selectedQuestIndex].completed)
-        // {
-        //     for (int i = 0; i <= this->quests[this->selectedQuestIndex].currentStage; i++)
-        //     {
-        //         sf::Text text;
-        //         text.setFont(this->font);
-        //         text.setCharacterSize(20);
-        //         if (i == this->quests[this->selectedQuestIndex].currentStage)
-        //             text.setFillColor(sf::Color::Green);
-        //         else
-        //             text.setFillColor(sf::Color::White);
-        //         text.setString(this->quests[this->selectedQuestIndex].stages[i].description);
-        //         text.setOrigin(text.getGlobalBounds().width / 2.f, text.getGlobalBounds().height / 2.f);
-        //         auto bounds = text.getGlobalBounds();
-        //         text.setPosition(this->contentBox.getPosition().x - this->contentBox.getSize().x / 2.f + bounds.getSize().x / 2.f + margin, this->contentBox.getPosition().y - this->contentBox.getSize().y / 2.f + bounds.getSize().y / 2.f + margin + i * 50.f);
-        //         this->contentText.push_back(text);
-
-        //         if (i == this->quests[this->selectedQuestIndex].currentStage)
-        //         {
-        //             sf::Text statusText;
-        //             statusText.setFont(this->font);
-        //             statusText.setCharacterSize(40);
-        //             statusText.setFillColor(sf::Color::White);
-        //             statusText.setString(this->quests[this->selectedQuestIndex].stages[i].condition->getProgress());
-        //             statusText.setOrigin(statusText.getGlobalBounds().width / 2.f, statusText.getGlobalBounds().height / 2.f);
-        //             auto statusBounds = statusText.getGlobalBounds();
-        //             statusText.setPosition(
-        //                 this->contentBox.getPosition().x,
-        //                 this->contentBox.getPosition().y + this->contentBox.getSize().y / 2.f - statusBounds.getSize().y / 2.f - margin
-        //             );
-        //             this->contentText.push_back(statusText);
-        //         }
-        //     }
-        // }
-        // else
-        // {
-        //     for (int i = 0; i < this->quests[this->selectedQuestIndex].stages.size(); i++)
-        //     {
-        //         sf::Text text;
-        //         text.setFont(this->font);
-        //         text.setCharacterSize(20);
-        //         text.setFillColor(sf::Color::White);
-        //         text.setString(this->quests[this->selectedQuestIndex].stages[i].description);
-        //         text.setOrigin(text.getGlobalBounds().width / 2.f, text.getGlobalBounds().height / 2.f);
-        //         auto bounds = text.getGlobalBounds();
-        //         text.setPosition(this->contentBox.getPosition().x - this->contentBox.getSize().x / 2.f + bounds.getSize().x / 2.f + margin, this->contentBox.getPosition().y - this->contentBox.getSize().y / 2.f + bounds.getSize().y / 2.f + margin + i * 50.f);
-        //         this->contentText.push_back(text);
-        //     }
-
-        //     sf::Text statusText;
-        //     statusText.setFont(this->font);
-        //     statusText.setCharacterSize(40);
-        //     statusText.setFillColor(sf::Color::Green);
-        //     statusText.setString("Quest completed");
-        //     statusText.setOrigin(statusText.getGlobalBounds().width / 2.f, statusText.getGlobalBounds().height / 2.f);
-        //     auto bounds = statusText.getGlobalBounds();
-        //     statusText.setPosition(
-        //                 this->contentBox.getPosition().x,
-        //                 this->contentBox.getPosition().y + this->contentBox.getSize().y / 2.f - bounds.getSize().y / 2.f - margin
-        //             );
-        //     this->contentText.push_back(statusText);
-        // }
-    }
-
-    void setAllQuestsInactive()
-    {
-        for (auto& quest : this->quests)
-        {
-            quest.active = false;
-        }
-    }
 };

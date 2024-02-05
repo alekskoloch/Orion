@@ -1,117 +1,8 @@
 #include "GUIJournal.h"
 
-GUIJournal::GUIJournal(sf::RenderWindow& window, entt::registry& registry, std::vector<Quest>& quests) : window(window), registry(registry), quests(quests)
+GUIJournal::GUIJournal(sf::RenderWindow& window, entt::registry& registry, std::vector<Quest>& quests) : window(window), registry(registry), quests(quests), font(FontManager::getInstance().getFont("font"))
 {
-    this->position = sf::Vector2f(window.getSize().x / 2.f, window.getSize().y / 2.f);
-    this->size = sf::Vector2f(window.getSize().x / 2.f, window.getSize().y / 2.f);
-
-    sf::Vector2f contentBoxSize = sf::Vector2f(this->size.x * 0.8, this->size.y);
-    sf::Vector2f selectBoxSize = sf::Vector2f(this->size.x * 0.2, this->size.y);
-    sf::Vector2f bookmarkBarSize = sf::Vector2f(contentBoxSize.x + selectBoxSize.x, this->size.y * 0.1);
-
-    //TODO: Refactor text initialization
-    this->contentBox.setSize(contentBoxSize);
-    this->contentBox.setFillColor(sf::Color(0, 0, 0, 200));
-    this->contentBox.setOutlineColor(sf::Color::White);
-    this->contentBox.setOutlineThickness(2.f);
-    this->contentBox.setOrigin(this->contentBox.getSize().x / 2.f, this->contentBox.getSize().y / 2.f);
-    this->contentBox.setPosition(position.x + selectBoxSize.x / 2.f, position.y + bookmarkBarSize.y / 2.f);
-
-    this->selectBox.setSize(selectBoxSize);
-    this->selectBox.setFillColor(sf::Color(0, 0, 0, 200));
-    this->selectBox.setOutlineColor(sf::Color::White);
-    this->selectBox.setOutlineThickness(2.f);
-    this->selectBox.setOrigin(this->selectBox.getSize().x / 2.f, this->selectBox.getSize().y / 2.f);
-    this->selectBox.setPosition(position.x - contentBoxSize.x / 2.f, position.y + bookmarkBarSize.y / 2.f);    
-
-    this->bookmarkBar.setSize(bookmarkBarSize);
-    this->bookmarkBar.setFillColor(sf::Color(0, 0, 0, 200));
-    this->bookmarkBar.setOutlineColor(sf::Color::White);
-    this->bookmarkBar.setOutlineThickness(2.f);
-    this->bookmarkBar.setOrigin(this->bookmarkBar.getSize().x / 2.f, this->bookmarkBar.getSize().y / 2.f);
-    this->bookmarkBar.setPosition(position.x, position.y - contentBoxSize.y / 2.f);
-
-    this->font = FontManager::getInstance().getFont("font");
-    this->titleText.setFont(font);
-    this->titleText.setCharacterSize(40);
-    this->titleText.setFillColor(sf::Color::White);
-    this->titleText.setString("Journal");
-    this->titleText.setOrigin(this->titleText.getGlobalBounds().width / 2.f, this->titleText.getGlobalBounds().height / 2.f);
-    this->titleText.setPosition(position.x, position.y - contentBoxSize.y / 2.f);
-
-    this->maxVisibleButtons = std::floor(this->selectBox.getSize().y / 50.f);
-
-
-    //1/3 width of the selectBox
-    GUIButton allSortButton = GUIButton(
-        sf::Vector2f(
-            this->selectBox.getPosition().x - this->selectBox.getSize().x / 3.f,
-            this->selectBox.getPosition().y + this->selectBox.getSize().y / 2.f - 25.f
-        ),
-        sf::Vector2f(this->selectBox.getSize().x / 3.f, 50.f),
-        "All",
-        20,
-        sf::Color(0, 0, 0, 200),
-        sf::Color(0, 100, 0, 200),
-        sf::Color(0, 200, 0, 200),
-        ButtonStyle::Bordered
-    );
-
-    allSortButton.setOnClick([this]()
-    {
-        this->sortType = SortType::All;
-        this->sortAndDisplayQuests();
-    });
-
-    this->sortButtons.push_back(allSortButton);
-
-    GUIButton currentSortButton = GUIButton(
-        sf::Vector2f(
-            this->selectBox.getPosition().x,
-            this->selectBox.getPosition().y + this->selectBox.getSize().y / 2.f - 25.f
-        ),
-        sf::Vector2f(this->selectBox.getSize().x / 3.f, 50.f),
-        "Current",
-        20,
-        sf::Color(0, 0, 0, 200),
-        sf::Color(0, 100, 0, 200),
-        sf::Color(0, 200, 0, 200),
-        ButtonStyle::Bordered
-    );
-
-    currentSortButton.setOnClick([this]()
-    {
-        this->sortType = SortType::Current;
-        this->sortAndDisplayQuests();
-    });
-
-    this->sortButtons.push_back(currentSortButton);
-
-    GUIButton completedSortButton = GUIButton(
-        sf::Vector2f(
-            this->selectBox.getPosition().x + this->selectBox.getSize().x / 3.f,
-            this->selectBox.getPosition().y + this->selectBox.getSize().y / 2.f - 25.f
-        ),
-        sf::Vector2f(this->selectBox.getSize().x / 3.f, 50.f),
-        "Completed",
-        20,
-        sf::Color(0, 0, 0, 200),
-        sf::Color(0, 100, 0, 200),
-        sf::Color(0, 200, 0, 200),
-        ButtonStyle::Bordered
-    );
-
-    completedSortButton.setOnClick([this]()
-    {
-        this->sortType = SortType::Completed;
-        this->sortAndDisplayQuests();
-    });
-
-    this->sortButtons.push_back(completedSortButton);
-
-    this->sortAndDisplayQuests();
-
-    this->setButtons();
+    this->initializeGUIJournal();
 }
 
 void GUIJournal::processInput(sf::Event& event)
@@ -121,6 +12,9 @@ void GUIJournal::processInput(sf::Event& event)
         this->isOpen = !this->isOpen;
         this->isButtonReleased = false;
         this->contentText.clear();
+
+        if (this->isOpen)
+            this->sortAndDisplayQuests();
     }
 
     if (!sf::Keyboard::isKeyPressed(sf::Keyboard::J))
@@ -129,17 +23,26 @@ void GUIJournal::processInput(sf::Event& event)
     if (!sf::Mouse::isButtonPressed(sf::Mouse::Left))
         this->isMouseReleased = true;
 
-    if (this->buttons.size() > this->maxVisibleButtons)
+    if (this->isOpen)
     {
-        if (event.type == sf::Event::MouseWheelScrolled)
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape) && this->isButtonReleased)
         {
-            if (event.mouseWheelScroll.delta > 0 && this->scrollPosition > 0)
+            this->isOpen = false;
+            this->isButtonReleased = false;
+        }
+
+        if (this->buttons.size() > this->maxVisibleButtons)
+        {
+            if (event.type == sf::Event::MouseWheelScrolled)
             {
-                this->scrollPosition--;
-            }
-            else if (event.mouseWheelScroll.delta < 0 && this->scrollPosition < this->buttons.size() - this->maxVisibleButtons)
-            {
-                this->scrollPosition++;
+                if (event.mouseWheelScroll.delta > 0 && this->scrollPosition > 0)
+                {
+                    this->scrollPosition--;
+                }
+                else if (event.mouseWheelScroll.delta < 0 && this->scrollPosition < this->buttons.size() - this->maxVisibleButtons)
+                {
+                    this->scrollPosition++;
+                }
             }
         }
     }
@@ -151,12 +54,12 @@ void GUIJournal::update(sf::Time deltaTime)
 
     if (this->buttons.size() > this->maxVisibleButtons)
     {
-        for (int i = this->scrollPosition, j = 0; i < this->maxVisibleButtons + this->scrollPosition; i++, j++)
+        for (int i = this->scrollPosition; i < this->maxVisibleButtons + this->scrollPosition; i++)
         {
             this->buttons[i].setPosition(
                 sf::Vector2f(
                     this->selectBox.getPosition().x,
-                    this->selectBox.getPosition().y - this->selectBox.getSize().y / 2.f + 25.f + 2.f + j * 50.f
+                    this->selectBox.getPosition().y - (this->selectBox.getSize().y / 2.f) + (journal::BUTTON_HEIGHT / 2.f) + journal::DEFAULT_OUTLINE_THICKNESS + ((i - this->scrollPosition) * journal::BUTTON_HEIGHT)
                 )
             );
         }
@@ -213,16 +116,166 @@ void GUIJournal::draw(sf::RenderTarget& target, sf::RenderStates states) const
     }
 }
 
+void GUIJournal::initializeGUIJournal()
+{
+    this->initializeGUIJournalSize();
+    this->initializeGUIJournalPosition();
+    this->initializeBoxes();
+    this->initializeTitleText();
+    this->initializeButtons();
+    
+    this->sortAndDisplayQuests();
+    this->setButtons();
+}
+
+void GUIJournal::initializeGUIJournalSize()
+{
+    this->size = sf::Vector2f(
+        window.getSize().x * journal::WINDOW_WIDTH_PERCENTAGE,
+        window.getSize().y * journal::WINDOW_HEIGHT_PERCENTAGE
+    );
+}
+
+void GUIJournal::initializeGUIJournalPosition()
+{
+    this->position = sf::Vector2f(
+        window.getSize().x * journal::WINDOW_POSITION_X_PERCENTAGE,
+        window.getSize().y * journal::WINDOW_POSITION_Y_PERCENTAGE
+    );
+}
+
+void GUIJournal::initializeBoxes()
+{
+    this->initializeBookmarkBar();
+    this->initializeContentBox();
+    this->initializeSelectBox();
+}
+
+void GUIJournal::initializeBookmarkBar()
+{
+    this->bookmarkBar.setSize(sf::Vector2f(this->size.x, this->size.y * journal::BOOKMARK_BAR_HEIGHT_PERCENTAGE));
+    this->initializeJournalBoxElement(this->bookmarkBar);
+    this->bookmarkBar.setPosition(position.x, position.y - this->size.y / 2.f - this->bookmarkBar.getSize().y / 2.f);
+}
+
+void GUIJournal::initializeContentBox()
+{    
+    this->contentBox.setSize(sf::Vector2f(this->size.x * journal::CONTENT_BOX_WIDTH_PERCENTAGE, this->size.y));
+    this->initializeJournalBoxElement(this->contentBox);
+    this->contentBox.setPosition(position.x + this->size.x * journal::SELECT_BOX_WIDTH_PERCENTAGE / 2.f, position.y);
+}
+
+void GUIJournal::initializeSelectBox()
+{
+    this->selectBox.setSize(sf::Vector2f(this->size.x * journal::SELECT_BOX_WIDTH_PERCENTAGE, this->size.y));
+    this->initializeJournalBoxElement(this->selectBox);
+    this->selectBox.setPosition(position.x - this->size.x * journal::CONTENT_BOX_WIDTH_PERCENTAGE / 2.f, position.y);
+}
+
+void GUIJournal::initializeJournalBoxElement(sf::RectangleShape& element)
+{
+    element.setFillColor(journal::DEFAULT_BOX_COLOR);
+    element.setOutlineColor(journal::DEFAULT_OUTLINE_COLOR);
+    element.setOutlineThickness(journal::DEFAULT_OUTLINE_THICKNESS);
+    element.setOrigin(element.getSize().x / 2.f, element.getSize().y / 2.f);
+}
+
+void GUIJournal::initializeTitleText()
+{
+    this->titleText = this->getJournalStyleText(journal::TITLE_TEXT);
+    this->titleText.setPosition(this->bookmarkBar.getPosition());
+}
+
+sf::Text GUIJournal::getJournalStyleText(const std::string text, const unsigned int characterSize, const sf::Color color)
+{
+    sf::Text journalStyleText;
+    journalStyleText.setFont(this->font);
+    journalStyleText.setCharacterSize(characterSize);
+    journalStyleText.setFillColor(color);
+    journalStyleText.setString(text);
+    journalStyleText.setOrigin(journalStyleText.getGlobalBounds().width / 2.f, journalStyleText.getGlobalBounds().height / 2.f);
+    return journalStyleText;
+}
+
+void GUIJournal::initializeMaxVisibleButtons()
+{
+    this->maxVisibleButtons = this->calculateMaxVisibleButtons();
+}
+
+unsigned int GUIJournal::calculateMaxVisibleButtons()
+{
+    return std::floor((this->selectBox.getSize().y - journal::BUTTON_HEIGHT) / journal::BUTTON_HEIGHT);
+}
+
+void GUIJournal::initializeButtons()
+{
+    this->initializeMaxVisibleButtons();
+    this->initializeSortButtons();
+    
+}
+
+void GUIJournal::initializeSortButtons()
+{
+    std::array<std::string, static_cast<size_t>(SortType::SORT_TYPE_COUNT)> sortButtonNames = {"All", "Current", "Completed"};
+    sf::Vector2f basePosition = this->selectBox.getPosition();
+    float offsetX = this->selectBox.getSize().x / static_cast<int>(SortType::SORT_TYPE_COUNT);
+    float positionY = basePosition.y + this->selectBox.getSize().y / 2.f - journal::BUTTON_HEIGHT / 2.f;
+
+    for(size_t i = 0; i < sortButtonNames.size(); ++i)
+    {
+        float positionX = basePosition.x - offsetX + offsetX * i;
+        GUIButton sortButton = this->getJournalButtonStyle(
+            sortButtonNames[i],
+            sf::Vector2f(positionX, positionY),
+            sf::Vector2f(this->selectBox.getSize().x / static_cast<int>(SortType::SORT_TYPE_COUNT), journal::BUTTON_HEIGHT),
+            ButtonStyle::Bordered
+        );
+        SortType sortType = static_cast<SortType>(i);
+
+        sortButton.setOnClick([this, sortType]()
+        {
+            this->sortType = sortType;
+            this->sortAndDisplayQuests();
+
+            for (auto& button : this->sortButtons)
+                button.setDefaultState();
+
+            this->sortButtons[static_cast<size_t>(sortType)].setSelectedState();
+        });
+
+        this->sortButtons.push_back(sortButton);
+    }
+}
+
+GUIButton GUIJournal::getJournalButtonStyle(const std::string text, const sf::Vector2f position, const sf::Vector2f size, ButtonStyle style)
+{
+    return GUIButton(
+        position,
+        size,
+        text,
+        journal::SMALL_CHARACTER_SIZE,
+        journal::BUTTON_COLOR,
+        journal::BUTTON_HOVER_COLOR,
+        journal::BUTTON_ACTIVE_COLOR,
+        style
+    );
+}
+
 void GUIJournal::sortAndDisplayQuests()
 {
     this->sortedQuests.clear();
+
+    this->contentText.clear();
+
+    for (auto& sortButton : this->sortButtons)
+        sortButton.setDefaultState();
 
     switch (sortType)
     {
     case SortType::All:
         for (auto& quest : this->quests)
             this->sortedQuests.push_back(quest);
-        this->setButtons();
+        this->sortButtons[0].setSelectedState();
         break;
     case SortType::Current:
         for (auto& quest : this->quests)
@@ -230,7 +283,7 @@ void GUIJournal::sortAndDisplayQuests()
             if (!quest.completed)
                 this->sortedQuests.push_back(quest);
         }
-        this->setButtons();
+        this->sortButtons[1].setSelectedState();
         break;
     case SortType::Completed:
         for (auto& quest : this->quests)
@@ -238,11 +291,14 @@ void GUIJournal::sortAndDisplayQuests()
             if (quest.completed)
                 this->sortedQuests.push_back(quest);
         }
-        this->setButtons();
+        this->sortButtons[2].setSelectedState();
         break;
     default:
         throw std::runtime_error("Invalid SortType for quests in journal");
     }
+
+    this->scrollPosition = 0;
+    this->setButtons();
 }
 
 void GUIJournal::setButtons()
@@ -251,33 +307,75 @@ void GUIJournal::setButtons()
 
     for (auto& quest : this->sortedQuests)
     {
-        GUIButton button;
-        button = GUIButton(
+        GUIButton button = this->getJournalButtonStyle(
+            quest.get().name,
             sf::Vector2f(
                 this->selectBox.getPosition().x,
-                this->selectBox.getPosition().y - this->selectBox.getSize().y / 2.f + 25.f + 2.f + this->buttons.size() * 50.f
+                this->selectBox.getPosition().y - this->selectBox.getSize().y / 2.f + (journal::BUTTON_HEIGHT / 2.f) + journal::DEFAULT_OUTLINE_THICKNESS + this->buttons.size() * journal::BUTTON_HEIGHT
             ),
-            sf::Vector2f(this->selectBox.getSize().x, 50.f),
-            quest.get().name,
-            20,
-            sf::Color(0, 0, 0, 200),
-            sf::Color(0, 100, 0, 200),
-            sf::Color(0, 200, 0, 200),
-            ButtonStyle::Borderless
+            sf::Vector2f(this->selectBox.getSize().x, journal::BUTTON_HEIGHT)
         );
 
         button.setOnClick([this, &quest]()
         {
-            for (auto& q : this->quests)
-            {
-                q.active = false;
-            }
-
+            this->setAllQuestsInactive();
             quest.get().active = true;
-
             this->setContentText();
+
+            for (auto& button : this->buttons)
+                button.setDefaultState();
+
+            this->buttons[&quest - &this->sortedQuests[0]].setSelectedState();
         });
 
         this->buttons.push_back(button);
+    }
+}
+
+void GUIJournal::setContentText()
+{        
+    this->contentText.clear();
+
+    if (this->quests.empty()) return;        
+
+    for (const auto& quest : this->quests | std::views::filter(&Quest::active))
+    {
+        sf::Text titleText = this->getJournalStyleText(quest.name);
+        titleText.setPosition(
+            this->contentBox.getPosition().x + this->contentBox.getSize().x / 2.f - titleText.getGlobalBounds().width / 2.f - journal::MARGIN,
+            this->contentBox.getPosition().y - this->contentBox.getSize().y / 2.f + titleText.getGlobalBounds().height / 2.f + journal::MARGIN
+        );
+        this->contentText.push_back(titleText);
+
+        for (int i = 0; i <= quest.currentStage; ++i)
+        {
+            sf::Color stageTextColor = (i == quest.currentStage && !quest.completed) ? journal::POSITIVE_TEXT_COLOR : sf::Color::White;
+            sf::Text stageText = this->getJournalStyleText(quest.stages[i].description, journal::SMALL_CHARACTER_SIZE, stageTextColor);
+            stageText.setPosition(
+                this->contentBox.getPosition().x - this->contentBox.getSize().x / 2.f + stageText.getGlobalBounds().getSize().x / 2.f + journal::MARGIN,
+                this->contentBox.getPosition().y - this->contentBox.getSize().y / 2.f + stageText.getGlobalBounds().getSize().y / 2.f + journal::MARGIN + i * journal::BUTTON_HEIGHT
+            );
+            this->contentText.push_back(stageText);
+
+            if (i == quest.currentStage)
+            {
+                std::string statusString = quest.completed ? "Quest completed" : quest.stages[i].condition->getProgress();
+                sf::Color statusColor = quest.completed ? journal::POSITIVE_TEXT_COLOR : sf::Color::White;
+                sf::Text statusText = this->getJournalStyleText(statusString, journal::CHARACTER_SIZE, statusColor);
+                statusText.setPosition(
+                    this->contentBox.getPosition().x,
+                    this->contentBox.getPosition().y + this->contentBox.getSize().y / 2.f - statusText.getGlobalBounds().getSize().y / 2.f - journal::MARGIN
+                );
+                this->contentText.push_back(statusText);
+            }
+        }
+    }
+}
+
+void GUIJournal::setAllQuestsInactive()
+{
+    for (auto& quest : this->quests)
+    {
+        quest.active = false;
     }
 }
