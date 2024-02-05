@@ -57,20 +57,8 @@ include_directories(${NLOHMANN_JSON_INCLUDE_DIR})
 #GoogleTest
 enable_testing()
 
-add_subdirectory(src/lib/TextureManager)
-target_link_libraries(main TextureManager)
-
-add_subdirectory(src/lib/FontManager)
-target_link_libraries(main FontManager)
-
-add_subdirectory(src/lib/SoundManager)
-target_link_libraries(main SoundManager)
-
-add_subdirectory(src/lib/EventManager)
-target_link_libraries(main EventManager)
-
-add_subdirectory(src/lib/SceneManager)
-target_link_libraries(main SceneManager)
+add_subdirectory(src/lib/Managers)
+target_link_libraries(main EventManager FontManager SceneManager SoundManager TextureManager)
 
 file(GLOB TEST_SRC tests/*.cpp)
 add_executable(unit_tests ${TEST_SRC})
