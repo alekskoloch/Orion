@@ -59,7 +59,8 @@ void Game::processEvents()
 
     this->guiManager.processInput();
     
-    this->systemManager.executeEventSystems();
+    if (!this->guiManager.pause())
+        this->systemManager.executeEventSystems();
 }
 
 void Game::update(sf::Time deltaTime)
