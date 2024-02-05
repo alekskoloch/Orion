@@ -3,8 +3,6 @@
 #include "../components/components.h"
 #include "../components/tagComponents.h"
 
-#include "../managers/TextureManager.h"
-
 #include "../utils/MathOperations.h"
 
 void PointSystem::addPointOfInterest(entt::registry& registry, sf::Vector2f pointPosition, std::string id)

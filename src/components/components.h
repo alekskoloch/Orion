@@ -2,8 +2,6 @@
 
 #include "../pch.h"
 
-#include "../managers/TextureManager.h"
-
 #include "../schema/ShieldSchema.h"
 
 enum class SpecialShotType

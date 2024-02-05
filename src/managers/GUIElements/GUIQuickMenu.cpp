@@ -1,6 +1,5 @@
 #include "GUIQuickMenu.h"
 
-#include "../../managers/TextureManager.h"
 #include "../../managers/SoundManager.h"
 
 #include "../../utils/Mouse.h"

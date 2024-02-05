@@ -1,6 +1,6 @@
 #include "GUIMinimap.h"
 
-#include "../TextureManager.h"
+#include "TextureManager.h"
 
 #include "../../managers/FontManager.h"
 

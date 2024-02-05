@@ -1,3 +1,5 @@
+#include "TextureManager.h"
+
 #include <iostream>
 #include <fstream>
 #include <algorithm>

@@ -1,6 +1,6 @@
 #include "PlayerInitializationSystem.h"
 
-#include "../managers/TextureManager.h"
+#include "TextureManager.h"
 #include "../systems/WeaponsSystem.h"
 #include "../systems/ShieldSystem.h"
 #include "../components/components.h"

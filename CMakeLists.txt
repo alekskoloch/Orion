@@ -57,10 +57,8 @@ include_directories(${NLOHMANN_JSON_INCLUDE_DIR})
 #GoogleTest
 enable_testing()
 
-# create library for TextureManager
-add_library(texture_manager src/managers/TextureManager.cpp)
-target_include_directories(texture_manager PUBLIC src/managers)
-target_link_libraries(texture_manager sfml-graphics EnTT::EnTT)
+add_subdirectory(src/lib/TextureManager)
+target_link_libraries(main TextureManager)
 
 file(GLOB TEST_SRC tests/*.cpp)
 add_executable(unit_tests ${TEST_SRC})

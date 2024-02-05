@@ -1,6 +1,8 @@
 #pragma once
 
-#include "../pch.h"
+#include <SFML/Graphics.hpp>
+#include <unordered_map>
+#include <string>
 
 class TextureManager
 {

@@ -1,6 +1,5 @@
 #include "GUIWeaponTile.h"
 
-#include "../TextureManager.h"
 #include "../FontManager.h"
 
 #include "../../systems/MoneySystem.h"

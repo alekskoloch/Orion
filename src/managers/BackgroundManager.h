@@ -2,8 +2,6 @@
 
 #include "../pch.h"
 
-#include "../managers/TextureManager.h"
-
 #include "../systems/ProceduralGenerationSystem.h"
 
 class BackgroundTile

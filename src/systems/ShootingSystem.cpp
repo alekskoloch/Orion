@@ -9,7 +9,7 @@
 #include "../systems/ShieldSystem.h"
 #include "../systems/BulletSystem.h"
 
-#include "../managers/TextureManager.h"
+#include "TextureManager.h"
 #include "../managers/SoundManager.h"
 #include "../components/components.h"
 #include "../components/tagComponents.h"

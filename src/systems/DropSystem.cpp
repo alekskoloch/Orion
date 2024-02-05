@@ -1,7 +1,5 @@
 #include "DropSystem.h"
 
-#include "../managers/TextureManager.h"
-
 #include "../components/components.h"
 #include "../components/tagComponents.h"
 

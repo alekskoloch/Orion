@@ -3,7 +3,6 @@
 #include "../systems/WeaponsSystem.h"
 #include "../systems/ShieldSystem.h"
 
-#include "../managers/TextureManager.h"
 #include "../managers/SceneManager.h"
 #include "../systems/PlayerInitializationSystem.h"
 #include "../schema/WeaponsSchema.h"

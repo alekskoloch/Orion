@@ -2,8 +2,6 @@
 
 #include "../pch.h"
 
-#include "../managers/TextureManager.h"
-
 inline sf::Sprite CreateSprite(const std::string& textureName)
 {
     sf::Sprite sprite(TextureManager::getInstance().getTexture(textureName));

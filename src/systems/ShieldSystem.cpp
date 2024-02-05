@@ -1,6 +1,5 @@
 #include "ShieldSystem.h"
 
-#include "../managers/TextureManager.h"
 #include "../managers/SoundManager.h"
 
 #include "../systems/EnergySystem.h"
