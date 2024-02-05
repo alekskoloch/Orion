@@ -45,7 +45,13 @@ void GUIButton::setOnClick(std::function<void()> onClick)
 
 void GUIButton::setDefaultState()
 {
+    this->selectedState = false;
     this->setFillColor(normalColor);
+}
+
+void GUIButton::setSelectedState(bool selectedState)
+{
+    this->selectedState = selectedState;
 }
 
 void GUIButton::update(const sf::Vector2f& mousePos, bool& mouseReleased)
@@ -68,7 +74,10 @@ void GUIButton::update(const sf::Vector2f& mousePos, bool& mouseReleased)
     }
     else if (mouseReleased)
     {
-        this->setFillColor(normalColor);
+        if (this->selectedState)
+            this->setFillColor(selectedColor);
+        else
+            this->setFillColor(normalColor);
     }
 }
 

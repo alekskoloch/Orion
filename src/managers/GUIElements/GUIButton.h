@@ -23,6 +23,8 @@ public:
     void setText(const std::string& textString);
     void setOnClick(std::function<void()> onClick);
     void setDefaultState();
+    //TODO: Color should be configurable
+    void setSelectedState(bool selectedState = true);
 
     void update(const sf::Vector2f& mousePos, bool& mouseReleased);
     void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
@@ -32,9 +34,11 @@ private:
     sf::Color normalColor;
     sf::Color hoverColor;
     sf::Color activeColor;
+    sf::Color selectedColor = sf::Color(128, 128, 128, 200);
     ButtonStyle style;
     unsigned int maxFontSize;
     std::function<void()> onClick;
 
+    bool selectedState = false;
     void adjustTextSize();
 };
