@@ -9,6 +9,9 @@
 #include "Mouse.h"
 #include "StringOperations.h"
 
+#include "components.h"
+#include "tagComponents.h"
+
 #include <iostream>
 #include <fstream>
 #include <algorithm>

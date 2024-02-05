@@ -1,8 +1,13 @@
 #pragma once
 
-#include "../pch.h"
+#include <SFML/Graphics.hpp>
+#include <entt/entt.hpp>
+#include <functional>
+#include <unordered_map>
+#include <string>
+#include <vector>
 
-#include "../schema/ShieldSchema.h"
+#include "../../schema/ShieldSchema.h"
 
 enum class SpecialShotType
 {

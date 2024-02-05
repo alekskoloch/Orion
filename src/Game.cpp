@@ -3,9 +3,6 @@
 #include "systems/PlayerInitializationSystem.h"
 #include "systems/EnemyInitializationSystem.h"
 
-#include "components/components.h"
-#include "components/tagComponents.h"
-
 Game::Game() : window(sf::VideoMode(3840u, 2160u), "Orion"), systemManager(this->window, this->registry, this->event), guiManager(this->window, this->registry, this->event, this->systemManager.getQuests())    
 {
     //TODO: Frame rate should be configurable
