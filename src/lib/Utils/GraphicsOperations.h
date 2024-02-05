@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../pch.h"
+#include <SFML/Graphics.hpp>
 
 inline sf::Sprite CreateSprite(const std::string& textureName)
 {

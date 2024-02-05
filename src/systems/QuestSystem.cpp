@@ -1,13 +1,5 @@
 #include "QuestSystem.h"
 
-//TODO: Move this to utils
-std::string removeWhitespace(std::string str) {
-    str.erase(std::remove_if(str.begin(), str.end(), [](unsigned char x) {
-        return std::isspace(x);
-    }), str.end());
-    return str;
-}
-
 void QuestSystem::startQuest(Quest quest)
 {
     NotifySystem::notify(NotifySystem::Type::BigInfo, "Quest started: " + quest.name);

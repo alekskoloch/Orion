@@ -1,8 +1,7 @@
 #pragma once
 
-#include "../pch.h"
-
-#include "../components/components.h"
+#include <SFML/Graphics.hpp>
+#include <cmath>
 
 inline float LinearInterpolation(float startValue, float endValue, float fraction)
 {
@@ -33,11 +32,6 @@ inline float CalculateDistance(const sf::Vector2f& point1, const sf::Vector2f& p
     return std::hypot(point1.x - point2.x, point1.y - point2.y);
 }
 
-inline float DistanceToMouse(const sf::Vector2f& mousePosition, const Position& position)
-{
-    return CalculateDistance(mousePosition, position.position);
-}
-
 inline double CalculateAzimuthAngleInRadians(const sf::Vector2f vector, float offsetInDegrees = 0.0f)
 {
     sf::Vector2f normalizedVector = NormalizeVector(vector);
@@ -62,8 +56,6 @@ inline float AngleDifference(float targetAngle, float currentAngle)
     }
     return angleDifference;
 }
-
-
 
 inline sf::Vector2f CalculateVectorFromAngle(float angleInRadians)
 {

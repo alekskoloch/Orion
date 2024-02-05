@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../pch.h"
+#include <SFML/Graphics.hpp>
 
 namespace utils
 {

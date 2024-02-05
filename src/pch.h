@@ -4,6 +4,11 @@
 #include "EventManager.h"
 #include "SceneManager.h"
 
+#include "GraphicsOperations.h"
+#include "MathOperations.h"
+#include "Mouse.h"
+#include "StringOperations.h"
+
 #include <iostream>
 #include <fstream>
 #include <algorithm>

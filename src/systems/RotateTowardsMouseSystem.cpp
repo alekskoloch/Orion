@@ -23,7 +23,7 @@ void RotateTowardsMouseSystem::rotateTowardsMouse(entt::registry& registry, sf::
             sf::Vector2f mousePosition = static_cast<sf::Vector2f>(sf::Mouse::getPosition(window));
             mousePosition = window.mapPixelToCoords(sf::Mouse::getPosition(window));
                         
-            float distanceToMouse = DistanceToMouse(mousePosition, position);
+            float distanceToMouse = CalculateDistance(mousePosition, position.position);
 
             if (distanceToMouse > rotation.minimalActivationDistance)
             {
