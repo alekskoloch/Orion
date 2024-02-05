@@ -1,7 +1,5 @@
 #include "MusicSystem.h"
 
-#include "../managers/SoundManager.h"
-
 void MusicSystem::initializeMusic()
 {
     //TODO: Reducing the size of a music file

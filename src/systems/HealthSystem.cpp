@@ -1,7 +1,5 @@
 #include "HealthSystem.h"
 
-#include "../managers/SoundManager.h"
-
 #include "../components/components.h"
 
 void HealthSystem::updateHealth(entt::registry& registry)

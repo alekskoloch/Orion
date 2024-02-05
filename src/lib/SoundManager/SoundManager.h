@@ -1,6 +1,9 @@
 #pragma once
 
-#include "../pch.h"
+#include <SFML/Audio.hpp>
+#include <unordered_map>
+#include <string>
+#include <memory>
 
 class SoundManager
 {

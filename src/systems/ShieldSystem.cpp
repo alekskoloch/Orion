@@ -1,7 +1,5 @@
 #include "ShieldSystem.h"
 
-#include "../managers/SoundManager.h"
-
 #include "../systems/EnergySystem.h"
 #include "../systems/SkillSystem.h"
 #include "../systems/CooldownSystem.h"

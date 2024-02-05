@@ -5,7 +5,6 @@
 #include "EnemyInitializationSystem.h"
 #include "DropSystem.h"
 
-#include "../managers/SoundManager.h"
 #include "../managers/EventManager.h"
 
 #include "../systems/WeaponsSystem.h"
