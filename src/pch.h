@@ -1,6 +1,7 @@
 #include "TextureManager.h"
 #include "FontManager.h"
 #include "SoundManager.h"
+#include "EventManager.h"
 
 #include <iostream>
 #include <fstream>

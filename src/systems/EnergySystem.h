@@ -2,8 +2,6 @@
 
 #include "../pch.h"
 
-#include "../managers/EventManager.h"
-
 #include "../components/components.h"
 #include "../components/tagComponents.h"
 

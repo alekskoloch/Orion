@@ -3,8 +3,6 @@
 #include "../../components/components.h"
 #include "../../components/tagComponents.h"
 
-#include "../../managers/EventManager.h"
-
 GUIEnergyBar::GUIEnergyBar(sf::RenderWindow& window, entt::registry& registry)
     : window(window), registry(registry)
 {

@@ -2,7 +2,6 @@
 
 #include "../../pch.h"
 
-#include "../../managers/EventManager.h"
 #include "../PointSystem.h"
 
 #include "../../components/components.h"
