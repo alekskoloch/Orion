@@ -1,4 +1,5 @@
 #include "TextureManager.h"
+#include "FontManager.h"
 
 #include <iostream>
 #include <fstream>

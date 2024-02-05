@@ -2,8 +2,6 @@
 
 #include "../../pch.h"
 
-#include "../../managers/FontManager.h"
-
 #include "../../systems/QuestCore/Quest.h"
 
 #include "GUIButton.h"

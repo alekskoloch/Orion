@@ -2,8 +2,6 @@
 
 #include "../../pch.h"
 
-#include "../../managers/FontManager.h"
-
 enum class ButtonStyle
 {
     Bordered,

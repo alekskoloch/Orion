@@ -1,7 +1,6 @@
 #include "Skill.h"
 
 #include "../managers/SoundManager.h"
-#include "../managers/FontManager.h"
 
 #include "../utils/Mouse.h"
 #include "../utils/GraphicsOperations.h"

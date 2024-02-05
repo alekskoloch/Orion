@@ -60,6 +60,9 @@ enable_testing()
 add_subdirectory(src/lib/TextureManager)
 target_link_libraries(main TextureManager)
 
+add_subdirectory(src/lib/FontManager)
+target_link_libraries(main FontManager)
+
 file(GLOB TEST_SRC tests/*.cpp)
 add_executable(unit_tests ${TEST_SRC})
 target_link_libraries(unit_tests gtest_main texture_manager sfml-graphics)

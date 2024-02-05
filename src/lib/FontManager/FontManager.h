@@ -1,6 +1,8 @@
 #pragma once
 
-#include "../pch.h"
+#include <SFML/Graphics.hpp>
+#include <unordered_map>
+#include <string>
 
 //TODO: Refactor code to use this class
 class FontManager

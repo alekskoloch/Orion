@@ -5,8 +5,6 @@
 
 #include "../components/components.h"
 
-#include "../managers/FontManager.h"
-
 #include "../managers/GUIElements/GUIDialogBox.h"
 
 #include "CooldownSystem.h"

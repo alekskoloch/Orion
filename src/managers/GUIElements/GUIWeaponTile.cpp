@@ -1,7 +1,5 @@
 #include "GUIWeaponTile.h"
 
-#include "../FontManager.h"
-
 #include "../../systems/MoneySystem.h"
 #include "../../systems/CooldownSystem.h"
 #include "../../systems/SkillSystem.h"

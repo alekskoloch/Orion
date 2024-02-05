@@ -1,7 +1,5 @@
 #include "InfoSystem.h"
 
-#include "../managers/FontManager.h"
-
 #include "../components/components.h"
 
 void InfoSystem::update(entt::registry& registry, sf::Time deltaTime)

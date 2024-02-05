@@ -1,9 +1,5 @@
 #include "GUIMinimap.h"
 
-#include "TextureManager.h"
-
-#include "../../managers/FontManager.h"
-
 #include "../../components/components.h"
 #include "../../components/tagComponents.h"
 
