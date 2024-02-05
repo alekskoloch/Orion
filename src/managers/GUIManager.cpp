@@ -30,7 +30,8 @@ GUIManager::GUIManager(sf::RenderWindow& window, entt::registry& registry, sf::E
 
 void GUIManager::processInput()
 {
-    this->journal.processInput(this->event);
+    if (!this->quickMenuActive)
+        this->journal.processInput(this->event);
 }
 
 void GUIManager::update(sf::Time deltaTime)
