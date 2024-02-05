@@ -4,8 +4,10 @@
 #include "../../systems/CooldownSystem.h"
 #include "../../systems/SkillSystem.h"
 
-#include "../../components/components.h"
-#include "../../components/tagComponents.h"
+#include "weapon.h"
+#include "shield.h"
+#include "moneyInventory.h"
+#include "player.h"
 
 #include "../../utils/GraphicsOperations.h"
 

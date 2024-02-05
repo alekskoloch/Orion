@@ -5,8 +5,6 @@
 #include "../entities/EnemyBuilder.h"
 
 #include "../systems/WeaponsSystem.h"
-#include "../components/components.h"
-#include "../components/tagComponents.h"
 
 #include "../schema/WeaponsSchema.h"
 

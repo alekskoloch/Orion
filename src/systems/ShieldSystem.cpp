@@ -4,8 +4,12 @@
 #include "../systems/SkillSystem.h"
 #include "../systems/CooldownSystem.h"
 
-#include "../components/components.h"
-#include "../components/tagComponents.h"
+#include "position.h"
+#include "shield.h"
+#include "input.h"
+#include "player.h"
+#include "renderable.h"
+#include "playerShield.h"
 
 #include "../utils/GraphicsOperations.h"
 

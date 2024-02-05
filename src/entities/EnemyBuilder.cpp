@@ -1,9 +1,14 @@
 #include "EnemyBuilder.h"
 
-#include "../systems/WeaponsSystem.h"
-#include "../systems/ProceduralGenerationSystem.h"
-
-#include "../utils/GraphicsOperations.h"
+#include "entityState.h"
+#include "name.h"
+#include "position.h"
+#include "speed.h"
+#include "health.h"
+#include "experience.h"
+#include "drop.h"
+#include "waypointMovement.h"
+#include "enemy.h"
 
 EnemyBuilder::EnemyBuilder(entt::registry& registry) : registry(registry)
 {

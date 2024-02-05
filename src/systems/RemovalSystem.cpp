@@ -1,7 +1,9 @@
 #include "RemovalSystem.h"
 
-#include "../components/components.h"
-#include "../components/tagComponents.h"
+#include "enemy.h"
+#include "bullet.h"
+#include "player.h"
+#include "position.h"
 
 #include "../utils/MathOperations.h"
 

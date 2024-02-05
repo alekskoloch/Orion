@@ -1,6 +1,6 @@
 #include "InfoSystem.h"
 
-#include "../components/components.h"
+#include "info.h"
 
 void InfoSystem::update(entt::registry& registry, sf::Time deltaTime)
 {

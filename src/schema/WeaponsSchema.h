@@ -3,7 +3,17 @@
 #include "../systems/BulletSystem.h"
 #include "../systems/ProceduralGenerationSystem.h"
 
-#include "../components/components.h"
+#include "playerBullet.h"
+#include "enemyBullet.h"
+#include "shurikenBullet.h"
+#include "player.h"
+
+enum class SpecialShotType
+{
+    FullCircleShoot,
+    TripleSalvo,
+    None
+};
 
 struct WeaponSchema
 {

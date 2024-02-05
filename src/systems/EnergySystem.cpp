@@ -2,6 +2,8 @@
 
 #include "../systems/SkillSystem.h"
 
+#include "player.h"
+
 void EnergySystem::updateEnergy(entt::registry& registry, sf::Time deltaTime)
 {
     auto view = registry.view<Player, Energy>();

@@ -1,7 +1,7 @@
 #include "InputSystem.h"
 
-#include "../components/components.h"
-#include "../components/tagComponents.h"
+#include "input.h"
+#include "player.h"
 
 void InputSystem::processInput(entt::registry& registry, sf::Event& event)
 {

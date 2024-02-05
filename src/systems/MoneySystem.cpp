@@ -1,7 +1,7 @@
 #include "MoneySystem.h"
 
-#include "../components/components.h"
-#include "../components/tagComponents.h"
+#include "moneyInventory.h"
+#include "player.h"
 
 void MoneySystem::addMoney(entt::registry& registry, int amount)
 {

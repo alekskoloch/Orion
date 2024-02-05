@@ -1,7 +1,7 @@
 #include "GUIExpInfo.h"
 
-#include "../../components/components.h"
-#include "../../components/tagComponents.h"
+#include "experience.h"
+#include "player.h"
 
 GUIExpInfo::GUIExpInfo(sf::RenderWindow& window, entt::registry& registry)
     : window(window), registry(registry)

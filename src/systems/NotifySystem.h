@@ -3,8 +3,6 @@
 #include "../pch.h"
 #include <queue> //TODO: add to pch
 
-#include "../components/components.h"
-
 #include "../managers/GUIElements/GUIDialogBox.h"
 
 #include "CooldownSystem.h"

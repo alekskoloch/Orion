@@ -1,6 +1,9 @@
 #include "AccelerationSystem.h"
 
-#include "../components/components.h"
+#include "acceleration.h"
+#include "input.h"
+#include "speed.h"
+#include "velocity.h"
 
 void AccelerationSystem::accelerate(entt::registry& registry, sf::Time deltaTime)
 {

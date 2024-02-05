@@ -7,8 +7,9 @@
 
 #include "../entities/WeaponBuilder.h"
 
-#include "../components/components.h"
-#include "../components/tagComponents.h"
+#include "weapon.h"
+#include "skills.h"
+#include "enemy.h"
 
 void WeaponsSystem::changeWeapon(entt::registry& registry, Weapons weapon)
 {

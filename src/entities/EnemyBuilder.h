@@ -4,9 +4,6 @@
 
 #include "../systems/WeaponsSystem.h"
 
-#include "../components/components.h"
-#include "../components/tagComponents.h"
-
 class EnemyBuilder
 {
 public:

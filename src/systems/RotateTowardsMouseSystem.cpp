@@ -3,7 +3,10 @@
 #include "../systems/CameraSystem.h"
 
 #include "../utils/MathOperations.h"
-#include "../components/components.h"
+
+#include "rotationTowardsMouse.h"
+#include "position.h"
+#include "renderable.h"
 
 void RotateTowardsMouseSystem::rotateTowardsMouse(entt::registry& registry, sf::Time deltaTime, sf::RenderWindow& window)
 {

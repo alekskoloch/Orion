@@ -1,6 +1,9 @@
 #include "WaypointsMovementSystem.h"
 
-#include "../components/components.h"
+#include "velocity.h"
+#include "waypointMovement.h"
+#include "position.h"
+#include "speed.h"
 
 #include "../utils/MathOperations.h"
 

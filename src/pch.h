@@ -9,9 +9,6 @@
 #include "Mouse.h"
 #include "StringOperations.h"
 
-#include "components.h"
-#include "tagComponents.h"
-
 #include <iostream>
 #include <fstream>
 #include <algorithm>
@@ -22,6 +19,7 @@
 #include <random>
 #include <ranges>
 #include <concepts>
+#include <type_traits>
 
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>

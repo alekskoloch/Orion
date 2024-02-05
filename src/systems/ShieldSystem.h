@@ -2,7 +2,7 @@
 
 #include "../pch.h"
 
-#include "../components/components.h"
+#include "shield.h"
 
 #include "../schema/ShieldSchema.h"
 

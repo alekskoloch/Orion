@@ -1,6 +1,5 @@
 #pragma once
 
-#include "../components/components.h"
 #include "WeaponsSchema.h"
 
 struct EnemySchema

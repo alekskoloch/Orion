@@ -1,7 +1,9 @@
 #include "PointSystem.h"
 
-#include "../components/components.h"
-#include "../components/tagComponents.h"
+#include "pointOfInterest.h"
+#include "position.h"
+#include "renderable.h"
+#include "player.h"
 
 #include "../utils/MathOperations.h"
 

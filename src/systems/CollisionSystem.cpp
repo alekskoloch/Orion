@@ -13,6 +13,16 @@
 
 #include "../schema/EnemySchema.h"
 
+#include "shield.h"
+#include "health.h"
+#include "info.h"
+#include "experience.h"
+#include "stoneInventory.h"
+#include "moneyInventory.h"
+#include "enemy.h"
+#include "player.h"
+#include "dropItem.h"
+
 template <typename BulletOwnerTag, typename TargetTag>
 void checkBulletCollitions(entt::registry& registry, std::unordered_set<entt::entity>& entitiesToDestroy, sf::RenderWindow& window)
 {

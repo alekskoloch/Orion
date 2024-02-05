@@ -2,11 +2,13 @@
 
 #include "../pch.h"
 
-#include "../components/components.h"
-#include "../components/tagComponents.h"
-
-#include "../utils/MathOperations.h"
-#include "../utils/GraphicsOperations.h"
+#include "weapon.h"
+#include "position.h"
+#include "collision.h"
+#include "renderable.h"
+#include "velocity.h"
+#include "bullet.h"
+#include "shurikenBullet.h"
 
 class BulletSystem
 {

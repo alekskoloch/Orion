@@ -1,7 +1,9 @@
 #include "GUIMinimap.h"
 
-#include "../../components/components.h"
-#include "../../components/tagComponents.h"
+#include "renderable.h"
+#include "position.h"
+#include "player.h"
+#include "enemy.h"
 
 #include "../../utils/GraphicsOperations.h"
 

@@ -1,6 +1,10 @@
 #include "MovementSystem.h"
 
-#include "../components/components.h"
+#include "position.h"
+#include "velocity.h"
+#include "input.h"
+#include "movementBoost.h"
+#include "player.h"
 
 #include "../systems/EnergySystem.h"
 

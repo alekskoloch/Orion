@@ -1,7 +1,7 @@
 #include "ExperienceSystem.h"
 
-#include "../components/components.h"
-#include "../components/tagComponents.h"
+#include "experience.h"
+#include "player.h"
 
 void ExperienceSystem::addExp(entt::registry& registry, unsigned int exp)
 {

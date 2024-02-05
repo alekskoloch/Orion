@@ -1,6 +1,6 @@
 #include "HealthSystem.h"
 
-#include "../components/components.h"
+#include "health.h"
 
 void HealthSystem::updateHealth(entt::registry& registry)
 {

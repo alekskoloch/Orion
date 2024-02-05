@@ -9,8 +9,6 @@
 #include "GUIElements/GUICircleSegment.h"
 #include "GUIElements/GUIStar.h"
 
-#include "../components/components.h"
-
 //TODO: Move to config
 const float MARGIN = 120.f;
 const float SEGMENT_THICKNESS = 5.f;

@@ -1,7 +1,7 @@
 #include "CameraSystem.h"
 
-#include "../components/components.h"
-#include "../components/tagComponents.h"
+#include "position.h"
+#include "player.h"
 
 void CameraSystem::setDefaultCamera(sf::RenderWindow& window)
 {

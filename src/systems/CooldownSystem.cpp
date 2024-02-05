@@ -1,6 +1,6 @@
 #include "CooldownSystem.h"
 
-#include "../components/components.h"
+#include "cooldown.h"
 
 void CooldownSystem::updateCooldowns(entt::registry& registry, sf::Time deltaTime)
 {

@@ -4,10 +4,9 @@
 
 #include "../PointSystem.h"
 
-#include "../../components/components.h"
-#include "../../components/tagComponents.h"
-
-#include "../../utils/MathOperations.h"
+#include "pointOfInterest.h"
+#include "position.h"
+#include "player.h"
 
 class IQuestCondition
 {

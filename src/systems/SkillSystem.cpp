@@ -1,7 +1,7 @@
 #include "SkillSystem.h"
 
-#include "../components/components.h"
-#include "../components/tagComponents.h"
+#include "skills.h"
+#include "player.h"
 
 void SkillSystem::modifySkill(entt::registry& registry, SkillType skillType, float value)
 {

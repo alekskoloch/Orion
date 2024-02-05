@@ -1,7 +1,9 @@
 #include "DebugSystem.h"
 
-#include "../components/components.h"
-#include "../components/tagComponents.h"
+#include "position.h"
+#include "collision.h"
+#include "entityState.h"
+#include "enemy.h"
 
 void DebugSystem::renderCollisionBoxes(entt::registry& registry, sf::RenderWindow& window)
 {

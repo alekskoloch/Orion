@@ -1,7 +1,7 @@
 #include "GUIEnergyBar.h"
 
-#include "../../components/components.h"
-#include "../../components/tagComponents.h"
+#include "energy.h"
+#include "player.h"
 
 GUIEnergyBar::GUIEnergyBar(sf::RenderWindow& window, entt::registry& registry)
     : window(window), registry(registry)

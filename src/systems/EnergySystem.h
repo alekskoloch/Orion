@@ -1,9 +1,8 @@
 #pragma once
 
 #include "../pch.h"
-
-#include "../components/components.h"
-#include "../components/tagComponents.h"
+#include "uniqueTag.h"
+#include "energy.h"
 
 class EnergySystem
 {

@@ -4,8 +4,6 @@
 
 #include "../systems/WeaponsSystem.h"
 
-#include "../components/components.h"
-
 class WeaponBuilder
 {
 public:

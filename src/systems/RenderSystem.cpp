@@ -1,6 +1,7 @@
 #include "RenderSystem.h"
 
-#include "../components/components.h"
+#include "renderable.h"
+#include "position.h"
 
 void RenderSystem::renderEntities(sf::RenderWindow& window, entt::registry& registry)
 {

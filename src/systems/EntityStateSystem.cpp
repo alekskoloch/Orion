@@ -1,7 +1,9 @@
 #include "EntityStateSystem.h"
 
-#include "../components/components.h"
-#include "../components/tagComponents.h"
+#include "enemy.h"
+#include "player.h"
+#include "position.h"
+#include "entityState.h"
 
 #include "../utils/MathOperations.h"
 

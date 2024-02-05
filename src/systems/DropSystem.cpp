@@ -1,7 +1,13 @@
 #include "DropSystem.h"
 
-#include "../components/components.h"
-#include "../components/tagComponents.h"
+#include "drop.h"
+#include "renderable.h"
+#include "position.h"
+#include "velocity.h"
+#include "collision.h"
+#include "health.h"
+#include "enemy.h"
+#include "dropItem.h"
 
 #include "../systems/ProceduralGenerationSystem.h"
 

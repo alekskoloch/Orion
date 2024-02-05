@@ -1,7 +1,6 @@
 #include "BackgroundManager.h"
 
-#include "../components/components.h"
-#include "../components/tagComponents.h"
+#include "player.h"
 
 #include "../systems/EnemyInitializationSystem.h"
 #include "../systems/ProceduralGenerationSystem.h"

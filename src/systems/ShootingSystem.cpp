@@ -10,8 +10,14 @@
 #include "../systems/BulletSystem.h"
 
 #include "TextureManager.h"
-#include "../components/components.h"
-#include "../components/tagComponents.h"
+
+#include "player.h"
+#include "enemy.h"
+#include "weapon.h"
+#include "input.h"
+#include "position.h"
+#include "entityState.h"
+
 
 #include "../utils/MathOperations.h"
 #include "../utils/GraphicsOperations.h"

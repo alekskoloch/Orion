@@ -1,8 +1,5 @@
 #include "GUISkillTree.h"
 
-#include "../../components/components.h"
-#include "../../components/tagComponents.h"
-
 #include "../../utils/GraphicsOperations.h"
 #include "../../utils/Mouse.h"
 
