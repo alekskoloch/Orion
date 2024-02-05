@@ -2,6 +2,7 @@
 #include "FontManager.h"
 #include "SoundManager.h"
 #include "EventManager.h"
+#include "SceneManager.h"
 
 #include <iostream>
 #include <fstream>

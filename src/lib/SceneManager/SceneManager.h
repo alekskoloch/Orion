@@ -1,7 +1,5 @@
 #pragma once
 
-#include "../pch.h"
-
 enum class Scene
 {
     MainMenu,

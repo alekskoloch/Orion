@@ -2,8 +2,6 @@
 
 #include "../pch.h"
 
-#include "../managers/SceneManager.h"
-
 #include "../systems/QuestSystem.h"
 
 #include "BackgroundManager.h"

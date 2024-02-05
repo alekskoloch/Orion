@@ -1,7 +1,5 @@
 #include "Game.h"
 
-#include "managers/SceneManager.h"
-
 #include "systems/PlayerInitializationSystem.h"
 #include "systems/EnemyInitializationSystem.h"
 

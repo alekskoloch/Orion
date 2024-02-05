@@ -69,6 +69,9 @@ target_link_libraries(main SoundManager)
 add_subdirectory(src/lib/EventManager)
 target_link_libraries(main EventManager)
 
+add_subdirectory(src/lib/SceneManager)
+target_link_libraries(main SceneManager)
+
 file(GLOB TEST_SRC tests/*.cpp)
 add_executable(unit_tests ${TEST_SRC})
 target_link_libraries(unit_tests gtest_main texture_manager sfml-graphics)

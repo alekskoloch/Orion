@@ -1,11 +1,11 @@
 cmake_minimum_required(VERSION 3.10)
 
-project(EventManager)
+project(SceneManager)
 
 set(CMAKE_CXX_STANDARD 23)
 
-set(SOURCE_FILES EventManager.cpp)
-set(HEADER_FILES EventManager.h)
+set(SOURCE_FILES SceneManager.cpp)
+set(HEADER_FILES SceneManager.h)
 
 add_library(${PROJECT_NAME} STATIC ${SOURCE_FILES} ${HEADER_FILES})
 
