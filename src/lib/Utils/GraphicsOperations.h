@@ -1,6 +1,7 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
+#include "TextureManager.h"
 
 inline sf::Sprite CreateSprite(const std::string& textureName)
 {

@@ -57,14 +57,61 @@ include_directories(${NLOHMANN_JSON_INCLUDE_DIR})
 #GoogleTest
 enable_testing()
 
-add_subdirectory(src/lib/Managers)
-target_link_libraries(main EventManager FontManager SceneManager SoundManager TextureManager)
-
 add_subdirectory(src/lib/Utils)
 include_directories(${UTILS_INCLUDE_DIR})
 
 add_subdirectory(src/lib/Components)
 include_directories(${COMPONENTS_INCLUDE_DIR})
+
+add_subdirectory(src/lib/Managers)
+target_link_libraries(main EventManager FontManager SceneManager SoundManager TextureManager BackgroundManager)
+
+add_subdirectory(src/lib/Schemes)
+include_directories(${SCHEMES_INCLUDE_DIR})
+
+add_subdirectory(src/lib/Systems)
+target_link_libraries(main
+    PointSystem
+    QuestSystem
+    CooldownSystem
+    NotifySystem
+    ProceduralGenerationSystem
+    AccelerationSystem
+    BulletSystem
+    CameraSystem
+    CollisionSystem
+    DropSystem
+    EnemyInitializationSystem
+    ExperienceSystem
+    WeaponSystem
+    PlayerInitializationSystem
+    SkillSystem
+    ShieldSystem
+    EnergySystem
+    DebugSystem
+    EntityStateSystem
+    HealthSystem
+    InfoSystem
+    InputSystem
+    MoneySystem
+    MovementSystem
+    MusicSystem
+    RemovalSystem
+    RenderSystem
+    RotateTowardsMouseSystem
+    ShootingSystem
+    StoneSystem
+    TimeControlSystem
+    WaypointsMovementSystem
+)
+
+add_subdirectory(src/lib/Entities)
+target_link_libraries(main Entities)
+
+add_subdirectory(src/lib/GUI)
+target_link_libraries(main
+    GUIDialogBox
+)
 
 file(GLOB TEST_SRC tests/*.cpp)
 add_executable(unit_tests ${TEST_SRC})

@@ -3,8 +3,8 @@
 #include "../utils/Mouse.h"
 #include "../utils/GraphicsOperations.h"
 
-#include "../systems/ProceduralGenerationSystem.h"
-#include "../systems/ExperienceSystem.h"
+#include "ProceduralGenerationSystem.h"
+#include "ExperienceSystem.h"
 
 #include "player.h"
 #include "stoneInventory.h"

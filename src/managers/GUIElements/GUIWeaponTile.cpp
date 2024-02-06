@@ -1,8 +1,8 @@
 #include "GUIWeaponTile.h"
 
-#include "../../systems/MoneySystem.h"
-#include "../../systems/CooldownSystem.h"
-#include "../../systems/SkillSystem.h"
+#include "MoneySystem.h"
+#include "CooldownSystem.h"
+#include "SkillSystem.h"
 
 #include "weapon.h"
 #include "shield.h"

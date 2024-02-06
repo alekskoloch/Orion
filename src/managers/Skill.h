@@ -2,10 +2,11 @@
 
 #include "../pch.h"
 
-#include "../systems/SkillSystem.h"
+//TODO: Resolve this dependency
+#include "../Systems/SkillSystem/SkillSystem.h"
 
 #include "SkillManager.h"
-#include "GUIElements/GUIDialogBox.h"
+#include "GUIDialogBox.h"
 #include "GUIElements/GUICircleSegment.h"
 #include "GUIElements/GUIStar.h"
 

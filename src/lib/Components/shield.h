@@ -1,6 +1,8 @@
 #pragma once
 
-#include "../../schema/ShieldSchema.h"
+#include "ShieldSchema.h"
+
+#include "TextureManager.h"
 
 struct Shield
 {

@@ -1,7 +1,7 @@
 #include "SkillManager.h"
 
-#include "../systems/StoneSystem.h"
-#include "../systems/ExperienceSystem.h"
+#include "StoneSystem.h"
+#include "ExperienceSystem.h"
 
 #include "../utils/StringOperations.h"
 

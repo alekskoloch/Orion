@@ -1,10 +1,10 @@
 #include "GUIManager.h"
 
-#include "../systems/WeaponsSystem.h"
-#include "../systems/ShieldSystem.h"
+#include "WeaponsSystem.h"
+#include "ShieldSystem.h"
 
-#include "../systems/PlayerInitializationSystem.h"
-#include "../schema/WeaponsSchema.h"
+#include "PlayerInitializationSystem.h"
+#include "WeaponsSchema.h"
 
 #include "../utils/GraphicsOperations.h"
 #include "../utils/Mouse.h"

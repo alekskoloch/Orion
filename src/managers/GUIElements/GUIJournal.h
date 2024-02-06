@@ -2,7 +2,7 @@
 
 #include "../../pch.h"
 
-#include "../../systems/QuestCore/Quest.h"
+#include "QuestSystem.h"
 
 #include "GUIButton.h"
 

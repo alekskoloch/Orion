@@ -2,7 +2,7 @@
 
 #include "../pch.h"
 
-#include "../systems/QuestSystem.h"
+#include "QuestSystem.h"
 
 #include "BackgroundManager.h"
 

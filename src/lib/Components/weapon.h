@@ -1,5 +1,10 @@
 #pragma once
 
+#include <functional>
+#include <string>
+#include <entt/entt.hpp>
+#include <SFML/Graphics.hpp>
+
 enum class WeaponType
 {
     SingleShot,

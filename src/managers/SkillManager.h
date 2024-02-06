@@ -4,7 +4,7 @@
 
 #include "Skill.h"
 
-#include "GUIElements/GUIDialogBox.h"
+#include "GUIDialogBox.h"
 #include "GUIElements/GUIStar.h"
 #include "GUIElements/GUIBox.h"
 
