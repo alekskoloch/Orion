@@ -40,10 +40,8 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(googletest)
 
-file(GLOB_RECURSE SOURCES src/*.cpp src/*.h)
-
 # Main Executable
-add_executable(main ${SOURCES})
+add_executable(main src/main.cpp src/Game.h src/Game.cpp src/managers/GUIManager.h src/managers/GUIManager.cpp src/managers/SystemManager.h src/managers/SystemManager.cpp)
 
 #SFML
 target_link_libraries(main sfml-graphics sfml-audio)
