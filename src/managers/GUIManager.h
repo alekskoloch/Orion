@@ -2,14 +2,14 @@
 
 #include "../pch.h"
 
-#include "GUIScenes/GUISkillTree.h"
+#include "GUISkillTree.h"
 
-#include "GUIElements/GUIQuickMenu.h"
-#include "GUIElements/GUIEnergyBar.h"
-#include "GUIElements/GUIMinimap.h"
-#include "GUIElements/GUIWeaponTile.h"
-#include "GUIElements/GUIExpInfo.h"
-#include "GUIElements/GUIJournal.h"
+#include "GUIQuickMenu.h"
+#include "GUIEnergyBar.h"
+#include "GUIMinimap.h"
+#include "GUIWeaponTile.h"
+#include "GUIExpInfo.h"
+#include "GUIJournal.h"
 
 class GUIManager
 {

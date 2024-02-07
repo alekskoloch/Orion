@@ -6,6 +6,9 @@ add_definitions(-DCONFIG_PATH=\"${CMAKE_SOURCE_DIR}/config/\")
 
 set(CMAKE_CXX_STANDARD 23)
 
+set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -fuse-ld=lld")
+set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -fuse-ld=lld")
+
 #SFML
 find_package(SFML 2.6 COMPONENTS graphics audio REQUIRED)
 
@@ -64,7 +67,7 @@ add_subdirectory(src/lib/Components)
 include_directories(${COMPONENTS_INCLUDE_DIR})
 
 add_subdirectory(src/lib/Managers)
-target_link_libraries(main EventManager FontManager SceneManager SoundManager TextureManager BackgroundManager)
+target_link_libraries(main EventManager FontManager SceneManager SoundManager TextureManager BackgroundManager SkillManager)
 
 add_subdirectory(src/lib/Schemes)
 include_directories(${SCHEMES_INCLUDE_DIR})
@@ -111,6 +114,18 @@ target_link_libraries(main Entities)
 add_subdirectory(src/lib/GUI)
 target_link_libraries(main
     GUIDialogBox
+    GUIBox
+    GUIButton
+    GUICircleSegment
+    GUIEnergyBar
+    GUIQuickMenu
+    GUIExpInfo
+    GUIJournal
+    GUIMinimap
+    GUIStar
+    GUIWeaponTile
+    GUISkill
+    GUIScenes
 )
 
 file(GLOB TEST_SRC tests/*.cpp)
