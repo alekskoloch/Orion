@@ -1,6 +1,9 @@
 #pragma once
 
-#include "../pch.h"
+#include <SFML/Graphics.hpp>
+#include <entt/entt.hpp>
+
+#include "SceneManager.h"
 
 #include "GUISkillTree.h"
 

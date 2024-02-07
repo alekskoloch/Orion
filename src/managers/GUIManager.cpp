@@ -6,8 +6,8 @@
 #include "PlayerInitializationSystem.h"
 #include "WeaponsSchema.h"
 
-#include "../utils/GraphicsOperations.h"
-#include "../utils/Mouse.h"
+#include "GraphicsOperations.h"
+#include "Mouse.h"
 
 GUIManager::GUIManager(sf::RenderWindow& window, entt::registry& registry, sf::Event& event, std::vector<Quest>& quests) : window(window), registry(registry), event(event),
     quickMenu(window, registry),

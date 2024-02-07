@@ -1,6 +1,6 @@
 #pragma once
 
-#include "pch.h"
+#include "SceneManager.h"
 
 #include "managers/GUIManager.h"
 #include "managers/SystemManager.h"

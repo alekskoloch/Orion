@@ -33,7 +33,7 @@
 #include "RenderSystem.h"
 #include "DebugSystem.h"
 
-#include "../utils/MathOperations.h"
+#include "MathOperations.h"
 
 
 SystemManager::SystemManager(sf::RenderWindow& window, entt::registry& registry, sf::Event& event) : window(window), registry(registry), event(event), backgroundManager(registry, window)
