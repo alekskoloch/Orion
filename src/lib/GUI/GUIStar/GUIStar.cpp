@@ -1,3 +1,4 @@
+#include "pch.h"
 #include "GUIStar.h"
 
 GUIStar::GUIStar(sf::Vector2f position, sf::Color color, float radius, bool flicker, float idleTime, float flickerTime)

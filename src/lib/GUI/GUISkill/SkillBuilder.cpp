@@ -1,3 +1,4 @@
+#include "pch.h"
 #include "SkillBuilder.h"
 
 SkillBuilder& SkillBuilder::addWindow(sf::RenderWindow& window)

@@ -1,3 +1,4 @@
+#include "pch.h"
 #include "GUIJournal.h"
 
 GUIJournal::GUIJournal(sf::RenderWindow& window, entt::registry& registry, std::vector<Quest>& quests) : window(window), registry(registry), quests(quests), font(FontManager::getInstance().getFont("font"))

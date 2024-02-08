@@ -1,3 +1,4 @@
+#include "pch.h"
 #include "GUIBox.h"
 
 GUIBox::GUIBox(float width, float height, sf::Vector2f position, sf::Font& font, sf::Color fillColor, sf::Color outlineColor, float outlineThickness, float bevel) : font(font)

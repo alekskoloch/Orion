@@ -1,3 +1,4 @@
+#include "pch.h"
 #include "GUIExpInfo.h"
 
 GUIExpInfo::GUIExpInfo(sf::RenderWindow& window, entt::registry& registry)

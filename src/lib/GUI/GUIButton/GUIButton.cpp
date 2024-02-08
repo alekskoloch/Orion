@@ -1,3 +1,4 @@
+#include "pch.h"
 #include "GUIButton.h"
 
 GUIButton::GUIButton(const sf::Vector2f& position, const sf::Vector2f& size,

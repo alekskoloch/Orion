@@ -1,3 +1,4 @@
+#include "pch.h"
 #include "WeaponBuilder.h"
 
 WeaponBuilder::WeaponBuilder()

@@ -1,3 +1,4 @@
+#include "pch.h"
 #include "GUIQuickMenu.h"
 
 const uint8_t TILES_NUMBER = 8;

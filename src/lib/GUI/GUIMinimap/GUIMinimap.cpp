@@ -1,3 +1,4 @@
+#include "pch.h"
 #include "GUIMinimap.h"
 
 GUIMinimap::GUIMinimap(sf::RenderWindow& window, entt::registry& registry, std::vector<Quest>& quests)

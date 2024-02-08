@@ -1,9 +1,9 @@
 #pragma once
 
-#include "SceneManager.h"
-
 #include <SFML/Graphics.hpp>
 #include <entt/entt.hpp>
+
+#include "SceneManager.h"
 
 #include "QuestSystem.h"
 

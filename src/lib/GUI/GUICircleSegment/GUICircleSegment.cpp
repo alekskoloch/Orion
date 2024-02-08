@@ -1,3 +1,4 @@
+#include "pch.h"
 #include "GUICircleSegment.h"
 
 void GUICircleSegment::update(float deltaTime)

@@ -4,8 +4,6 @@ project(SkillManager)
 
 set(CMAKE_CXX_STANDARD 23)
 
-find_package(SFML 2.6 COMPONENTS graphics REQUIRED)
-
 set(SOURCE_FILES SkillManager.cpp)
 set(HEADER_FILES SkillManager.h)
 

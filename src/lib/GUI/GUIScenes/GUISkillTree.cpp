@@ -1,3 +1,4 @@
+#include "pch.h"
 #include "GUISkillTree.h"
 
 GUISkillTree::GUISkillTree(entt::registry& registry, sf::RenderWindow& window) : registry(registry), window(window)

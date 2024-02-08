@@ -112,6 +112,9 @@ target_link_libraries(main
     GUIScenes
 )
 
+target_precompile_headers(main PRIVATE src/pch.h)
+set(PCH_DIR "${PROJECT_SOURCE_DIR}/src" CACHE INTERNAL "Path to the directory containing the PCH")
+
 file(GLOB TEST_SRC tests/*.cpp)
 add_executable(unit_tests ${TEST_SRC})
 target_link_libraries(unit_tests gtest_main texture_manager sfml-graphics)

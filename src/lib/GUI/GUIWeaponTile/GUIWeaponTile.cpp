@@ -1,3 +1,4 @@
+#include "pch.h"
 #include "GUIWeaponTile.h"
 
 GUIWeaponTile::GUIWeaponTile(sf::RenderWindow& window, entt::registry& registry) : window(window), registry(registry)

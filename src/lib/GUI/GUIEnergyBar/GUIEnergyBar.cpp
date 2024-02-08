@@ -1,3 +1,4 @@
+#include "pch.h"
 #include "GUIEnergyBar.h"
 
 GUIEnergyBar::GUIEnergyBar(sf::RenderWindow& window, entt::registry& registry)

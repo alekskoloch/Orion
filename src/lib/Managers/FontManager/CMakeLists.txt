@@ -4,8 +4,6 @@ project(FontManager)
 
 set(CMAKE_CXX_STANDARD 23)
 
-find_package(SFML 2.6 COMPONENTS graphics REQUIRED)
-
 set(SOURCE_FILES FontManager.cpp)
 set(HEADER_FILES FontManager.h)
 
