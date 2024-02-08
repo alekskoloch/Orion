@@ -1,3 +1,4 @@
+#include "pch.h"
 #include "EventManager.h"
 
 EventManager& EventManager::getInstance()

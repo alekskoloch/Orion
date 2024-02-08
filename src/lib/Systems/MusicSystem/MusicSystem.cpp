@@ -1,3 +1,4 @@
+#include "pch.h"
 #include "MusicSystem.h"
 
 void MusicSystem::initializeMusic()

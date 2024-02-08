@@ -1,3 +1,4 @@
+#include "pch.h"
 #include "InputSystem.h"
 
 void InputSystem::processInput(entt::registry& registry, sf::Event& event)

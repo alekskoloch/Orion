@@ -1,3 +1,4 @@
+#include "pch.h"
 #include "PointSystem.h"
 
 #include "pointOfInterest.h"

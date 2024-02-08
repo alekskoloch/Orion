@@ -1,3 +1,4 @@
+#include "pch.h"
 #include "WeaponsSystem.h"
 
 void WeaponsSystem::changeWeapon(entt::registry& registry, Weapons weapon)

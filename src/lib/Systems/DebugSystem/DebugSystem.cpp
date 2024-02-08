@@ -1,3 +1,4 @@
+#include "pch.h"
 #include "DebugSystem.h"
 
 void DebugSystem::renderCollisionBoxes(entt::registry& registry, sf::RenderWindow& window)

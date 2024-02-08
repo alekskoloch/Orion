@@ -1,3 +1,4 @@
+#include "pch.h"
 #include "ShootingSystem.h"
 
 template <typename BulletOwnerTag>

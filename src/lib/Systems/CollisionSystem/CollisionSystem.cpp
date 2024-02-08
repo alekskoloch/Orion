@@ -1,3 +1,4 @@
+#include "pch.h"
 #include "CollisionSystem.h"
 
 template <typename BulletOwnerTag, typename TargetTag>

@@ -1,3 +1,4 @@
+#include "pch.h"
 #include "RenderSystem.h"
 
 void RenderSystem::renderEntities(sf::RenderWindow& window, entt::registry& registry)

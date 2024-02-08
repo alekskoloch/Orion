@@ -1,3 +1,4 @@
+#include "pch.h"
 #include "QuestSystem.h"
 
 void QuestSystem::startQuest(Quest quest)

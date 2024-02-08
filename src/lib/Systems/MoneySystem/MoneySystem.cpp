@@ -1,6 +1,5 @@
+#include "pch.h"
 #include "MoneySystem.h"
-
-
 
 void MoneySystem::addMoney(entt::registry& registry, int amount)
 {

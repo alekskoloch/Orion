@@ -1,3 +1,4 @@
+#include "pch.h"
 #include "BackgroundManager.h"
 
 //TODO: Color for tiles is only for testing purposes

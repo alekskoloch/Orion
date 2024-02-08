@@ -1,3 +1,4 @@
+#include "pch.h"
 #include "SkillManager.h"
 
 SkillManager::SkillManager(sf::RenderWindow& window, entt::registry& registry)

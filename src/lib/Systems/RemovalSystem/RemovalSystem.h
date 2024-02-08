@@ -2,7 +2,6 @@
 
 #include <entt/entt.hpp>
 #include <SFML/System.hpp>
-#include <vector>
 
 #include "enemy.h"
 #include "bullet.h"

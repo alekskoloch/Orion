@@ -1,3 +1,4 @@
+#include "pch.h"
 #include "ShieldSystem.h"
 
 void ShieldSystem::updateShieldPosition(entt::registry& registry)

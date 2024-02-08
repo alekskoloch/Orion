@@ -1,3 +1,4 @@
+#include "pch.h"
 #include "BulletSystem.h"
 
 void BulletSystem::updateShurikenBullet(entt::registry& registry, sf::Time deltaTime)

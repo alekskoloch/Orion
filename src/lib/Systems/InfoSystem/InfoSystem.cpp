@@ -1,3 +1,4 @@
+#include "pch.h"
 #include "InfoSystem.h"
 
 void InfoSystem::update(entt::registry& registry, sf::Time deltaTime)

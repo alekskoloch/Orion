@@ -1,3 +1,4 @@
+#include "pch.h"
 #include "NotifySystem.h"
 
 void NotifySystem::notify(const Type type, const std::string& message, float displayTime)

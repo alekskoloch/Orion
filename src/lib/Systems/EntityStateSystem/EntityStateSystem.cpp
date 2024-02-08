@@ -1,3 +1,4 @@
+#include "pch.h"
 #include "EntityStateSystem.h"
 
 void EntityStateSystem::updateEntityState(entt::registry& registry)

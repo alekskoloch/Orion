@@ -1,7 +1,5 @@
 #pragma once
 
-#include <queue>
-
 #include <SFML/Graphics.hpp>
 #include "GUIDialogBox.h"
 #include "CooldownSystem.h"

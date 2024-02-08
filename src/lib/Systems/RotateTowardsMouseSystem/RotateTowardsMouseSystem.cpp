@@ -1,3 +1,4 @@
+#include "pch.h"
 #include "RotateTowardsMouseSystem.h"
 
 void RotateTowardsMouseSystem::rotateTowardsMouse(entt::registry& registry, sf::Time deltaTime, sf::RenderWindow& window)

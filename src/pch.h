@@ -1,4 +1,13 @@
 #include <cmath>
+#include <concepts>
+#include <format>
+#include <fstream>
 #include <functional>
+#include <iostream>
 #include <memory>
+#include <random>
+#include <ranges>
+#include <string>
 #include <vector>
+#include <unordered_map>
+#include <queue>

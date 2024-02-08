@@ -1,3 +1,4 @@
+#include "pch.h"
 #include "CameraSystem.h"
 
 void CameraSystem::setDefaultCamera(sf::RenderWindow& window)

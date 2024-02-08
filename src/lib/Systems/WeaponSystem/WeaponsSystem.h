@@ -4,8 +4,6 @@
 #include <SFML/Graphics.hpp>
 #include <nlohmann/json.hpp>
 #include "TextureManager.h"
-#include <fstream>
-#include <iostream>
 
 #include "WeaponsSchema.h"
 

@@ -1,3 +1,4 @@
+#include "pch.h"
 #include "EnemyInitializationSystem.h"
 
 //TODO: Temporary solution for initialize enemy, refactor later

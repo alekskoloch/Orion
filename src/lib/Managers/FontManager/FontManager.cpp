@@ -1,3 +1,4 @@
+#include "pch.h"
 #include "FontManager.h"
 
 FontManager& FontManager::getInstance()

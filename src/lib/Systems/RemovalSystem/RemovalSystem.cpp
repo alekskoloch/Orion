@@ -1,3 +1,4 @@
+#include "pch.h"
 #include "RemovalSystem.h"
 
 std::vector<entt::entity> RemovalSystem::entitiesToDestroy = {};

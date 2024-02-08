@@ -1,3 +1,4 @@
+#include "pch.h"
 #include "WaypointsMovementSystem.h"
 
 const float DISTANCE_TOLERANCE = 5.f;

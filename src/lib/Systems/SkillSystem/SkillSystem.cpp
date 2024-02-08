@@ -1,3 +1,4 @@
+#include "pch.h"
 #include "SkillSystem.h"
 
 void SkillSystem::modifySkill(entt::registry& registry, SkillType skillType, float value)

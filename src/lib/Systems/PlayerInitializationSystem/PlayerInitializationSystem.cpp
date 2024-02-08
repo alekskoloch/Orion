@@ -1,3 +1,4 @@
+#include "pch.h"
 #include "PlayerInitializationSystem.h"
 
 // TODO: Change start position

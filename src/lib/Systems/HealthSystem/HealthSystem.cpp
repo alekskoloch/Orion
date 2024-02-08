@@ -1,3 +1,4 @@
+#include "pch.h"
 #include "HealthSystem.h"
 
 void HealthSystem::updateHealth(entt::registry& registry)

@@ -1,3 +1,4 @@
+#include "pch.h"
 #include "DropSystem.h"
 
 void DropSystem::drop(entt::registry& registry, entt::entity& entity)

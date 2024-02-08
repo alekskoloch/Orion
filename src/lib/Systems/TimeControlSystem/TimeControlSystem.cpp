@@ -1,3 +1,4 @@
+#include "pch.h"
 #include "TimeControlSystem.h"
 
 void TimeControlSystem::updateSlowMotion(float& slowMotionFactor, bool slowMotion, float slowMotionSpeed, float slowMotionTargetFactor, float deltaTime)
