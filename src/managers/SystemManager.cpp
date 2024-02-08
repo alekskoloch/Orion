@@ -3,7 +3,6 @@
 #include "ProceduralGenerationSystem.h"
 
 #include "PlayerInitializationSystem.h"
-#include "EnemyInitializationSystem.h"
 #include "MusicSystem.h"
 
 #include "InputSystem.h"

@@ -79,11 +79,8 @@ target_link_libraries(main
     CameraSystem
     CollisionSystem
     DropSystem
-    EnemyInitializationSystem
-    ExperienceSystem
     WeaponSystem
     PlayerInitializationSystem
-    SkillSystem
     ShieldSystem
     EnergySystem
     DebugSystem
@@ -91,14 +88,12 @@ target_link_libraries(main
     HealthSystem
     InfoSystem
     InputSystem
-    MoneySystem
     MovementSystem
     MusicSystem
     RemovalSystem
     RenderSystem
     RotateTowardsMouseSystem
     ShootingSystem
-    StoneSystem
     TimeControlSystem
     WaypointsMovementSystem
 )
@@ -108,18 +103,12 @@ target_link_libraries(main Entities)
 
 add_subdirectory(src/lib/GUI)
 target_link_libraries(main
-    GUIDialogBox
-    GUIBox
-    GUIButton
-    GUICircleSegment
     GUIEnergyBar
     GUIQuickMenu
     GUIExpInfo
     GUIJournal
     GUIMinimap
-    GUIStar
     GUIWeaponTile
-    GUISkill
     GUIScenes
 )
 
