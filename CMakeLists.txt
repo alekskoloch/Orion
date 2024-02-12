@@ -96,6 +96,7 @@ target_link_libraries(main
     ShootingSystem
     TimeControlSystem
     WaypointsMovementSystem
+    ParticleSystem
 )
 
 add_subdirectory(src/lib/Entities)
