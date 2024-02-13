@@ -19,7 +19,7 @@ void RemovalSystem::update(entt::registry& registry)
         destroyEntities(registry);
         break;
     default:
-        framesSinceLastExecution = 0;
+        framesSinceLastExecution = -1;
         break;
     }
 }
@@ -59,7 +59,8 @@ void RemovalSystem::destroyEntities(entt::registry& registry)
 {
     for (auto entity : entitiesToDestroy)
     {
-        registry.destroy(entity);
+        if (registry.valid(entity))
+            registry.destroy(entity);
     }
 
     entitiesToDestroy.clear();
