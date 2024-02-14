@@ -13,3 +13,10 @@ void ParticleSystem::draw(sf::RenderWindow &window)
         window.draw(particle->particle);
     }
 }
+
+void ParticleSystem::removeDeadParticles()
+{
+    particles.erase(std::remove_if(particles.begin(), particles.end(),
+        [](const auto& particle) { return particle->lifetime <= 0; }),
+        particles.end());
+}

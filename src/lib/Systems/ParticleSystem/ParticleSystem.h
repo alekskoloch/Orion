@@ -13,4 +13,6 @@ public:
 private:
     entt::registry& registry;
     std::vector<std::unique_ptr<Particle>> particles;
+
+    void removeDeadParticles();
 };
