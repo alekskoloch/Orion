@@ -14,5 +14,6 @@ private:
     entt::registry& registry;
     std::vector<std::unique_ptr<Particle>> particles;
 
+    void createFlameEffect(const sf::Vector2f& position, const sf::Vector2f& entityVelocity);
     void removeDeadParticles();
 };
