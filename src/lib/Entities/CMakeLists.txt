@@ -4,8 +4,8 @@ project(Entities)
 
 set(CMAKE_CXX_STANDARD 23)
 
-set(SOURCE_FILES EnemyBuilder.cpp WeaponBuilder.cpp)
-set(HEADER_FILES EnemyBuilder.h   WeaponBuilder.h) 
+set(SOURCE_FILES EnemyBuilder.cpp WeaponBuilder.cpp ParticleBuilder.cpp ParticleFactory.cpp)
+set(HEADER_FILES EnemyBuilder.h   WeaponBuilder.h   ParticleBuilder.h   ParticleFactory.h) 
 
 add_library(${PROJECT_NAME} STATIC ${SOURCE_FILES} ${HEADER_FILES})
 
