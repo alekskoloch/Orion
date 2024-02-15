@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "EnemyBuilder.h"
 
+#include "removable.h"
 #include "entityState.h"
 #include "name.h"
 #include "position.h"
@@ -26,6 +27,7 @@ EnemyBuilder& EnemyBuilder::createEnemy(std::string name)
     sf::Sprite sprite = CreateSprite(name);
     registry.emplace<Collision>(enemy, sprite.getGlobalBounds());
     registry.emplace<Renderable>(enemy, sprite);
+    registry.emplace<Removable>(enemy, false);
 
     return *this;
 }
