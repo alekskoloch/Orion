@@ -31,16 +31,22 @@ ParticleBuilder& ParticleBuilder::addStartColor(sf::Color startColor)
 ParticleBuilder& ParticleBuilder::addEndColor(sf::Color endColor)
 {
     particle.endColor = endColor;
+
+    return *this;
 }
 
 ParticleBuilder& ParticleBuilder::addPosition(sf::Vector2f position)
 {
     particle.particle.setPosition(position);
+
+    return *this;
 }
 
 ParticleBuilder& ParticleBuilder::addVelocity(sf::Vector2f velocity)
 {
     particle.velocity = velocity;
+
+    return *this;
 }
 
 Particle ParticleBuilder::build()
