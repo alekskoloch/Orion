@@ -16,6 +16,7 @@ ParticleBuilder& ParticleBuilder::addLifetime(float lifetime)
 ParticleBuilder& ParticleBuilder::addRadius(float radius)
 {
     particle.particle.setRadius(radius);
+    particle.particle.setOrigin(radius / 2.f, radius / 2.f);
 
     return *this;
 }
