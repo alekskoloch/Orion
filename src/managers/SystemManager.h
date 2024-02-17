@@ -5,9 +5,11 @@
 
 #include "SceneManager.h"
 
+#include "ParticleSystem.h"
 #include "QuestSystem.h"
 
 #include "BackgroundManager.h"
+
 
 // make this configurable
 const constexpr float TARGET_SLOW_MOTION_FACTOR = 0.05f;
@@ -37,6 +39,7 @@ private:
     BackgroundManager backgroundManager;
 
     QuestSystem questSystem;
+    ParticleSystem particleSystem;
 
     bool slowMotion = false;
     float slowMotionFactor = 1.0f;

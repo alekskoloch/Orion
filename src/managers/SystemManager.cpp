@@ -36,7 +36,7 @@
 #include "MathOperations.h"
 
 
-SystemManager::SystemManager(sf::RenderWindow& window, entt::registry& registry, sf::Event& event) : window(window), registry(registry), event(event), backgroundManager(registry, window)
+SystemManager::SystemManager(sf::RenderWindow& window, entt::registry& registry, sf::Event& event) : window(window), registry(registry), event(event), backgroundManager(registry, window), particleSystem(registry)
 {
     SceneManager::getInstance().setCurrentScene(Scene::Game);
     this->executeInitializationSystems();
@@ -119,16 +119,18 @@ void SystemManager::executeUpdateSystems(sf::Time deltaTime)
             EntityStateSystem::updateEntityState(this->registry);
             ShootingSystem::shoot(this->registry, deltaTime, this->window);
             BulletSystem::updateShurikenBullet(this->registry, deltaTime);
-            DropSystem::updateDrop(this->registry, deltaTime);
             AccelerationSystem::accelerate(this->registry, deltaTime);
             MovementSystem::updateMovement(this->registry, deltaTime);
             ShieldSystem::updateShield(this->registry, deltaTime);
             HealthSystem::updateHealth(this->registry);
+            DropSystem::updateDrop(this->registry, deltaTime);
+            this->particleSystem.update(deltaTime);
             CollisionSystem::updateCollisionBoxes(this->registry);      
             CollisionSystem::checkCollisions(this->registry, this->window);
             RemovalSystem::update(this->registry);
             PointSystem::update(this->registry, deltaTime);
             InfoSystem::update(this->registry, deltaTime);
+
             this->questSystem.update(this->registry, deltaTime);
         }
     }
@@ -143,6 +145,7 @@ void SystemManager::executeRenderSystems()
         
         backgroundManager.draw();
         
+        this->particleSystem.draw(this->window);
         RenderSystem::renderEntities(this->window, this->registry);
         InfoSystem::draw(this->registry, this->window);
         if (this->debugMode)
