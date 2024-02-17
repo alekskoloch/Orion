@@ -16,6 +16,9 @@ private:
     entt::registry& registry;
     std::vector<std::unique_ptr<Particle>> particles;
 
+    void handlePlayerMovementParticles();
+    void handleEnemyExplosionParticles();
+
     void adjustParticlesVisibility();
     void createFlameEffect(const sf::Vector2f& position, const sf::Vector2f& entityVelocity);
     void createExplosionEffect(const sf::Vector2f& position);

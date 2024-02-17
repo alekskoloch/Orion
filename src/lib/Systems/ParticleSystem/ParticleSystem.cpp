@@ -30,6 +30,54 @@ void ParticleSystem::draw(sf::RenderWindow &window)
     }
 }
 
+void ParticleSystem::handlePlayerMovementParticles()
+{
+    auto view = registry.view<Player, Input, Position, Velocity>();
+    for (auto entity : view)
+    {
+        auto &position = view.get<Position>(entity).position;
+        auto &velocity = view.get<Velocity>(entity).velocity;
+        auto &input = view.get<Input>(entity);
+
+        if ((input.right || input.left || input.up || input.down) && (velocity.x != 0 || velocity.y != 0))
+        {
+            auto playerRenderable = registry.get<Renderable>(entity);
+            auto playerRotation = playerRenderable.sprite.getRotation();
+
+            sf::Transform transform;
+            transform.rotate(playerRotation, position.x, position.y);
+
+            //TODO: This should be configurable
+            sf::Vector2f offsetRight(30.f, 30.f);
+            sf::Vector2f offsetLeft(-30.f, 30.f);
+
+            sf::Vector2f emissonPointRight = transform.transformPoint(position + offsetRight);
+            sf::Vector2f emissionPointMiddle = transform.transformPoint(position);
+            sf::Vector2f emissonPointLeft = transform.transformPoint(position + offsetLeft);
+
+            this->createFlameEffect(emissonPointRight, velocity);
+            this->createFlameEffect(emissionPointMiddle, velocity);
+            this->createFlameEffect(emissonPointLeft, velocity);
+        }
+    }
+}
+
+void ParticleSystem::handleEnemyExplosionParticles()
+{
+    auto view = registry.view<Enemy, Position, Velocity, Removable>();
+    for (auto entity : view)
+    {
+        auto &position = view.get<Position>(entity).position;
+        auto &velocity = view.get<Velocity>(entity).velocity;
+        auto &removable = view.get<Removable>(entity);
+
+        if (removable.remove)
+        {
+            this->createExplosionEffect(position);
+        }
+    }
+}
+
 void ParticleSystem::removeDeadParticles()
 {
     particles.erase(std::remove_if(particles.begin(), particles.end(),
