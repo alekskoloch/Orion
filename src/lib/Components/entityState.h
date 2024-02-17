@@ -12,4 +12,9 @@ struct EntityState
 
     float attackRange;
     float idleRange;
+
+    float rushDuration;
+    float rushTimer = 0.0f;
+
+    bool waypointMovementChanged = false;
 };
