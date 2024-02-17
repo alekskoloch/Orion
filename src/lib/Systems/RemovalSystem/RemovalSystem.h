@@ -7,6 +7,7 @@
 #include "bullet.h"
 #include "player.h"
 #include "position.h"
+#include "removable.h"
 
 #include "MathOperations.h"
 

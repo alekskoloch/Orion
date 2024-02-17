@@ -6,6 +6,16 @@ int RemovalSystem::framesSinceLastExecution = 0;
 
 void RemovalSystem::update(entt::registry& registry)
 {
+    auto view = registry.view<Removable>();
+    for (auto entity : view)
+    {
+        auto& removable = view.get<Removable>(entity);
+        if (removable.remove)
+        {
+            registry.destroy(entity);
+        }
+    }
+
     framesSinceLastExecution++;
     switch (framesSinceLastExecution)
     {
