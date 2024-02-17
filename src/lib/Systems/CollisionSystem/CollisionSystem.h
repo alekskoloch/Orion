@@ -24,6 +24,7 @@
 #include "enemy.h"
 #include "player.h"
 #include "dropItem.h"
+#include "entityState.h"
 
 class CollisionSystem
 {

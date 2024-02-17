@@ -45,6 +45,9 @@ void checkBulletCollitions(entt::registry& registry, std::unordered_set<entt::en
                 }
                 else if constexpr (std::is_same_v<TargetTag, Enemy>)
                 {
+                    auto& enemyEntityStateComponent = registry.get<EntityState>(target);
+                    enemyEntityStateComponent.currentState = EntityState::State::Attacking;
+                    enemyEntityStateComponent.rushTimer = 0.0f;
 
                     auto& enemyHealthComponent = registry.get<Health>(target);
                     if (enemyHealthComponent.currentHealthValue <= 0.f)
