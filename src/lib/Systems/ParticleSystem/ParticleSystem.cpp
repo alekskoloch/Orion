@@ -43,31 +43,14 @@ void ParticleSystem::createFlameEffect(const sf::Vector2f &position, const sf::V
 
     //TODO: Refactor this
     if (std::abs(entityVelocity.x) < 200 && std::abs(entityVelocity.y) < 200)
-    {
         particleCount = 3;
-    }
     else if (std::abs(entityVelocity.x) < 600 && std::abs(entityVelocity.y) < 600)
-    {
         particleCount = 5;
-    }
     else
-    {
         particleCount = 7;
-    }
+
+    ParticleFactory particleFactory;
 
     for (unsigned int i = 0; i < particleCount; i++)
-    {
-        auto particle = std::make_unique<Particle>();
-        particle->particle.setRadius(particleRadius);
-        particle->particle.setOrigin(particleRadius / 2.f, particleRadius / 2.f);
-        particle->particle.setFillColor(startColor);
-
-        sf::Vector2f offset = normalizedVelocity * (-particleRadius * i);
-
-        particle->particle.setPosition(position + offset);
-        particle->velocity = entityVelocity * 0.8f;
-        particle->lifetime = lifetime;
-
-        particles.push_back(std::move(particle));
-    }
+        particles.push_back(std::make_unique<Particle>(particleFactory.createFlameParticle(position + normalizedVelocity * (-3.f * i), entityVelocity)));
 }

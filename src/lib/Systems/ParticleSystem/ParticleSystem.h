@@ -4,6 +4,8 @@
 
 #include "particle.h"
 
+#include "../Entities/ParticleFactory.h"
+
 class ParticleSystem
 {
 public:
