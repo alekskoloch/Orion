@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "WaypointsMovementSystem.h"
 
+#include "ProceduralGenerationSystem.h"
+
 const float DISTANCE_TOLERANCE = 5.f;
 
 void WaypointsMovementSystem::updateWaypoints(entt::registry& registry, sf::Time deltaTime)
@@ -24,4 +26,12 @@ void WaypointsMovementSystem::updateWaypoints(entt::registry& registry, sf::Time
                 waypointMovementComponent.currentWaypointIndex = (waypointMovementComponent.currentWaypointIndex + 1) % waypointMovementComponent.waypoints.size();
         }
     }
+}
+
+sf::Vector2f WaypointsMovementSystem::generateWaypoint(const sf::Vector2f& position, float distance)
+{
+    return sf::Vector2f(
+        ProceduralGenerationSystem::GetRandomNumber(position.x - distance, position.x + distance),
+        ProceduralGenerationSystem::GetRandomNumber(position.y - distance, position.y + distance)
+    );
 }

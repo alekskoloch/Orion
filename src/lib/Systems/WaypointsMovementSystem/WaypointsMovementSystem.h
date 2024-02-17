@@ -10,8 +10,14 @@
 
 #include "MathOperations.h"
 
+//TODO: Move to some configuration file
+static const float WAYPOINT_GENERATION_DISTANCE_OFFSET = 500.f;
+
 class WaypointsMovementSystem
 {
 public:
     static void updateWaypoints(entt::registry& registry, sf::Time deltaTime);
+
+private:
+    static sf::Vector2f generateWaypoint(const sf::Vector2f& position, float distance = WAYPOINT_GENERATION_DISTANCE_OFFSET);
 };
