@@ -2,6 +2,8 @@
 #include "ParticleSystem.h"
 
 #include "player.h"
+#include "enemy.h"
+#include "removable.h"
 #include "position.h"
 #include "velocity.h"
 #include "renderable.h"
@@ -53,4 +55,13 @@ void ParticleSystem::createFlameEffect(const sf::Vector2f &position, const sf::V
 
     for (unsigned int i = 0; i < particleCount; i++)
         particles.push_back(std::make_unique<Particle>(particleFactory.createFlameParticle(position + normalizedVelocity * (-3.f * i), entityVelocity)));
+}
+
+void ParticleSystem::createExplosionEffect(const sf::Vector2f &position)
+{
+    ParticleFactory particleFactory;
+
+    //TODO: Particle number should be configurable
+    for (unsigned int i = 0; i < 60; i++)
+        particles.push_back(std::make_unique<Particle>(particleFactory.createExplosionParticle(position, sf::Color(255, 255, 0))));
 }

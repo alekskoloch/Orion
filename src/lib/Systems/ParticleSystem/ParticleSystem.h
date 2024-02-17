@@ -17,5 +17,6 @@ private:
     std::vector<std::unique_ptr<Particle>> particles;
 
     void createFlameEffect(const sf::Vector2f& position, const sf::Vector2f& entityVelocity);
+    void createExplosionEffect(const sf::Vector2f& position);
     void removeDeadParticles();
 };
