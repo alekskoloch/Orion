@@ -5,6 +5,7 @@
 #include "SoundManager.h"
 
 #include "health.h"
+#include "removable.h"
 
 class HealthSystem
 {
