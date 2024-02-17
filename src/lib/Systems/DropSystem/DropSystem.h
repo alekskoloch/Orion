@@ -12,7 +12,7 @@
 #include "position.h"
 #include "velocity.h"
 #include "collision.h"
-#include "health.h"
+#include "removable.h"
 #include "enemy.h"
 #include "dropItem.h"
 

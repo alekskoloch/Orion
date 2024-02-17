@@ -80,10 +80,10 @@ void DropSystem::drop(entt::registry& registry, entt::entity& entity)
 
 void DropSystem::updateDrop(entt::registry& registry, sf::Time deltaTime)
 {
-    auto enemies = registry.view<Enemy, Health>();
+    auto enemies = registry.view<Enemy, Removable>();
     for (auto enemy : enemies)
     {
-        if (registry.get<Health>(enemy).currentHealthValue <= 0)
+        if (registry.get<Removable>(enemy).remove)
         {
             DropSystem::drop(registry, enemy);
         }
