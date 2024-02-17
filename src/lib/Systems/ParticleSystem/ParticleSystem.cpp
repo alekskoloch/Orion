@@ -22,6 +22,22 @@ ParticleSystem::ParticleSystem(entt::registry &registry) : registry(registry)
 
 }
 
+void ParticleSystem::update(sf::Time deltaTime)
+{
+    this->removeDeadParticles();
+
+    this->adjustParticlesVisibility();
+
+    for (auto &particle : particles)
+    {
+        particle->lifetime -= deltaTime.asSeconds();        
+        particle->particle.move(particle->velocity * deltaTime.asSeconds());
+    }
+
+    this->handlePlayerMovementParticles();
+    this->handleEnemyExplosionParticles();
+}
+
 void ParticleSystem::draw(sf::RenderWindow &window)
 {
     for (auto &particle : particles)

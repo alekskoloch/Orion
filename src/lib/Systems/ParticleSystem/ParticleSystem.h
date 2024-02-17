@@ -11,6 +11,7 @@ class ParticleSystem
 public:
     ParticleSystem(entt::registry& registry);
 
+    void update(sf::Time deltaTime);
     void draw(sf::RenderWindow &window);
 private:
     entt::registry& registry;
