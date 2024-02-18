@@ -26,6 +26,8 @@ void WaypointsMovementSystem::updateWaypoints(entt::registry& registry, sf::Time
                 waypointMovementComponent.currentWaypointIndex = (waypointMovementComponent.currentWaypointIndex + 1) % waypointMovementComponent.waypoints.size();
         }
     }
+
+    WaypointsMovementSystem::updateAttackingEnemyWaypoints(registry, deltaTime);
 }
 
 void WaypointsMovementSystem::updateAttackingEnemyWaypoints(entt::registry& registry, sf::Time& deltaTime)
