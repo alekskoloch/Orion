@@ -28,6 +28,41 @@ void WaypointsMovementSystem::updateWaypoints(entt::registry& registry, sf::Time
     }
 }
 
+void WaypointsMovementSystem::updateAttackingEnemyWaypoints(entt::registry& registry, sf::Time& deltaTime)
+{
+    auto enemies = registry.view<Enemy, EntityState, WaypointMovement, Position>();
+
+    for (auto& enemy : enemies)
+    {
+        auto& enemyEntityState = enemies.get<EntityState>(enemy);
+        auto& enemyWaypointMovement = enemies.get<WaypointMovement>(enemy);
+        auto playerPosition = registry.view<Position>().get<Position>(registry.view<Player>().front()).position;
+
+        if (enemyEntityState.currentState == EntityState::State::Attacking)
+        {
+            if (!enemyEntityState.waypointMovementChanged)
+            {
+                enemyWaypointMovement.waypoints = generateWaypointNearPosition(playerPosition);
+                enemyWaypointMovement.currentWaypointIndex = 0;
+                enemyEntityState.waypointMovementChanged = true;
+            }
+            else
+            {
+                float distanceToCurrentWaypoint = CalculateDistance(enemies.get<Position>(enemy).position, enemyWaypointMovement.waypoints[enemyWaypointMovement.currentWaypointIndex]);
+
+                if (distanceToCurrentWaypoint < DISTANCE_TOLERANCE)
+                    enemyWaypointMovement.waypoints = generateWaypointNearPosition(playerPosition);
+            }
+        }
+        else if (enemyEntityState.currentState == EntityState::State::Idle && enemyWaypointMovement.waypoints.size() == 1)
+        {
+            enemyWaypointMovement.waypoints = generateWaypointsNearPosition(enemies.get<Position>(enemy).position);
+            enemyWaypointMovement.currentWaypointIndex = 0;
+            enemyEntityState.waypointMovementChanged = false;
+        }
+    }
+}
+
 std::vector<sf::Vector2f> WaypointsMovementSystem::generateWaypointNearPosition(const sf::Vector2f& position)
 {
     return {WaypointsMovementSystem::generateWaypoint(position)};

@@ -7,6 +7,9 @@
 #include "waypointMovement.h"
 #include "position.h"
 #include "speed.h"
+#include "player.h"
+#include "enemy.h"
+#include "entityState.h"
 
 #include "MathOperations.h"
 
@@ -22,4 +25,6 @@ private:
     static std::vector<sf::Vector2f> generateWaypointNearPosition(const sf::Vector2f& position);
     static std::vector<sf::Vector2f> generateWaypointsNearPosition(const sf::Vector2f& position);
     static sf::Vector2f generateWaypoint(const sf::Vector2f& position, float distance = WAYPOINT_GENERATION_DISTANCE_OFFSET);
+
+    static void updateAttackingEnemyWaypoints(entt::registry& registry, sf::Time& deltaTime);
 };
