@@ -28,6 +28,21 @@ void WaypointsMovementSystem::updateWaypoints(entt::registry& registry, sf::Time
     }
 }
 
+std::vector<sf::Vector2f> WaypointsMovementSystem::generateWaypointNearPosition(const sf::Vector2f& position)
+{
+    return {WaypointsMovementSystem::generateWaypoint(position)};
+}
+
+std::vector<sf::Vector2f> WaypointsMovementSystem::generateWaypointsNearPosition(const sf::Vector2f& position)
+{
+    std::vector<sf::Vector2f> waypoints;
+    for (int i = 0; i < ProceduralGenerationSystem::GetRandomNumber(3, 6); i++)
+    {
+        waypoints.push_back(generateWaypoint(position));
+    }
+    return waypoints;
+}
+
 sf::Vector2f WaypointsMovementSystem::generateWaypoint(const sf::Vector2f& position, float distance)
 {
     return sf::Vector2f(

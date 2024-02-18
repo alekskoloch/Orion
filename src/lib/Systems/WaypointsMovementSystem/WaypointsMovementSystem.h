@@ -19,5 +19,7 @@ public:
     static void updateWaypoints(entt::registry& registry, sf::Time deltaTime);
 
 private:
+    static std::vector<sf::Vector2f> generateWaypointNearPosition(const sf::Vector2f& position);
+    static std::vector<sf::Vector2f> generateWaypointsNearPosition(const sf::Vector2f& position);
     static sf::Vector2f generateWaypoint(const sf::Vector2f& position, float distance = WAYPOINT_GENERATION_DISTANCE_OFFSET);
 };
