@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "EnemyBuilder.h"
 
+#include "WaypointsMovementSystem.h"
+
 #include "removable.h"
 #include "entityState.h"
 #include "name.h"
@@ -91,21 +93,7 @@ EnemyBuilder& EnemyBuilder::setWeapon(Weapons weapon)
 
 EnemyBuilder& EnemyBuilder::setWaypointMovement()
 {
-    // TODO: Move this to a separate function
-    int numOfWaypoints = ProceduralGenerationSystem::GetRandomNumber(2, 6);
-    std::vector<sf::Vector2f> waypoints;
-
-    auto enemyPos = registry.get<Position>(enemy);
-
-    for (int i = 0; i < numOfWaypoints; i++)
-    {
-        float x = ProceduralGenerationSystem::GetRandomNumber(enemyPos.position.x - 500.f, enemyPos.position.x + 500.f);
-        float y = ProceduralGenerationSystem::GetRandomNumber(enemyPos.position.y - 500.f, enemyPos.position.y + 500.f);
-
-        waypoints.push_back(sf::Vector2f(x, y));
-    }
-
-    registry.emplace<WaypointMovement>(enemy, waypoints);
+    registry.emplace<WaypointMovement>(enemy, WaypointsMovementSystem::getRandomWaypointsNearPosition(registry.get<Position>(enemy).position));
 
     return *this;
 }
