@@ -13,5 +13,5 @@
 class EntityStateSystem
 {
 public:
-    static void updateEntityState(entt::registry& registry);
+    static void updateEntityState(entt::registry& registry, sf::Time& deltaTime);
 };
