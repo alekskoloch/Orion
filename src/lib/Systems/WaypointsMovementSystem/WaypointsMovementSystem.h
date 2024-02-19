@@ -20,6 +20,7 @@ class WaypointsMovementSystem
 {
 public:
     static void updateWaypoints(entt::registry& registry, sf::Time deltaTime);
+    static std::vector<sf::Vector2f> getRandomWaypointsNearPosition(const sf::Vector2f& position);
 
 private:
     static std::vector<sf::Vector2f> generateWaypointNearPosition(const sf::Vector2f& position);

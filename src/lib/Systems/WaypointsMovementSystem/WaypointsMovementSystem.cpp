@@ -30,6 +30,11 @@ void WaypointsMovementSystem::updateWaypoints(entt::registry& registry, sf::Time
     WaypointsMovementSystem::updateAttackingEnemyWaypoints(registry, deltaTime);
 }
 
+std::vector<sf::Vector2f> WaypointsMovementSystem::getRandomWaypointsNearPosition(const sf::Vector2f& position)
+{
+    return generateWaypointsNearPosition(position);
+}
+
 void WaypointsMovementSystem::updateAttackingEnemyWaypoints(entt::registry& registry, sf::Time& deltaTime)
 {
     auto enemies = registry.view<Enemy, EntityState, WaypointMovement, Position>();
