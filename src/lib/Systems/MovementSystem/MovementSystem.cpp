@@ -21,7 +21,7 @@ void MovementSystem::updateMovement(entt::registry& registry, sf::Time deltaTime
 
 void MovementSystem::updateMovementBoost(entt::registry& registry, sf::Time deltaTime)
 {
-    auto view = registry.view<Position, Input, MovementBoost>();
+    auto view = registry.view<Position, Velocity, Input, MovementBoost>();
     for (auto entity : view)
     {
         auto& position = view.get<Position>(entity);
@@ -30,61 +30,36 @@ void MovementSystem::updateMovementBoost(entt::registry& registry, sf::Time delt
 
         if (input.readyForMovementBoost)
         {
-            if ((input.up || input.down || input.left || input.right) && EnergySystem::hasEnoughEnergy<Player>(registry, 30.f))
+            if (EnergySystem::hasEnoughEnergy<Player>(registry, 30.f))
             {
                 boostMovementValue = sf::Vector2f(0.f, 0.f);
 
-                //TODO: Refactor this
-                input.movementBoostActive = true;
-                if (input.up && !input.down && !input.left && !input.right)
-                {
+                if (input.up)
                     boostMovementValue.y -= movementBoost.boostValue;
-                    EnergySystem::removeEnergy<Player>(registry, 30.f);
-                    SoundManager::getInstance().playSound("MovementBoost");
-                }
-                else if (input.down && !input.up && !input.left && !input.right)
-                {
+                if (input.down)
                     boostMovementValue.y += movementBoost.boostValue;
-                    EnergySystem::removeEnergy<Player>(registry, 30.f);
-                    SoundManager::getInstance().playSound("MovementBoost");
-                }
-                else if (input.left && !input.right && !input.up && !input.down)
-                {
+
+                if (input.left)
                     boostMovementValue.x -= movementBoost.boostValue;
-                    EnergySystem::removeEnergy<Player>(registry, 30.f);
-                    SoundManager::getInstance().playSound("MovementBoost");
-                }
-                else if (input.right && !input.left && !input.up && !input.down)
-                {
+                if (input.right)
                     boostMovementValue.x += movementBoost.boostValue;
-                    EnergySystem::removeEnergy<Player>(registry, 30.f);
-                    SoundManager::getInstance().playSound("MovementBoost");
-                }
-                else if (input.up && !input.down && input.left && !input.right)
+
+                if (!input.up && !input.down && !input.left && !input.right)
                 {
-                    boostMovementValue.y -= movementBoost.boostDecelerationValue;
-                    boostMovementValue.x -= movementBoost.boostDecelerationValue;
-                    EnergySystem::removeEnergy<Player>(registry, 30.f);
-                    SoundManager::getInstance().playSound("MovementBoost");
+                    auto& velocity = view.get<Velocity>(entity);
+                    if (velocity.velocity.x > 0)
+                        boostMovementValue.x += movementBoost.boostValue;
+                    else if (velocity.velocity.x < 0)
+                        boostMovementValue.x -= movementBoost.boostValue;
+
+                    if (velocity.velocity.y > 0)
+                        boostMovementValue.y += movementBoost.boostValue;
+                    else if (velocity.velocity.y < 0)
+                        boostMovementValue.y -= movementBoost.boostValue;
                 }
-                else if (input.up && !input.down && !input.left && input.right)
+
+                if (boostMovementValue.x != 0.f || boostMovementValue.y != 0.f)
                 {
-                    boostMovementValue.y -= movementBoost.boostDecelerationValue;
-                    boostMovementValue.x += movementBoost.boostDecelerationValue;
-                    EnergySystem::removeEnergy<Player>(registry, 30.f);
-                    SoundManager::getInstance().playSound("MovementBoost");
-                }
-                else if (!input.up && input.down && input.left && !input.right)
-                {
-                    boostMovementValue.y += movementBoost.boostDecelerationValue;
-                    boostMovementValue.x -= movementBoost.boostDecelerationValue;
-                    EnergySystem::removeEnergy<Player>(registry, 30.f);
-                    SoundManager::getInstance().playSound("MovementBoost");
-                }
-                else if (!input.up && input.down && !input.left && input.right)
-                {
-                    boostMovementValue.y += movementBoost.boostDecelerationValue;
-                    boostMovementValue.x += movementBoost.boostDecelerationValue;
                     EnergySystem::removeEnergy<Player>(registry, 30.f);
                     SoundManager::getInstance().playSound("MovementBoost");
                 }
