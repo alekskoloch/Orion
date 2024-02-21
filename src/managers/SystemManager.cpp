@@ -36,7 +36,8 @@
 #include "MathOperations.h"
 
 
-SystemManager::SystemManager(sf::RenderWindow& window, entt::registry& registry, sf::Event& event) : window(window), registry(registry), event(event), backgroundManager(registry, window), particleSystem(registry)
+SystemManager::SystemManager(sf::RenderWindow& window, entt::registry& registry, sf::Event& event) :
+    window(window), registry(registry), event(event), backgroundManager(registry, window), particleSystem(registry)
 {
     SceneManager::getInstance().setCurrentScene(Scene::Game);
     this->executeInitializationSystems();
@@ -116,7 +117,7 @@ void SystemManager::executeUpdateSystems(sf::Time deltaTime)
             CooldownSystem::updateCooldowns(this->registry, deltaTime);
             EnergySystem::updateEnergy(this->registry, deltaTime);
             WeaponsSystem::updateWeaponCooldown(this->registry, deltaTime);
-            EntityStateSystem::updateEntityState(this->registry);
+            EntityStateSystem::updateEntityState(this->registry, deltaTime);
             ShootingSystem::shoot(this->registry, deltaTime, this->window);
             BulletSystem::updateShurikenBullet(this->registry, deltaTime);
             AccelerationSystem::accelerate(this->registry, deltaTime);
