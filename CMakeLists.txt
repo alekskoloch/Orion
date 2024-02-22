@@ -12,6 +12,10 @@ set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -fuse-ld=lld")
 #SFML
 find_package(SFML 2.6 COMPONENTS graphics audio REQUIRED)
 
+#Boost
+cmake_policy(SET CMP0074 NEW)
+find_package(Boost 1.84.0 REQUIRED)
+
 #EnTT
 include(FetchContent)
 FetchContent_Declare(
@@ -45,6 +49,13 @@ add_executable(main src/main.cpp src/Game.h src/Game.cpp src/managers/GUIManager
 
 #SFML
 target_link_libraries(main sfml-graphics sfml-audio)
+
+#Boost
+if(Boost_FOUND)
+    include_directories(${Boost_INCLUDE_DIRS})
+    add_executable(${PROJECT_NAME} src/main.cpp)
+    target_link_libraries(${PROJECT_NAME} ${Boost_LIBRARIES})
+endif()
 
 #EnTT
 target_link_libraries(main EnTT::EnTT)
