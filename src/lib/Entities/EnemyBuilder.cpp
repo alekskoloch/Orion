@@ -41,9 +41,6 @@ EnemyBuilder& EnemyBuilder::addEntityState(float attackRange, float idleRange)
     enemyState.attackRange = attackRange;
     enemyState.idleRange = idleRange;
 
-    //TODO: This is temporary. Value should be loaded from a json file
-    enemyState.rushDuration = 10.0f;
-
     return *this;
 }
 
