@@ -45,7 +45,7 @@ void WaypointsMovementSystem::updateAttackingEnemyWaypoints(entt::registry& regi
         auto& enemyWaypointMovement = enemies.get<WaypointMovement>(enemy);
         auto playerPosition = registry.view<Position>().get<Position>(registry.view<Player>().front()).position;
 
-        if (enemyEntityState.currentState == EntityState::State::Attacking)
+        if (enemyEntityState.stateMachine->state_cast<const Attacking*>() != nullptr)
         {
             if (!enemyEntityState.waypointMovementChanged)
             {
@@ -61,7 +61,7 @@ void WaypointsMovementSystem::updateAttackingEnemyWaypoints(entt::registry& regi
                     enemyWaypointMovement.waypoints = generateWaypointNearPosition(playerPosition);
             }
         }
-        else if (enemyEntityState.currentState == EntityState::State::Idle && enemyWaypointMovement.waypoints.size() == 1)
+        else if (enemyEntityState.stateMachine->state_cast<const Idle*>() != nullptr && enemyWaypointMovement.waypoints.size() == 1)
         {
             enemyWaypointMovement.waypoints = generateWaypointsNearPosition(enemies.get<Position>(enemy).position);
             enemyWaypointMovement.currentWaypointIndex = 0;
