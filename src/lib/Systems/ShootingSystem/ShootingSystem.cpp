@@ -91,18 +91,19 @@ void handlePlayerShooting(entt::registry& registry, sf::Time deltaTime, sf::Rend
 void handleEnemyShooting(entt::registry& registry, sf::Time deltaTime, sf::RenderWindow& window)
 {
     auto enemyView = registry.view<Enemy, Weapon, Position, EntityState>();
-    auto playerPosition = registry.view<Player, Position>().get<Position>(registry.view<Player, Position>().front()).position;
+    auto playerPosition = registry.view<Player, Position>().get<Position>(registry.view<Player>().front()).position;
+
     for (auto enemyEntity : enemyView)
     {
         auto& enemyState = enemyView.get<EntityState>(enemyEntity);
-        if (enemyState.currentState == EntityState::State::Attacking)
+
+        if (enemyState.stateMachine->state_cast<const Attacking*>() != nullptr)
         {
             auto& enemyWeapon = enemyView.get<Weapon>(enemyEntity);
             auto& enemyPosition = enemyView.get<Position>(enemyEntity);
 
-            if (enemyWeapon.currentCooldownTime == 0.f)
+            if (enemyWeapon.currentCooldownTime <= 0.f)
             {
-                //handleShoot<EnemyBullet>(registry, enemyEntity, playerPosition);
                 enemyWeapon.shot(registry, window, enemyEntity);
                 SoundManager::getInstance().playSound("EnemyShot");
                 enemyWeapon.SetCooldown();
