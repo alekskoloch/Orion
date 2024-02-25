@@ -4,34 +4,29 @@
 void EntityStateSystem::updateEntityState(entt::registry& registry, sf::Time& deltaTime)
 {
     auto enemies = registry.view<Enemy, Position, EntityState>();
-    auto playerPosition = registry.view<Player, Position>().get<Position>(registry.view<Player>().front());
-    
+    auto playerPosition = registry.view<Player, Position>().get<Position>(registry.view<Player>().front()).position;
+
     for (auto& enemy : enemies)
     {
-        Position& enemyPosition = enemies.get<Position>(enemy);
-        
-        float distance = CalculateDistance(enemyPosition.position, playerPosition.position);
+        auto& enemyPosition = enemies.get<Position>(enemy).position;
         auto& enemyState = enemies.get<EntityState>(enemy);
-        
+
+        float distance = CalculateDistance(enemyPosition, playerPosition);
+
         if (distance < enemyState.attackRange)
         {
-            enemyState.currentState = EntityState::State::Attacking;
-            enemyState.rushTimer = 0.0f;
-        }
-        else if (distance < enemyState.idleRange)
-        {
-            if (enemyState.currentState == EntityState::State::Attacking)
+            if (!enemyState.stateMachine->state_cast<const Attacking*>())
             {
-                enemyState.rushTimer = 0.0f;
+                enemyState.stateMachine->process_event(EventAttack());
+                std::cout << "Enemy is attacking" << std::endl;
             }
         }
-        else
+        else if (distance > enemyState.idleRange)
         {
-            enemyState.rushTimer += deltaTime.asSeconds();
-            if (enemyState.rushTimer >= enemyState.rushDuration)
+            if (enemyState.stateMachine->state_cast<const Attacking*>())
             {
-                enemyState.currentState = EntityState::State::Idle;
-                enemyState.rushTimer = 0.0f;
+                enemyState.stateMachine->process_event(EventRush(deltaTime));
+                std::cout << "Enemy is rushing" << std::endl;
             }
         }
     }
