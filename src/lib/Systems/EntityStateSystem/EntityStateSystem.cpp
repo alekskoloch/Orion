@@ -18,7 +18,6 @@ void EntityStateSystem::updateEntityState(entt::registry& registry, sf::Time& de
             if (!enemyState.stateMachine->state_cast<const Attacking*>())
             {
                 enemyState.stateMachine->process_event(EventAttack());
-                std::cout << "Enemy is attacking" << std::endl;
             }
         }
         else if (distance > enemyState.idleRange)
@@ -26,7 +25,6 @@ void EntityStateSystem::updateEntityState(entt::registry& registry, sf::Time& de
             if (enemyState.stateMachine->state_cast<const Attacking*>())
             {
                 enemyState.stateMachine->process_event(EventRush(deltaTime));
-                std::cout << "Enemy is rushing" << std::endl;
             }
         }
     }
