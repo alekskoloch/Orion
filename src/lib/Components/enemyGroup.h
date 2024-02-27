@@ -89,5 +89,12 @@ static const GroupFormation RECTANGLE_FORMATION = {
 
 struct EnemyGroup
 {
+    unsigned int groupID;
+    entt::entity leader;
 
+    unsigned int numOfMembers = 0;
+
+    sf::Vector2f offset = sf::Vector2f(0.f, 0.f);
+
+    GroupFormation formation = RECTANGLE_FORMATION;
 };
