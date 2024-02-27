@@ -1,6 +1,5 @@
 #pragma once
 
-#include <entt/entt.hpp>
 #include <vector>
 #include <algorithm>
 
@@ -42,6 +41,34 @@ struct GroupFormation
         }
 
         return -1; 
+    }
+
+    //TODO: position should be assigned randomly based on priority
+    sf::Vector2f getSeatPosition()
+    {
+        auto priority = getCurrentPositionPriority();
+
+        for (size_t i = 0; i < formation.size(); ++i) {
+            for (size_t j = 0; j < formation[i].size(); ++j) {
+                if (formation[i][j] == priority && !seats[i][j])
+                {
+                    //TODO: this should be calculated based on the leader position
+                    int leaderRow = 1;
+                    int leaderCol = 1;
+
+                    int seatRow = i;
+                    int seatCol = j;
+
+                    int rowOffset = seatRow - leaderRow;
+                    int colOffset = seatCol - leaderCol;
+
+                    seats[i][j] = true;
+
+                    return sf::Vector2f(colOffset * 100.f, rowOffset * 100.f);
+                }
+            }
+        }
+        return sf::Vector2f(0.f, 0.f);
     }
 };
 
