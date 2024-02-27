@@ -1,5 +1,7 @@
 #pragma once
 
+#include <entt/entt.hpp>
+
 #include <vector>
 #include <algorithm>
 
@@ -69,6 +71,19 @@ struct GroupFormation
             }
         }
         return sf::Vector2f(0.f, 0.f);
+    }
+};
+
+static const GroupFormation RECTANGLE_FORMATION = {
+    {
+        {2, 1, 2},
+        {1, 0, 1},
+        {2, 1, 2}
+    },
+    {
+        {false, false, false},
+        {false, true, false},
+        {false, false, false}
     }
 };
 
