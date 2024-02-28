@@ -108,6 +108,7 @@ target_link_libraries(main
     TimeControlSystem
     WaypointsMovementSystem
     ParticleSystem
+    EnemyGroupSystem
 )
 
 add_subdirectory(src/lib/Entities)
