@@ -5,6 +5,8 @@
 #include <vector>
 #include <algorithm>
 
+using GroupID = unsigned int;
+
 struct GroupFormation
 {
     std::vector<std::vector<int>> formation;
@@ -87,14 +89,20 @@ static const GroupFormation RECTANGLE_FORMATION = {
     }
 };
 
-struct EnemyGroup
+struct EnemyGroup {};
+
+struct EnemyGroupLeader
 {
-    unsigned int groupID;
-    entt::entity leader;
+    GroupID groupID;
 
-    unsigned int numOfMembers = 0;
-
-    sf::Vector2f offset = sf::Vector2f(0.f, 0.f);
-
+    std::vector<entt::entity> members;
     GroupFormation formation = RECTANGLE_FORMATION;
+    
+    unsigned int numOfMembers = 0;
+};
+
+struct EnemyGroupMember
+{
+    entt::entity leader;
+    sf::Vector2f offset = sf::Vector2f(0.f, 0.f);
 };
