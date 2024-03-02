@@ -7,20 +7,20 @@ bool EnemyGroupSystem::addMemberToGroup(entt::registry& registry, entt::entity l
     {
         registry.emplace<EnemyGroup>(member);
 
-        auto& leaderGroup = registry.get<EnemyGroup>(leader);
-        leaderGroup.numOfMembers++;
-        auto& memberGroup = registry.get<EnemyGroup>(member);
+        auto& memberComponent = registry.emplace<EnemyGroupMember>(member);
+        auto& leaderComponent = registry.get<EnemyGroupLeader>(leader);
+        leaderComponent.numOfMembers++;
 
-        memberGroup.leader = leader;
+        memberComponent.leader = leader;
 
-        memberGroup.groupID = leaderGroup.groupID;
+        leaderComponent.members.push_back(member);
 
-        auto& memberGroupSpeed = registry.get<Speed>(member);
-        auto& leaderGroupSpeed = registry.get<Speed>(leader);
+        auto& memberSpeed = registry.get<Speed>(member);
+        auto& leaderSpeed = registry.get<Speed>(leader);
 
-        memberGroupSpeed.maxSpeedValue = leaderGroupSpeed.maxSpeedValue;
+        memberSpeed.maxSpeedValue = leaderSpeed.maxSpeedValue;
 
-        memberGroup.offset = leaderGroup.formation.getSeatPosition();
+        memberComponent.offset = leaderComponent.formation.getSeatPosition();
 
         return true;
     }
