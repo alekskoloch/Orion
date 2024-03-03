@@ -6,11 +6,14 @@
 #include "ProceduralGenerationSystem.h"
 
 #include "enemyGroup.h"
+#include "position.h"
+#include "name.h"
 #include "speed.h"
 
 class EnemyGroupSystem
 {
 public:
+    void updateEnemyGroup(entt::registry& registry);
 
 private:
     unsigned int groupID = 0;
