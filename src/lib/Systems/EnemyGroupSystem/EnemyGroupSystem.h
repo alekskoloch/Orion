@@ -15,5 +15,6 @@ public:
 private:
     unsigned int groupID = 0;
 
+    bool createGroup(entt::registry& registry, entt::entity leader, entt::entity member);
     bool addMemberToGroup(entt::registry& registry, entt::entity leader, entt::entity member);
 };

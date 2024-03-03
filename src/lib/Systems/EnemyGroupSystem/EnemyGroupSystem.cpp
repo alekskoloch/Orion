@@ -1,6 +1,21 @@
 #include "pch.h"
 #include "EnemyGroupSystem.h"
 
+bool EnemyGroupSystem::createGroup(entt::registry& registry, entt::entity leader, entt::entity member)
+{
+    if (registry.valid(leader) && registry.valid(member))
+    {
+        registry.emplace<EnemyGroup>(leader);
+
+        auto& leaderComponent = registry.emplace<EnemyGroupLeader>(leader);
+        leaderComponent.groupID = groupID++;
+        leaderComponent.formation = RECTANGLE_FORMATION;
+
+        this->addMemberToGroup(registry, leader, member);
+    }
+    return false;
+}
+
 bool EnemyGroupSystem::addMemberToGroup(entt::registry& registry, entt::entity leader, entt::entity member)
 {
     if (registry.valid(leader) && registry.valid(member))
