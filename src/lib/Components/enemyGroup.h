@@ -89,8 +89,6 @@ static const GroupFormation RECTANGLE_FORMATION = {
     }
 };
 
-struct EnemyGroup {};
-
 struct EnemyGroupLeader
 {
     GroupID groupID;

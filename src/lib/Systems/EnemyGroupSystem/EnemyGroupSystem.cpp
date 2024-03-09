@@ -23,13 +23,22 @@ void EnemyGroupSystem::updateEnemyGroup(entt::registry& registry)
 
                     if (CalculateDistance(enemyPosition, otherEnemyPosition) < 1000.f)
                     {
-                        if (!registry.any_of<EnemyGroupLeader>(enemy) && !registry.any_of<EnemyGroup>(otherEnemy))
+                        if (
+                            !registry.any_of<EnemyGroupLeader>(enemy) &&
+                            !registry.any_of<EnemyGroupMember>(enemy) &&
+                            !registry.any_of<EnemyGroupLeader>(otherEnemy) &&
+                            !registry.any_of<EnemyGroupMember>(otherEnemy)
+                        )
                         {
                             this->createGroup(registry, enemy, otherEnemy);
                         }
-                        else if (registry.any_of<EnemyGroupLeader>(otherEnemy) && !registry.any_of<EnemyGroup>(enemy))
+                        else if (
+                            registry.any_of<EnemyGroupLeader>(enemy) &&
+                            !registry.any_of<EnemyGroupLeader>(otherEnemy) &&
+                            !registry.any_of<EnemyGroupMember>(otherEnemy)
+                        )
                         {
-                            this->addMemberToGroup(registry, otherEnemy, enemy);
+                            this->addMemberToGroup(registry, enemy, otherEnemy);
                         }
                     }
                 }
@@ -42,8 +51,6 @@ bool EnemyGroupSystem::createGroup(entt::registry& registry, entt::entity leader
 {
     if (registry.valid(leader) && registry.valid(member))
     {
-        registry.emplace<EnemyGroup>(leader);
-
         auto& leaderComponent = registry.emplace<EnemyGroupLeader>(leader);
         leaderComponent.groupID = groupID++;
         leaderComponent.formation = RECTANGLE_FORMATION;
@@ -57,8 +64,6 @@ bool EnemyGroupSystem::addMemberToGroup(entt::registry& registry, entt::entity l
 {
     if (registry.valid(leader) && registry.valid(member))
     {
-        registry.emplace<EnemyGroup>(member);
-
         auto& memberComponent = registry.emplace<EnemyGroupMember>(member);
         auto& leaderComponent = registry.get<EnemyGroupLeader>(leader);
         leaderComponent.numOfMembers++;
