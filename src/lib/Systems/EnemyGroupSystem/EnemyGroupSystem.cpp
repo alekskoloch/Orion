@@ -45,6 +45,8 @@ void EnemyGroupSystem::updateEnemyGroup(entt::registry& registry)
             }
         }
     }
+
+    this->removalGroupComponent(registry);
 }
 
 bool EnemyGroupSystem::createGroup(entt::registry& registry, entt::entity leader, entt::entity member)
@@ -82,4 +84,45 @@ bool EnemyGroupSystem::addMemberToGroup(entt::registry& registry, entt::entity l
         return true;
     }
     return false;
+}
+
+void EnemyGroupSystem::removalGroupComponent(entt::registry& registry)
+{
+    std::vector<entt::entity> leadersToRemove;
+
+    auto leaders = registry.view<EnemyGroupLeader>();
+    for (auto leader : leaders)
+    {
+        auto& leaderComponent = registry.get<EnemyGroupLeader>(leader);
+        leaderComponent.members.erase(
+            std::remove_if(leaderComponent.members.begin(), leaderComponent.members.end(), [&registry](entt::entity member) { return !registry.valid(member); }),
+            leaderComponent.members.end());
+
+        if (leaderComponent.members.empty())
+        {
+            leadersToRemove.push_back(leader);
+        }
+    }
+
+    for (auto leader : leadersToRemove)
+    {
+        registry.remove<EnemyGroupLeader>(leader);
+    }
+
+    std::vector<entt::entity> membersToRemove;
+
+    auto members = registry.view<EnemyGroupMember>();
+    for (auto member : members)
+    {
+        auto& memberComponent = registry.get<EnemyGroupMember>(member);
+        if (!registry.valid(memberComponent.leader))
+        {
+            membersToRemove.push_back(member);
+        }
+    }
+
+    for (auto member : membersToRemove)
+    {
+        registry.remove<EnemyGroupMember>(member);
+    }
 }
