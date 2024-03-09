@@ -12,6 +12,8 @@ struct GroupFormation
     std::vector<std::vector<int>> formation;
     std::vector<std::vector<bool>> seats;
 
+    float offset = 200.f;
+
     bool isFormationFull() const
     {
         for (auto& row : seats)
@@ -68,7 +70,7 @@ struct GroupFormation
 
                     seats[i][j] = true;
 
-                    return sf::Vector2f(colOffset * 100.f, rowOffset * 100.f);
+                    return sf::Vector2f(colOffset * offset, rowOffset * offset);
                 }
             }
         }
