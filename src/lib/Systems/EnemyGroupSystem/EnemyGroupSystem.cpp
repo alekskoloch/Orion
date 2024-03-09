@@ -68,6 +68,10 @@ bool EnemyGroupSystem::addMemberToGroup(entt::registry& registry, entt::entity l
     {
         auto& memberComponent = registry.emplace<EnemyGroupMember>(member);
         auto& leaderComponent = registry.get<EnemyGroupLeader>(leader);
+     
+        if (leaderComponent.formation.isFormationFull())
+            return false;
+     
         leaderComponent.numOfMembers++;
 
         memberComponent.leader = leader;
