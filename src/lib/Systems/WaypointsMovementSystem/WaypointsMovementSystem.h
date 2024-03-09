@@ -10,6 +10,7 @@
 #include "player.h"
 #include "enemy.h"
 #include "entityState.h"
+#include "enemyGroup.h"
 
 #include "MathOperations.h"
 
@@ -28,4 +29,6 @@ private:
     static sf::Vector2f generateWaypoint(const sf::Vector2f& position, float distance = WAYPOINT_GENERATION_DISTANCE_OFFSET);
 
     static void updateAttackingEnemyWaypoints(entt::registry& registry, sf::Time& deltaTime);
+
+    static void setWaypointToLeader(entt::registry& registry, entt::entity entity);
 };

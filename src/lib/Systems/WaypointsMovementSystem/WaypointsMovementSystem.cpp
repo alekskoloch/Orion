@@ -27,6 +27,20 @@ void WaypointsMovementSystem::updateWaypoints(entt::registry& registry, sf::Time
         }
     }
 
+    auto groupEnemyView = registry.view<EnemyGroupLeader>();
+
+    for (auto entity : groupEnemyView)
+    {
+        if (registry.any_of<EnemyGroupLeader>(entity))
+        {
+            auto& members = registry.get<EnemyGroupLeader>(entity).members;
+            for (auto member : members)
+            {
+                WaypointsMovementSystem::setWaypointToLeader(registry, member);
+            }
+        }
+    }
+
     WaypointsMovementSystem::updateAttackingEnemyWaypoints(registry, deltaTime);
 }
 
@@ -41,6 +55,9 @@ void WaypointsMovementSystem::updateAttackingEnemyWaypoints(entt::registry& regi
 
     for (auto& enemy : enemies)
     {
+        if (registry.any_of<EnemyGroupMember>(enemy))
+            continue;
+
         auto& enemyEntityState = enemies.get<EntityState>(enemy);
         auto& enemyWaypointMovement = enemies.get<WaypointMovement>(enemy);
         auto playerPosition = registry.view<Position>().get<Position>(registry.view<Player>().front()).position;
@@ -91,4 +108,16 @@ sf::Vector2f WaypointsMovementSystem::generateWaypoint(const sf::Vector2f& posit
         ProceduralGenerationSystem::GetRandomNumber(position.x - distance, position.x + distance),
         ProceduralGenerationSystem::GetRandomNumber(position.y - distance, position.y + distance)
     );
+}
+
+void WaypointsMovementSystem::setWaypointToLeader(entt::registry& registry, entt::entity member)
+{
+    auto& leader = registry.get<EnemyGroupMember>(member).leader;
+    if (registry.valid(leader))
+    {
+        auto& leaderPosition = registry.view<Position>().get<Position>(leader).position;
+        auto& entityOffset = registry.get<EnemyGroupMember>(member).offset;
+
+        registry.view<WaypointMovement>().get<WaypointMovement>(member).waypoints = {sf::Vector2f(leaderPosition.x + entityOffset.x, leaderPosition.y + entityOffset.y)};
+    }
 }
