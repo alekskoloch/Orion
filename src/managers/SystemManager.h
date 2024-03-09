@@ -7,6 +7,7 @@
 
 #include "ParticleSystem.h"
 #include "QuestSystem.h"
+#include "EnemyGroupSystem.h"
 
 #include "BackgroundManager.h"
 
@@ -40,6 +41,7 @@ private:
 
     QuestSystem questSystem;
     ParticleSystem particleSystem;
+    EnemyGroupSystem enemyGroupSystem;
 
     bool slowMotion = false;
     float slowMotionFactor = 1.0f;

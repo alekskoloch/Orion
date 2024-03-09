@@ -112,6 +112,9 @@ void SystemManager::executeUpdateSystems(sf::Time deltaTime)
                 RotateTowardsMouseSystem::rotateTowardsMouse(this->registry, deltaTime, this->window);
 
             backgroundManager.update();
+
+            RemovalSystem::update(this->registry);
+            this->enemyGroupSystem.updateEnemyGroup(this->registry);
             
             WaypointsMovementSystem::updateWaypoints(this->registry, deltaTime);
             CooldownSystem::updateCooldowns(this->registry, deltaTime);
@@ -128,7 +131,6 @@ void SystemManager::executeUpdateSystems(sf::Time deltaTime)
             this->particleSystem.update(deltaTime);
             CollisionSystem::updateCollisionBoxes(this->registry);      
             CollisionSystem::checkCollisions(this->registry, this->window);
-            RemovalSystem::update(this->registry);
             PointSystem::update(this->registry, deltaTime);
             InfoSystem::update(this->registry, deltaTime);
 
