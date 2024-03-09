@@ -24,7 +24,7 @@ EnemyBuilder& EnemyBuilder::createEnemy(std::string name)
     enemy = registry.create();
 
     registry.emplace<Enemy>(enemy);
-    registry.emplace<Name>(enemy);
+    registry.emplace<Name>(enemy, name);
     
     sf::Sprite sprite = CreateSprite(name);
     registry.emplace<Collision>(enemy, sprite.getGlobalBounds());
