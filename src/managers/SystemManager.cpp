@@ -135,6 +135,9 @@ void SystemManager::executeUpdateSystems(sf::Time deltaTime)
             InfoSystem::update(this->registry, deltaTime);
 
             this->questSystem.update(this->registry, deltaTime);
+
+            if (this->debugMode)
+                DebugSystem::update(this->registry, this->window);
         }
     }
 }
