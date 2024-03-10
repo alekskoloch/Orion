@@ -28,7 +28,7 @@ void EnemyInitializationSystem::loadEnemyFromConfig(entt::registry& registry, st
 
     EnemyBuilder enemyBuilder(registry);
 
-    enemyBuilder.createEnemy(enemyJson["name"])
+    auto newEnemy = enemyBuilder.createEnemy(enemyJson["name"])
                 .addEntityState(enemyJson["attackRange"], enemyJson["idleRange"])
                 .addPosition(position)
                 .addSpeed(enemyJson["speed"])
@@ -36,7 +36,10 @@ void EnemyInitializationSystem::loadEnemyFromConfig(entt::registry& registry, st
                 .addExperience(enemyJson["experience"])
                 .addDrop(100, 69)
                 .setWeapon(enemyJson["weapon"])
-                .setWaypointMovement();
+                .setWaypointMovement()
+                .build();
+
+    EnemyInitializationSystem::drawEnemyModifiers(registry, newEnemy);
 }
 
 entt::entity EnemyInitializationSystem::spawnEnemy(entt::registry& registry, sf::Vector2f position, std::string enemyType)
@@ -72,4 +75,12 @@ entt::entity EnemyInitializationSystem::spawnEnemy(entt::registry& registry, sf:
             }
         }
     }
+}
+
+void EnemyInitializationSystem::drawEnemyModifiers(entt::registry& registry, entt::entity enemy)
+{
+    //todo: add more modifiers
+
+    if (ProceduralGenerationSystem::GetRandomNumber(0, 100) < 5)
+        registry.emplace<EnemyModificator>(enemy, std::vector<Modificator>{Modificator::AllySummon});
 }
