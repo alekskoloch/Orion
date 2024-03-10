@@ -20,4 +20,6 @@ class EnemyInitializationSystem
 public:
     static void createNewEnemy(entt::registry& registry, sf::Vector2f position);
     static void loadEnemyFromConfig(entt::registry& registry, std::ifstream& configFile, sf::Vector2f position);
+
+    static entt::entity spawnEnemy(entt::registry& registry, sf::Vector2f position, std::string enemyType);
 };

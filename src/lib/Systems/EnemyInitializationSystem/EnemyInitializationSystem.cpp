@@ -38,3 +38,38 @@ void EnemyInitializationSystem::loadEnemyFromConfig(entt::registry& registry, st
                 .setWeapon(enemyJson["weapon"])
                 .setWaypointMovement();
 }
+
+entt::entity EnemyInitializationSystem::spawnEnemy(entt::registry& registry, sf::Vector2f position, std::string enemyType)
+{
+    std::ifstream configFile(CONFIG_PATH + std::string("enemyConfig.json"));
+    if (!configFile.is_open())
+        throw std::runtime_error("Could not open config file");
+    else
+    {
+        nlohmann::json configJson;
+        configFile >> configJson;
+
+        if (!configJson.contains("enemies") || !configJson["enemies"].is_array())
+            throw std::runtime_error("Could not find enemies array in config file");
+
+        for (const auto& enemyJson : configJson["enemies"])
+        {
+            if (enemyJson["name"] == enemyType)
+            {
+                EnemyBuilder enemyBuilder(registry);
+
+                enemyBuilder.createEnemy(enemyJson["name"])
+                            .addEntityState(enemyJson["attackRange"], enemyJson["idleRange"])
+                            .addPosition(position)
+                            .addSpeed(enemyJson["speed"])
+                            .addHealth(enemyJson["health"])
+                            .addExperience(enemyJson["experience"])
+                            .addDrop(100, 69)
+                            .setWeapon(enemyJson["weapon"])
+                            .setWaypointMovement();
+
+                return enemyBuilder.build();
+            }
+        }
+    }
+}
