@@ -11,6 +11,7 @@
 #include "name.h"
 #include "speed.h"
 #include "enemyModificator.h"
+#include "entityState.h"
 
 class EnemyGroupSystem
 {
