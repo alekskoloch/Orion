@@ -11,6 +11,8 @@ struct GroupFormation
 {
     std::vector<std::vector<int>> formation;
     std::vector<std::vector<bool>> seats;
+    int leaderRow;
+    int leaderCol;
 
     float offset = 200.f;
 
@@ -58,10 +60,6 @@ struct GroupFormation
             for (size_t j = 0; j < formation[i].size(); ++j) {
                 if (formation[i][j] == priority && !seats[i][j])
                 {
-                    //TODO: this should be calculated based on the leader position
-                    int leaderRow = 1;
-                    int leaderCol = 1;
-
                     int seatRow = i;
                     int seatCol = j;
 
@@ -88,7 +86,9 @@ static const GroupFormation RECTANGLE_FORMATION = {
         {false, false, false},
         {false, true, false},
         {false, false, false}
-    }
+    },
+    1,
+    1
 };
 
 struct EnemyGroupLeader
