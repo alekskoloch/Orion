@@ -91,6 +91,29 @@ static const GroupFormation RECTANGLE_FORMATION = {
     1
 };
 
+static const GroupFormation TRIANGLE_FORMATION = {
+    {
+        {5,4,3,4,5},
+        {4,3,2,3,4},
+        {3,2,1,2,3},
+        {2,1,0,1,2},
+        {1,1,1,1,1},
+        {2,2,2,2,2},
+        {3,3,3,3,3}
+    },
+    {
+        {false, false, false, false, false},
+        {false, false, false, false, false},
+        {false, false, false, false, false},
+        {false, false, true, false, false},
+        {false, false, false, false, false},
+        {false, false, false, false, false},
+        {false, false, false, false, false}
+    },
+    3,
+    2
+};
+
 struct EnemyGroupLeader
 {
     GroupID groupID;
