@@ -4,6 +4,7 @@
 #include <entt/entt.hpp>
 
 #include "ProceduralGenerationSystem.h"
+#include "EnemyInitializationSystem.h"
 
 #include "enemyGroup.h"
 #include "position.h"
@@ -22,4 +23,6 @@ private:
     bool addMemberToGroup(entt::registry& registry, entt::entity leader, entt::entity member);
 
     void removalGroupComponent(entt::registry& registry);
+
+    void spawnEnemyAndAttachToGroup(entt::registry& registry);
 };

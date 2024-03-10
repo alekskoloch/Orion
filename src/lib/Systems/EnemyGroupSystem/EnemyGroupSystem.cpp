@@ -46,6 +46,8 @@ void EnemyGroupSystem::updateEnemyGroup(entt::registry& registry)
         }
     }
 
+    this->spawnEnemyAndAttachToGroup(registry);
+
     this->removalGroupComponent(registry);
 }
 
@@ -55,7 +57,7 @@ bool EnemyGroupSystem::createGroup(entt::registry& registry, entt::entity leader
     {
         auto& leaderComponent = registry.emplace<EnemyGroupLeader>(leader);
         leaderComponent.groupID = groupID++;
-        leaderComponent.formation = RECTANGLE_FORMATION;
+        leaderComponent.formation = TRIANGLE_FORMATION;
 
         this->addMemberToGroup(registry, leader, member);
     }
@@ -128,5 +130,37 @@ void EnemyGroupSystem::removalGroupComponent(entt::registry& registry)
     for (auto member : membersToRemove)
     {
         registry.remove<EnemyGroupMember>(member);
+    }
+}
+
+void EnemyGroupSystem::spawnEnemyAndAttachToGroup(entt::registry& registry)
+{
+    if (registry.view<Enemy>().empty())
+        return;
+
+    bool chance = ProceduralGenerationSystem::GetRandomNumber(0, 1000) < 5;
+
+    if (chance)
+    {
+        auto enemy = registry.view<Position, Name>().begin();
+
+        if (!registry.any_of<EnemyGroupLeader>(*enemy) && !registry.any_of<EnemyGroupMember>(*enemy))
+        {
+            auto enemyPosition = registry.get<Position>(*enemy).position;
+            auto enemyName = registry.get<Name>(*enemy).name;
+
+            auto spawnedEnemy = EnemyInitializationSystem::spawnEnemy(registry, enemyPosition, enemyName);
+
+            if (registry.valid(spawnedEnemy))
+            {
+                this->createGroup(registry, *enemy, spawnedEnemy);
+            }
+
+            for (int i = 0; i < 15; i++)
+            {
+                auto spawnedEnemy = EnemyInitializationSystem::spawnEnemy(registry, enemyPosition, enemyName);
+                this->addMemberToGroup(registry, *enemy, spawnedEnemy);
+            }
+        }
     }
 }

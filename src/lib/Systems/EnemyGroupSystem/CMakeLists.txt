@@ -20,6 +20,7 @@ target_link_libraries(${PROJECT_NAME} PUBLIC
     EnTT::EnTT
     ProceduralGenerationSystem
     WaypointsMovementSystem
+    EnemyInitializationSystem
 )
 
 target_precompile_headers(${PROJECT_NAME} PRIVATE "${PCH_DIR}/pch.h")
