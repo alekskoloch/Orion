@@ -10,6 +10,7 @@
 #include "position.h"
 #include "name.h"
 #include "speed.h"
+#include "enemyModificator.h"
 
 class EnemyGroupSystem
 {

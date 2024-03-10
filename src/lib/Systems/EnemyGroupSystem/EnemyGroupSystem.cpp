@@ -135,31 +135,34 @@ void EnemyGroupSystem::removalGroupComponent(entt::registry& registry)
 
 void EnemyGroupSystem::spawnEnemyAndAttachToGroup(entt::registry& registry)
 {
-    if (registry.view<Enemy>().empty())
-        return;
+    auto enemiesWithModifiers = registry.view<EnemyModificator, Position, Name>();
 
-    bool chance = ProceduralGenerationSystem::GetRandomNumber(0, 1000) < 5;
-
-    if (chance)
+    for (auto enemy : enemiesWithModifiers)
     {
-        auto enemy = registry.view<Position, Name>().begin();
+        auto modificators = registry.get<EnemyModificator>(enemy).modificators;
 
-        if (!registry.any_of<EnemyGroupLeader>(*enemy) && !registry.any_of<EnemyGroupMember>(*enemy))
+        if (std::find(modificators.begin(), modificators.end(), Modificator::AllySummon) != modificators.end())
         {
-            auto enemyPosition = registry.get<Position>(*enemy).position;
-            auto enemyName = registry.get<Name>(*enemy).name;
+            auto enemyPosition = registry.get<Position>(enemy).position;
+            auto enemyName = registry.get<Name>(enemy).name;
 
-            auto spawnedEnemy = EnemyInitializationSystem::spawnEnemy(registry, enemyPosition, enemyName);
-
-            if (registry.valid(spawnedEnemy))
-            {
-                this->createGroup(registry, *enemy, spawnedEnemy);
-            }
-
-            for (int i = 0; i < 15; i++)
+            if (!registry.any_of<EnemyGroupLeader>(enemy) && !registry.any_of<EnemyGroupMember>(enemy))
             {
                 auto spawnedEnemy = EnemyInitializationSystem::spawnEnemy(registry, enemyPosition, enemyName);
-                this->addMemberToGroup(registry, *enemy, spawnedEnemy);
+
+                if (registry.valid(spawnedEnemy))
+                {
+                    this->createGroup(registry, enemy, spawnedEnemy);
+                }
+
+                // TODO: The number of enemies is temporary
+                for (int i = 0; i < 15; i++)
+                {
+                    auto spawnedEnemy = EnemyInitializationSystem::spawnEnemy(registry, enemyPosition, enemyName);
+                    this->addMemberToGroup(registry, enemy, spawnedEnemy);
+                }
+
+                registry.remove<EnemyModificator>(enemy);
             }
         }
     }
