@@ -1,6 +1,11 @@
 #include "pch.h"
 #include "DebugSystem.h"
 
+void DebugSystem::update(entt::registry& registry, sf::RenderWindow& window)
+{
+    creatingEnemies(registry, window);
+}
+
 void DebugSystem::renderCollisionBoxes(entt::registry& registry, sf::RenderWindow& window)
 {
     auto collisionView = registry.view<Collision>();
@@ -70,4 +75,31 @@ void DebugSystem::renderBackgroundTilesFrame(entt::registry& registry, sf::Rende
 
         window.draw(rectBox);
     }
+}
+
+void DebugSystem::creatingEnemies(entt::registry& registry, sf::RenderWindow& window)
+{
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::P))
+    {
+        spawnEnemyOnMousePosition(registry, window);
+    }
+}
+
+void DebugSystem::spawnEnemyOnMousePosition(entt::registry& registry, sf::RenderWindow& window)
+{
+    auto mousePosition = sf::Mouse::getPosition(window);
+    auto worldMousePosition = window.mapPixelToCoords(mousePosition);
+    auto player = registry.view<Player>();
+    auto playerPosition = registry.get<Position>(player.front()).position;
+
+    auto windowSize = window.getSize();
+
+    auto finalPosition = sf::Vector2f(
+        worldMousePosition.x + playerPosition.x - windowSize.x / 2,
+        worldMousePosition.y + playerPosition.y - windowSize.y / 2
+    );
+
+
+
+    EnemyInitializationSystem::spawnEnemy(registry, finalPosition, "Sparkle");
 }

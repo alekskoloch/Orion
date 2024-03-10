@@ -19,6 +19,7 @@ target_link_libraries(${PROJECT_NAME} PUBLIC
     sfml-graphics
     EnTT::EnTT
     BackgroundManager
+    EnemyInitializationSystem
 )
 
 target_precompile_headers(${PROJECT_NAME} PRIVATE "${PCH_DIR}/pch.h")
