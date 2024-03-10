@@ -21,6 +21,8 @@ public:
     EnemyBuilder& setWeapon(Weapons weapon);
     EnemyBuilder& setWaypointMovement();
 
+    entt::entity build();
+
 private:
     entt::registry& registry;
     entt::entity enemy;

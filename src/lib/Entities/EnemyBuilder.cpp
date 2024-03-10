@@ -94,3 +94,8 @@ EnemyBuilder& EnemyBuilder::setWaypointMovement()
 
     return *this;
 }
+
+entt::entity EnemyBuilder::build()
+{
+    return enemy;
+}
