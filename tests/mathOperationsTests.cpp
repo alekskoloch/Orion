@@ -1,19 +1,23 @@
 #include <gtest/gtest.h>
 
-#include "../src/utils/MathOperations.h"
+#include <SFML/Graphics.hpp>
+
+#include "../src/lib/Components/Position.h"
+#include "../src/lib/Utils/MathOperations.h"
+#include "../src/lib/Utils/Mouse.h"
 
 TEST(DistanceToMouseTest, SamePoints)
 {
     sf::Vector2f mousePosition(0, 0);
     Position position{sf::Vector2f(0, 0)};
-    EXPECT_FLOAT_EQ(DistanceToMouse(mousePosition, position), 0.0f);
+    EXPECT_FLOAT_EQ(CalculateDistance(mousePosition, position.position), 0.0f);
 }
 
 TEST(DistanceToMouseTest, DifferentPoints)
 {
     sf::Vector2f mousePosition(3, 4);
     Position position{sf::Vector2f(0, 0)};
-    EXPECT_FLOAT_EQ(DistanceToMouse(mousePosition, position), 5.0f);
+    EXPECT_FLOAT_EQ(CalculateDistance(mousePosition, position.position), 5.0f);
 }
 
 TEST(AngleDifferenceTest, ZeroDifference)

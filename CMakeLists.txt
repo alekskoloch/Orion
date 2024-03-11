@@ -6,8 +6,8 @@ add_definitions(-DCONFIG_PATH=\"${CMAKE_SOURCE_DIR}/config/\")
 
 set(CMAKE_CXX_STANDARD 23)
 
-set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -fuse-ld=lld")
-set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -fuse-ld=lld")
+set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -fuse-ld=lld" CACHE INTERNAL "")
+set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -fuse-ld=lld" CACHE INTERNAL "")
 
 #SFML
 find_package(SFML 2.6 COMPONENTS graphics audio REQUIRED)
@@ -44,8 +44,14 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(googletest)
 
+#GoogleTest
+enable_testing()
+
 # Main Executable
 add_executable(main src/main.cpp src/Game.h src/Game.cpp)
+
+target_precompile_headers(main PRIVATE src/pch.h)
+set(PCH_DIR "${PROJECT_SOURCE_DIR}/src" CACHE INTERNAL "")
 
 #SFML
 target_link_libraries(main sfml-graphics sfml-audio)
@@ -63,9 +69,6 @@ target_link_libraries(main EnTT::EnTT)
 
 # Include directories for nlohmann/json
 include_directories(${NLOHMANN_JSON_INCLUDE_DIR})
-
-#GoogleTest
-enable_testing()
 
 add_subdirectory(src/lib/Utils)
 include_directories(${UTILS_INCLUDE_DIR})
@@ -126,13 +129,10 @@ target_link_libraries(main
     GUIScenes
 )
 
-target_precompile_headers(main PRIVATE src/pch.h)
-set(PCH_DIR "${PROJECT_SOURCE_DIR}/src" CACHE INTERNAL "Path to the directory containing the PCH")
-
 file(GLOB TEST_SRC tests/*.cpp)
 add_executable(unit_tests ${TEST_SRC})
-target_link_libraries(unit_tests gtest_main texture_manager sfml-graphics)
+target_link_libraries(unit_tests gtest_main TextureManager
+ sfml-graphics)
 
-#GoogleTest discovery
 include(GoogleTest)
 gtest_discover_tests(unit_tests)
