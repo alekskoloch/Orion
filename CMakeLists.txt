@@ -45,10 +45,11 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(googletest)
 
 # Main Executable
-add_executable(main src/main.cpp src/Game.h src/Game.cpp src/managers/GUIManager.h src/managers/GUIManager.cpp src/managers/SystemManager.h src/managers/SystemManager.cpp)
+add_executable(main src/main.cpp src/Game.h src/Game.cpp)
 
 #SFML
 target_link_libraries(main sfml-graphics sfml-audio)
+include_directories(${SFML_INCLUDE_DIR})
 
 #Boost
 if(Boost_FOUND)
@@ -73,7 +74,7 @@ add_subdirectory(src/lib/Components)
 include_directories(${COMPONENTS_INCLUDE_DIR})
 
 add_subdirectory(src/lib/Managers)
-target_link_libraries(main EventManager FontManager SceneManager SoundManager TextureManager BackgroundManager SkillManager)
+target_link_libraries(main SystemManager GUIManager EventManager FontManager SceneManager SoundManager TextureManager BackgroundManager SkillManager)
 
 add_subdirectory(src/lib/Schemes)
 include_directories(${SCHEMES_INCLUDE_DIR})

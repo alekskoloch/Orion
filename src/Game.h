@@ -1,9 +1,7 @@
 #pragma once
 
-#include "SceneManager.h"
-
-#include "managers/GUIManager.h"
-#include "managers/SystemManager.h"
+#include "GUIManager.h"
+#include "SystemManager.h"
 
 class Game
 {

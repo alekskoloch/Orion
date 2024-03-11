@@ -1,5 +1,10 @@
-#include "../pch.h"
+#include "pch.h"
 #include "GUIManager.h"
+
+#include <SFML/Graphics.hpp>
+#include <entt/entt.hpp>
+
+#include "SceneManager.h"
 
 #include "WeaponsSystem.h"
 #include "ShieldSystem.h"

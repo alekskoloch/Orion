@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "Game.h"
 
+#include "SceneManager.h"
+
 #include "PlayerInitializationSystem.h"
 #include "EnemyInitializationSystem.h"
 

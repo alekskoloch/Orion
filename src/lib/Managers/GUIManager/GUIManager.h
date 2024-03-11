@@ -1,10 +1,5 @@
 #pragma once
 
-#include <SFML/Graphics.hpp>
-#include <entt/entt.hpp>
-
-#include "SceneManager.h"
-
 #include "GUISkillTree.h"
 
 #include "GUIQuickMenu.h"

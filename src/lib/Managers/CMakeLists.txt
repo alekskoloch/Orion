@@ -4,6 +4,8 @@ project (Managers)
 
 set(CMAKE_CXX_STANDARD 23)
 
+add_subdirectory(SystemManager)
+add_subdirectory(GUIManager)
 add_subdirectory(EventManager)
 add_subdirectory(FontManager)
 add_subdirectory(SceneManager)
