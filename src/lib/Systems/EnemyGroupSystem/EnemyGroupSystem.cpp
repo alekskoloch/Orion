@@ -46,9 +46,12 @@ void EnemyGroupSystem::updateEnemyGroup(entt::registry& registry)
         }
     }
 
+
     this->spawnEnemyAndAttachToGroup(registry);
 
     this->removalGroupComponent(registry);
+ 
+    this->updateMemberSpeed(registry);
 }
 
 bool EnemyGroupSystem::createGroup(entt::registry& registry, entt::entity leader, entt::entity member)
@@ -169,6 +172,38 @@ void EnemyGroupSystem::spawnEnemyAndAttachToGroup(entt::registry& registry)
                     registry.remove<EnemyModificator>(enemy);
                 }
             }
+        }
+    }
+}
+
+void EnemyGroupSystem::updateMemberSpeed(entt::registry& registry)
+{
+    auto members = registry.view<EnemyGroupMember, Speed, Position, WaypointMovement>();
+
+    for (auto member : members)
+    {
+        auto& memberComponent = registry.get<EnemyGroupMember>(member);
+        auto& memberPosition = registry.get<Position>(member).position;
+        auto& memberWaypointMovement = registry.get<WaypointMovement>(member);
+        
+        if (memberWaypointMovement.waypoints.size() > 0)
+        {
+            if (CalculateDistance(memberPosition, memberWaypointMovement.waypoints[memberWaypointMovement.currentWaypointIndex]) < 100.f)
+            {
+                memberComponent.reachedLeaderPosition = true;
+            }
+        }
+
+        auto& memberSpeed = registry.get<Speed>(member);
+        auto& leaderSpeed = registry.get<Speed>(memberComponent.leader);
+
+        if (memberComponent.reachedLeaderPosition)
+        {
+            memberSpeed.maxSpeedValue = leaderSpeed.maxSpeedValue;
+        }
+        else
+        {
+            memberSpeed.maxSpeedValue = leaderSpeed.maxSpeedValue * 2.f;
         }
     }
 }

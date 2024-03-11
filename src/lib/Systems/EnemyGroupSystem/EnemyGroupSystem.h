@@ -12,6 +12,7 @@
 #include "speed.h"
 #include "enemyModificator.h"
 #include "entityState.h"
+#include "waypointMovement.h"
 
 class EnemyGroupSystem
 {
@@ -27,4 +28,6 @@ private:
     void removalGroupComponent(entt::registry& registry);
 
     void spawnEnemyAndAttachToGroup(entt::registry& registry);
+
+    void updateMemberSpeed(entt::registry& registry);
 };
