@@ -128,4 +128,6 @@ struct EnemyGroupMember
 {
     entt::entity leader;
     sf::Vector2f offset = sf::Vector2f(0.f, 0.f);
+
+    bool reachedLeaderPosition = false;
 };
