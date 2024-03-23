@@ -19,6 +19,7 @@ GUIManager::GUIManager(sf::RenderWindow& window, entt::registry& registry, sf::E
     quickMenu(window, registry),
     energyBar(window, registry),
     minimap(window, registry, quests),
+    mainMenu(registry, window),
     skillTreeGUI(registry, window),
     weaponTile(window, registry),
     shieldTile(window, registry),
@@ -63,6 +64,10 @@ void GUIManager::update(sf::Time deltaTime)
     {
         this->skillTreeGUI.update(deltaTime);
     }
+    else if (SceneManager::getInstance().getCurrentScene() == Scene::MainMenu)
+    {
+        this->mainMenu.update(deltaTime);
+    }
 }
 
 void GUIManager::draw()
@@ -91,6 +96,10 @@ void GUIManager::draw()
     else if (SceneManager::getInstance().getCurrentScene() == Scene::SkillTree)
     {
         this->skillTreeGUI.draw();
+    }
+    else if (SceneManager::getInstance().getCurrentScene() == Scene::MainMenu)
+    {
+        this->mainMenu.draw();
     }
 }
 

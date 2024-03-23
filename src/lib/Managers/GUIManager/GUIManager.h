@@ -1,5 +1,6 @@
 #pragma once
 
+#include "GUIMainMenu.hpp"
 #include "GUISkillTree.h"
 
 #include "GUIQuickMenu.h"
@@ -35,6 +36,7 @@ private:
     GUIExpInfo expInfo;
     GUIJournal journal;
 
+    GUIMainMenu mainMenu;
     GUISkillTree skillTreeGUI;
 
     bool quickMenuActive = false;

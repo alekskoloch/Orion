@@ -4,8 +4,8 @@ project(GUIScenes)
 
 set(CMAKE_CXX_STANDARD 23)
 
-set(SOURCE_FILES GUISkillTree.cpp)
-set(HEADER_FILES GUISkillTree.h) 
+set(SOURCE_FILES GUISkillTree.cpp   GUIMainMenu.cpp)
+set(HEADER_FILES GUISkillTree.h     GUIMainMenu.hpp) 
 
 add_library(${PROJECT_NAME} STATIC ${SOURCE_FILES} ${HEADER_FILES})
 
@@ -19,6 +19,7 @@ target_link_libraries(${PROJECT_NAME} PUBLIC
     sfml-graphics
     EnTT::EnTT
     SkillManager
+    SceneManager
 )
 
 target_precompile_headers(${PROJECT_NAME} PRIVATE "${PCH_DIR}/pch.h")

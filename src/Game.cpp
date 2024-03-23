@@ -10,6 +10,8 @@ Game::Game() : window(sf::VideoMode(3840u, 2160u), "Orion"), systemManager(this-
 {
     //TODO: Frame rate should be configurable
     window.setFramerateLimit(144);
+
+    SceneManager::getInstance().setCurrentScene(Scene::MainMenu);
 }
 
 void Game::run()
