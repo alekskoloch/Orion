@@ -4,6 +4,8 @@ project(GUI)
 
 set(CMAKE_CXX_STANDARD 23)
 
+add_subdirectory(GUICore)
+
 add_subdirectory(GUIDialogBox)
 add_subdirectory(GUIBox)
 add_subdirectory(GUIButton)
