@@ -2,8 +2,12 @@
 
 #include <entt/entt.hpp>
 #include <SFML/Graphics.hpp>
+#include <vector>
+#include <memory>
 
 #include "SceneManager.h"
+
+#include "GUIElement.hpp"
 
 class GUIMainMenu
 {
@@ -17,5 +21,18 @@ private:
     sf::RenderWindow& window;
     sf::View view;
 
-    sf::Font font;
+    std::vector<std::unique_ptr<GUIElement>> elements;
+
+    void initialize();
+    unsigned int SCREEN_WIDTH;
+    unsigned int SCREEN_HEIGHT;
+
+    unsigned int BUTTON_WIDTH;
+    unsigned int BUTTON_HEIGHT;
+
+    unsigned int TITLE_FONT_SIZE;
+    unsigned int BUTTONS_FONT_SIZE;
+
+    float MARGIN;
+    float OUTLINE_THICKNESS;
 };
