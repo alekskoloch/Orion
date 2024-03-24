@@ -20,7 +20,7 @@ private:
     entt::registry& registry;
     sf::RenderWindow& window;
     sf::View view;
-    float moveSpeed = 20.0f;
+    float moveSpeed = 1000.0f;
 
     sf::Font font;
 };

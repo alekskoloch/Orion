@@ -11,13 +11,13 @@ void GUISkillTree::update(sf::Time& deltaTime)
     SkillManager::getInstance(this->window, this->registry).update(deltaTime);
 
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
-        view.move(0, -moveSpeed);
+        view.move(0, -moveSpeed * deltaTime.asSeconds());
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
-        view.move(-moveSpeed, 0);
+        view.move(-moveSpeed * deltaTime.asSeconds(), 0);
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
-        view.move(0, moveSpeed);
+        view.move(0, moveSpeed * deltaTime.asSeconds());
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
-        view.move(moveSpeed, 0);
+        view.move(moveSpeed * deltaTime.asSeconds(), 0);
 
     window.setView(view);
 }
