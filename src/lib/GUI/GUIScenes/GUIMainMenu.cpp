@@ -35,7 +35,7 @@ GUIMainMenu::GUIMainMenu(entt::registry& registry, sf::RenderWindow& window) : r
 
     elements.back().get()->setOnActivateAction([&]()
     {
-        //SceneManager::getInstance().setCurrentScene(Scene::Settings);
+        SceneManager::getInstance().setCurrentScene(Scene::Settings);
     });
 
     elements.push_back(GUIElementFactory::createButton(
@@ -54,11 +54,6 @@ GUIMainMenu::GUIMainMenu(entt::registry& registry, sf::RenderWindow& window) : r
 
 void GUIMainMenu::update(sf::Time& deltaTime)
 {
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
-    {
-        SceneManager::getInstance().setCurrentScene(Scene::Game);
-    }
-
     sf::Vector2f mousePosition = sf::Vector2f(sf::Mouse::getPosition(this->window).x, sf::Mouse::getPosition(this->window).y);
 
     for (auto& element : elements)
