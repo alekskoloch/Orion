@@ -3,6 +3,7 @@
 enum class Scene
 {
     MainMenu,
+    Settings,
     Game,
     SkillTree,
     GameOver
