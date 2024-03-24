@@ -2,14 +2,17 @@
 #include "Game.h"
 
 #include "SceneManager.h"
+#include "TextureManager.h"
+#include "ConfigManager.hpp"
 
 #include "PlayerInitializationSystem.h"
 #include "EnemyInitializationSystem.h"
 
-Game::Game() : window(sf::VideoMode(3840u, 2160u), "Orion"), systemManager(this->window, this->registry, this->event), guiManager(this->window, this->registry, this->event, this->systemManager.getQuests())    
+#include "nlohmann/json.hpp"
+
+Game::Game() : window(sf::VideoMode(ConfigManager::getInstance().getScreenWidth(), ConfigManager::getInstance().getScreenHeight()), "Orion", sf::Style::Fullscreen), systemManager(this->window, this->registry, this->event), guiManager(this->window, this->registry, this->event, this->systemManager.getQuests())    
 {
-    //TODO: Frame rate should be configurable
-    window.setFramerateLimit(144);
+    this->window.setFramerateLimit(ConfigManager::getInstance().getFrameRateLimit());
 
     SceneManager::getInstance().setCurrentScene(Scene::MainMenu);
 }
@@ -42,12 +45,6 @@ void Game::processEvents()
         {
             this->systemManager.disableSlowMotion();
             this->guiManager.toggleQuickMenu(false);
-        }
-
-        //TODO: Temporary solution for testing
-        if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape)
-        {
-            SceneManager::getInstance().setCurrentScene(Scene::Game);
         }
 
         //when ` key is pressed, toggle debug mode
