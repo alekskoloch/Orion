@@ -14,6 +14,15 @@ Game::Game() : window(sf::VideoMode(ConfigManager::getInstance().getScreenWidth(
 {
     this->window.setFramerateLimit(ConfigManager::getInstance().getFrameRateLimit());
 
+    this->cursorTexture = TextureManager::getInstance().getTexture("Cursor");
+
+    if (!this->cursor.loadFromPixels(this->cursorTexture.copyToImage().getPixelsPtr(), this->cursorTexture.getSize(), {25, 25}))
+    {
+        std::cerr << "Failed to load cursor texture" << std::endl;
+    }
+
+    this->window.setMouseCursor(this->cursor);
+
     SceneManager::getInstance().setCurrentScene(Scene::MainMenu);
 }
 

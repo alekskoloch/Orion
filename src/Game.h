@@ -14,6 +14,9 @@ private:
     SystemManager systemManager;
     GUIManager guiManager;
 
+    sf::Texture cursorTexture;
+    sf::Cursor cursor;
+
     void processEvents();
     void update(sf::Time deltaTime);
     void render();
