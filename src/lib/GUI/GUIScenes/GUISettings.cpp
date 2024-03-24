@@ -110,15 +110,21 @@ void GUISettings::update(sf::Time& deltaTime)
 
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
     {
-        //save settings to gameConfig.json
         std::ofstream file(CONFIG_PATH + std::string("gameConfig.json"));
         if (file.is_open())
         {
-            nlohmann::json j;
-            j["resolution"]["width"] = std::stoi(elements[2]->getText());
-            j["resolution"]["height"] = std::stoi(elements[2]->getText().substr(elements[2]->getText().find('x') + 1));
-            j["frameRateLimit"] = std::stoi(elements[4]->getText());
-            file << j.dump(4);
+            nlohmann::json config;
+            config["resolution"]["width"] = std::stoi(elements[2]->getText());
+            config["resolution"]["height"] = std::stoi(elements[2]->getText().substr(elements[2]->getText().find('x') + 1));
+            if (elements[4]->getText() == "unlimited")
+            {
+                config["frameRateLimit"] = 0;
+            }
+            else
+            {
+                config["frameRateLimit"] = std::stoi(elements[4]->getText());
+            }
+            file << config.dump(4);
         }
         else
         {
