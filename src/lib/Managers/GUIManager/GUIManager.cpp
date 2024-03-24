@@ -20,6 +20,7 @@ GUIManager::GUIManager(sf::RenderWindow& window, entt::registry& registry, sf::E
     energyBar(window, registry),
     minimap(window, registry, quests),
     mainMenu(registry, window),
+    settings(registry, window),
     skillTreeGUI(registry, window),
     weaponTile(window, registry),
     shieldTile(window, registry),
@@ -59,6 +60,11 @@ void GUIManager::update(sf::Time deltaTime)
             this->moneyBar.update();
             this->expInfo.update();
         }
+
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
+        {
+            SceneManager::getInstance().setCurrentScene(Scene::MainMenu);
+        }
     }
     else if (SceneManager::getInstance().getCurrentScene() == Scene::SkillTree)
     {
@@ -67,6 +73,10 @@ void GUIManager::update(sf::Time deltaTime)
     else if (SceneManager::getInstance().getCurrentScene() == Scene::MainMenu)
     {
         this->mainMenu.update(deltaTime);
+    }
+    else if (SceneManager::getInstance().getCurrentScene() == Scene::Settings)
+    {
+        this->settings.update(deltaTime);
     }
 }
 
@@ -100,6 +110,10 @@ void GUIManager::draw()
     else if (SceneManager::getInstance().getCurrentScene() == Scene::MainMenu)
     {
         this->mainMenu.draw();
+    }
+    else if (SceneManager::getInstance().getCurrentScene() == Scene::Settings)
+    {
+        this->settings.draw();
     }
 }
 

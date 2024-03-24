@@ -2,6 +2,7 @@
 
 #include "GUIMainMenu.hpp"
 #include "GUISkillTree.h"
+#include "GUISettings.hpp"
 
 #include "GUIQuickMenu.h"
 #include "GUIEnergyBar.h"
@@ -38,6 +39,7 @@ private:
 
     GUIMainMenu mainMenu;
     GUISkillTree skillTreeGUI;
+    GUISettings settings;
 
     bool quickMenuActive = false;
     bool pauseFromGUI = false;
