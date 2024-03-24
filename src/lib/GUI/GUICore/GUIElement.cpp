@@ -5,7 +5,7 @@ GUIShape::GUIShape(std::unique_ptr<sf::Shape> shape)
 {
 }
 
-void GUIShape::update(sf::Time deltaTime, EffectType type)
+void GUIShape::update(sf::Time deltaTime, sf::Vector2f mousePosition, EffectType type)
 {
     for (auto& effect : effects)
     {
@@ -13,7 +13,32 @@ void GUIShape::update(sf::Time deltaTime, EffectType type)
         if (effect->getType() == type)
             updateThisEffect = true; 
 
+        if (this->interactiveElement)
+        {
+            if (!shape->getGlobalBounds().contains(mousePosition))
+            {
+                updateThisEffect = false;
+            }
+            else
+            {
+                if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left))
+                {
+                    this->isClicked = true;
+                }
+            }
+        }
+
         effect->update(deltaTime, updateThisEffect);
+
+        if  (this->isClicked)
+        {
+            if (!sf::Mouse::isButtonPressed(sf::Mouse::Button::Left))
+            {
+                this->isClicked = false;
+                if (onActivateAction != nullptr)
+                    this->onActivateAction();
+            }
+        }
     }
 }
 
@@ -86,7 +111,7 @@ void GUIElement::update(sf::Time deltaTime, sf::Vector2f mousePosition)
 
     for (auto& shape : shapes)
     {
-        shape->update(deltaTime, effectType);
+        shape->update(deltaTime, mousePosition, effectType);
     }
 }
 

@@ -150,6 +150,25 @@ public:
         return std::move(builder.build());
     }
 
+    static std::unique_ptr<sf::Shape> createButtonArrow(const sf::Vector2f& position, float rotation, float thickness = 5, float size = 40)
+    {
+        ShapeBuilder<sf::ConvexShape> builder;
+        builder.setPointCount(3)
+            .setPoint(0, sf::Vector2f(0, 0))
+            .setPoint(1, sf::Vector2f(size, size / 2))
+            .setPoint(2, sf::Vector2f(0, size))
+            .setRotation(rotation)
+            .setFillColor(sf::Color::Black)
+            .setOutlineColor(sf::Color::White)
+            .setOutlineThickness(1)
+            .setOrigin(
+                {size / 2, size / 2}
+            )
+            .setPosition(position);
+
+        return std::move(builder.build());
+    }
+
     static std::unique_ptr<sf::Shape> createBasicRectangle(const sf::Vector2f& position, const sf::Vector2f& size)
     {
         ShapeBuilder<sf::RectangleShape> builder;
@@ -374,11 +393,12 @@ class GUIShape : public sf::Drawable
 {
 public:
     GUIShape(std::unique_ptr<sf::Shape> shape);
-    void update(sf::Time deltaTime, EffectType type = EffectType::Idle);
+    void update(sf::Time deltaTime, sf::Vector2f mousePosition, EffectType type = EffectType::Idle);
     void addEffect(std::unique_ptr<GUIEffect> effect);
     sf::FloatRect getGlobalBounds() const { return shape->getGlobalBounds(); }
     void setPosition(const sf::Vector2f& position) { shape->setPosition(position); }
     sf::Shape* getShapePointer() { return shape.get(); }
+    void setAsInteractiveElement(std::function<void()> action) { this->interactiveElement = true; this->onActivateAction = action; }
 
 protected:
     virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
@@ -392,6 +412,11 @@ private:
 
     float outlineOpacity;
     bool fadeIn;
+
+    bool interactiveElement = false;
+    std::function<void()> onActivateAction;
+
+    bool isClicked = false;
 };
 
 class GUIShapeText : public GUIShape
@@ -401,7 +426,7 @@ public:
 
     void setText(const std::string& text, unsigned int characterSize = CHARACTER_SIZE)
     {
-        this->font = FontManager::getInstance().getFont("font");
+        font = FontManager::getInstance().getFont("font");
 
         sf::Text newText;
         newText.setFont(font);
@@ -421,6 +446,22 @@ public:
         textObject = std::move(newText);
     }
 
+    void setText(unsigned int index)
+    {
+        if (index < texts.size())
+        {
+            currentIndex = index;
+            setText(texts[index]);
+        }
+    }
+
+    unsigned int getTextIndex() const { return currentIndex; }
+
+    void setTexts(const std::vector<std::string>& texts, unsigned int characterSize = CHARACTER_SIZE)
+    {
+        this->texts = texts;
+    }
+
     sf::Text& getTextObject() { return textObject; }
 
     virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override
@@ -430,7 +471,10 @@ public:
         target.draw(textObject, states);
     }
 
+    unsigned int currentIndex = 0;
+
 private:
+    std::vector<std::string> texts;
     sf::Text textObject;
     sf::Font font;
 };
@@ -449,6 +493,11 @@ public:
     {
         if (onActivateAction)
             onActivateAction();
+    }
+
+    std::string getText() const
+    {
+        return static_cast<GUIShapeText*>(shapes[0].get())->getTextObject().getString();
     }
 
     void setPosition(const sf::Vector2f& position);
@@ -571,6 +620,85 @@ public:
             .addShape(std::move(line4));
 
         // return builder.build();
+        return std::make_unique<GUIElement>(builder.build());
+    }
+
+    static std::unique_ptr<GUIElement> createArrowButton(const sf::Vector2f& position, const sf::Vector2f& size = sf::Vector2f(300, 50), std::vector<std::string> texts = {}, unsigned int index = 0)
+    {
+        float buttonMargin = std::sqrt(std::min(size.x, size.y) / 10);
+        float cornerSize = std::min(size.x, size.y) / 4;
+
+        std::unique_ptr<GUIShapeText> base = std::make_unique<GUIShapeText>(ShapeFactory::createBasicRectangle(position, sf::Vector2f(size.x - buttonMargin * 2, size.y - buttonMargin * 2)));
+        
+        base->setTexts(texts);
+        base->setText(index);
+
+        std::unique_ptr<GUIShape> line1 = std::make_unique<GUIShape>(ShapeFactory::createLine(
+            position - sf::Vector2f(size.x / 2, size.y / 2) + sf::Vector2f(cornerSize + buttonMargin, GLOBAL_OUTLINE / 2),
+            position + sf::Vector2f(size.x, 0) - sf::Vector2f(size.x / 2, size.y / 2) - sf::Vector2f(cornerSize + buttonMargin, -GLOBAL_OUTLINE / 2),
+            2.f
+        ));
+
+        line1->addEffect(std::make_unique<ChangeFillColor>(line1->getShapePointer(), EffectType::Idle, sf::Color(50, 50, 50, 255)));
+        line1->addEffect(std::make_unique<ChangeFillColor>(line1->getShapePointer(), EffectType::Hover, TEST_ORANGE_COLOR));
+        line1->addEffect(std::make_unique<ChangeFillColor>(line1->getShapePointer(), EffectType::Active, TEST_ORANGE_COLOR));
+
+        std::unique_ptr<GUIShape> line3 = std::make_unique<GUIShape>(ShapeFactory::createLine(
+            position + sf::Vector2f(size.x, size.y) - sf::Vector2f(size.x / 2, size.y / 2) + sf::Vector2f(-cornerSize - buttonMargin, -GLOBAL_OUTLINE / 2),
+            position + sf::Vector2f(0, size.y) - sf::Vector2f(size.x / 2, size.y / 2) - sf::Vector2f(-cornerSize - buttonMargin, GLOBAL_OUTLINE / 2),
+            2.f
+        ));
+
+        line3->addEffect(std::make_unique<ChangeFillColor>(line3->getShapePointer(), EffectType::Idle, sf::Color(50, 50, 50, 255)));
+        line3->addEffect(std::make_unique<ChangeFillColor>(line3->getShapePointer(), EffectType::Hover, TEST_ORANGE_COLOR));
+        line3->addEffect(std::make_unique<ChangeFillColor>(line3->getShapePointer(), EffectType::Active, TEST_ORANGE_COLOR));
+
+        std::unique_ptr<GUIShape> arrowRight = std::make_unique<GUIShape>(ShapeFactory::createButtonArrow(
+            sf::Vector2f(position.x + size.x / 2 - buttonMargin - cornerSize, position.y),
+            0.0f,
+            GLOBAL_OUTLINE,
+            cornerSize * 1.5
+        ));
+
+        arrowRight->setAsInteractiveElement(
+            [base = base.get()]() mutable {
+                base->setText(base->getTextIndex() + 1);
+            }
+        );
+        arrowRight->addEffect(std::make_unique<ChangeOutlineColorEffectOnHover>(arrowRight->getShapePointer(), EffectType::Hover, TEST_ORANGE_COLOR));
+       
+        arrowRight->addEffect(std::make_unique<ChangeFillColor>(arrowRight->getShapePointer(), EffectType::Idle, sf::Color::Black));
+        arrowRight->addEffect(std::make_unique<ChangeFillColor>(arrowRight->getShapePointer(), EffectType::Hover, sf::Color::Black));
+        arrowRight->addEffect(std::make_unique<ChangeFillColor>(arrowRight->getShapePointer(), EffectType::Active, TEST_ORANGE_COLOR));
+
+        std::unique_ptr<GUIShape> arrowLeft = std::make_unique<GUIShape>(ShapeFactory::createButtonArrow(
+            sf::Vector2f(position.x - size.x / 2 + buttonMargin + cornerSize, position.y),
+            180.0f,
+            GLOBAL_OUTLINE,
+            cornerSize * 1.5
+        ));
+
+        arrowLeft->setAsInteractiveElement(
+            [base = base.get()]() mutable {
+                base->setText(base->getTextIndex() - 1);
+            }
+        );
+        arrowLeft->addEffect(std::make_unique<ChangeOutlineColorEffectOnHover>(arrowLeft->getShapePointer(), EffectType::Hover, TEST_ORANGE_COLOR));
+        
+        arrowLeft->addEffect(std::make_unique<ChangeFillColor>(arrowLeft->getShapePointer(), EffectType::Idle, sf::Color::Black));
+        arrowLeft->addEffect(std::make_unique<ChangeFillColor>(arrowLeft->getShapePointer(), EffectType::Hover, sf::Color::Black));
+        arrowLeft->addEffect(std::make_unique<ChangeFillColor>(arrowLeft->getShapePointer(), EffectType::Active, TEST_ORANGE_COLOR));
+
+        GUIElementBuilder builder;
+        builder
+            .setPosition(position)
+            .setType(GUIElementType::Button)
+            .addShape(std::move(base))
+            .addShape(std::move(line1))
+            .addShape(std::move(line3))
+            .addShape(std::move(arrowRight))
+            .addShape(std::move(arrowLeft));
+
         return std::make_unique<GUIElement>(builder.build());
     }
 
