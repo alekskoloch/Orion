@@ -4,8 +4,8 @@ project(GUIScenes)
 
 set(CMAKE_CXX_STANDARD 23)
 
-set(SOURCE_FILES GUISkillTree.cpp   GUIMainMenu.cpp)
-set(HEADER_FILES GUISkillTree.h     GUIMainMenu.hpp) 
+set(SOURCE_FILES GUISkillTree.cpp   GUIMainMenu.cpp     GUISettings.cpp)
+set(HEADER_FILES GUISkillTree.h     GUIMainMenu.hpp     GUISettings.hpp) 
 
 add_library(${PROJECT_NAME} STATIC ${SOURCE_FILES} ${HEADER_FILES})
 
@@ -21,6 +21,7 @@ target_link_libraries(${PROJECT_NAME} PUBLIC
     GUIElement
     SkillManager
     SceneManager
+    nlohmann_json
 )
 
 target_precompile_headers(${PROJECT_NAME} PRIVATE "${PCH_DIR}/pch.h")
