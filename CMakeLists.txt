@@ -77,7 +77,7 @@ add_subdirectory(src/lib/Components)
 include_directories(${COMPONENTS_INCLUDE_DIR})
 
 add_subdirectory(src/lib/Managers)
-target_link_libraries(main SystemManager GUIManager EventManager FontManager SceneManager SoundManager TextureManager BackgroundManager SkillManager)
+target_link_libraries(main SystemManager GUIManager EventManager FontManager SceneManager SoundManager TextureManager BackgroundManager SkillManager ConfigManager)
 
 add_subdirectory(src/lib/Schemes)
 include_directories(${SCHEMES_INCLUDE_DIR})
