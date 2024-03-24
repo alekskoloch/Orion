@@ -4,6 +4,7 @@
 #include <SFML/Graphics.hpp>
 
 #include "SkillManager.h"
+#include "SceneManager.h"
 
 #include "GraphicsOperations.h"
 #include "Mouse.h"
