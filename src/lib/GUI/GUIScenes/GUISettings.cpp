@@ -13,7 +13,6 @@ GUISettings::GUISettings(entt::registry& registry, sf::RenderWindow& window) : r
     unsigned int currentHeight;
     unsigned int currentFrameRate;
 
-    //load settings from gameConfig.json trough nlohmann json
     std::ifstream file(CONFIG_PATH + std::string("gameConfig.json"));
     if (file.is_open())
     {
@@ -71,13 +70,18 @@ GUISettings::GUISettings(entt::registry& registry, sf::RenderWindow& window) : r
     ));
 
     unsigned int currentFrameRateIndex = 0;
-    std::vector<std::string> frameRates = { "30", "60", "120", "144", "240", "unlimited" };
+    std::vector<std::string> frameRates = { "30", "60", "120", "144", "240", "360", "unlimited" };
 
     for (size_t i = 0; i < frameRates.size(); i++)
     {
         if (frameRates[i] == std::to_string(currentFrameRate))
         {
             currentFrameRateIndex = i;
+            break;
+        }
+        else if (currentFrameRate == 0)
+        {
+            currentFrameRateIndex = frameRates.size() - 1;
             break;
         }
     }
