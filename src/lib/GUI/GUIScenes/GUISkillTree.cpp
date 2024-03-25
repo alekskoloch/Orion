@@ -20,6 +20,11 @@ void GUISkillTree::update(sf::Time& deltaTime)
         view.move(moveSpeed * deltaTime.asSeconds(), 0);
 
     window.setView(view);
+
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
+    {
+        SceneManager::getInstance().setCurrentScene(Scene::Game);
+    }
 }
 
 void GUISkillTree::draw()

@@ -41,6 +41,16 @@ void GUIManager::update(sf::Time deltaTime)
 {
     if (SceneManager::getInstance().getCurrentScene() == Scene::Game)
     {
+        //TODO: this solution is temporary, change of scenes should be done in a different way
+        if (this->quitTimer < 0.2f)
+        {
+            this->readyToQuit = false;
+            this->quitTimer += deltaTime.asSeconds();
+        }
+        else
+            this->readyToQuit = true;
+
+
         if (this->quickMenuActive)
             this->quickMenu.update();
 
@@ -61,7 +71,7 @@ void GUIManager::update(sf::Time deltaTime)
             this->expInfo.update();
         }
 
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape) && this->readyToQuit)
         {
             SceneManager::getInstance().setCurrentScene(Scene::MainMenu);
         }
@@ -69,6 +79,7 @@ void GUIManager::update(sf::Time deltaTime)
     else if (SceneManager::getInstance().getCurrentScene() == Scene::SkillTree)
     {
         this->skillTreeGUI.update(deltaTime);
+        this->quitTimer = 0.f;
     }
     else if (SceneManager::getInstance().getCurrentScene() == Scene::MainMenu)
     {

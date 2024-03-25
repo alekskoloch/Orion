@@ -43,6 +43,8 @@ private:
 
     bool quickMenuActive = false;
     bool pauseFromGUI = false;
+    bool readyToQuit = true;
+    float quitTimer = 0.f;
 
 //TODO: move shader
     sf::Shader shader;
