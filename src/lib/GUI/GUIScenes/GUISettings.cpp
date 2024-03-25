@@ -58,6 +58,7 @@ GUISettings::GUISettings(entt::registry& registry, sf::RenderWindow& window) : r
         if (resolutions[i] == std::to_string(currentWidth) + "x" + std::to_string(currentHeight))
         {
             currentResolutionIndex = i;
+            this->loadedResolution = resolutions[i];
             break;
         }
     }
@@ -77,6 +78,7 @@ GUISettings::GUISettings(entt::registry& registry, sf::RenderWindow& window) : r
         if (frameRates[i] == std::to_string(currentFrameRate))
         {
             currentFrameRateIndex = i;
+            this->loadedFrameRate = frameRates[i];
             break;
         }
         else if (currentFrameRate == 0)
@@ -139,8 +141,25 @@ void GUISettings::update(sf::Time& deltaTime)
         SceneManager::getInstance().setCurrentScene(Scene::MainMenu);
     }
 
-
-
+    //TODO: this is horrible, refactor this
+    if (this->elements[2]->getText() != this->loadedResolution || this->elements[4]->getText() != this->loadedFrameRate)
+    {
+        if (elements.size() == 5)
+        {
+            elements.push_back(GUIElementFactory::createText(
+                sf::Vector2f(SCREEN_WIDTH / 2, SCREEN_HEIGHT - SCREEN_HEIGHT / 10),
+                "Changes will be applied after restarting the game",
+                BUTTONS_FONT_SIZE
+            ));
+        }
+    }
+    else
+    {
+        if (elements.size() == 6)
+        {
+            elements.pop_back();
+        }
+    }
 }
 
 void GUISettings::draw()

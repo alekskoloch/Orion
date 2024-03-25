@@ -35,4 +35,8 @@ private:
 
     float MARGIN;
     float OUTLINE_THICKNESS;
+
+    std::string loadedResolution;
+    std::string loadedFrameRate;
+    
 };
