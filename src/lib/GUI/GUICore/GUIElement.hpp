@@ -6,13 +6,13 @@
 #include <functional>
 
 #include "FontManager.h"
+#include "SoundManager.h"
+
+//TODO: REFACTOR ALL THIS STUFF, FOR NOW IT'S JUST A TEMPORARY SOLUTION
 
 const float GLOBAL_OUTLINE = 3.f;
-// const sf::Color TEST_ORANGE_COLOR = sf::Color(255, 165, 0);
 const sf::Color TEST_ORANGE_COLOR = sf::Color(123, 176, 230);
 const unsigned int CHARACTER_SIZE = 20;
-
-//light blue:
 
 
 enum class GUIElementType
@@ -262,6 +262,32 @@ private:
     float speed = 200.f;
     float minRange = 50.f;
     float maxRange = 255.f;
+};
+
+class PlaySoundEffect : public GUIEffect
+{
+public:
+
+    PlaySoundEffect(sf::Shape* shape, EffectType type, const std::string& soundName) : GUIEffect(shape, type), soundName(soundName) {}
+
+    void update(sf::Time deltaTime, bool active) override
+    {
+        if (active)
+        {
+            if (!this->soundPlayed)
+            {
+                this->soundPlayed = true;
+                SoundManager::getInstance().playSound(soundName);
+            }
+        }
+        else
+        {
+            this->soundPlayed = false;
+        }
+    }
+private:
+    std::string soundName;
+    bool soundPlayed = false;
 };
 
 class MoveOutOnHover : public GUIEffect
@@ -540,7 +566,11 @@ public:
         float cornerSize = std::min(size.x, size.y) / 4;
 
         std::unique_ptr<GUIShapeText> base = std::make_unique<GUIShapeText>(ShapeFactory::createBasicRectangle(position, sf::Vector2f(size.x - buttonMargin * 2, size.y - buttonMargin * 2)));
-        
+        base->addEffect(std::make_unique<PlaySoundEffect>(base->getShapePointer(), EffectType::Hover, "ButtonHover"));
+        //TODO: sound effect on click is temporary
+        base->addEffect(std::make_unique<PlaySoundEffect>(base->getShapePointer(), EffectType::Active, "SkillUnlock"));
+
+
         if (!text.empty())
         {
             base->setText(text, characterSize);
@@ -632,6 +662,7 @@ public:
         
         base->setTexts(texts);
         base->setText(index);
+        base->addEffect(std::make_unique<PlaySoundEffect>(base->getShapePointer(), EffectType::Hover, "ButtonHover"));
 
         std::unique_ptr<GUIShape> line1 = std::make_unique<GUIShape>(ShapeFactory::createLine(
             position - sf::Vector2f(size.x / 2, size.y / 2) + sf::Vector2f(cornerSize + buttonMargin, GLOBAL_OUTLINE / 2),
