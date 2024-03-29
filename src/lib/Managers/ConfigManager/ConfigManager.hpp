@@ -22,4 +22,6 @@ public:
     unsigned int getScreenWidth() const { return SCREEN_WIDTH; }
     unsigned int getScreenHeight() const { return SCREEN_HEIGHT; }
     unsigned int getFrameRateLimit() const { return FRAME_RATE_LIMIT; }
+
+    float getScale();
 };
