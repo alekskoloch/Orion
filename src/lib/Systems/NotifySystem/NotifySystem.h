@@ -1,6 +1,9 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
+
+#include "ConfigManager.hpp"
+
 #include "GUIDialogBox.h"
 #include "CooldownSystem.h"
 #include "FontManager.h"

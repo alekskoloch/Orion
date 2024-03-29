@@ -7,19 +7,29 @@ void NotifySystem::notify(const Type type, const std::string& message, float dis
     switch (type)
     {
     case Type::Info:
-        text = sf::Text(message, FontManager::getInstance().getFont("font"), 24); //TODO: set font size
-        text.setPosition(20.f, 1080.f);
+        text = sf::Text(message, FontManager::getInstance().getFont("font"),
+            24 * ConfigManager::getInstance().getScale()
+        );
+        text.setPosition(
+            20.f * ConfigManager::getInstance().getScale(),
+            1080.f * ConfigManager::getInstance().getScale()
+        );
 
         if (!notifications.empty())
             for (auto& notification : notifications)
-                if (notification.text.getCharacterSize() == 24)
-                    notification.text.move(0.f, notification.text.getGlobalBounds().height + 20.f); //TODO: set margin
+                if (notification.text.getCharacterSize() == 24 * ConfigManager::getInstance().getScale())
+                    notification.text.move(0.f, notification.text.getGlobalBounds().height + 20.f * ConfigManager::getInstance().getScale());
 
         notifications.push_back({ text, displayTime });
         break;
     case Type::BigInfo:
-        text = sf::Text(message, FontManager::getInstance().getFont("font"), 48); //TODO: set font size
-        text.setPosition(3840.f / 2.f - text.getGlobalBounds().width / 2.f, 200.f);
+        text = sf::Text(message, FontManager::getInstance().getFont("font"),
+            48 * ConfigManager::getInstance().getScale()
+        );
+        text.setPosition(
+            3840.f * ConfigManager::getInstance().getScale() / 2.f - text.getGlobalBounds().width / 2.f,
+            200.f * ConfigManager::getInstance().getScale()
+        );
         text.setOutlineColor(sf::Color::Red);
         text.setOutlineThickness(2.f);
 
