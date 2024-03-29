@@ -46,7 +46,9 @@ private:
     bool slowMotion = false;
     float slowMotionFactor = 1.0f;
 
-    float zoomFactorTarget = 1.0f;
-    float zoomFactor = 1.0f;
+    //TODO: transfer it to some system
+    void initializeZoom();
+    float zoomFactorTarget;
+    float zoomFactor;
     void updateZoomFactor(sf::Time deltaTime);
 };

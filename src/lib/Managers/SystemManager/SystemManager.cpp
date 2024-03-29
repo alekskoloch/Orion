@@ -40,6 +40,7 @@ SystemManager::SystemManager(sf::RenderWindow& window, entt::registry& registry,
     window(window), registry(registry), event(event), backgroundManager(registry, window), particleSystem(registry)
 {
     SceneManager::getInstance().setCurrentScene(Scene::Game);
+    this->initializeZoom();
     this->executeInitializationSystems();
 
     this->questSystem.addRandomQuest(this->registry, "First Random Quest");
@@ -66,19 +67,25 @@ void SystemManager::executeEventSystems()
     //TODO: Refactor this
     if (this->event.type == sf::Event::MouseWheelScrolled)
     {
-        if (this->event.mouseWheelScroll.delta > 0 && this->zoomFactorTarget > 1.f)
+        if (this->event.mouseWheelScroll.delta > 0 && this->zoomFactorTarget > 1 / ConfigManager::getInstance().getScale())
         {
-            this->zoomFactorTarget -= 0.05f;
-            if (this->zoomFactorTarget < 1.f)
-                this->zoomFactorTarget = 1.f;
+            this->zoomFactorTarget -= 0.05f * (1 / ConfigManager::getInstance().getScale());
+            if (this->zoomFactorTarget < 1 / ConfigManager::getInstance().getScale())
+                this->zoomFactorTarget = 1 / ConfigManager::getInstance().getScale();
         }
-        else if (this->event.mouseWheelScroll.delta < 0 && this->zoomFactorTarget < 2.f)
+        else if (this->event.mouseWheelScroll.delta < 0 && this->zoomFactorTarget < (1 / ConfigManager::getInstance().getScale()) * 2.f)
         {
-            this->zoomFactorTarget += 0.05f;
-            if (this->zoomFactorTarget > 2.f)
-                this->zoomFactorTarget = 2.f;
+            this->zoomFactorTarget += 0.05f * (1 / ConfigManager::getInstance().getScale());
+            if (this->zoomFactorTarget > (1 / ConfigManager::getInstance().getScale()) * 2.f)
+                this->zoomFactorTarget = (1 / ConfigManager::getInstance().getScale()) * 2.f;
         }
     }
+}
+
+void SystemManager::initializeZoom()
+{
+    this->zoomFactor = 1 / ConfigManager::getInstance().getScale();
+    this->zoomFactorTarget = this->zoomFactor;
 }
 
 void SystemManager::updateZoomFactor(sf::Time deltaTime)
