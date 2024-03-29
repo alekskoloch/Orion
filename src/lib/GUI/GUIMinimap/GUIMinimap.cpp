@@ -44,7 +44,7 @@ void GUIMinimap::update()
             );
 
             sf::CircleShape enemyDot;
-            enemyDot.setRadius(5);
+            enemyDot.setRadius(std::max(2.0f, std::round(5.0f * ConfigManager::getInstance().getScale())));
             enemyDot.setFillColor(sf::Color::Red);
             enemyDot.setPosition(enemyMinimapPosition);
             mapObjects.push_back(enemyDot);
@@ -77,25 +77,30 @@ void GUIMinimap::initializationMinimap()
     TextureManager::getInstance().loadTexture("ACTIVE_QUEST_MINIMAP_TEXTURE", ASSETS_PATH + std::string("MapMarker.png"));
 
     //TODO: temporary solution, make this configurable
-    backgroundMap.setRadius(200);
+    backgroundMap.setRadius(200 * ConfigManager::getInstance().getScale());
     backgroundMap.setPointCount(100);
     backgroundMap.setFillColor(sf::Color(128, 128, 128, 200));
     backgroundMap.setOutlineThickness(4);
     backgroundMap.setOutlineColor(sf::Color::White);
-    backgroundMap.setPosition(3340, 100);
+    backgroundMap.setPosition(3340 * ConfigManager::getInstance().getScale(), 100 * ConfigManager::getInstance().getScale());
 
     playerMinimapSprite = CreateSprite("PLAYER_MINIMAP_TEXTURE");
+    playerMinimapSprite.setScale(ConfigManager::getInstance().getScale(), ConfigManager::getInstance().getScale());
     playerMinimapSprite.setPosition(backgroundMap.getPosition().x + backgroundMap.getRadius(), backgroundMap.getPosition().y + backgroundMap.getRadius());
 
     activeQuestMinimapSprite = CreateSprite("ACTIVE_QUEST_MINIMAP_TEXTURE");
+    activeQuestMinimapSprite.setScale(ConfigManager::getInstance().getScale(), ConfigManager::getInstance().getScale());
 }
 
 void GUIMinimap::initializePlayerCoordinatesText()
 {
     playerCoordinatesText.setFont(this->font);
-    playerCoordinatesText.setCharacterSize(20);
+    playerCoordinatesText.setCharacterSize(20 * ConfigManager::getInstance().getScale());
     playerCoordinatesText.setFillColor(sf::Color::White);
-    playerCoordinatesText.setPosition(backgroundMap.getPosition().x + backgroundMap.getRadius(), backgroundMap.getPosition().y + backgroundMap.getRadius() + backgroundMap.getRadius() + 20);
+    playerCoordinatesText.setPosition(
+        backgroundMap.getPosition().x + backgroundMap.getRadius(),
+        backgroundMap.getPosition().y + backgroundMap.getRadius() + backgroundMap.getRadius() + 40 * ConfigManager::getInstance().getScale()
+    );
 }
 
 void GUIMinimap::updatePlayerCoordinates()
@@ -112,19 +117,28 @@ void GUIMinimap::writePlayerCoordinates()
 void GUIMinimap::initializeActiveQuestText()
 {
     activeQuestTitleText.setFont(this->font);
-    activeQuestTitleText.setCharacterSize(20);
+    activeQuestTitleText.setCharacterSize(20 * ConfigManager::getInstance().getScale());
     activeQuestTitleText.setFillColor(sf::Color::White);
-    activeQuestTitleText.setPosition(backgroundMap.getPosition().x + backgroundMap.getRadius(), backgroundMap.getPosition().y + backgroundMap.getRadius() + backgroundMap.getRadius() + 20 + this->playerCoordinatesText.getGlobalBounds().height + 30);
+    activeQuestTitleText.setPosition(
+        playerCoordinatesText.getPosition().x,
+        playerCoordinatesText.getPosition().y + playerCoordinatesText.getGlobalBounds().height + 40 * ConfigManager::getInstance().getScale()
+    );
 
     activeQuestDescriptionText.setFont(this->font);
-    activeQuestDescriptionText.setCharacterSize(20);
+    activeQuestDescriptionText.setCharacterSize(20 * ConfigManager::getInstance().getScale());
     activeQuestDescriptionText.setFillColor(sf::Color::White);
-    activeQuestDescriptionText.setPosition(backgroundMap.getPosition().x + backgroundMap.getRadius(), backgroundMap.getPosition().y + backgroundMap.getRadius() + backgroundMap.getRadius() + 40 + this->playerCoordinatesText.getGlobalBounds().height + 30);
+    activeQuestDescriptionText.setPosition(
+        activeQuestTitleText.getPosition().x,
+        activeQuestTitleText.getPosition().y + activeQuestTitleText.getGlobalBounds().height + 40 * ConfigManager::getInstance().getScale()
+    );
 
     activeQuestDistanceText.setFont(this->font);
-    activeQuestDistanceText.setCharacterSize(20);
+    activeQuestDistanceText.setCharacterSize(20 * ConfigManager::getInstance().getScale());
     activeQuestDistanceText.setFillColor(sf::Color::White);
-    activeQuestDistanceText.setPosition(backgroundMap.getPosition().x + backgroundMap.getRadius(), backgroundMap.getPosition().y + backgroundMap.getRadius() + backgroundMap.getRadius() + 60 + this->playerCoordinatesText.getGlobalBounds().height + 30);
+    activeQuestDistanceText.setPosition(
+        activeQuestDescriptionText.getPosition().x,
+        activeQuestDescriptionText.getPosition().y + activeQuestDescriptionText.getGlobalBounds().height + 40 * ConfigManager::getInstance().getScale()
+    );
 }
 
 void GUIMinimap::updateActiveQuestText()
