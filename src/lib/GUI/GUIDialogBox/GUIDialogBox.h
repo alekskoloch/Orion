@@ -1,6 +1,7 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
+#include "ConfigManager.hpp"
 #include "SoundManager.h"
 
 enum class GUIDialogBoxState

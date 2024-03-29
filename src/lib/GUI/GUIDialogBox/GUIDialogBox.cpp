@@ -14,7 +14,10 @@ void GUIDialogBox::initialize()
 
 void GUIDialogBox::initializeBox()
 {
-    this->box.setSize(sf::Vector2f(800, 300));
+    this->box.setSize(sf::Vector2f(
+        800 * ConfigManager::getInstance().getScale(),
+        300 * ConfigManager::getInstance().getScale()
+    ));
     this->box.setFillColor(sf::Color(0, 0, 0, 200));
     this->box.setOutlineColor(sf::Color(255, 255, 255, 255));
     this->box.setOutlineThickness(2);
@@ -29,7 +32,7 @@ void GUIDialogBox::initializeText()
         sf::Text text;
         text.setString(line);
         text.setFont(this->font);
-        text.setCharacterSize(30);
+        text.setCharacterSize(30 * ConfigManager::getInstance().getScale());
         text.setFillColor(sf::Color::White);
         text.setOutlineThickness(1);
         text.setOutlineColor(sf::Color::Black);
@@ -39,21 +42,21 @@ void GUIDialogBox::initializeText()
 
     this->noText.setString("No");
     this->noText.setFont(this->font);
-    this->noText.setCharacterSize(30);
+    this->noText.setCharacterSize(30 * ConfigManager::getInstance().getScale());
     this->noText.setFillColor(sf::Color::White);
     this->noText.setOutlineThickness(1);
     this->noText.setOutlineColor(sf::Color::Black);
 
     this->yesText.setString("Yes");
     this->yesText.setFont(this->font);
-    this->yesText.setCharacterSize(30);
+    this->yesText.setCharacterSize(30 * ConfigManager::getInstance().getScale());
     this->yesText.setFillColor(sf::Color::White);
     this->yesText.setOutlineThickness(1);
     this->yesText.setOutlineColor(sf::Color::Black);
 
     this->okText.setString("Ok");
     this->okText.setFont(this->font);
-    this->okText.setCharacterSize(30);
+    this->okText.setCharacterSize(30 * ConfigManager::getInstance().getScale());
     this->okText.setFillColor(sf::Color::White);
     this->okText.setOutlineThickness(1);
     this->okText.setOutlineColor(sf::Color::Black);
@@ -69,7 +72,7 @@ void GUIDialogBox::updateText()
         );
         this->messageTexts[i].setPosition(
             this->box.getPosition().x,
-            this->box.getPosition().y - this->box.getSize().y / 2 + 40 + i * 40
+            this->box.getPosition().y - this->box.getSize().y / 2 + 40 * ConfigManager::getInstance().getScale() + i * 40 * ConfigManager::getInstance().getScale()
         );
     }
 
@@ -79,7 +82,7 @@ void GUIDialogBox::updateText()
     );
     this->noText.setPosition(
         this->box.getPosition().x - this->box.getSize().x / 4,
-        this->box.getPosition().y + this->box.getSize().y / 2 - 60
+        this->box.getPosition().y + this->box.getSize().y / 2 - 60 * ConfigManager::getInstance().getScale()
     );
 
     this->yesText.setOrigin(
@@ -88,7 +91,7 @@ void GUIDialogBox::updateText()
     );
     this->yesText.setPosition(
         this->box.getPosition().x + this->box.getSize().x / 4,
-        this->box.getPosition().y + this->box.getSize().y / 2 - 60
+        this->box.getPosition().y + this->box.getSize().y / 2 - 60 * ConfigManager::getInstance().getScale()
     );
 
     this->okText.setOrigin(
@@ -97,7 +100,7 @@ void GUIDialogBox::updateText()
     );
     this->okText.setPosition(
         this->box.getPosition().x,
-        this->box.getPosition().y + this->box.getSize().y / 2 - 60
+        this->box.getPosition().y + this->box.getSize().y / 2 - 60 * ConfigManager::getInstance().getScale()
     );
 }
 
@@ -184,7 +187,7 @@ void GUIDialogBox::setMessage(std::vector<std::string> message)
         sf::Text text;
         text.setString(line);
         text.setFont(this->font);
-        text.setCharacterSize(30);
+        text.setCharacterSize(30 * ConfigManager::getInstance().getScale());
         text.setFillColor(sf::Color::White);
         text.setOutlineThickness(1);
         text.setOutlineColor(sf::Color::Black);
@@ -206,7 +209,7 @@ void GUIDialogBox::setMessage(std::vector<std::string> message)
     };
 
     this->box.setSize(sf::Vector2f(
-        findLongestLine(this->messageTexts).getGlobalBounds().width + 100,
+        findLongestLine(this->messageTexts).getGlobalBounds().width + 100 * ConfigManager::getInstance().getScale(),
         this->box.getSize().y
     ));
 
