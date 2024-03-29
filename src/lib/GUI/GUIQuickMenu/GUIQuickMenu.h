@@ -3,6 +3,7 @@
 #include <entt/entt.hpp>
 #include <SFML/Graphics.hpp>
 #include <vector>
+#include "ConfigManager.hpp"
 #include "TextureManager.h"
 #include "SoundManager.h"
 

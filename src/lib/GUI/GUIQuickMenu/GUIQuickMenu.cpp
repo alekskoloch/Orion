@@ -81,7 +81,11 @@ void GUIQuickMenu::initializeQuickMenu()
     for (int i = 0; i < TILES_NUMBER; i++)
     {
         this->quickMenuTiles[i] = CreateSprite("INACTIVE_TILE");
-        this->quickMenuTiles[i].setPosition((this->window.getSize().x / 2.f) + std::sin((i * ANGLE_INCREMENT) * M_PI / 180.f) * RADIUS, (this->window.getSize().y / 2.f) - std::cos((i * ANGLE_INCREMENT) * M_PI / 180.f) * RADIUS);
+        this->quickMenuTiles[i].setScale(ConfigManager::getInstance().getScale(), ConfigManager::getInstance().getScale());
+        this->quickMenuTiles[i].setPosition(
+            (this->window.getSize().x / 2.f) + std::sin((i * ANGLE_INCREMENT) * M_PI / 180.f) * (RADIUS * ConfigManager::getInstance().getScale()),
+            (this->window.getSize().y / 2.f) - std::cos((i * ANGLE_INCREMENT) * M_PI / 180.f) * (RADIUS * ConfigManager::getInstance().getScale())
+        );
         this->quickMenuTiles[i].setRotation(i * ANGLE_INCREMENT);
         
         //TODO: this is a temporary solution for loading bullet ico textures
@@ -107,8 +111,13 @@ void GUIQuickMenu::initializeQuickMenu()
         }
 
         this->quickMenuIcons[i].setPosition(this->quickMenuTiles[i].getPosition());
+        this->quickMenuIcons[i].setScale(ConfigManager::getInstance().getScale(), ConfigManager::getInstance().getScale());
     }
 
     this->quickMenuTiles[TILES_NUMBER] = CreateSprite("INACTIVE_MIDDLE_TILE");
-    this->quickMenuTiles[TILES_NUMBER].setPosition(1920, 1080);
+    this->quickMenuTiles[TILES_NUMBER].setScale(ConfigManager::getInstance().getScale(), ConfigManager::getInstance().getScale());
+    this->quickMenuTiles[TILES_NUMBER].setPosition(
+        (this->window.getSize().x / 2.f),
+        (this->window.getSize().y / 2.f)
+    );
 }
