@@ -11,7 +11,6 @@ void GUIEnergyBar::update(sf::Time deltaTime)
 {
     EventManager::getInstance().subscribe(EventManager::Event::NotEnoughEnergy, [this]()
     {
-        // this->energyBarSprite.setFillColor(sf::Color::Red);
         this->isNotEnoughEnergy = true;
     });
 
@@ -47,7 +46,10 @@ void GUIEnergyBar::update(sf::Time deltaTime)
     {
         auto& playerEnergy = playerEnergyView.get<Energy>(player);
 
-        this->energyBarSprite.setSize(sf::Vector2f((playerEnergy.currentEnergyValue / playerEnergy.maxEnergyValue) * 300, 50));
+        this->energyBarSprite.setSize(sf::Vector2f((playerEnergy.currentEnergyValue / playerEnergy.maxEnergyValue) *
+            300 * ConfigManager::getInstance().getScale(),
+            50 * ConfigManager::getInstance().getScale()
+        ));
     }
 }
 
@@ -59,14 +61,27 @@ void GUIEnergyBar::draw()
 
 void GUIEnergyBar::initializeEnergyBar()
 {
-    //TODO: Temporary solution
-    this->energyBarSprite.setSize(sf::Vector2f(300, 50));
+    this->energyBarSprite.setSize(sf::Vector2f(
+        300 * ConfigManager::getInstance().getScale(),
+        50 * ConfigManager::getInstance().getScale()
+    ));
     this->energyBarSprite.setFillColor(sf::Color::Blue);
-    this->energyBarSprite.setPosition(3300, 2000);
+    this->energyBarSprite.setPosition(
+        3300 * ConfigManager::getInstance().getScale(),
+        2000 * ConfigManager::getInstance().getScale()
+    );
 
-    this->energyBarBackgroundSprite.setSize(sf::Vector2f(300, 50));
+    this->energyBarBackgroundSprite.setSize(sf::Vector2f(
+        300 * ConfigManager::getInstance().getScale(),
+        50 * ConfigManager::getInstance().getScale()
+    ));
     this->energyBarBackgroundSprite.setFillColor(sf::Color::Transparent);
     this->energyBarBackgroundSprite.setOutlineColor(sf::Color::White);
-    this->energyBarBackgroundSprite.setOutlineThickness(-5.0f);
-    this->energyBarBackgroundSprite.setPosition(3300, 2000);
+    this->energyBarBackgroundSprite.setOutlineThickness(
+        std::min(-1.f, std::round(-5.f * ConfigManager::getInstance().getScale()))
+    );
+    this->energyBarBackgroundSprite.setPosition(
+        3300 * ConfigManager::getInstance().getScale(),
+        2000 * ConfigManager::getInstance().getScale()
+    );
 }

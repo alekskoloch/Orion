@@ -2,6 +2,7 @@
 
 #include <entt/entt.hpp>
 #include <SFML/Graphics.hpp>
+#include "ConfigManager.hpp"
 #include "EventManager.h"
 
 #include "energy.h"
