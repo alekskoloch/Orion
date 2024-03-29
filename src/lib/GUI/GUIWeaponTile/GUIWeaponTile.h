@@ -2,6 +2,7 @@
 
 #include <entt/entt.hpp>
 #include <SFML/Graphics.hpp>
+#include "ConfigManager.hpp"
 #include "TextureManager.h"
 #include "FontManager.h"
 
