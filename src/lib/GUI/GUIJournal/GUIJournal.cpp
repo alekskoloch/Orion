@@ -191,7 +191,7 @@ sf::Text GUIJournal::getJournalStyleText(const std::string text, const unsigned 
 {
     sf::Text journalStyleText;
     journalStyleText.setFont(this->font);
-    journalStyleText.setCharacterSize(characterSize);
+    journalStyleText.setCharacterSize(characterSize * ConfigManager::getInstance().getScale());
     journalStyleText.setFillColor(color);
     journalStyleText.setString(text);
     journalStyleText.setOrigin(journalStyleText.getGlobalBounds().width / 2.f, journalStyleText.getGlobalBounds().height / 2.f);
@@ -254,7 +254,7 @@ GUIButton GUIJournal::getJournalButtonStyle(const std::string text, const sf::Ve
         position,
         size,
         text,
-        journal::SMALL_CHARACTER_SIZE,
+        journal::SMALL_CHARACTER_SIZE * ConfigManager::getInstance().getScale(),
         journal::BUTTON_COLOR,
         journal::BUTTON_HOVER_COLOR,
         journal::BUTTON_ACTIVE_COLOR,
