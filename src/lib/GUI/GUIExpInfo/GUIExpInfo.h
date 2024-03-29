@@ -3,6 +3,8 @@
 #include <entt/entt.hpp>
 #include <SFML/Graphics.hpp>
 
+#include "ConfigManager.hpp"
+
 #include "experience.h"
 #include "player.h"
 

@@ -5,18 +5,30 @@ GUIExpInfo::GUIExpInfo(sf::RenderWindow& window, entt::registry& registry)
     : window(window), registry(registry)
 {
     backgroundBar.setFillColor(sf::Color::Black);
-    backgroundBar.setSize(sf::Vector2f(220, 20));
+    backgroundBar.setSize(sf::Vector2f(
+        220 * ConfigManager::getInstance().getScale(),
+        20 * ConfigManager::getInstance().getScale()
+    ));
     backgroundBar.setOutlineThickness(4);
     backgroundBar.setOutlineColor(sf::Color::White);
-    backgroundBar.setPosition(180, 50);
+    backgroundBar.setPosition(
+        180 * ConfigManager::getInstance().getScale(),
+        50 * ConfigManager::getInstance().getScale()
+    );
 
     expBar.setFillColor(sf::Color::Yellow);
-    expBar.setSize(sf::Vector2f(0, 20));
-    expBar.setPosition(180, 50);
+    expBar.setSize(sf::Vector2f(0, 20 * ConfigManager::getInstance().getScale()));
+    expBar.setPosition(
+        180 * ConfigManager::getInstance().getScale(),
+        50 * ConfigManager::getInstance().getScale()
+    );
 
     skillPointsAvailable.setFillColor(sf::Color::Yellow);
-    skillPointsAvailable.setRadius(20);
-    skillPointsAvailable.setPosition(160, 50);
+    skillPointsAvailable.setRadius(20 * ConfigManager::getInstance().getScale());
+    skillPointsAvailable.setPosition(
+        160 * ConfigManager::getInstance().getScale(),
+        50 * ConfigManager::getInstance().getScale()
+    );
 }
 
 void GUIExpInfo::update()
@@ -26,8 +38,8 @@ void GUIExpInfo::update()
     auto& playerSkillPoints = this->registry.get<Experience>(playerEntity).skillPoints;
     auto& playerRequiredExp = this->registry.get<Experience>(playerEntity).experienceToNextLevel;
 
-    float expBarWidth = 220.f * (playerExp / (float)playerRequiredExp);
-    expBar.setSize(sf::Vector2f(expBarWidth, 20));
+    float expBarWidth = (220.f * ConfigManager::getInstance().getScale()) * (playerExp / (float)playerRequiredExp);
+    expBar.setSize(sf::Vector2f(expBarWidth, 20 * ConfigManager::getInstance().getScale()));
 
     if (playerSkillPoints > 0)
         this->skillPointsAvailableVisible = true;
