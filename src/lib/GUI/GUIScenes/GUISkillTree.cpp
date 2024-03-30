@@ -4,6 +4,7 @@
 GUISkillTree::GUISkillTree(entt::registry& registry, sf::RenderWindow& window) : registry(registry), window(window)
 {
     this->view = this->window.getDefaultView();
+    this->view.zoom(1 / ConfigManager::getInstance().getScale());
 }
 
 void GUISkillTree::update(sf::Time& deltaTime)

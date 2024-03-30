@@ -19,6 +19,7 @@ target_link_libraries(${PROJECT_NAME} PUBLIC
     sfml-graphics
     EnTT::EnTT
     GUIElement
+    ConfigManager
     SkillManager
     SceneManager
     nlohmann_json
