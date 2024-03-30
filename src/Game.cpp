@@ -10,7 +10,7 @@
 
 #include "nlohmann/json.hpp"
 
-Game::Game() : window(sf::VideoMode(ConfigManager::getInstance().getScreenWidth(), ConfigManager::getInstance().getScreenHeight()), "Orion", sf::Style::Fullscreen), systemManager(this->window, this->registry, this->event), guiManager(this->window, this->registry, this->event, this->systemManager.getQuests())    
+Game::Game() : window(sf::VideoMode(ConfigManager::getInstance().getScreenWidth(), ConfigManager::getInstance().getScreenHeight()), "Orion", ConfigManager::getInstance().getWindowStyle()), systemManager(this->window, this->registry, this->event), guiManager(this->window, this->registry, this->event, this->systemManager.getQuests())    
 {
     this->window.setFramerateLimit(ConfigManager::getInstance().getFrameRateLimit());
 

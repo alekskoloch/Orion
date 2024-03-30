@@ -3,5 +3,6 @@
     "resolution": {
         "height": 2160,
         "width": 3840
-    }
+    },
+    "windowMode": "Fullscreen"
 }

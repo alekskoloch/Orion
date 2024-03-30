@@ -38,5 +38,5 @@ private:
 
     std::string loadedResolution;
     std::string loadedFrameRate;
-    
+    std::string loadedWindowMode;
 };

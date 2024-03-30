@@ -12,16 +12,18 @@ GUISettings::GUISettings(entt::registry& registry, sf::RenderWindow& window) : r
     unsigned int currentWidth;
     unsigned int currentHeight;
     unsigned int currentFrameRate;
+    std::string currentWindowMode;
 
     std::ifstream file(CONFIG_PATH + std::string("gameConfig.json"));
     if (file.is_open())
     {
-        nlohmann::json j;
-        file >> j;
+        nlohmann::json config;
+        file >> config;
 
-        currentWidth = j["resolution"]["width"];
-        currentHeight = j["resolution"]["height"];
-        currentFrameRate = j["frameRateLimit"];
+        currentWidth = config["resolution"]["width"];
+        currentHeight = config["resolution"]["height"];
+        currentFrameRate = config["frameRateLimit"];
+        currentWindowMode = config["windowMode"].get<std::string>();
     }
     else
     {
@@ -103,6 +105,32 @@ GUISettings::GUISettings(entt::registry& registry, sf::RenderWindow& window) : r
         BUTTONS_FONT_SIZE
     ));
 
+    unsigned int currentWindowModeIndex = 0;
+    std::vector<std::string> windowModes = { "Fullscreen", "Windowed" };
+
+    for (size_t i = 0; i < windowModes.size(); i++)
+    {
+        if (windowModes[i] == currentWindowMode)
+        {
+            currentWindowModeIndex = i;
+            this->loadedWindowMode = windowModes[i];
+            break;
+        }
+    }
+
+    this->elements.push_back(GUIElementFactory::createText(
+        sf::Vector2f(SCREEN_WIDTH / 2 - BUTTON_WIDTH / 2, SCREEN_HEIGHT / 2 + 2 * BUTTON_HEIGHT + 2 * MARGIN),
+        "Window Mode",
+        BUTTONS_FONT_SIZE
+    ));
+
+    this->elements.push_back(GUIElementFactory::createArrowButton(
+        sf::Vector2f(SCREEN_WIDTH / 2 + BUTTON_WIDTH / 2, SCREEN_HEIGHT / 2 + 2 * BUTTON_HEIGHT + 2 * MARGIN),
+        sf::Vector2f(BUTTON_WIDTH, BUTTON_HEIGHT),
+        windowModes,
+        currentWindowModeIndex,
+        BUTTONS_FONT_SIZE
+    ));
 }
 
 void GUISettings::update(sf::Time& deltaTime)
@@ -132,6 +160,15 @@ void GUISettings::update(sf::Time& deltaTime)
             {
                 config["frameRateLimit"] = std::stoi(elements[4]->getText());
             }
+
+            if (elements[6]->getText() == "Fullscreen")
+            {
+                config["windowMode"] = "Fullscreen";
+            }
+            else
+            {
+                config["windowMode"] = "Windowed";
+            }
             file << config.dump(4);
         }
         else
@@ -144,9 +181,9 @@ void GUISettings::update(sf::Time& deltaTime)
     }
 
     //TODO: this is horrible, refactor this
-    if (this->elements[2]->getText() != this->loadedResolution || this->elements[4]->getText() != this->loadedFrameRate)
+    if (this->elements[2]->getText() != this->loadedResolution || this->elements[4]->getText() != this->loadedFrameRate || this->elements[6]->getText() != this->loadedWindowMode)
     {
-        if (elements.size() == 5)
+        if (elements.size() == 7)
         {
             elements.push_back(GUIElementFactory::createText(
                 sf::Vector2f(SCREEN_WIDTH / 2, SCREEN_HEIGHT - SCREEN_HEIGHT / 10),
@@ -157,7 +194,7 @@ void GUISettings::update(sf::Time& deltaTime)
     }
     else
     {
-        if (elements.size() == 6)
+        if (elements.size() == 8)
         {
             elements.pop_back();
         }

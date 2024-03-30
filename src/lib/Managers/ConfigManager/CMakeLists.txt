@@ -11,6 +11,6 @@ add_library(${PROJECT_NAME} STATIC ${SOURCE_FILES} ${HEADER_FILES})
 
 target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR} ${PCH_DIR})
 
-target_link_libraries(${PROJECT_NAME} nlohmann_json)
+target_link_libraries(${PROJECT_NAME} sfml-graphics nlohmann_json)
 
 target_precompile_headers(${PROJECT_NAME} PRIVATE "${PCH_DIR}/pch.h")
