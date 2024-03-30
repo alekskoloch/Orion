@@ -6,6 +6,8 @@
 #include <string>
 #include <fstream>
 
+#include "ConfigManager.hpp"
+
 #include "GUIDialogBox.h"
 #include "GUIStar.h"
 #include "GUIBox.h"
@@ -51,7 +53,6 @@ private:
 
     GUIBox box;
     void initBox();
-
 
     GUIDialogBox dialogBox;
 

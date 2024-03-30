@@ -212,7 +212,7 @@ sf::Vector2f GUISkill::calculateStarPosition()
 
 void GUISkill::addDescriptionLine(const std::string descriptionTextLine)
 {
-    this->descriptionTexts.push_back(this->getConfiguredText(descriptionTextLine, DESCRIPTION_CHARACTER_SIZE, INACTIVE_DESCRIPTION_COLOR));
+    this->descriptionTexts.push_back(this->getConfiguredText(descriptionTextLine, DESCRIPTION_CHARACTER_SIZE * ConfigManager::getInstance().getScale(), INACTIVE_DESCRIPTION_COLOR));
     this->centerText(this->descriptionTexts[this->descriptionTexts.size() - 1]);
 
     for (int i = 0; i < this->descriptionTexts.size(); i++)

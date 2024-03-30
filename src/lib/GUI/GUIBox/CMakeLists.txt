@@ -17,6 +17,7 @@ target_include_directories(${PROJECT_NAME} PUBLIC
 
 target_link_libraries(${PROJECT_NAME} PUBLIC
     sfml-graphics
+    ConfigManager
 )
 
 target_precompile_headers(${PROJECT_NAME} PRIVATE "${PCH_DIR}/pch.h")

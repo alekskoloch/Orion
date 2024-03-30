@@ -23,7 +23,7 @@ void GUIBox::update()
 
             this->texts[i]->setPosition(
                 this->position.x,
-                this->position.y - this->height / 2 + 40 + i * 40
+                this->position.y - this->height / 2 + (40 * ConfigManager::getInstance().getScale()) + i * (40 * ConfigManager::getInstance().getScale())
             );
         }
 
@@ -36,7 +36,7 @@ void GUIBox::addText(std::string text)
     sf::Text textToAdd;
     textToAdd.setString(text);
     textToAdd.setFont(this->font);
-    textToAdd.setCharacterSize(30);
+    textToAdd.setCharacterSize(30 * ConfigManager::getInstance().getScale());
     textToAdd.setFillColor(sf::Color::White);
     textToAdd.setOutlineColor(sf::Color::Black);
     textToAdd.setOutlineThickness(2.f);

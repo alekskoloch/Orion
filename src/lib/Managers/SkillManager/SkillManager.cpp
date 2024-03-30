@@ -2,7 +2,7 @@
 #include "SkillManager.h"
 
 SkillManager::SkillManager(sf::RenderWindow& window, entt::registry& registry)
-    : window(window), registry(registry), dialogBox(window, {"Are you sure you want to unlock this skill?"}, this->font), box(600.f, 300.f, sf::Vector2f(350.f, 200.f), this->font)
+    : window(window), registry(registry), dialogBox(window, {"Are you sure you want to unlock this skill?"}, this->font), box(600.f * ConfigManager::getInstance().getScale(), 300.f * ConfigManager::getInstance().getScale(), sf::Vector2f(350.f * ConfigManager::getInstance().getScale(), 200.f * ConfigManager::getInstance().getScale()), this->font)
 {
     this->font.loadFromFile(ASSETS_PATH + std::string("fonts/font.ttf"));
 

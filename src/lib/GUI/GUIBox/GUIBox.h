@@ -4,6 +4,8 @@
 #include <vector>
 #include <memory>
 
+#include "ConfigManager.hpp"
+
 class GUIBox : public sf::Drawable
 {
 public:

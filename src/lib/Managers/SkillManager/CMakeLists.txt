@@ -15,6 +15,7 @@ target_link_libraries(${PROJECT_NAME}
     sfml-graphics
     EnTT::EnTT
     nlohmann_json::nlohmann_json
+    ConfigManager
     GUIDialogBox
     GUIStar
     GUIBox
