@@ -14,16 +14,38 @@ Game::Game() : window(sf::VideoMode(ConfigManager::getInstance().getScreenWidth(
 {
     this->window.setFramerateLimit(ConfigManager::getInstance().getFrameRateLimit());
 
-    this->cursorTexture = TextureManager::getInstance().getTexture("Cursor");
+    this->loadCursor();
 
-    if (!this->cursor.loadFromPixels(this->cursorTexture.copyToImage().getPixelsPtr(), this->cursorTexture.getSize(), {25, 25}))
+    SceneManager::getInstance().setCurrentScene(Scene::MainMenu);
+}
+
+void Game::loadCursor()
+{
+    sf::Vector2u hotspot;
+
+    if (ConfigManager::getInstance().getScale() <= 0.25f)
+    {
+        this->cursorTexture = TextureManager::getInstance().getTexture("CursorSmall");
+        hotspot = {6, 6};
+    }
+    else if (ConfigManager::getInstance().getScale() <= 0.5f)
+    {
+        this->cursorTexture = TextureManager::getInstance().getTexture("CursorMedium");
+        hotspot = {12, 12};
+    }
+    else
+    {
+        this->cursorTexture = TextureManager::getInstance().getTexture("CursorLarge");
+        hotspot = {25, 25};
+    }
+
+
+    if (!this->cursor.loadFromPixels(this->cursorTexture.copyToImage().getPixelsPtr(), this->cursorTexture.getSize(), hotspot))
     {
         std::cerr << "Failed to load cursor texture" << std::endl;
     }
 
     this->window.setMouseCursor(this->cursor);
-
-    SceneManager::getInstance().setCurrentScene(Scene::MainMenu);
 }
 
 void Game::run()
