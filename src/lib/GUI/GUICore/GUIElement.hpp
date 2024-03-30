@@ -472,12 +472,12 @@ public:
         textObject = std::move(newText);
     }
 
-    void setText(unsigned int index)
+    void setText(unsigned int index, unsigned int characterSize = CHARACTER_SIZE)
     {
         if (index < texts.size())
         {
             currentIndex = index;
-            setText(texts[index]);
+            setText(texts[index], characterSize);
         }
     }
 
@@ -653,15 +653,15 @@ public:
         return std::make_unique<GUIElement>(builder.build());
     }
 
-    static std::unique_ptr<GUIElement> createArrowButton(const sf::Vector2f& position, const sf::Vector2f& size = sf::Vector2f(300, 50), std::vector<std::string> texts = {}, unsigned int index = 0)
+    static std::unique_ptr<GUIElement> createArrowButton(const sf::Vector2f& position, const sf::Vector2f& size = sf::Vector2f(300, 50), std::vector<std::string> texts = {}, unsigned int index = 0, unsigned int characterSize = CHARACTER_SIZE)
     {
         float buttonMargin = std::sqrt(std::min(size.x, size.y) / 10);
         float cornerSize = std::min(size.x, size.y) / 4;
 
         std::unique_ptr<GUIShapeText> base = std::make_unique<GUIShapeText>(ShapeFactory::createBasicRectangle(position, sf::Vector2f(size.x - buttonMargin * 2, size.y - buttonMargin * 2)));
         
-        base->setTexts(texts);
-        base->setText(index);
+        base->setTexts(texts, characterSize);
+        base->setText(index, characterSize);
         base->addEffect(std::make_unique<PlaySoundEffect>(base->getShapePointer(), EffectType::Hover, "ButtonHover"));
 
         std::unique_ptr<GUIShape> line1 = std::make_unique<GUIShape>(ShapeFactory::createLine(
@@ -692,8 +692,8 @@ public:
         ));
 
         arrowRight->setAsInteractiveElement(
-            [base = base.get()]() mutable {
-                base->setText(base->getTextIndex() + 1);
+            [base = base.get(), characterSize]() mutable {
+                base->setText(base->getTextIndex() + 1, characterSize);
             }
         );
         arrowRight->addEffect(std::make_unique<ChangeOutlineColorEffectOnHover>(arrowRight->getShapePointer(), EffectType::Hover, TEST_ORANGE_COLOR));
@@ -710,8 +710,8 @@ public:
         ));
 
         arrowLeft->setAsInteractiveElement(
-            [base = base.get()]() mutable {
-                base->setText(base->getTextIndex() - 1);
+            [base = base.get(), characterSize]() mutable {
+                base->setText(base->getTextIndex() - 1, characterSize);
             }
         );
         arrowLeft->addEffect(std::make_unique<ChangeOutlineColorEffectOnHover>(arrowLeft->getShapePointer(), EffectType::Hover, TEST_ORANGE_COLOR));

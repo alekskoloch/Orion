@@ -67,7 +67,8 @@ GUISettings::GUISettings(entt::registry& registry, sf::RenderWindow& window) : r
         sf::Vector2f(SCREEN_WIDTH / 2 + BUTTON_WIDTH / 2, SCREEN_HEIGHT / 2),
         sf::Vector2f(BUTTON_WIDTH, BUTTON_HEIGHT),
         resolutions,
-        currentResolutionIndex
+        currentResolutionIndex,
+        BUTTONS_FONT_SIZE
     ));
 
     unsigned int currentFrameRateIndex = 0;
@@ -98,7 +99,8 @@ GUISettings::GUISettings(entt::registry& registry, sf::RenderWindow& window) : r
         sf::Vector2f(SCREEN_WIDTH / 2 + BUTTON_WIDTH / 2, SCREEN_HEIGHT / 2 + BUTTON_HEIGHT + MARGIN),
         sf::Vector2f(BUTTON_WIDTH, BUTTON_HEIGHT),
         frameRates,
-        currentFrameRateIndex
+        currentFrameRateIndex,
+        BUTTONS_FONT_SIZE
     ));
 
 }
