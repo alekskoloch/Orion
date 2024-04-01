@@ -3,7 +3,7 @@
 class ProceduralGenerationSystem
 {
 public:
-    static void Initialize(int seed) { generator.seed(seed); }
+    static void Initialize(int seed) { generator.seed(seed); globalSeed = seed; }
 
     template <typename T>
     requires std::integral<T> || std::floating_point<T>
@@ -22,7 +22,7 @@ public:
     requires std::integral<T> || std::floating_point<T>
     static T GetRandomNumber(T min, T max, int seed1, int seed2 = 0)
     {
-        std::seed_seq seedSequence{ seed1, seed2 };
+        std::seed_seq seedSequence{ seed1 + globalSeed , seed2 + globalSeed };
         std::mt19937 generator(seedSequence);
 
         if constexpr (std::is_floating_point_v<T>) {
@@ -35,4 +35,5 @@ public:
     }
 private:
     static inline std::mt19937 generator = std::mt19937(std::random_device{}());
+    static inline int globalSeed = 0;
 };
