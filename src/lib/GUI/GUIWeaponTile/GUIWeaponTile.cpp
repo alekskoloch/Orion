@@ -129,7 +129,7 @@ void GUIShieldTile::update()
     {
         float cooldown = CooldownSystem::getCooldown(this->registry, playerEntity, "shieldCooldown");
 
-        this->shiedlStateCircle.setRadius(150.f * (cooldown / shieldDuration));
+        this->shiedlStateCircle.setRadius((150.f * ConfigManager::getInstance().getScale()) * (cooldown / shieldDuration));
 
         this->shiedlStateCircle.setOrigin(this->shiedlStateCircle.getGlobalBounds().width / 2.f, this->shiedlStateCircle.getGlobalBounds().height / 2.f);
     }
