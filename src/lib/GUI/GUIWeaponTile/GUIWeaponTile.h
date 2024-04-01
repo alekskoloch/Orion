@@ -26,9 +26,13 @@ public:
 
     void update();
     void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
+
+    void clear();
 private:
     sf::RenderWindow& window;
     entt::registry& registry;
+
+    void initialize();
 
     sf::CircleShape circle;
     sf::CircleShape loadingCircle;
@@ -48,9 +52,13 @@ public:
 
     void update();
     void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
+
+    void clear();
 private:
     sf::RenderWindow& window;
     entt::registry& registry;
+
+    void initialize();
 
     sf::CircleShape circle;
     sf::CircleShape shiedlStateCircle;

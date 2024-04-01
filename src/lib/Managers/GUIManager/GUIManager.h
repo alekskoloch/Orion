@@ -46,6 +46,8 @@ private:
     bool readyToQuit = true;
     float quitTimer = 0.f;
 
+    bool tilesReady = false;
+
 //TODO: move shader
     sf::Shader shader;
     sf::Texture shaderTexture;

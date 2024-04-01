@@ -41,6 +41,14 @@ void GUIManager::update(sf::Time deltaTime)
 {
     if (SceneManager::getInstance().getCurrentScene() == Scene::Game)
     {
+        if (!SceneManager::getInstance().isGameStarted())
+        {
+            //TODO: This is horrible, temporary solution
+            this->weaponTile.clear();
+            this->shieldTile.clear();
+            SceneManager::getInstance().setGameStarted(true);
+        }
+
         //TODO: this solution is temporary, change of scenes should be done in a different way
         if (this->quitTimer < 0.2f)
         {

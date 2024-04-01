@@ -3,6 +3,11 @@
 
 GUIWeaponTile::GUIWeaponTile(sf::RenderWindow& window, entt::registry& registry) : window(window), registry(registry)
 {
+    this->initialize();
+}
+
+void GUIWeaponTile::initialize()
+{
     this->circle.setRadius(200.f * ConfigManager::getInstance().getScale());
     this->circle.setFillColor(sf::Color(0, 0, 0));
     this->circle.setOutlineColor(sf::Color::White);
@@ -72,7 +77,18 @@ void GUIWeaponTile::draw(sf::RenderTarget& target, sf::RenderStates states) cons
     target.draw(this->weaponIcon, states);
 }
 
+void GUIWeaponTile::clear()
+{
+    this->initialize();
+    this->specialShotAvailable = false;
+}
+
 GUIShieldTile::GUIShieldTile(sf::RenderWindow& window, entt::registry& registry) : window(window), registry(registry)
+{
+    this->initialize();   
+}
+
+void GUIShieldTile::initialize()
 {
     this->circle.setRadius(150.f * ConfigManager::getInstance().getScale());
     this->circle.setFillColor(sf::Color(0, 0, 0));
@@ -124,6 +140,12 @@ void GUIShieldTile::draw(sf::RenderTarget& target, sf::RenderStates states) cons
     target.draw(this->circle, states);
     target.draw(this->shiedlStateCircle, states);
     target.draw(this->shieldIcon, states);
+}
+
+void GUIShieldTile::clear()
+{
+    this->initialize();
+    this->shieldDuration = 0.f;
 }
 
 GUIMoneyBar::GUIMoneyBar(sf::RenderWindow& window, entt::registry& registry) : window(window), registry(registry)

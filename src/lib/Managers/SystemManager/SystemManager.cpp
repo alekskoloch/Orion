@@ -169,7 +169,6 @@ void SystemManager::executeUpdateSystems(sf::Time deltaTime)
         else
         {
             this->startNewGame();
-            SceneManager::getInstance().setGameStarted(true);
         }
     }
 }
