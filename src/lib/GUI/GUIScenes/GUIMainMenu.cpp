@@ -13,6 +13,19 @@ GUIMainMenu::GUIMainMenu(entt::registry& registry, sf::RenderWindow& window) : r
     ));
 
     elements.push_back(GUIElementFactory::createButton(
+        sf::Vector2f(this->SCREEN_WIDTH / 2, this->SCREEN_HEIGHT / 2 - (this->BUTTON_HEIGHT + this->MARGIN)),
+        sf::Vector2f(this->BUTTON_WIDTH, this->BUTTON_HEIGHT),
+        "Continue",
+        this->OUTLINE_THICKNESS,
+        this->BUTTONS_FONT_SIZE
+    ));
+
+    elements.back().get()->setOnActivateAction([&]()
+    {
+        SceneManager::getInstance().setCurrentScene(Scene::Game);
+    });
+
+    elements.push_back(GUIElementFactory::createButton(
         sf::Vector2f(this->SCREEN_WIDTH / 2, this->SCREEN_HEIGHT / 2),
         sf::Vector2f(this->BUTTON_WIDTH, this->BUTTON_HEIGHT),
         "New Game",
@@ -57,17 +70,25 @@ void GUIMainMenu::update(sf::Time& deltaTime)
 {
     sf::Vector2f mousePosition = sf::Vector2f(sf::Mouse::getPosition(this->window).x, sf::Mouse::getPosition(this->window).y);
 
-    for (auto& element : elements)
+    for (size_t i = 0; i < elements.size(); i++)
     {
-        element->update(deltaTime, mousePosition);
+        if (i == 1)
+            if (!SceneManager::getInstance().isGameStarted())
+                continue;
+
+        elements[i]->update(deltaTime, mousePosition);
     }
 }
 
 void GUIMainMenu::draw()
 {
-    for (auto& element : elements)
+    for (size_t i = 0; i < elements.size(); i++)
     {
-        this->window.draw(*element);
+        if (i == 1)
+            if (!SceneManager::getInstance().isGameStarted())
+                continue;
+
+        this->window.draw(*elements[i]);
     }
 }
 
