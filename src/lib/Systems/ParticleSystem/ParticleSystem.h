@@ -13,6 +13,8 @@ public:
 
     void update(sf::Time deltaTime);
     void draw(sf::RenderWindow &window);
+
+    void clear();
 private:
     entt::registry& registry;
     std::vector<std::unique_ptr<Particle>> particles;

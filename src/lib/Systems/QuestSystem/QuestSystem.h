@@ -15,6 +15,8 @@ public:
 
     void update(entt::registry& registry, sf::Time deltaTime);
     std::vector<Quest>& getQuests();
+
+    void clear();
 private:
     std::vector<Quest> quests;
 };

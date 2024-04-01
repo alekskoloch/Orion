@@ -19,6 +19,8 @@ class EnemyGroupSystem
 public:
     void updateEnemyGroup(entt::registry& registry);
 
+    void clear();
+
 private:
     unsigned int groupID = 0;
 

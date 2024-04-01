@@ -5,6 +5,14 @@
 
 BackgroundManager::BackgroundManager(entt::registry& registry, sf::RenderWindow& window) : registry(registry), window(window)
 {
+    
+}
+
+void BackgroundManager::initialize()
+{
+    currentPlayerTileX = 0;
+    currentPlayerTileY = 0;
+
     for (int x = -tilesAroundPlayer; x < tilesAroundPlayer+1; x++)
     {
         for (int y = -tilesAroundPlayer; y < tilesAroundPlayer+1; y++)
@@ -48,6 +56,11 @@ void BackgroundManager::draw()
     {
         backgroundTile.draw(window);
     }
+}
+
+void BackgroundManager::clear()
+{
+    backgroundTiles.clear();
 }
 
 void BackgroundManager::updateBackgroundTiles(int playerTileX, int playerTileY)

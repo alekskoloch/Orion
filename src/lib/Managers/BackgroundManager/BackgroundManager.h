@@ -111,8 +111,12 @@ class BackgroundManager
 public:
     BackgroundManager(entt::registry& registry, sf::RenderWindow& window);
 
+    void initialize();
+
     void update();
     void draw();
+    
+    void clear();
 
     //TODO: For DebugSystem
     std::vector<BackgroundTile>& getBackgroundTiles() { return backgroundTiles; }

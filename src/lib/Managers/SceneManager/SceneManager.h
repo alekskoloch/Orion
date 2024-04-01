@@ -14,6 +14,9 @@ class SceneManager
 private:
     SceneManager() = default;
     Scene currentScene;
+
+    //TODO: This should be handled by GameState?
+    bool gameStarted = false;
 public:
     static SceneManager& getInstance();
 
@@ -22,4 +25,7 @@ public:
 
     void setCurrentScene(Scene scene);
     Scene getCurrentScene();
+
+    bool isGameStarted();
+    void setGameStarted(bool gameStarted);
 };

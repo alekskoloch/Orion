@@ -22,6 +22,7 @@ GUIMainMenu::GUIMainMenu(entt::registry& registry, sf::RenderWindow& window) : r
 
     elements.back().get()->setOnActivateAction([&]()
     {
+        SceneManager::getInstance().setGameStarted(false);
         SceneManager::getInstance().setCurrentScene(Scene::Game);
     });
 

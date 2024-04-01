@@ -16,3 +16,13 @@ Scene SceneManager::getCurrentScene()
 {
     return this->currentScene;
 }
+
+bool SceneManager::isGameStarted()
+{
+    return this->gameStarted;
+}
+
+void SceneManager::setGameStarted(bool gameStarted)
+{
+    this->gameStarted = gameStarted;
+}

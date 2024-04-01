@@ -8,7 +8,6 @@ SkillManager::SkillManager(sf::RenderWindow& window, entt::registry& registry)
 
     this->dialogBox.setState(GUIDialogBoxState::Hidden);
     
-    this->initializeFirstSkill();
     this->initBox();
 }
 
@@ -80,6 +79,12 @@ void SkillManager::updateBox()
 {
     this->box.clearTexts();
     this->initBox();
+}
+
+void SkillManager::clear()
+{
+    this->skills.clear();
+    this->activeStars.clear();
 }
 
 void SkillManager::loadSkillFromConfig(std::string skillName, std::ifstream& configFile)

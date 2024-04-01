@@ -16,6 +16,7 @@ target_link_libraries(${PROJECT_NAME}
     EnTT::EnTT
     ConfigManager
     PlayerInitializationSystem
+    SkillManager
     SceneManager
     ParticleSystem
     QuestSystem

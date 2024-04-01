@@ -97,3 +97,8 @@ std::vector<Quest>& QuestSystem::getQuests()
 {
     return this->quests;
 }
+
+void QuestSystem::clear()
+{
+    this->quests.clear();
+}

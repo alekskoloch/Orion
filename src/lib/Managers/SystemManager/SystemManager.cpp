@@ -39,10 +39,28 @@
 SystemManager::SystemManager(sf::RenderWindow& window, entt::registry& registry, sf::Event& event) :
     window(window), registry(registry), event(event), backgroundManager(registry, window), particleSystem(registry)
 {
-    SceneManager::getInstance().setCurrentScene(Scene::Game);
+
+}
+
+void SystemManager::startNewGame()
+{   
+    this->registry.clear();
+
+    this->questSystem.clear();
+    this->particleSystem.clear();
+    this->enemyGroupSystem.clear();
+    this->backgroundManager.clear();
+
+
+    this->backgroundManager.initialize();
+
     this->initializeZoom();
     this->executeInitializationSystems();
 
+    SkillManager::getInstance(this->window, this->registry).clear();
+    SkillManager::getInstance(this->window, this->registry).initializeFirstSkill();
+
+    //TODO: Only for testing
     this->questSystem.addRandomQuest(this->registry, "First Random Quest");
     this->questSystem.addRandomQuest(this->registry, "Second Random Quest");
     this->questSystem.addRandomQuest(this->registry, "Third Random Quest");
@@ -50,8 +68,7 @@ SystemManager::SystemManager(sf::RenderWindow& window, entt::registry& registry,
 
 void SystemManager::executeInitializationSystems()
 {
-    //TODO: Seed should be random
-    ProceduralGenerationSystem::Initialize(1);
+    ProceduralGenerationSystem::Initialize(std::rand());
     PlayerInitializationSystem::initializePlayer(this->registry);
     MusicSystem::initializeMusic();
 }
@@ -102,49 +119,57 @@ void SystemManager::executeUpdateSystems(sf::Time deltaTime)
 {
     if (SceneManager::getInstance().getCurrentScene() == Scene::Game)
     {
-        NotifySystem::update(deltaTime);
-
-        //TODO: should be handled by GameState
-        if (!NotifySystem::isDialogBoxActive())
+        if (SceneManager::getInstance().isGameStarted())
         {
-            this->updateZoomFactor(deltaTime);
+            NotifySystem::update(deltaTime);
 
-            if (this->slowMotion || this->slowMotionFactor != 1.0f)
+            //TODO: should be handled by GameState
+            if (!NotifySystem::isDialogBoxActive())
             {
-                TimeControlSystem::updateSlowMotion(this->slowMotionFactor, this->slowMotion, SLOW_MOTION_SPEED, TARGET_SLOW_MOTION_FACTOR, deltaTime.asSeconds());
-                deltaTime *= this->slowMotionFactor;
+                this->updateZoomFactor(deltaTime);
+
+                if (this->slowMotion || this->slowMotionFactor != 1.0f)
+                {
+                    TimeControlSystem::updateSlowMotion(this->slowMotionFactor, this->slowMotion, SLOW_MOTION_SPEED, TARGET_SLOW_MOTION_FACTOR, deltaTime.asSeconds());
+                    deltaTime *= this->slowMotionFactor;
+                }
+
+                if (!this->slowMotion)
+                    RotateTowardsMouseSystem::rotateTowardsMouse(this->registry, deltaTime, this->window);
+
+                backgroundManager.update();
+
+                RemovalSystem::update(this->registry);
+                this->enemyGroupSystem.updateEnemyGroup(this->registry);
+                
+                WaypointsMovementSystem::updateWaypoints(this->registry, deltaTime);
+                CooldownSystem::updateCooldowns(this->registry, deltaTime);
+                EnergySystem::updateEnergy(this->registry, deltaTime);
+                WeaponsSystem::updateWeaponCooldown(this->registry, deltaTime);
+                EntityStateSystem::updateEntityState(this->registry, deltaTime);
+                ShootingSystem::shoot(this->registry, deltaTime, this->window);
+                BulletSystem::updateShurikenBullet(this->registry, deltaTime);
+                AccelerationSystem::accelerate(this->registry, deltaTime);
+                MovementSystem::updateMovement(this->registry, deltaTime);
+                ShieldSystem::updateShield(this->registry, deltaTime);
+                HealthSystem::updateHealth(this->registry);
+                DropSystem::updateDrop(this->registry, deltaTime);
+                this->particleSystem.update(deltaTime);
+                CollisionSystem::updateCollisionBoxes(this->registry);      
+                CollisionSystem::checkCollisions(this->registry, this->window);
+                PointSystem::update(this->registry, deltaTime);
+                InfoSystem::update(this->registry, deltaTime);
+
+                this->questSystem.update(this->registry, deltaTime);
+
+                if (this->debugMode)
+                    DebugSystem::update(this->registry, this->window);
             }
-
-            if (!this->slowMotion)
-                RotateTowardsMouseSystem::rotateTowardsMouse(this->registry, deltaTime, this->window);
-
-            backgroundManager.update();
-
-            RemovalSystem::update(this->registry);
-            this->enemyGroupSystem.updateEnemyGroup(this->registry);
-            
-            WaypointsMovementSystem::updateWaypoints(this->registry, deltaTime);
-            CooldownSystem::updateCooldowns(this->registry, deltaTime);
-            EnergySystem::updateEnergy(this->registry, deltaTime);
-            WeaponsSystem::updateWeaponCooldown(this->registry, deltaTime);
-            EntityStateSystem::updateEntityState(this->registry, deltaTime);
-            ShootingSystem::shoot(this->registry, deltaTime, this->window);
-            BulletSystem::updateShurikenBullet(this->registry, deltaTime);
-            AccelerationSystem::accelerate(this->registry, deltaTime);
-            MovementSystem::updateMovement(this->registry, deltaTime);
-            ShieldSystem::updateShield(this->registry, deltaTime);
-            HealthSystem::updateHealth(this->registry);
-            DropSystem::updateDrop(this->registry, deltaTime);
-            this->particleSystem.update(deltaTime);
-            CollisionSystem::updateCollisionBoxes(this->registry);      
-            CollisionSystem::checkCollisions(this->registry, this->window);
-            PointSystem::update(this->registry, deltaTime);
-            InfoSystem::update(this->registry, deltaTime);
-
-            this->questSystem.update(this->registry, deltaTime);
-
-            if (this->debugMode)
-                DebugSystem::update(this->registry, this->window);
+        }
+        else
+        {
+            this->startNewGame();
+            SceneManager::getInstance().setGameStarted(true);
         }
     }
 }

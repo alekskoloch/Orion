@@ -46,6 +46,11 @@ void ParticleSystem::draw(sf::RenderWindow &window)
     }
 }
 
+void ParticleSystem::clear()
+{
+    particles.clear();
+}
+
 void ParticleSystem::handlePlayerMovementParticles()
 {
     auto view = registry.view<Player, Input, Position, Velocity>();

@@ -4,6 +4,7 @@
 #include <entt/entt.hpp>
 
 #include "SceneManager.h"
+#include "SkillManager.h"
 
 #include "ParticleSystem.h"
 #include "QuestSystem.h"
@@ -20,6 +21,7 @@ class SystemManager
 {
 public:
     SystemManager(sf::RenderWindow& window, entt::registry& registry, sf::Event& event);
+    void startNewGame();
 
     void executeInitializationSystems();
     void executeEventSystems();
@@ -36,7 +38,7 @@ private:
     sf::RenderWindow& window;
     entt::registry& registry;
     sf::Event& event;
-    
+
     BackgroundManager backgroundManager;
 
     QuestSystem questSystem;

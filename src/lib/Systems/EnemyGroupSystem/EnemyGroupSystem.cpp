@@ -54,6 +54,11 @@ void EnemyGroupSystem::updateEnemyGroup(entt::registry& registry)
     this->updateMemberSpeed(registry);
 }
 
+void EnemyGroupSystem::clear()
+{
+    groupID = 0;
+}
+
 bool EnemyGroupSystem::createGroup(entt::registry& registry, entt::entity leader, entt::entity member)
 {
     if (registry.valid(leader) && registry.valid(member))
