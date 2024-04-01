@@ -5,6 +5,12 @@
 
 static sf::Vector2f boostMovementValue = sf::Vector2f(0.f, 0.f);
 
+//TODO: This only temporary solution
+void MovementSystem::clearMovementBoost()
+{
+    boostMovementValue = sf::Vector2f(0.f, 0.f);
+}
+
 void MovementSystem::updateMovement(entt::registry& registry, sf::Time deltaTime)
 {
     auto view = registry.view<Position, Velocity>();

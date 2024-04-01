@@ -61,6 +61,8 @@ void SystemManager::startNewGame()
 
     NotifySystem::clearNotifications();
 
+    MovementSystem::clearMovementBoost();
+
     //TODO: Only for testing
     this->questSystem.addRandomQuest(this->registry, "First Random Quest");
     this->questSystem.addRandomQuest(this->registry, "Second Random Quest");
