@@ -19,7 +19,7 @@ void GUIMinimap::update()
 
     mapObjects.clear();
 
-    float maxDistance = backgroundMap.getRadius() * 20.0f;
+    float maxDistance = backgroundMap.getRadius() * (20.0f * (1 / ConfigManager::getInstance().getScale()));
 
     auto enemies = registry.view<Enemy, Position>();
     for (auto enemy : enemies)
@@ -39,8 +39,8 @@ void GUIMinimap::update()
             );
 
             sf::Vector2f enemyMinimapPosition(
-                playerMinimapPosition.x + (enemyPosition.position.x - playerPosition.position.x) / 20,
-                playerMinimapPosition.y + (enemyPosition.position.y - playerPosition.position.y) / 20
+                playerMinimapPosition.x + (enemyPosition.position.x - playerPosition.position.x) / (20.0f * (1 / ConfigManager::getInstance().getScale())),
+                playerMinimapPosition.y + (enemyPosition.position.y - playerPosition.position.y) / (20.0f * (1 / ConfigManager::getInstance().getScale()))
             );
 
             sf::CircleShape enemyDot;
