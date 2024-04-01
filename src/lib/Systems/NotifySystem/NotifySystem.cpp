@@ -12,7 +12,7 @@ void NotifySystem::notify(const Type type, const std::string& message, float dis
         );
         text.setPosition(
             20.f * ConfigManager::getInstance().getScale(),
-            1080.f * ConfigManager::getInstance().getScale()
+            ConfigManager::getInstance().getScreenHeight() / 2
         );
 
         if (!notifications.empty())
