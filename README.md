@@ -27,7 +27,7 @@ Orion is currently in the prototype phase, far from a full-fledged alpha version
 ## Building Orion - Quick Guide
 
 <p align="center" style="font-size: 14px;">
-  <i>Note: Orion is currently developed and tested on the <b>Windows</b> platform. Compatibility with other operating systems is not guaranteed at this experimental stage. Additionally, the game is designed to run in a resolution of <b>3840x2160</b>.</i>
+  <i>Note: Orion is currently developed and tested on the <b>Windows</b> platform. Compatibility with other operating systems is not guaranteed at this experimental stage.</i>
 </p>
 
 To compile the Orion project on your machine, follow these straightforward steps:
@@ -119,6 +119,13 @@ After successful compilation, run the project executable:
 
 ## Features
 
+### Main Menu
+Start or continue your journey. Adjust settings to customize your gaming experience. Fine-tune the resolution, frame rate limits, and window mode to your preferences.
+
+<p align="center">
+  <img src="docs/menu.png" alt="main menu" width="720">
+</p>
+
 ### Skill Tree
 Progress through a skill tree by gaining experience points from defeating enemies. Upon leveling up, receive skill points to allocate into various abilities. Some skills may require special stones obtained from defeated enemies.
 
@@ -151,9 +158,6 @@ Monsters of the same type team up in formations when close. Get ready for coordi
 
 ### Enhancements for Next Update
 In the upcoming update, attention is directed towards enhancing the overall gameplay experience. Here's what you can expect:
-
-#### Resolution Handling
-Ensuring compatibility with various screen sizes and resolutions will be a priority.
 
 #### Tutorial
 A comprehensive tutorial will be added to help new players understand the game mechanics better.
