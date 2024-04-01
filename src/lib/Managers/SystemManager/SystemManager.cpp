@@ -51,7 +51,6 @@ void SystemManager::startNewGame()
     this->enemyGroupSystem.clear();
     this->backgroundManager.clear();
 
-
     this->backgroundManager.initialize();
 
     this->initializeZoom();
@@ -59,6 +58,8 @@ void SystemManager::startNewGame()
 
     SkillManager::getInstance(this->window, this->registry).clear();
     SkillManager::getInstance(this->window, this->registry).initializeFirstSkill();
+
+    NotifySystem::clearNotifications();
 
     //TODO: Only for testing
     this->questSystem.addRandomQuest(this->registry, "First Random Quest");

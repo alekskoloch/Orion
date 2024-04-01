@@ -108,3 +108,9 @@ void NotifySystem::draw(sf::RenderWindow& window)
     if (dialogBox != nullptr)
         dialogBox->draw();
 }
+
+void NotifySystem::clearNotifications()
+{
+    notifications.clear();
+    bigInfoQueue = std::queue<Notification>();
+}

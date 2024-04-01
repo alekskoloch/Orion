@@ -29,6 +29,8 @@ public:
     static void update(sf::Time deltaTime);
     static void draw(sf::RenderWindow& window);
 
+    static void clearNotifications();
+
 private:
     static inline std::list<Notification> notifications;
     static inline std::queue<Notification> bigInfoQueue;
