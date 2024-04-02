@@ -35,6 +35,7 @@ public:
 
     void setMessage(std::vector<std::string> message);
     void setType(GUIDialogBoxType type) { this->type = type; }
+    void setButtonOkText(const std::string& text) { this->okText.setString(text); }
 private:
     sf::RenderWindow& window;
     std::vector<std::string> messages;
