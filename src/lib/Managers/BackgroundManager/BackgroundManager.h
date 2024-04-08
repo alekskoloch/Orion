@@ -133,4 +133,6 @@ private:
     std::vector<BackgroundTile> backgroundTiles;
 
     void updateBackgroundTiles(int playerTileX, int playerTileY);
+
+    bool firstUpdate = true;
 };

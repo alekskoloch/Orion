@@ -10,24 +10,17 @@ BackgroundManager::BackgroundManager(entt::registry& registry, sf::RenderWindow&
 
 void BackgroundManager::initialize()
 {
-    currentPlayerTileX = 0;
-    currentPlayerTileY = 0;
-
-    for (int x = -tilesAroundPlayer; x < tilesAroundPlayer+1; x++)
-    {
-        for (int y = -tilesAroundPlayer; y < tilesAroundPlayer+1; y++)
-        {
-            backgroundTiles.push_back(BackgroundTile(
-                sf::Vector2f(0.f + x * backgroundTileSize, 0.f + y * backgroundTileSize),
-                sf::Vector2f(backgroundTileSize, backgroundTileSize),
-                sf::Color(100 + (x * 2), 100 + (y * 2), 100)
-            ));
-        }
-    }
+    this->updateBackgroundTiles(0, 0);
 }
 
 void BackgroundManager::update()
 {
+    if (this->firstUpdate)
+    {
+        this->initialize();
+        this->firstUpdate = false;
+    }
+
     auto playerView = registry.view<Player, Position>();
     auto playerEntity = playerView.front();
     auto& playerPosition = playerView.get<Position>(playerEntity);
@@ -61,6 +54,9 @@ void BackgroundManager::draw()
 void BackgroundManager::clear()
 {
     backgroundTiles.clear();
+    this->firstUpdate = true;
+    this->currentPlayerTileX = 0;
+    this->currentPlayerTileY = 0;
 }
 
 void BackgroundManager::updateBackgroundTiles(int playerTileX, int playerTileY)

@@ -51,8 +51,6 @@ void SystemManager::startNewGame()
     this->enemyGroupSystem.clear();
     this->backgroundManager.clear();
 
-    this->backgroundManager.initialize();
-
     this->initializeZoom();
     this->executeInitializationSystems();
 
