@@ -46,6 +46,7 @@ target_link_libraries(${PROJECT_NAME}
     TimeControlSystem
     RenderSystem
     DebugSystem
+    TutorialSystem
 )
 
 target_precompile_headers(${PROJECT_NAME} PRIVATE "${PCH_DIR}/pch.h")

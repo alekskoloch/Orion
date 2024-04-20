@@ -30,6 +30,7 @@
 #include "QuestSystem.h"
 #include "TimeControlSystem.h"
 
+
 #include "RenderSystem.h"
 #include "DebugSystem.h"
 
@@ -37,7 +38,7 @@
 
 
 SystemManager::SystemManager(sf::RenderWindow& window, entt::registry& registry, sf::Event& event) :
-    window(window), registry(registry), event(event), backgroundManager(registry, window), particleSystem(registry)
+    window(window), registry(registry), event(event), backgroundManager(registry, window), particleSystem(registry), tutorialSystem(window, registry)
 {
 
 }
@@ -50,6 +51,7 @@ void SystemManager::startNewGame()
     this->particleSystem.clear();
     this->enemyGroupSystem.clear();
     this->backgroundManager.clear();
+    this->tutorialSystem.clear();
 
     this->initializeZoom();
     this->executeInitializationSystems();
@@ -155,6 +157,7 @@ void SystemManager::executeUpdateSystems(sf::Time deltaTime)
                 CollisionSystem::checkCollisions(this->registry, this->window);
                 PointSystem::update(this->registry, deltaTime);
                 InfoSystem::update(this->registry, deltaTime);
+                this->tutorialSystem.update(deltaTime, this->window);
 
                 this->questSystem.update(this->registry, deltaTime);
 
