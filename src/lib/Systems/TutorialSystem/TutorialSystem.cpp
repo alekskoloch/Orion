@@ -24,7 +24,7 @@ void TutorialSystem::initializeGreetings()
 
     std::string buttonMessage = "Play";
     
-    EventManager::getInstance().subscribe(EventManager::Event::Test, [this, welcomeMessage, buttonMessage]() {
+    EventManager::getInstance().subscribe(EventManager::Event::Tutorial, [this, welcomeMessage, buttonMessage]() {
         NotifySystem::notifyDialogBox(this->window, welcomeMessage, buttonMessage, [this]() {});
     });
 }
@@ -41,7 +41,7 @@ void TutorialSystem::update(sf::Time deltaTime, sf::RenderWindow& window)
         {
             this->welcomeDisplayed = true;
 
-            EventManager::getInstance().trigger(EventManager::Event::Test);
+            EventManager::getInstance().trigger(EventManager::Event::Tutorial);
         }
     }
 }
