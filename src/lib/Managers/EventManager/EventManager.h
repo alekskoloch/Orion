@@ -14,7 +14,8 @@ public:
     enum class Event
     {
         NotEnoughEnergy,
-        EnemyKilled
+        EnemyKilled,
+        Tutorial
     };
 
     EventManager(EventManager const&) = delete;
