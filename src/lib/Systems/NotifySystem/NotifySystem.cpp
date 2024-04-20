@@ -42,14 +42,30 @@ void NotifySystem::notify(const Type type, const std::string& message, float dis
 
 void NotifySystem::notifyDialogBox(sf::RenderWindow& window, const std::string& message, const std::string& buttonMessage, std::function<void()> callback)
 {
-    if (dialogBox != nullptr)
-        return;
+    dialogBox.reset();
 
     std::vector<std::string> messages = { message };
     dialogBox = std::make_unique<GUIDialogBox>(window, messages, FontManager::getInstance().getFont("font"));
     dialogBox->setType(GUIDialogBoxType::Ok);
     dialogBox->setState(GUIDialogBoxState::Idle);
     dialogBox->setMessage({ message });
+
+    if (callback)
+        dialogBox->setCallback(callback);
+}
+
+void NotifySystem::notifyDialogBox(sf::RenderWindow& window, std::vector<std::string> messages, std::string buttonMessage, std::function<void()> callback)
+{
+    dialogBox.reset();
+
+    dialogBox = std::make_unique<GUIDialogBox>(window, messages, FontManager::getInstance().getFont("font"));
+    dialogBox->setType(GUIDialogBoxType::Ok);
+    dialogBox->setState(GUIDialogBoxState::Idle);
+    dialogBox->setMessage(messages);
+    dialogBox->setButtonOkText(buttonMessage);
+
+    if (callback)
+        dialogBox->setCallback(callback);
 }
 
 bool NotifySystem::isDialogBoxActive()
