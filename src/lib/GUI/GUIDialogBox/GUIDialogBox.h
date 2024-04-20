@@ -36,10 +36,12 @@ public:
     void setMessage(std::vector<std::string> message);
     void setType(GUIDialogBoxType type) { this->type = type; }
     void setButtonOkText(const std::string& text) { this->okText.setString(text); }
+    void setCallback(std::function<void()> callback) { this->callback = callback; }
 private:
     sf::RenderWindow& window;
     std::vector<std::string> messages;
     std::string target;
+    std::function<void()> callback;
 
     GUIDialogBoxType type = GUIDialogBoxType::YesNo;
     GUIDialogBoxState state = GUIDialogBoxState::Hidden;
@@ -55,4 +57,7 @@ private:
     sf::Text yesText;
     sf::Text okText;
     sf::RectangleShape box;
+
+    bool readyToExecute = false;
+    bool mouseIsReleased = false;
 };

@@ -108,6 +108,9 @@ void GUIDialogBox::update()
 {
     this->updateText();
 
+    if (!sf::Mouse::isButtonPressed(sf::Mouse::Left))
+        this->mouseIsReleased = true;
+
     if (this->type == GUIDialogBoxType::YesNo)
     {
         if (this->noText.getGlobalBounds().contains(sf::Vector2f(sf::Mouse::getPosition(this->window))))
@@ -149,8 +152,21 @@ void GUIDialogBox::update()
                 this->okText.setFillColor(sf::Color::Green);
                 SoundManager::getInstance().playSound("MouseHover");
             }
-            if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+            if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && this->mouseIsReleased)
+            {
+                this->readyToExecute = true;
+            }
+            else if (!sf::Mouse::isButtonPressed(sf::Mouse::Left) && this->readyToExecute)
+            {
+                this->readyToExecute = false;
                 this->state = GUIDialogBoxState::Ok;
+
+                if (this->callback)
+                {
+                    this->callback();
+                    this->callback = nullptr;
+                }
+            }
         }
         else
         {
