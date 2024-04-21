@@ -14,6 +14,8 @@ private:
     unsigned int FRAME_RATE_LIMIT;
     std::string WINDOW_STYLE;
 
+    bool TUTORIAL_ENABLED;
+
 public:
     static ConfigManager& getInstance();
 
@@ -28,5 +30,6 @@ public:
     unsigned int getWindowStyle() const { return this->WINDOW_STYLE == "Fullscreen" ? sf::Style::Fullscreen : sf::Style::Default; }
 
     float getScale();
+    bool isTutorialEnabled() const { return TUTORIAL_ENABLED; }
 };
 

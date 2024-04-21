@@ -22,6 +22,8 @@ void ConfigManager::loadConfig()
     this->SCREEN_HEIGHT = config["resolution"]["height"];
     this->FRAME_RATE_LIMIT = config["frameRateLimit"];
     this->WINDOW_STYLE = config["windowMode"].get<std::string>();
+
+    this->TUTORIAL_ENABLED = config["tutorialEnabled"];
 }
 
 float ConfigManager::getScale()
