@@ -22,8 +22,6 @@ void ConfigManager::loadConfig()
     this->SCREEN_HEIGHT = config["resolution"]["height"];
     this->FRAME_RATE_LIMIT = config["frameRateLimit"];
     this->WINDOW_STYLE = config["windowMode"].get<std::string>();
-
-    this->TUTORIAL_ENABLED = config["tutorialEnabled"];
 }
 
 float ConfigManager::getScale()
@@ -36,4 +34,18 @@ float ConfigManager::getScale()
     float scaleY = static_cast<float>(SCREEN_HEIGHT) / k4KHeight;
 
     return std::min(scaleX, scaleY) / k4KScale;
+}
+
+bool ConfigManager::isTutorialEnabled()
+{
+    std::ifstream file(CONFIG_PATH + std::string("gameConfig.json"));
+    nlohmann::json config;
+
+    if (file.is_open())
+    {
+        file >> config;
+        file.close();
+    }
+
+    return config["tutorialEnabled"].get<bool>();
 }
