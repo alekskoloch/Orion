@@ -2,6 +2,15 @@
     "enemies":
     [
         {
+            "name": "Target",
+            "health": 1.0,
+            "speed": 0.0,
+            "experience": 0,
+            "weapon": 0,
+            "attackRange": 0.0,
+            "idleRange": 0.0
+        },
+        {
             "name": "Sparkle",
             "health": 10.0,
             "speed": 600.0,
