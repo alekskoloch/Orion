@@ -26,6 +26,40 @@ protected:
     unsigned int subscriberId;
 };
 
+class DefaultCondition : public IQuestCondition
+{
+public:
+    bool check(entt::registry& registry) override
+    {
+        return true;
+    }
+
+    void subscribeEvent() override
+    {
+        
+    }
+
+    void unsubscribeEvent() override
+    {
+        
+    }
+
+    std::string getProgress()
+    {
+        return "No condition";
+    }
+
+    float getTargetDistance(entt::registry& registry) override
+    {
+        return 0.0f;
+    }
+
+    sf::Vector2f getTargetPosition(entt::registry& registry) override
+    {
+        return sf::Vector2f();
+    }
+};
+
 class ReachPointOfInterestCondition : public IQuestCondition
 {
 public:
