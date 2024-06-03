@@ -8,14 +8,19 @@
 
 #include "../utils/MathOperations.h"
 
-void PointSystem::addPointOfInterest(entt::registry& registry, sf::Vector2f pointPosition, std::string id)
+void PointSystem::addPointOfInterest(entt::registry& registry, sf::Vector2f pointPosition, std::string id, PointOfInterestType type)
 {
     auto pointOfInterest = registry.create();
     registry.emplace<PointOfInterest>(pointOfInterest, id);
     registry.emplace<Position>(pointOfInterest, pointPosition);
     sf::Sprite sprite;
     sprite.setPosition(pointPosition);
-    sprite.setTexture(TextureManager::getInstance().getTexture("pointOfInterest"));
+
+    if (type == PointOfInterestType::Tutorial)
+        sprite.setTexture(TextureManager::getInstance().getTexture("pointOfInterestTutorial"));
+    else
+        sprite.setTexture(TextureManager::getInstance().getTexture("pointOfInterest"));
+    
     registry.emplace<Renderable>(pointOfInterest, sprite);
 }
 
