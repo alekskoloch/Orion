@@ -75,7 +75,7 @@ void TutorialSystem::update(sf::Time deltaTime, sf::RenderWindow& window, QuestS
                 .addAction([](entt::registry& reg) {
                     int x = 1000;
                     int y = 1000;
-                    PointSystem::addPointOfInterest(reg, sf::Vector2f(x, y), "TutorialPoint1");
+                    PointSystem::addPointOfInterest(reg, sf::Vector2f(x, y), "TutorialPoint1", PointOfInterestType::Tutorial);
                 })
                 .addCondition(std::make_shared<ReachPointOfInterestCondition>("TutorialPoint1"))
                 .build();
@@ -90,7 +90,7 @@ void TutorialSystem::update(sf::Time deltaTime, sf::RenderWindow& window, QuestS
                 .addAction([&window, movingMessage2](entt::registry& reg) {
                     int x = -1000;
                     int y = -1000;
-                    PointSystem::addPointOfInterest(reg, sf::Vector2f(x, y), "TutorialPoint2");
+                    PointSystem::addPointOfInterest(reg, sf::Vector2f(x, y), "TutorialPoint2", PointOfInterestType::Tutorial);
                     NotifySystem::notifyDialogBox(window,
                         movingMessage2,
                         "OK", []() {}
@@ -117,11 +117,27 @@ void TutorialSystem::update(sf::Time deltaTime, sf::RenderWindow& window, QuestS
                 .addCondition(std::make_shared<KillEnemiesCondition>(1))
                 .build();
 
+            QuestStage endStage = QuestStageBuilder()
+                .addDescription("Congratulations!")
+                .addAction([&window](entt::registry& reg) {
+                    NotifySystem::notifyDialogBox(window,
+                        std::vector<std::string>
+                            {
+                                "Congratulations! You've completed the tutorial!",
+                                "You're now ready to explore the world of Orion!"
+                            },
+                        "OK", []() {}
+                    );
+                })
+                .addCondition(std::make_shared<DefaultCondition>())
+                .build();
+
             QuestBuilder questBuilder;
             questBuilder.addName("Tutorial");
             questBuilder.addStage(stage);
             questBuilder.addStage(stage2);
             questBuilder.addStage(stage3);
+            questBuilder.addStage(endStage);
             questBuilder.setType(QuestType::Tutorial);
 
             Quest quest = questBuilder.build();
