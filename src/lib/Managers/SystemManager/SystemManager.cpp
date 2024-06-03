@@ -157,7 +157,7 @@ void SystemManager::executeUpdateSystems(sf::Time deltaTime)
                 CollisionSystem::checkCollisions(this->registry, this->window);
                 PointSystem::update(this->registry, deltaTime);
                 InfoSystem::update(this->registry, deltaTime);
-                this->tutorialSystem.update(deltaTime, this->window);
+                this->tutorialSystem.update(deltaTime, this->window, this->questSystem);
 
                 this->questSystem.update(this->registry, deltaTime);
 
