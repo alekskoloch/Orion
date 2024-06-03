@@ -22,6 +22,7 @@ target_link_libraries(${PROJECT_NAME} PUBLIC
     NotifySystem
     ConfigManager
     QuestSystem
+    EnemyInitializationSystem
 )
 
 target_precompile_headers(${PROJECT_NAME} PRIVATE "${PCH_DIR}/pch.h")

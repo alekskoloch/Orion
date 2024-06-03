@@ -3,6 +3,8 @@
 
 #include "ConfigManager.hpp"
 
+#include "EnemyInitializationSystem.h"
+
 #include "player.h"
 #include "experience.h"
 
@@ -99,6 +101,10 @@ void TutorialSystem::update(sf::Time deltaTime, sf::RenderWindow& window, QuestS
                 .addCondition(std::make_shared<ReachPointOfInterestCondition>("TutorialPoint2"))
                 .build();
 
+            //TODO: This should be in some TutorialConfig
+            const float RADIUS = 1500;
+            const unsigned int ENEMIES_COUNT = 8;
+
             QuestStage stage3 = QuestStageBuilder()
                 .addDescription("Kill an enemy")
                 .addAction([&window](entt::registry& reg) {
@@ -106,15 +112,24 @@ void TutorialSystem::update(sf::Time deltaTime, sf::RenderWindow& window, QuestS
                         std::vector<std::string>
                             {
                                 "Great job! You've reached the second point of interest!",
-                                "Now, kill an enemy to proceed!",
+                                "Now, destroy all targets to proceed!",
                                 "You can use the mouse to aim and the left mouse button to shoot."
                             },
                         "OK", []() {}
                     );
 
-                    EventManager::getInstance().trigger(EventManager::Event::EnableEnemySpawning);
+
+                    
+                    for (int i = 0; i < ENEMIES_COUNT; i++)
+                    {
+                        float angle = i * 45;
+                        float x = -1000 + RADIUS * cos(angle * 3.14159265 / 180);
+                        float y = -1000 + RADIUS * sin(angle * 3.14159265 / 180);
+
+                        EnemyInitializationSystem::spawnEnemy(reg, sf::Vector2f(x, y), "Target");
+                    }
                 })
-                .addCondition(std::make_shared<KillEnemiesCondition>(1))
+                .addCondition(std::make_shared<KillEnemiesCondition>(ENEMIES_COUNT))
                 .build();
 
             QuestStage endStage = QuestStageBuilder()
@@ -128,6 +143,8 @@ void TutorialSystem::update(sf::Time deltaTime, sf::RenderWindow& window, QuestS
                             },
                         "OK", []() {}
                     );
+
+                    EventManager::getInstance().trigger(EventManager::Event::EnableEnemySpawning);
                 })
                 .addCondition(std::make_shared<DefaultCondition>())
                 .build();
