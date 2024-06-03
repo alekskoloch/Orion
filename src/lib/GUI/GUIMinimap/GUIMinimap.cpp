@@ -75,6 +75,7 @@ void GUIMinimap::initializationMinimap()
 {
     TextureManager::getInstance().loadTexture("PLAYER_MINIMAP_TEXTURE", ASSETS_PATH + std::string("playerMinimap.png"));
     TextureManager::getInstance().loadTexture("ACTIVE_QUEST_MINIMAP_TEXTURE", ASSETS_PATH + std::string("MapMarker.png"));
+    TextureManager::getInstance().loadTexture("ACTIVE_TUTORIAL_QUEST_MINIMAP_TEXTURE", ASSETS_PATH + std::string("MapMarkerTutorial.png"));
 
     //TODO: temporary solution, make this configurable
     backgroundMap.setRadius(200 * ConfigManager::getInstance().getScale());
@@ -184,6 +185,11 @@ void GUIMinimap::updateQuestMarker()
     {
         if ((quest.active && !quest.completed) || (quest.type == QuestType::Tutorial && !quest.completed))
         {
+            if (quest.type == QuestType::Tutorial)
+                activeQuestMinimapSprite.setTexture(TextureManager::getInstance().getTexture("ACTIVE_TUTORIAL_QUEST_MINIMAP_TEXTURE"));
+            else
+                activeQuestMinimapSprite.setTexture(TextureManager::getInstance().getTexture("ACTIVE_QUEST_MINIMAP_TEXTURE"));
+
             auto questMarkerPosition = quest.stages[quest.currentStage].condition->getTargetPosition(registry);
             if (questMarkerPosition != sf::Vector2f())
             {
