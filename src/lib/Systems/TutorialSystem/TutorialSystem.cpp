@@ -101,10 +101,6 @@ void TutorialSystem::update(sf::Time deltaTime, sf::RenderWindow& window, QuestS
                 .addCondition(std::make_shared<ReachPointOfInterestCondition>("TutorialPoint2"))
                 .build();
 
-            //TODO: This should be in some TutorialConfig
-            const float RADIUS = 1500;
-            const unsigned int ENEMIES_COUNT = 8;
-
             QuestStage stage3 = QuestStageBuilder()
                 .addDescription("Kill an enemy")
                 .addAction([&window](entt::registry& reg) {
@@ -118,7 +114,9 @@ void TutorialSystem::update(sf::Time deltaTime, sf::RenderWindow& window, QuestS
                         "OK", []() {}
                     );
 
-
+                    // TODO: This should be in some tutorial configuration file
+                    const float RADIUS = 1500;
+                    const unsigned int ENEMIES_COUNT = 8;
                     
                     for (int i = 0; i < ENEMIES_COUNT; i++)
                     {
@@ -129,7 +127,7 @@ void TutorialSystem::update(sf::Time deltaTime, sf::RenderWindow& window, QuestS
                         EnemyInitializationSystem::spawnEnemy(reg, sf::Vector2f(x, y), "Target");
                     }
                 })
-                .addCondition(std::make_shared<KillEnemiesCondition>(ENEMIES_COUNT))
+                .addCondition(std::make_shared<KillEnemiesCondition>(8))
                 .build();
 
             QuestStage endStage = QuestStageBuilder()
