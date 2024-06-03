@@ -13,6 +13,7 @@ GUISettings::GUISettings(entt::registry& registry, sf::RenderWindow& window) : r
     unsigned int currentHeight;
     unsigned int currentFrameRate;
     std::string currentWindowMode;
+    bool tutorialEnabled;
 
     std::ifstream file(CONFIG_PATH + std::string("gameConfig.json"));
     if (file.is_open())
@@ -24,6 +25,7 @@ GUISettings::GUISettings(entt::registry& registry, sf::RenderWindow& window) : r
         currentHeight = config["resolution"]["height"];
         currentFrameRate = config["frameRateLimit"];
         currentWindowMode = config["windowMode"].get<std::string>();
+        tutorialEnabled = config["tutorialEnabled"].get<bool>();
     }
     else
     {
@@ -131,6 +133,20 @@ GUISettings::GUISettings(entt::registry& registry, sf::RenderWindow& window) : r
         currentWindowModeIndex,
         BUTTONS_FONT_SIZE
     ));
+
+    this->elements.push_back(GUIElementFactory::createText(
+        sf::Vector2f(SCREEN_WIDTH / 2 - BUTTON_WIDTH / 2, SCREEN_HEIGHT / 2 + 3 * BUTTON_HEIGHT + 3 * MARGIN),
+        "Tutorial",
+        BUTTONS_FONT_SIZE
+    ));
+
+    this->elements.push_back(GUIElementFactory::createArrowButton(
+        sf::Vector2f(SCREEN_WIDTH / 2 + BUTTON_WIDTH / 2, SCREEN_HEIGHT / 2 + 3 * BUTTON_HEIGHT + 3 * MARGIN),
+        sf::Vector2f(BUTTON_WIDTH, BUTTON_HEIGHT),
+        { "Enabled", "Disabled" },
+        tutorialEnabled ? 0 : 1,
+        BUTTONS_FONT_SIZE
+    ));
 }
 
 void GUISettings::update(sf::Time& deltaTime)
@@ -169,6 +185,16 @@ void GUISettings::update(sf::Time& deltaTime)
             {
                 config["windowMode"] = "Windowed";
             }
+
+            if (elements[8]->getText() == "Enabled")
+            {
+                config["tutorialEnabled"] = true;
+            }
+            else
+            {
+                config["tutorialEnabled"] = false;
+            }
+
             file << config.dump(4);
         }
         else
@@ -183,7 +209,7 @@ void GUISettings::update(sf::Time& deltaTime)
     //TODO: this is horrible, refactor this
     if (this->elements[2]->getText() != this->loadedResolution || this->elements[4]->getText() != this->loadedFrameRate || this->elements[6]->getText() != this->loadedWindowMode)
     {
-        if (elements.size() == 7)
+        if (elements.size() == 9)
         {
             elements.push_back(GUIElementFactory::createText(
                 sf::Vector2f(SCREEN_WIDTH / 2, SCREEN_HEIGHT - SCREEN_HEIGHT / 10),
@@ -194,7 +220,7 @@ void GUISettings::update(sf::Time& deltaTime)
     }
     else
     {
-        if (elements.size() == 8)
+        if (elements.size() == 10)
         {
             elements.pop_back();
         }
