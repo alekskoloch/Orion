@@ -12,6 +12,7 @@ class QuestSystem
 public:
     void startQuest(Quest quest);
     void addRandomQuest(entt::registry& registry, std::string questName);
+    void setQuestAsActive(std::string questName);
 
     void update(entt::registry& registry, sf::Time deltaTime);
     std::vector<Quest>& getQuests();

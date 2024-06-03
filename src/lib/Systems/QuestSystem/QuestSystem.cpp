@@ -93,6 +93,21 @@ void QuestSystem::update(entt::registry& registry, sf::Time deltaTime)
     }
 }
 
+void QuestSystem::setQuestAsActive(std::string questName)
+{
+    for (auto& quest : quests)
+    {
+        if (quest.name == questName)
+        {
+            quest.active = true;
+        }
+        else
+        {
+            quest.active = false;
+        }
+    }
+}
+
 std::vector<Quest>& QuestSystem::getQuests()
 {
     return this->quests;
