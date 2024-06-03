@@ -182,7 +182,7 @@ void GUIMinimap::updateQuestMarker()
     this->drawQuestMarker = false;
     for (auto& quest : this->quests)
     {
-        if (quest.active && !quest.completed)
+        if ((quest.active && !quest.completed) || (quest.type == QuestType::Tutorial && !quest.completed))
         {
             auto questMarkerPosition = quest.stages[quest.currentStage].condition->getTargetPosition(registry);
             if (questMarkerPosition != sf::Vector2f())
