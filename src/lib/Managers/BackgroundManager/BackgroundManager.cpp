@@ -5,11 +5,18 @@
 
 BackgroundManager::BackgroundManager(entt::registry& registry, sf::RenderWindow& window) : registry(registry), window(window)
 {
-    
+    EventManager::getInstance().subscribe(EventManager::Event::EnableEnemySpawning, [this]() {
+        this->enemiesEnabled = true;
+    });
 }
 
 void BackgroundManager::initialize()
 {
+    if (ConfigManager::getInstance().isTutorialEnabled())
+        this->enemiesEnabled = false;
+    else
+        this->enemiesEnabled = true;
+        
     this->updateBackgroundTiles(0, 0);
 }
 
@@ -95,7 +102,7 @@ void BackgroundManager::updateBackgroundTiles(int playerTileX, int playerTileY)
             if (!tileExists)
             {
                 //TODO: Temporary solution for enemy spawning, this should be handled by a system
-                if (ProceduralGenerationSystem::GetRandomNumber(1, 10) == 1)
+                if (this->enemiesEnabled && ProceduralGenerationSystem::GetRandomNumber(1, 10) == 1)
                     EnemyInitializationSystem::createNewEnemy(registry, sf::Vector2f(x * backgroundTileSize, y * backgroundTileSize));
 
                 newBackgroundTiles.push_back(BackgroundTile(

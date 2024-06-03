@@ -3,6 +3,9 @@
 #include <entt/entt.hpp>
 #include <SFML/Graphics.hpp>
 
+#include "ConfigManager.hpp"
+#include "EventManager.h"
+
 #include "ProceduralGenerationSystem.h"
 #include "EnemyInitializationSystem.h"
 
@@ -135,4 +138,5 @@ private:
     void updateBackgroundTiles(int playerTileX, int playerTileY);
 
     bool firstUpdate = true;
+    bool enemiesEnabled = false;
 };
