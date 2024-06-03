@@ -20,6 +20,8 @@ target_link_libraries(${PROJECT_NAME} PUBLIC
     EnTT::EnTT
     EventManager
     NotifySystem
+    ConfigManager
+    QuestSystem
 )
 
 target_precompile_headers(${PROJECT_NAME} PRIVATE "${PCH_DIR}/pch.h")
