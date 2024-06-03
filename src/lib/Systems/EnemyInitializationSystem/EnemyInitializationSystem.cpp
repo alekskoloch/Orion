@@ -23,7 +23,7 @@ void EnemyInitializationSystem::loadEnemyFromConfig(entt::registry& registry, st
     if (enemiesCount < 0)
         throw std::runtime_error("Enemies array is empty");
 
-    auto enemyIndex = ProceduralGenerationSystem::GetRandomNumber(0u, enemiesCount - 1);
+    auto enemyIndex = ProceduralGenerationSystem::GetRandomNumber(1u, enemiesCount - 1);
     const auto& enemyJson = configJson["enemies"][enemyIndex];
 
     EnemyBuilder enemyBuilder(registry);
