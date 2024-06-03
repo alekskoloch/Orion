@@ -26,3 +26,6 @@ install_manifest.txt
 *.log
 *.swp
 *.bak
+
+# Ignore gameConfig.json file in config file
+config/gameConfig.json
