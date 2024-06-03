@@ -275,13 +275,14 @@ void GUIJournal::sortAndDisplayQuests()
     {
     case SortType::All:
         for (auto& quest : this->quests)
-            this->sortedQuests.push_back(quest);
+            if (quest.type != QuestType::Tutorial)
+                this->sortedQuests.push_back(quest);
         this->sortButtons[0].setSelectedState();
         break;
     case SortType::Current:
         for (auto& quest : this->quests)
         {
-            if (!quest.completed)
+            if (!quest.completed && quest.type != QuestType::Tutorial)
                 this->sortedQuests.push_back(quest);
         }
         this->sortButtons[1].setSelectedState();
@@ -289,7 +290,7 @@ void GUIJournal::sortAndDisplayQuests()
     case SortType::Completed:
         for (auto& quest : this->quests)
         {
-            if (quest.completed)
+            if (quest.completed && quest.type != QuestType::Tutorial)
                 this->sortedQuests.push_back(quest);
         }
         this->sortButtons[2].setSelectedState();
