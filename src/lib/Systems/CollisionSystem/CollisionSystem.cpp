@@ -100,9 +100,12 @@ void checkBulletCollitions(entt::registry& registry, std::unordered_set<entt::en
                         infoPosition.x = registry.get<Position>(target).position.x + 50.f;
                         infoPosition.y = registry.get<Position>(target).position.y - 50.f;
 
-                        auto expInfo = registry.create();
-                        //TODO: Randomize and animate info position
-                        registry.emplace<Info>(expInfo, std::to_string(enemyExpValue), infoPosition, sf::Color::Yellow);
+                        if (enemyExpValue != 0)
+                        {
+                            auto expInfo = registry.create();
+                            //TODO: Randomize and animate info position
+                            registry.emplace<Info>(expInfo, std::to_string(enemyExpValue), infoPosition, sf::Color::Yellow);
+                        }
                     }
                 }
             }
