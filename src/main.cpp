@@ -3,7 +3,7 @@
 
 int main()
 {
-    ConfigManager::getInstance().loadConfig();
+    ConfigManager::getInstance().loadOrCreateConfig();
 
     Game game;
     game.run();
