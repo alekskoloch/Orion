@@ -15,6 +15,7 @@ public:
     {
         NotEnoughEnergy,
         EnemyKilled,
+        EnableEnemySpawning,
         Tutorial
     };
 
