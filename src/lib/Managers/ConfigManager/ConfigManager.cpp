@@ -7,6 +7,32 @@ ConfigManager& ConfigManager::getInstance()
     return instance;
 }
 
+void ConfigManager::loadOrCreateConfig()
+{
+    std::ifstream file(CONFIG_PATH + std::string("gameConfig.json"));
+    nlohmann::json config;
+
+    if (file.is_open())
+    {
+        file >> config;
+        file.close();
+    }
+    else
+    {
+        config["resolution"]["width"] = 1920;
+        config["resolution"]["height"] = 1080;
+        config["frameRateLimit"] = 60;
+        config["windowMode"] = "Windowed";
+        config["tutorialEnabled"] = true;
+
+        std::ofstream file(CONFIG_PATH + std::string("gameConfig.json"));
+        file << config;
+        file.close();
+    }
+
+    this->loadConfig();
+}
+
 void ConfigManager::loadConfig()
 {
     std::ifstream file(CONFIG_PATH + std::string("gameConfig.json"));

@@ -20,6 +20,7 @@ public:
     ConfigManager(ConfigManager const&) = delete;
     void operator=(ConfigManager const&) = delete;
 
+    void loadOrCreateConfig();
     void loadConfig();
 
     unsigned int getScreenWidth() const { return SCREEN_WIDTH; }
