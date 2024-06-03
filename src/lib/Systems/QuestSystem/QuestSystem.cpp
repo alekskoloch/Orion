@@ -3,7 +3,9 @@
 
 void QuestSystem::startQuest(Quest quest)
 {
-    NotifySystem::notify(NotifySystem::Type::BigInfo, "Quest started: " + quest.name);
+    if (quest.type != QuestType::Tutorial)
+        NotifySystem::notify(NotifySystem::Type::BigInfo, "Quest started: " + quest.name);
+
     quests.push_back(quest);
 }
 
@@ -82,9 +84,11 @@ void QuestSystem::update(entt::registry& registry, sf::Time deltaTime)
                     quest.currentStage--;
                     quest.completed = true;
                     quest.active = false;
-                    NotifySystem::notify(NotifySystem::Type::BigInfo, "Quest completed: " + quest.name);
+                    
+                    if (quest.type != QuestType::Tutorial)
+                        NotifySystem::notify(NotifySystem::Type::BigInfo, "Quest completed: " + quest.name);
                 }
-                else
+                else if (quest.type != QuestType::Tutorial)
                 {
                     NotifySystem::notify(NotifySystem::Type::Info, quest.name + ": New journal entry.");
                 }
