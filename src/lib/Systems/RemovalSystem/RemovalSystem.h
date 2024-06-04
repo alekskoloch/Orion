@@ -8,6 +8,7 @@
 #include "player.h"
 #include "position.h"
 #include "removable.h"
+#include "name.h"
 
 #include "MathOperations.h"
 

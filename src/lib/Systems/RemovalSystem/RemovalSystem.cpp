@@ -54,14 +54,15 @@ void RemovalSystem::checkBulletRemoval(entt::registry& registry)
 
 void RemovalSystem::checkEnemyRemoval(entt::registry& registry)
 {
-    auto view = registry.view<Enemy, Position>();
+    auto view = registry.view<Enemy, Position, Name>();
     auto playerView = registry.view<Player, Position>();
     auto playerPosition = playerView.get<Position>(playerView.front()).position;
-    for (auto entity : view)
+    for (auto enemy : view)
     {
-        auto enemyPosition = view.get<Position>(entity);
-        if (CalculateDistance(enemyPosition.position, playerPosition) > 5000.f)
-            RemovalSystem::MarkEntityForDestruction(entity);
+        auto enemyPosition = view.get<Position>(enemy);
+        auto enemyName = view.get<Name>(enemy).name;
+        if (CalculateDistance(enemyPosition.position, playerPosition) > 5000.f && enemyName != "Target")
+            RemovalSystem::MarkEntityForDestruction(enemy);
     }
 }
 
