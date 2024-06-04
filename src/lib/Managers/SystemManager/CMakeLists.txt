@@ -47,6 +47,7 @@ target_link_libraries(${PROJECT_NAME}
     RenderSystem
     DebugSystem
     TutorialSystem
+    AreaGuardSystem
 )
 
 target_precompile_headers(${PROJECT_NAME} PRIVATE "${PCH_DIR}/pch.h")
