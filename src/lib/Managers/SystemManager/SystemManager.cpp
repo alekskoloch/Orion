@@ -38,7 +38,11 @@
 
 
 SystemManager::SystemManager(sf::RenderWindow& window, entt::registry& registry, sf::Event& event) :
-    window(window), registry(registry), event(event), backgroundManager(registry, window), particleSystem(registry), tutorialSystem(window, registry)
+    window(window), registry(registry), event(event),
+    backgroundManager(registry, window),
+    particleSystem(registry),
+    tutorialSystem(window, registry),
+    areaGuardSystem(registry)
 {
 
 }
@@ -149,6 +153,7 @@ void SystemManager::executeUpdateSystems(sf::Time deltaTime)
                 BulletSystem::updateShurikenBullet(this->registry, deltaTime);
                 AccelerationSystem::accelerate(this->registry, deltaTime);
                 MovementSystem::updateMovement(this->registry, deltaTime);
+                this->areaGuardSystem.update(deltaTime);
                 ShieldSystem::updateShield(this->registry, deltaTime);
                 HealthSystem::updateHealth(this->registry);
                 DropSystem::updateDrop(this->registry, deltaTime);
@@ -157,7 +162,7 @@ void SystemManager::executeUpdateSystems(sf::Time deltaTime)
                 CollisionSystem::checkCollisions(this->registry, this->window);
                 PointSystem::update(this->registry, deltaTime);
                 InfoSystem::update(this->registry, deltaTime);
-                this->tutorialSystem.update(deltaTime, this->window, this->questSystem);
+                this->tutorialSystem.update(deltaTime, this->window, this->questSystem, this->areaGuardSystem);
 
                 this->questSystem.update(this->registry, deltaTime);
 
@@ -182,6 +187,7 @@ void SystemManager::executeRenderSystems()
         backgroundManager.draw();
         
         this->particleSystem.draw(this->window);
+        this->areaGuardSystem.draw(this->window);
         RenderSystem::renderEntities(this->window, this->registry);
         InfoSystem::draw(this->registry, this->window);
         if (this->debugMode)

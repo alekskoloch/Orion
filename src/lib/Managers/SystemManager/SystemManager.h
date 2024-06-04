@@ -10,6 +10,7 @@
 #include "QuestSystem.h"
 #include "EnemyGroupSystem.h"
 #include "TutorialSystem.hpp"
+#include "AreaGuardSystem.hpp"
 
 
 #include "BackgroundManager.h"
@@ -47,6 +48,7 @@ private:
     ParticleSystem particleSystem;
     EnemyGroupSystem enemyGroupSystem;
     TutorialSystem tutorialSystem;
+    AreaGuardSystem areaGuardSystem;
 
 
     bool slowMotion = false;
