@@ -7,6 +7,7 @@
 
 #include "NotifySystem.h"
 #include "QuestSystem.h"
+#include "AreaGuardSystem.hpp"
 
 class TutorialSystem
 {
@@ -14,7 +15,7 @@ public:
     TutorialSystem(sf::RenderWindow& window, entt::registry& registry) : window(window), registry(registry) { this->initialize(); }
     void clear();
 
-    void update(sf::Time deltaTime, sf::RenderWindow& window, QuestSystem& questSystem);
+    void update(sf::Time deltaTime, sf::RenderWindow& window, QuestSystem& questSystem, AreaGuardSystem& areaGuardSystem);
 private:
     sf::RenderWindow& window;
     entt::registry& registry;

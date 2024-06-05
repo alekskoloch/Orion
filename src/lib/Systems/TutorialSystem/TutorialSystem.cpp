@@ -7,6 +7,7 @@
 
 #include "player.h"
 #include "experience.h"
+#include "position.h"
 
 void TutorialSystem::clear()
 {
@@ -37,7 +38,7 @@ void TutorialSystem::initializeGreetings()
     });
 }
 
-void TutorialSystem::update(sf::Time deltaTime, sf::RenderWindow& window, QuestSystem& questSystem)
+void TutorialSystem::update(sf::Time deltaTime, sf::RenderWindow& window, QuestSystem& questSystem, AreaGuardSystem& areaGuardSystem)
 {
     this->timeSinceLastMessage += deltaTime.asSeconds();
 
@@ -103,7 +104,7 @@ void TutorialSystem::update(sf::Time deltaTime, sf::RenderWindow& window, QuestS
 
             QuestStage stage3 = QuestStageBuilder()
                 .addDescription("Kill an enemy")
-                .addAction([&window](entt::registry& reg) {
+                .addAction([&window, &areaGuardSystem](entt::registry& reg) {
                     NotifySystem::notifyDialogBox(window,
                         std::vector<std::string>
                             {
@@ -116,15 +117,27 @@ void TutorialSystem::update(sf::Time deltaTime, sf::RenderWindow& window, QuestS
 
                     // TODO: This should be in some tutorial configuration file
                     const float RADIUS = 1500;
-                    const unsigned int ENEMIES_COUNT = 8;
+                    const unsigned int TARGET_COUNT = 8;
+                    const float AREA_SIZE = RADIUS * 4;
+
+                    auto playerPosition = reg.get<Position>(reg.view<Player>().front()).position;
                     
-                    for (int i = 0; i < ENEMIES_COUNT; i++)
+                    for (int i = 0; i < TARGET_COUNT; i++)
                     {
                         float angle = i * 45;
-                        float x = -1000 + RADIUS * cos(angle * 3.14159265 / 180);
-                        float y = -1000 + RADIUS * sin(angle * 3.14159265 / 180);
+                        float x = playerPosition.x + RADIUS * cos(angle * 3.14159265 / 180);
+                        float y = playerPosition.y + RADIUS * sin(angle * 3.14159265 / 180);
 
                         EnemyInitializationSystem::spawnEnemy(reg, sf::Vector2f(x, y), "Target");
+
+                        areaGuardSystem.setGuardArea(sf::FloatRect(
+                            playerPosition.x - AREA_SIZE / 2,
+                            playerPosition.y - AREA_SIZE / 2,
+                            AREA_SIZE,
+                            AREA_SIZE
+                        ));
+
+
                     }
                 })
                 .addCondition(std::make_shared<KillEnemiesCondition>(8))
@@ -132,7 +145,7 @@ void TutorialSystem::update(sf::Time deltaTime, sf::RenderWindow& window, QuestS
 
             QuestStage endStage = QuestStageBuilder()
                 .addDescription("Congratulations!")
-                .addAction([&window](entt::registry& reg) {
+                .addAction([&window, &areaGuardSystem](entt::registry& reg) {
                     NotifySystem::notifyDialogBox(window,
                         std::vector<std::string>
                             {
@@ -143,6 +156,8 @@ void TutorialSystem::update(sf::Time deltaTime, sf::RenderWindow& window, QuestS
                     );
 
                     EventManager::getInstance().trigger(EventManager::Event::EnableEnemySpawning);
+
+                    areaGuardSystem.disableGuardArea();
                 })
                 .addCondition(std::make_shared<DefaultCondition>())
                 .build();
