@@ -71,7 +71,10 @@ void ShieldSystem::shieldActivaton(entt::registry& registry, Shield& shield)
 {
     EnergySystem::enableEnergyRegeneration<Player>(registry);
     if (shield.energyUsed >= shield.energyCost)
+    {
         getShield(registry);
+        EventManager::getInstance().trigger(EventManager::Event::ShieldActivated);
+    }
     shield.energyUsed = 0.f;
 }
 

@@ -5,6 +5,8 @@
 
 #include "ShieldSchema.h"
 
+#include "EventManager.h"
+
 #include "EnergySystem.h"
 #include "SkillSystem.h"
 #include "CooldownSystem.h"

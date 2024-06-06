@@ -19,6 +19,7 @@ target_link_libraries(${PROJECT_NAME} PUBLIC
     sfml-graphics
     EnTT::EnTT
     TextureManager
+    EventManager
     EnergySystem
     CooldownSystem
 )
