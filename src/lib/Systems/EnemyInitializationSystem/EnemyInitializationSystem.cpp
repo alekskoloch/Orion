@@ -42,7 +42,7 @@ void EnemyInitializationSystem::loadEnemyFromConfig(entt::registry& registry, st
     EnemyInitializationSystem::drawEnemyModifiers(registry, newEnemy);
 }
 
-entt::entity EnemyInitializationSystem::spawnEnemy(entt::registry& registry, sf::Vector2f position, std::string enemyType)
+entt::entity EnemyInitializationSystem::spawnEnemy(entt::registry& registry, sf::Vector2f position, std::string enemyType, Modificator modificator)
 {
     std::ifstream configFile(CONFIG_PATH + std::string("enemyConfig.json"));
     if (!configFile.is_open())
@@ -71,7 +71,10 @@ entt::entity EnemyInitializationSystem::spawnEnemy(entt::registry& registry, sf:
                             .setWeapon(enemyJson["weapon"])
                             .setWaypointMovement();
 
-                return enemyBuilder.build();
+                auto newEnemy = enemyBuilder.build();
+                if (modificator != Modificator::None)
+                    registry.emplace<EnemyModificator>(newEnemy, std::vector<Modificator>{modificator});
+                return newEnemy;
             }
         }
     }
