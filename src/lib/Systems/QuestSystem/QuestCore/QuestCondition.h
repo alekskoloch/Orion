@@ -163,3 +163,124 @@ private:
     int requiredKills;
     int currentKills = 0;
 };
+
+class KeyPressedCondition : public IQuestCondition
+{
+public:
+    KeyPressedCondition(sf::Keyboard::Key key) : key(key) {}
+
+    void subscribeEvent() override
+    {
+
+    }
+
+    void unsubscribeEvent() override
+    {
+    
+    }
+
+    bool check(entt::registry& registry) override
+    {
+        return sf::Keyboard::isKeyPressed(key);
+    }
+
+    std::string getProgress()
+    {
+        return "Press the key!";
+    }
+
+    float getTargetDistance(entt::registry& registry) override
+    {
+        return 0.0f;
+    }
+
+    sf::Vector2f getTargetPosition(entt::registry& registry) override
+    {
+        return sf::Vector2f();
+    }
+
+private:
+    sf::Keyboard::Key key;
+};
+
+class PlayerShieldActiveCondition : public IQuestCondition
+{
+public:
+    PlayerShieldActiveCondition() {}
+
+    void subscribeEvent() override
+    {
+        this->subscriberId = EventManager::getInstance().subscribe(EventManager::Event::ShieldActivated, [this]() {
+            this->shieldActive = true;
+        });
+    }
+
+    void unsubscribeEvent() override
+    {
+        EventManager::getInstance().unsubscribe(this->subscriberId);
+    }
+
+    bool check(entt::registry& registry) override
+    {
+        return shieldActive;
+    }
+
+    std::string getProgress()
+    {
+        return "Shield active!";
+    }
+
+    float getTargetDistance(entt::registry& registry) override
+    {
+        return 0.0f;
+    }
+
+    sf::Vector2f getTargetPosition(entt::registry& registry) override
+    {
+        return sf::Vector2f();
+    }
+
+private:
+    bool shieldActive = false;
+};
+
+class PlayerShieldDestroyedCondition : public IQuestCondition
+{
+public:
+    PlayerShieldDestroyedCondition() {}
+
+    void subscribeEvent() override
+    {
+        this->subscriberId = EventManager::getInstance().subscribe(EventManager::Event::ShieldDestroyed, [this]() {
+            this->shieldDestroyed = true;
+        });
+    }
+
+    void unsubscribeEvent() override
+    {
+        EventManager::getInstance().unsubscribe(this->subscriberId);
+    }
+
+    bool check(entt::registry& registry) override
+    {
+        return shieldDestroyed;
+    }
+
+    std::string getProgress()
+    {
+        return "Shield destroyed!";
+    }
+
+    float getTargetDistance(entt::registry& registry) override
+    {
+        return 0.0f;
+    }
+
+    sf::Vector2f getTargetPosition(entt::registry& registry) override
+    {
+        return sf::Vector2f();
+    }
+
+private:
+    bool shieldDestroyed = false;
+};  
