@@ -16,6 +16,8 @@ public:
         NotEnoughEnergy,
         EnemyKilled,
         EnableEnemySpawning,
+        ShieldActivated,
+        ShieldDestroyed,
         Tutorial
     };
 
