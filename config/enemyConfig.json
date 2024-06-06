@@ -11,6 +11,15 @@
             "idleRange": 0.0
         },
         {
+            "name": "Guard",
+            "health": 100.0,
+            "speed": 0.0,
+            "experience": 0,
+            "weapon": 1,
+            "attackRange": 4000.0,
+            "idleRange": 4000.0
+        },
+        {
             "name": "Sparkle",
             "health": 10.0,
             "speed": 600.0,
