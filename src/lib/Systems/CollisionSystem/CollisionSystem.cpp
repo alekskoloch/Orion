@@ -29,6 +29,7 @@ void checkBulletCollitions(entt::registry& registry, std::unordered_set<entt::en
                     {
                         if (shieldPlayerView.get<Shield>(shield).active)
                         {
+                            EventManager::getInstance().trigger(EventManager::Event::ShieldDestroyed);
                             CooldownSystem::setCooldown(registry, registry.view<Player>().front(), "shieldCooldown", 0.f);
                         }
                         else
