@@ -4,7 +4,9 @@
 
 enum class Modificator
 {
-    AllySummon
+    None,
+    TutorialGuard,
+    AllySummon,
 };
 
 struct EnemyModificator
