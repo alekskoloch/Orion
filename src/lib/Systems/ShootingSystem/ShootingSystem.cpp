@@ -104,9 +104,35 @@ void handleEnemyShooting(entt::registry& registry, sf::Time deltaTime, sf::Rende
 
             if (enemyWeapon.currentCooldownTime <= 0.f)
             {
-                enemyWeapon.shot(registry, window, enemyEntity);
-                SoundManager::getInstance().playSound("EnemyShot");
-                enemyWeapon.SetCooldown();
+                //TODO: Refactor this, modificators should be handled in other way
+                bool isTutorialGuard = false;
+        
+                if (registry.any_of<EnemyModificator>(enemyEntity))
+                {
+                    auto& enemyModificator = registry.get<EnemyModificator>(enemyEntity);
+                    for (auto& modificator : enemyModificator.modificators)
+                        if (modificator == Modificator::TutorialGuard)
+                            isTutorialGuard = true;
+                }
+                
+                if (!isTutorialGuard)
+                {
+                    enemyWeapon.shot(registry, window, enemyEntity);
+                    SoundManager::getInstance().playSound("EnemyShot");
+                    enemyWeapon.SetCooldown();
+                }
+                else
+                {
+                    auto playerEntity = registry.view<Player>().front();
+                    auto playerShield = registry.get<Shield>(playerEntity);
+
+                    if (playerShield.active)
+                    {
+                        enemyWeapon.shot(registry, window, enemyEntity);
+                        SoundManager::getInstance().playSound("EnemyShot");
+                        enemyWeapon.SetCooldown();
+                    }
+                }
             }
         }
     }

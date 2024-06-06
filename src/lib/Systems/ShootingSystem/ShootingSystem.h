@@ -20,7 +20,7 @@
 #include "input.h"
 #include "position.h"
 #include "entityState.h"
-
+#include "enemyModificator.h"
 
 #include "MathOperations.h"
 #include "GraphicsOperations.h"
