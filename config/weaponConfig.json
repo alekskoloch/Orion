@@ -41,6 +41,19 @@
             "specialShotCooldown": 5.0
         },
         {
+            "id": 10,
+            "name": "Guard Weapon",
+            "type": 0,
+            "damage": 10.0,
+            "bulletSpeed": 1000.0,
+            "shot": 1,
+            "specialShot": 100,
+            "shotCost": 300.0,
+            "specialShotCost": 1000.0,
+            "shotCooldown": 5.0,
+            "specialShotCooldown": 20.0
+        },
+        {
             "id": 100,
             "name": "Grey Pebble",
             "type": 0,
