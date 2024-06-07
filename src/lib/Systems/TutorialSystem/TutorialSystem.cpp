@@ -8,6 +8,7 @@
 #include "player.h"
 #include "experience.h"
 #include "position.h"
+#include "enemyModificator.h"
 
 void TutorialSystem::clear()
 {
@@ -143,6 +144,27 @@ void TutorialSystem::update(sf::Time deltaTime, sf::RenderWindow& window, QuestS
                 .addCondition(std::make_shared<KillEnemiesCondition>(8))
                 .build();
 
+                QuestStage stage4 = QuestStageBuilder()
+                .addDescription("Shield")
+                .addAction([&window](entt::registry& reg) {
+                    NotifySystem::notifyDialogBox(window,
+                        std::vector<std::string>
+                            {
+                                "Great job hitting the targets!",
+                                "Now, try to defend yourself against an incoming projectile. Use your shield!",
+                                "To do this, hold down the right mouse button",
+                                "until the shield is fully activated, and then let the projectile hit you."
+                            },
+                        "OK", []() {}
+                    );
+
+                    auto playerPosition = reg.get<Position>(reg.view<Player>().front()).position;
+
+                    EnemyInitializationSystem::spawnEnemy(reg, sf::Vector2f(playerPosition.x + 1000.f, playerPosition.y), "Guard", Modificator::TutorialGuard);
+                })
+                .addCondition(std::make_shared<PlayerShieldDestroyedCondition>())
+                .build();
+
             QuestStage endStage = QuestStageBuilder()
                 .addDescription("Congratulations!")
                 .addAction([&window, &areaGuardSystem](entt::registry& reg) {
@@ -154,6 +176,8 @@ void TutorialSystem::update(sf::Time deltaTime, sf::RenderWindow& window, QuestS
                             },
                         "OK", []() {}
                     );
+
+                    RemovalSystem::RemoveAllEnemies(reg);
 
                     EventManager::getInstance().trigger(EventManager::Event::EnableEnemySpawning);
 
@@ -167,6 +191,7 @@ void TutorialSystem::update(sf::Time deltaTime, sf::RenderWindow& window, QuestS
             questBuilder.addStage(stage);
             questBuilder.addStage(stage2);
             questBuilder.addStage(stage3);
+            questBuilder.addStage(stage4);
             questBuilder.addStage(endStage);
             questBuilder.setType(QuestType::Tutorial);
 

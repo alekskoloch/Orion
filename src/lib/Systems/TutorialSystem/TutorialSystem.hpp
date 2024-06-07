@@ -8,6 +8,7 @@
 #include "NotifySystem.h"
 #include "QuestSystem.h"
 #include "AreaGuardSystem.hpp"
+#include "RemovalSystem.h"
 
 class TutorialSystem
 {
