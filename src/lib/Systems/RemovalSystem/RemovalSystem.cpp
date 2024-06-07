@@ -39,6 +39,15 @@ void RemovalSystem::MarkEntityForDestruction(entt::entity& entity)
     entitiesToDestroy.push_back(entity);
 }
 
+void RemovalSystem::RemoveAllEnemies(entt::registry& registry)
+{
+    auto view = registry.view<Enemy>();
+    for (auto entity : view)
+    {
+        RemovalSystem::MarkEntityForDestruction(entity);
+    }
+}
+
 void RemovalSystem::checkBulletRemoval(entt::registry& registry)
 {
     auto view = registry.view<Bullet, Position>();

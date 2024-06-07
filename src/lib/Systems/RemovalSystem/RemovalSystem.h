@@ -18,6 +18,7 @@ public:
     static void update(entt::registry& registry);
 
     static void MarkEntityForDestruction(entt::entity& entity);
+    static void RemoveAllEnemies(entt::registry& registry);
 private:
     static std::vector<entt::entity> entitiesToDestroy;
     static int framesSinceLastExecution;
