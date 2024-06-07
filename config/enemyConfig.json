@@ -15,7 +15,7 @@
             "health": 100.0,
             "speed": 0.0,
             "experience": 0,
-            "weapon": 1,
+            "weapon": 10,
             "attackRange": 4000.0,
             "idleRange": 4000.0
         },
