@@ -15,7 +15,7 @@ AreaGuardSystem::AreaGuardSystem(entt::registry& registry)
 void AreaGuardSystem::initializeAreaRectangle()
 {
     this->areaRectangle.setFillColor(sf::Color::Transparent);
-    this->areaRectangle.setOutlineColor(sf::Color::Red);
+    this->areaRectangle.setOutlineColor(sf::Color::Transparent);
     this->areaRectangle.setOutlineThickness(3.f);
 }
 
