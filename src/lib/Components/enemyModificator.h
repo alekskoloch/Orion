@@ -5,6 +5,7 @@
 enum class Modificator
 {
     None,
+    Immortal,
     TutorialGuard,
     AllySummon,
 };
