@@ -46,6 +46,8 @@ void checkBulletCollitions(entt::registry& registry, std::unordered_set<entt::en
                 }
                 else if constexpr (std::is_same_v<TargetTag, Enemy>)
                 {
+                    bool isImmortal = false;
+
                     auto& enemyEntityStateComponent = registry.get<EntityState>(target);
                     enemyEntityStateComponent.stateMachine->process_event(EventAttack());
 
@@ -55,7 +57,22 @@ void checkBulletCollitions(entt::registry& registry, std::unordered_set<entt::en
 
                     entitiesToDestroy.insert(bullet);
                     auto player = registry.view<Player>().front();
-                    enemyHealthComponent.currentHealthValue -= WeaponsSystem::getWeaponDamage(registry);
+
+                    auto enemyModificator = registry.try_get<EnemyModificator>(target);
+                    if (enemyModificator != nullptr)
+                    {
+                        for (auto modificator : enemyModificator->modificators)
+                        {
+                            if (modificator == Modificator::Immortal)
+                            {
+                                isImmortal = true;
+                                break;
+                            }
+                        }
+                    }
+
+                    if (!isImmortal)
+                        enemyHealthComponent.currentHealthValue -= WeaponsSystem::getWeaponDamage(registry);
                     auto damageInfo = registry.create();
 
                     //TODO: Refactor this!
@@ -65,7 +82,11 @@ void checkBulletCollitions(entt::registry& registry, std::unordered_set<entt::en
                     {
                         std::string damageString;
                         
-                        if (damage - static_cast<int>(damage) == 0.0)
+                        if (isImmortal)
+                        {
+                            damageString = "??";
+                        }
+                        else if (damage - static_cast<int>(damage) == 0.0)
                         {
                             damageString = std::format("{}", static_cast<int>(damage));
                         }
