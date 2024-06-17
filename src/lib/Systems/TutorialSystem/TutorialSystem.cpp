@@ -76,10 +76,19 @@ void TutorialSystem::update(sf::Time deltaTime, sf::RenderWindow& window, QuestS
 
             QuestStage stage = QuestStageBuilder()
                 .addDescription("Find the point of interest")
-                .addAction([](entt::registry& reg) {
+                .addAction([&areaGuardSystem](entt::registry& reg) {
                     int x = 1000;
                     int y = 1000;
                     PointSystem::addPointOfInterest(reg, sf::Vector2f(x, y), "TutorialPoint1", PointOfInterestType::Tutorial);
+
+                    auto playerPosition = reg.get<Position>(reg.view<Player>().front()).position;
+
+                    areaGuardSystem.setGuardArea(sf::FloatRect(
+                        playerPosition.x - 4000,
+                        playerPosition.y - 4000,
+                        8000,
+                        8000
+                    ));
                 })
                 .addCondition(std::make_shared<ReachPointOfInterestCondition>("TutorialPoint1"))
                 .build();
@@ -105,7 +114,7 @@ void TutorialSystem::update(sf::Time deltaTime, sf::RenderWindow& window, QuestS
 
             QuestStage stage3 = QuestStageBuilder()
                 .addDescription("Kill an enemy")
-                .addAction([&window, &areaGuardSystem](entt::registry& reg) {
+                .addAction([&window](entt::registry& reg) {
                     NotifySystem::notifyDialogBox(window,
                         std::vector<std::string>
                             {
@@ -130,15 +139,6 @@ void TutorialSystem::update(sf::Time deltaTime, sf::RenderWindow& window, QuestS
                         float y = playerPosition.y + RADIUS * sin(angle * 3.14159265 / 180);
 
                         EnemyInitializationSystem::spawnEnemy(reg, sf::Vector2f(x, y), "Target");
-
-                        areaGuardSystem.setGuardArea(sf::FloatRect(
-                            playerPosition.x - AREA_SIZE / 2,
-                            playerPosition.y - AREA_SIZE / 2,
-                            AREA_SIZE,
-                            AREA_SIZE
-                        ));
-
-
                     }
                 })
                 .addCondition(std::make_shared<KillEnemiesCondition>(8))
