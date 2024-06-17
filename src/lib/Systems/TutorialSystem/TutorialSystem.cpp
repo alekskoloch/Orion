@@ -23,9 +23,6 @@ void TutorialSystem::initialize()
 
 void TutorialSystem::initializeGreetings()
 {
-    this->welcomeDisplayed = false;
-    this->movingDisplayed = false;
-
     std::vector<std::string> welcomeMessage = {
         "Welcome to Orion! Prepare for an epic journey!",
         "These messages will guide you through the game, providing essential information along the way.",

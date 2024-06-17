@@ -23,7 +23,6 @@ private:
 
     bool welcomeDisplayed = false;
     bool movingDisplayed = false;
-    bool combatDisplayed = false;
 
     void initialize();
 
