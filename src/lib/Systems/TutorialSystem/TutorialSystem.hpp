@@ -29,4 +29,5 @@ private:
     void initializeGreetings();
 
     float timeSinceLastMessage = 0.0f;
+    void updateTutorialTimers(sf::Time deltaTime);
 };

@@ -38,7 +38,7 @@ void TutorialSystem::initializeGreetings()
 
 void TutorialSystem::update(sf::Time deltaTime, sf::RenderWindow& window, QuestSystem& questSystem, AreaGuardSystem& areaGuardSystem)
 {
-    this->timeSinceLastMessage += deltaTime.asSeconds();
+    this->updateTutorialTimers(deltaTime);
 
     if (ConfigManager::getInstance().isTutorialEnabled())
     {
@@ -199,4 +199,9 @@ void TutorialSystem::update(sf::Time deltaTime, sf::RenderWindow& window, QuestS
             questSystem.startQuest(quest);
         }
     }
+}
+
+void TutorialSystem::updateTutorialTimers(sf::Time deltaTime)
+{
+    this->timeSinceLastMessage += deltaTime.asSeconds();
 }
