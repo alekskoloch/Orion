@@ -160,7 +160,10 @@ void TutorialSystem::update(sf::Time deltaTime, sf::RenderWindow& window, QuestS
 
                     auto playerPosition = reg.get<Position>(reg.view<Player>().front()).position;
 
-                    EnemyInitializationSystem::spawnEnemy(reg, sf::Vector2f(playerPosition.x + 1000.f, playerPosition.y), "Guard", Modificator::TutorialGuard);
+                    EnemyInitializationSystem::spawnEnemy(reg, sf::Vector2f(playerPosition.x + 1000.f, playerPosition.y), "Guard", {
+                        Modificator::Immortal,
+                        Modificator::TutorialGuard
+                    });
                 })
                 .addCondition(std::make_shared<PlayerShieldDestroyedCondition>())
                 .build();
