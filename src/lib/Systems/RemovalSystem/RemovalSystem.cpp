@@ -70,7 +70,7 @@ void RemovalSystem::checkEnemyRemoval(entt::registry& registry)
     {
         auto enemyPosition = view.get<Position>(enemy);
         auto enemyName = view.get<Name>(enemy).name;
-        if (CalculateDistance(enemyPosition.position, playerPosition) > 5000.f && enemyName != "Target")
+        if (CalculateDistance(enemyPosition.position, playerPosition) > 5000.f && enemyName != "Target" && enemyName != "Guard")
             RemovalSystem::MarkEntityForDestruction(enemy);
     }
 }
