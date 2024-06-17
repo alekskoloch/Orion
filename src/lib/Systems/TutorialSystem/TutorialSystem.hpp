@@ -4,7 +4,6 @@
 #include <entt/entt.hpp>
 
 #include "EventManager.h"
-
 #include "NotifySystem.h"
 #include "QuestSystem.h"
 #include "AreaGuardSystem.hpp"
@@ -27,7 +26,10 @@ private:
     void initialize();
 
     void initializeGreetings();
-
-    float timeSinceLastMessage = 0.0f;
+    void displayWelcomeMessage();
+    void displayMovementMessage(QuestSystem& questSystem, AreaGuardSystem& areaGuardSystem);
+    void createQuestStages(QuestSystem& questSystem, AreaGuardSystem& areaGuardSystem);
     void updateTutorialTimers(sf::Time deltaTime);
+    
+    float timeSinceLastMessage = 0.0f;
 };
