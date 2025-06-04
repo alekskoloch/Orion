@@ -11,6 +11,16 @@
 
 void TutorialSystem::clear()
 {
+    if (this->tutorialSubscriberId != 0)
+    {
+        EventManager::getInstance().unsubscribe(this->tutorialSubscriberId);
+        this->tutorialSubscriberId = 0;
+    }
+
+    this->welcomeDisplayed = false;
+    this->movingDisplayed = false;
+    this->timeSinceLastMessage = 0.0f;
+
     this->initializeGreetings();
 }
 
@@ -30,7 +40,7 @@ void TutorialSystem::initializeGreetings()
 
     std::string buttonMessage = "Play";
     
-    EventManager::getInstance().subscribe(EventManager::Event::Tutorial, [this, welcomeMessage, buttonMessage]() {
+    this->tutorialSubscriberId = EventManager::getInstance().subscribe(EventManager::Event::Tutorial, [this, welcomeMessage, buttonMessage]() {
         NotifySystem::notifyDialogBox(this->window, welcomeMessage, buttonMessage, [this]() {});
     });
 }
