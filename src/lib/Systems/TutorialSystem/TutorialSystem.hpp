@@ -23,6 +23,8 @@ private:
     bool welcomeDisplayed = false;
     bool movingDisplayed = false;
 
+    unsigned int tutorialSubscriberId{0};
+
     void initialize();
 
     void initializeGreetings();
