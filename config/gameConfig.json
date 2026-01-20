@@ -1,8 +1,8 @@
 {
     "frameRateLimit": 144,
     "resolution": {
-        "height": 2160,
-        "width": 3840
+        "height": 1440,
+        "width": 2560
     },
-    "windowMode": "Fullscreen"
+    "windowMode": "Windowed"
 }

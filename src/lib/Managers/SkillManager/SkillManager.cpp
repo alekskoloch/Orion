@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "SkillManager.h"
 
+SkillManager::~SkillManager() = default;
+
 SkillManager::SkillManager(sf::RenderWindow& window, entt::registry& registry)
     : window(window), registry(registry), dialogBox(window, {"Are you sure you want to unlock this skill?"}, this->font), box(600.f * ConfigManager::getInstance().getScale(), 300.f * ConfigManager::getInstance().getScale(), sf::Vector2f(350.f * ConfigManager::getInstance().getScale(), 200.f * ConfigManager::getInstance().getScale()), this->font)
 {

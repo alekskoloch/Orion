@@ -10,7 +10,7 @@
 //TODO: Resolve this dependency
 #include "../Systems/SkillSystem/SkillSystem.h"
 
-#include "../entities/WeaponBuilder.h"
+#include "../Entities/WeaponBuilder.h"
 
 #include "weapon.h"
 #include "skills.h"

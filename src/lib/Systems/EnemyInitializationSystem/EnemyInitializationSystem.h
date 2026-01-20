@@ -9,7 +9,7 @@
 
 #include "GraphicsOperations.h"
 
-#include "../entities/EnemyBuilder.h"
+#include "../Entities/EnemyBuilder.h"
 
 #include "WeaponsSystem.h"
 

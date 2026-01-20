@@ -2,6 +2,7 @@
 /build/
 
 # Ignore files created by IDEs
+/.cache/
 /.idea/
 /.vscode/
 *.user

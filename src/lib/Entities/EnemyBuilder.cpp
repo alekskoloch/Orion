@@ -69,7 +69,7 @@ EnemyBuilder& EnemyBuilder::addHealth(float health)
 EnemyBuilder& EnemyBuilder::addExperience(float experience)
 {
     //TODO: Level is temporary
-    registry.emplace<Experience>(enemy, 1, experience);
+    registry.emplace<Experience>(enemy, 1u, static_cast< unsigned int >( experience ) );
 
     return *this;
 }

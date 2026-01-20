@@ -35,6 +35,8 @@ public:
     SkillManager(const SkillManager&) = delete;
     void operator=(const SkillManager&) = delete;
 
+    ~SkillManager();
+
     void update(sf::Time& deltaTime);
     void draw();
 
