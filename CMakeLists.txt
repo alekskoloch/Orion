@@ -4,6 +4,8 @@ add_compile_definitions(_USE_MATH_DEFINES)
 
 project(Orion)
 
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
 add_compile_options(-w)
 
 add_definitions(-DASSETS_PATH=\"${CMAKE_SOURCE_DIR}/assets/\")

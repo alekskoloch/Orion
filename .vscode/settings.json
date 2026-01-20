@@ -1,0 +1,15 @@
+{
+    "C_Cpp.intelliSenseEngine": "disabled",
+    "clangd.path": "c:/tools/clang+llvm/bin/clangd.exe",
+    "clangd.arguments": [
+        "--compile-commands-dir=${workspaceFolder}/build",
+        "--background-index",
+        "--clang-tidy",
+        "--completion-style=detailed",
+        "--header-insertion=never",
+        "--pch-storage=memory"
+    ],
+    "[cpp]": {
+        "editor.defaultFormatter": "llvm-vs-code-extensions.vscode-clangd"
+    }
+}

@@ -1,0 +1,16 @@
+Checks: >
+  llvm-*,
+  clang-analyzer-*,
+  bugprone-*,
+  performance-*,
+  portability-*,
+  readability-*,
+  cppcoreguidelines-*,
+  modernize-*,
+  hicpp-*,
+  cert-*,
+  misc-*,
+  -llvm-include-order
+WarningsAsErrors: ''
+HeaderFilterRegex: '.*'
+FormatStyle: file
