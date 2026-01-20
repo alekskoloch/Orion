@@ -18,11 +18,15 @@ void SkillManager::update(sf::Time& deltaTime)
     this->updateBox();
     this->box.update();
 
-    for (auto& star : this->activeStars)
-        star->update(deltaTime.asSeconds());
+    for (size_t i = 0; i < this->activeStars.size(); ++i)
+    {
+        this->activeStars[i]->update(deltaTime.asSeconds());
+    }
 
-    for (auto& skill : this->skills)
-        skill->update(deltaTime);
+    for (size_t i = 0; i < this->skills.size(); ++i)
+    {
+        this->skills[i]->update(deltaTime);
+    }
 
     if (this->dialogBox.getState() != GUIDialogBoxState::Hidden)
         this->dialogBox.update();

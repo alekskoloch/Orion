@@ -193,9 +193,12 @@ void EnemyGroupSystem::updateMemberSpeed(entt::registry& registry)
         
         if (memberWaypointMovement.waypoints.size() > 0)
         {
-            if (CalculateDistance(memberPosition, memberWaypointMovement.waypoints[memberWaypointMovement.currentWaypointIndex]) < 100.f)
+            if (memberWaypointMovement.currentWaypointIndex < memberWaypointMovement.waypoints.size()) 
             {
-                memberComponent.reachedLeaderPosition = true;
+                if (CalculateDistance(memberPosition, memberWaypointMovement.waypoints[memberWaypointMovement.currentWaypointIndex]) < 100.f)
+                {
+                    memberComponent.reachedLeaderPosition = true;
+                }
             }
         }
 
