@@ -1,0 +1,17 @@
+Language: Cpp
+Standard: Auto
+BasedOnStyle: LLVM
+SpacesInParentheses: true
+SpacesInSquareBrackets: true
+SpacesInAngles: Always
+SpaceBeforeParens: ControlStatements
+BreakBeforeBraces: Allman
+IndentWidth: 4
+TabWidth: 4
+UseTab: Never
+PointerAlignment: Left
+ColumnLimit: 100
+AccessModifierOffset: -4
+SortIncludes: true
+MaxEmptyLinesToKeep: 1
+KeepEmptyLinesAtTheStartOfBlocks: false

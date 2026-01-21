@@ -1,7 +1,7 @@
-#include "Game.h"
 #include "ConfigManager.hpp"
+#include "Game.h"
 
-int main()
+auto main() -> int
 {
     ConfigManager::getInstance().loadConfig();
 
