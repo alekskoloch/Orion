@@ -15,7 +15,7 @@ void GUIStar::update(float deltaTime)
     if (!this->exists)
     {
         this->alphaChannel = std::clamp(this->alphaChannel + MaxAlpha * (deltaTime / this->flickerTime), 0.f, static_cast<float>(MaxAlpha));
-        this->color.a = static_cast<sf::Uint8>(this->alphaChannel);
+        this->color.a = static_cast<std::uint8_t>(this->alphaChannel);
         this->star.setFillColor(this->color);
 
         if (this->alphaChannel >= MaxAlpha)
@@ -34,7 +34,7 @@ void GUIStar::handleFlicker(float deltaTime)
 {
     float alphaDelta = MaxAlpha * (deltaTime / this->flickerTime);
     this->alphaChannel = std::clamp(this->alphaChannel + (this->isDarker ? -alphaDelta : alphaDelta), 0.f, static_cast<float>(MaxAlpha));
-    this->color.a = static_cast<sf::Uint8>(this->alphaChannel);
+    this->color.a = static_cast<std::uint8_t>(this->alphaChannel);
     this->star.setFillColor(this->color);
 
     if (this->alphaChannel <= 0.f || this->alphaChannel >= MaxAlpha)

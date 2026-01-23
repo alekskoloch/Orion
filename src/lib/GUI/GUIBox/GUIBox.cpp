@@ -12,19 +12,18 @@ GUIBox::GUIBox(float width, float height, sf::Vector2f position, sf::Font& font,
 
 void GUIBox::update()
 {
-    if (!this->textUpdated)
+    if ( !this->textUpdated )
     {
-        for (int i = 0; i < this->texts.size(); i++)
+        for ( int i = 0; i < this->texts.size(); i++ )
         {
-            this->texts[i]->setOrigin(
-                this->texts[i]->getGlobalBounds().width / 2.f,
-                this->texts[i]->getGlobalBounds().height / 2.f
-            );
+            this->texts[ i ]->setOrigin(
+                sf::Vector2f{ this->texts[ i ]->getGlobalBounds().size.x / 2.f,
+                              this->texts[ i ]->getGlobalBounds().size.y / 2.f } );
 
-            this->texts[i]->setPosition(
-                this->position.x,
-                this->position.y - this->height / 2 + (40 * ConfigManager::getInstance().getScale()) + i * (40 * ConfigManager::getInstance().getScale())
-            );
+            this->texts[ i ]->setPosition( sf::Vector2f{
+                this->position.x, this->position.y - this->height / 2 +
+                                      ( 40 * ConfigManager::getInstance().getScale() ) +
+                                      i * ( 40 * ConfigManager::getInstance().getScale() ) } );
         }
 
         this->textUpdated = true;
@@ -33,9 +32,7 @@ void GUIBox::update()
 
 void GUIBox::addText(std::string text)
 {
-    sf::Text textToAdd;
-    textToAdd.setString(text);
-    textToAdd.setFont(this->font);
+    auto textToAdd{ sf::Text{ this->font, text } };
     textToAdd.setCharacterSize(30 * ConfigManager::getInstance().getScale());
     textToAdd.setFillColor(sf::Color::White);
     textToAdd.setOutlineColor(sf::Color::Black);
@@ -59,7 +56,7 @@ void GUIBox::initializeBox(float width, float height, sf::Vector2f position, sf:
     this->box.setOutlineColor(outlineColor);
     this->box.setOutlineThickness(outlineThickness);
 
-    this->box.setOrigin(width / 2.f, height / 2.f);
+    this->box.setOrigin( sf::Vector2f{ width / 2.f, height / 2.f } );
 }
 
 void GUIBox::draw(sf::RenderTarget& target, sf::RenderStates states) const

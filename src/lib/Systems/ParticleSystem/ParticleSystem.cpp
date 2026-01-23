@@ -114,10 +114,10 @@ void ParticleSystem::adjustParticlesVisibility()
         {            
             float interpolation = particle->lifetime / lifetime;
             sf::Color interpolatedColor(
-                static_cast<sf::Uint8>(startColor.r + (endColor.r - startColor.r) * (1 - interpolation)),
-                static_cast<sf::Uint8>(startColor.g + (endColor.g - startColor.g) * (1 - interpolation)),
-                static_cast<sf::Uint8>(startColor.b + (endColor.b - startColor.b) * (1 - interpolation)),
-                static_cast<sf::Uint8>(255 * interpolation)
+                static_cast<std::uint8_t>(startColor.r + (endColor.r - startColor.r) * (1 - interpolation)),
+                static_cast<std::uint8_t>(startColor.g + (endColor.g - startColor.g) * (1 - interpolation)),
+                static_cast<std::uint8_t>(startColor.b + (endColor.b - startColor.b) * (1 - interpolation)),
+                static_cast<std::uint8_t>(255 * interpolation)
             );
 
             particle->particle.setFillColor(interpolatedColor);

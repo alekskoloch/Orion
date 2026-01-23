@@ -33,7 +33,7 @@ void SoundManager::playLoopedSound(const std::string& soundName)
     if(soundBuffers.find(soundName) == soundBuffers.end())
         loadSound(soundName, ASSETS_PATH + std::string("sounds/") + soundName + ".wav");
     sounds[soundName].setBuffer(soundBuffers.at(soundName));
-    sounds[soundName].setLoop(true);
+    sounds[soundName].setLooping(true);
     sounds[soundName].play();
 }
 
@@ -69,7 +69,7 @@ void SoundManager::playMusic(const std::string& musicName)
 void SoundManager::setLoop(const std::string& soundName, bool loop)
 {
     if (music.find(soundName) != music.end())
-        music[soundName]->setLoop(loop);
+        music[soundName]->setLooping(loop);
     else
         throw std::runtime_error("Sound not found: " + soundName);
 }

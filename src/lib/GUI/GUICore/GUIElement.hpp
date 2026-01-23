@@ -364,7 +364,7 @@ public:
 private:
     sf::Color color;
     sf::Color originalColor;
-    sf::Uint8 alpha;
+    std::uint8_t alpha;
     bool colorSet = false;
 };
 

@@ -37,13 +37,13 @@ void GUICircleSegment::update(float deltaTime)
     }
 }
 
-sf::Color GUICircleSegment::interpolateColor(sf::Color color1, sf::Color color2, float t)
+sf::Color GUICircleSegment::interpolateColor( sf::Color color1, sf::Color color2, float t )
 {
     sf::Color color;
-    color.r = static_cast<sf::Uint8>((1 - t) * color1.r + t * color2.r);
-    color.g = static_cast<sf::Uint8>((1 - t) * color1.g + t * color2.g);
-    color.b = static_cast<sf::Uint8>((1 - t) * color1.b + t * color2.b);
-    color.a = static_cast<sf::Uint8>((1 - t) * color1.a + t * color2.a);
+    color.r = static_cast< std::uint8_t >( ( 1 - t ) * color1.r + t * color2.r );
+    color.g = static_cast< std::uint8_t >( ( 1 - t ) * color1.g + t * color2.g );
+    color.b = static_cast< std::uint8_t >( ( 1 - t ) * color1.b + t * color2.b );
+    color.a = static_cast< std::uint8_t >( ( 1 - t ) * color1.a + t * color2.a );
 
     return color;
 }

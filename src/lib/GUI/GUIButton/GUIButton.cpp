@@ -4,9 +4,9 @@
 GUIButton::GUIButton(const sf::Vector2f& position, const sf::Vector2f& size,
                      const std::string& textString, unsigned int maxFontSize, const sf::Color& normalColor,
                      const sf::Color& hoverColor, const sf::Color& activeColor, ButtonStyle style)
-    : normalColor(normalColor), hoverColor(hoverColor), activeColor(activeColor), style(style), maxFontSize(maxFontSize)
+    : normalColor(normalColor), hoverColor(hoverColor), activeColor(activeColor), style(style), maxFontSize(maxFontSize), text{ FontManager::getInstance().getFont("font"), textString }
 {
-    this->setOrigin(size.x / 2.f, size.y / 2.f);
+    this->setOrigin( sf::Vector2f{ size.x / 2.f, size.y / 2.f } );
     this->setPosition(position);
     this->setSize(size);
     this->setFillColor(normalColor);
@@ -21,8 +21,6 @@ GUIButton::GUIButton(const sf::Vector2f& position, const sf::Vector2f& size,
         this->setOutlineThickness(0);
     }
 
-    text.setFont(FontManager::getInstance().getFont("font"));
-    text.setString(textString);
     text.setFillColor(sf::Color::White);
     adjustTextSize();
 }
@@ -59,7 +57,8 @@ void GUIButton::update(const sf::Vector2f& mousePos, bool& mouseReleased)
 {
     if (this->getGlobalBounds().contains(static_cast<sf::Vector2f>(mousePos)))
     {
-        if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && mouseReleased)
+        
+        if (sf::Mouse::isButtonPressed( sf::Mouse::Button::Left ) && mouseReleased)
         {
             this->setFillColor(activeColor);
             mouseReleased = false;
@@ -91,15 +90,15 @@ void GUIButton::draw(sf::RenderTarget& target, sf::RenderStates states) const
 void GUIButton::adjustTextSize()
 {
     auto buttonBounds = this->getGlobalBounds();
-    float maxTextWidth = buttonBounds.width - 20.f;
+    float maxTextWidth = buttonBounds.size.x - 20.f;
 
     text.setCharacterSize(maxFontSize);
-    while (text.getGlobalBounds().width > maxTextWidth && text.getCharacterSize() > 1)
+    while (text.getGlobalBounds().size.x > maxTextWidth && text.getCharacterSize() > 1)
     {
         text.setCharacterSize(text.getCharacterSize() - 1);
     }
 
     sf::FloatRect textRect = text.getLocalBounds();
-    text.setOrigin(textRect.left + textRect.width/2.0f, textRect.top + textRect.height/2.0f);
+    text.setOrigin( textRect.getCenter() );
     text.setPosition(this->getPosition());
 }

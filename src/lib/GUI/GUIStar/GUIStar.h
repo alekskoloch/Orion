@@ -25,7 +25,7 @@ private:
     bool isDarker = true;
     float alphaChannel = 0.f;
 
-    static constexpr sf::Uint8 MaxAlpha = 255;
+    static constexpr std::uint8_t MaxAlpha = 255;
 
     void handleFlicker(float deltaTime);
 };
