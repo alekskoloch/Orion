@@ -8,12 +8,9 @@
 #include "FontManager.h"
 #include "SoundManager.h"
 
-//TODO: REFACTOR ALL THIS STUFF, FOR NOW IT'S JUST A TEMPORARY SOLUTION
-
 const float GLOBAL_OUTLINE = 3.f;
 const sf::Color TEST_ORANGE_COLOR = sf::Color(123, 176, 230);
 const unsigned int CHARACTER_SIZE = 20;
-
 
 enum class GUIElementType
 {
@@ -258,7 +255,6 @@ public:
 private:
     bool fadeIn = false;
     float outlineOpacity;
-    //TODO: make this configurable
     float speed = 200.f;
     float minRange = 50.f;
     float maxRange = 255.f;
@@ -303,7 +299,7 @@ public:
     {
         if (active)
         {
-            float angle = std::fmod(this->shape->getRotation(), 360.f);
+            float angle = std::fmod(this->shape->getRotation().asDegrees(), 360.f);
             float offsetX = this->effectStrength * std::cos(2 * angle * (M_PI / 180.f)) * (angle >= 180.f ? 1 : -1);
             float offsetY = -this->effectStrength * std::sin(2* angle * (M_PI / 180.f) - (M_PI / 2)) * (angle >= 90.f && angle < 270.f ? 1 : -1);
             shape->setPosition(basePosition + sf::Vector2f(offsetX, offsetY));
@@ -435,7 +431,6 @@ private:
 
     sf::Vector2f basePosition;
 
-
     float outlineOpacity;
     bool fadeIn;
 
@@ -448,22 +443,25 @@ private:
 class GUIShapeText : public GUIShape
 {
 public:
-    using GUIShape::GUIShape;
+    GUIShapeText(std::unique_ptr<sf::Shape> shape)
+        : GUIShape(std::move(shape)), 
+          textObject(FontManager::getInstance().getFont("font"))
+    {}
 
     void setText(const std::string& text, unsigned int characterSize = CHARACTER_SIZE)
     {
-        font = FontManager::getInstance().getFont("font");
+        const sf::Font& fontRef = FontManager::getInstance().getFont("font");
 
-        sf::Text newText{ font };
-        newText.setString(text);
-
-        newText.setCharacterSize(characterSize);
+        sf::Text newText(fontRef, text, characterSize);
 
         sf::FloatRect textBounds = newText.getLocalBounds();
         sf::FloatRect shapeBounds = getGlobalBounds();
+        
         newText.setOrigin(textBounds.getCenter());
-        newText.setPosition( sf::Vector2f{ shapeBounds.position.x + shapeBounds.size.x / 2.0f,
-                            shapeBounds.position.y + shapeBounds.size.y / 2.0f } );
+        newText.setPosition({ 
+            shapeBounds.position.x + shapeBounds.size.x / 2.0f,
+            shapeBounds.position.y + shapeBounds.size.y / 2.0f 
+        });
 
         newText.setFillColor(sf::Color::White);
 
@@ -491,7 +489,6 @@ public:
     virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override
     {
         GUIShape::draw(target, states);
-
         target.draw(textObject, states);
     }
 
@@ -500,7 +497,6 @@ public:
 private:
     std::vector<std::string> texts;
     sf::Text textObject;
-    sf::Font font;
 };
 
 class GUIElement : public sf::Drawable
@@ -565,7 +561,7 @@ public:
 
         std::unique_ptr<GUIShapeText> base = std::make_unique<GUIShapeText>(ShapeFactory::createBasicRectangle(position, sf::Vector2f(size.x - buttonMargin * 2, size.y - buttonMargin * 2)));
         base->addEffect(std::make_unique<PlaySoundEffect>(base->getShapePointer(), EffectType::Hover, "ButtonHover"));
-        //TODO: sound effect on click is temporary
+        
         base->addEffect(std::make_unique<PlaySoundEffect>(base->getShapePointer(), EffectType::Active, "SkillUnlock"));
 
 
@@ -647,7 +643,6 @@ public:
             .addShape(std::move(line3))
             .addShape(std::move(line4));
 
-        // return builder.build();
         return std::make_unique<GUIElement>(builder.build());
     }
 
@@ -690,12 +685,12 @@ public:
         ));
 
         arrowRight->setAsInteractiveElement(
-            [base = base.get(), characterSize]() mutable {
-                base->setText(base->getTextIndex() + 1, characterSize);
+            [base_ptr = base.get(), characterSize]() mutable {
+                base_ptr->setText(base_ptr->getTextIndex() + 1, characterSize);
             }
         );
         arrowRight->addEffect(std::make_unique<ChangeOutlineColorEffectOnHover>(arrowRight->getShapePointer(), EffectType::Hover, TEST_ORANGE_COLOR));
-       
+        
         arrowRight->addEffect(std::make_unique<ChangeFillColor>(arrowRight->getShapePointer(), EffectType::Idle, sf::Color::Black));
         arrowRight->addEffect(std::make_unique<ChangeFillColor>(arrowRight->getShapePointer(), EffectType::Hover, sf::Color::Black));
         arrowRight->addEffect(std::make_unique<ChangeFillColor>(arrowRight->getShapePointer(), EffectType::Active, TEST_ORANGE_COLOR));
@@ -708,8 +703,8 @@ public:
         ));
 
         arrowLeft->setAsInteractiveElement(
-            [base = base.get(), characterSize]() mutable {
-                base->setText(base->getTextIndex() - 1, characterSize);
+            [base_ptr = base.get(), characterSize]() mutable {
+                base_ptr->setText(base_ptr->getTextIndex() - 1, characterSize);
             }
         );
         arrowLeft->addEffect(std::make_unique<ChangeOutlineColorEffectOnHover>(arrowLeft->getShapePointer(), EffectType::Hover, TEST_ORANGE_COLOR));

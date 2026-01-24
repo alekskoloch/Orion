@@ -1,9 +1,13 @@
 #include "pch.h"
 #include "GUIMinimap.h"
 
-GUIMinimap::GUIMinimap(sf::RenderWindow& window, entt::registry& registry, std::vector<Quest>& quests)
-    : window(window), registry(registry), font(FontManager::getInstance().getFont("font")), quests(quests), playerMinimapSprite( CreateSprite( "PLAYER_MINIMAP_TEXTURE" ) ), activeQuestMinimapSprite( CreateSprite( "ACTIVE_QUEST_MINIMAP_TEXTURE" ) ),
-    playerCoordinatesText{ this->font }, activeQuestDescriptionText( this->font ), activeQuestTitleText( this->font ), activeQuestDistanceText( this->font )
+GUIMinimap::GUIMinimap( sf::RenderWindow& window, entt::registry& registry,
+                        std::vector< Quest >& quests )
+    : window( window ), registry( registry ), font( FontManager::getInstance().getFont( "font" ) ),
+      quests( quests ), playerMinimapSprite( CreateSprite( "PLAYER_MINIMAP_TEXTURE" ) ),
+      activeQuestMinimapSprite( CreateSprite( "ACTIVE_QUEST_MINIMAP_TEXTURE" ) ),
+      playerCoordinatesText{ this->font }, activeQuestDescriptionText( this->font ),
+      activeQuestTitleText( this->font ), activeQuestDistanceText( this->font )
 {
     initializationMinimap();
     initializePlayerCoordinatesText();

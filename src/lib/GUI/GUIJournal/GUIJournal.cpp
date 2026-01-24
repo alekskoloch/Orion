@@ -9,7 +9,7 @@ GUIJournal::GUIJournal( sf::RenderWindow& window, entt::registry& registry,
     this->initializeGUIJournal();
 }
 
-void GUIJournal::processInput(sf::Event& event)
+void GUIJournal::processInput(const sf::Event& event)
 {
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::J) && this->isButtonReleased)
     {
@@ -194,7 +194,7 @@ void GUIJournal::initializeTitleText()
 sf::Text GUIJournal::getJournalStyleText(const std::string text, const unsigned int characterSize, const sf::Color color)
 {
     sf::Text journalStyleText{this->font};
-    journalStyleText.setCharacterSize(characterSize * ConfigManager::getInstance().getScale());
+    journalStyleText.setCharacterSize(static_cast<unsigned int>(characterSize * ConfigManager::getInstance().getScale()));
     journalStyleText.setFillColor(color);
     journalStyleText.setString(text);
     journalStyleText.setOrigin(journalStyleText.getGlobalBounds().getCenter() );
@@ -208,7 +208,7 @@ void GUIJournal::initializeMaxVisibleButtons()
 
 unsigned int GUIJournal::calculateMaxVisibleButtons()
 {
-    return std::floor((this->selectBox.getSize().y - journal::BUTTON_HEIGHT) / journal::BUTTON_HEIGHT);
+    return static_cast<unsigned int>(std::floor((this->selectBox.getSize().y - journal::BUTTON_HEIGHT) / journal::BUTTON_HEIGHT));
 }
 
 void GUIJournal::initializeButtons()
@@ -257,7 +257,7 @@ GUIButton GUIJournal::getJournalButtonStyle(const std::string text, const sf::Ve
         position,
         size,
         text,
-        journal::SMALL_CHARACTER_SIZE * ConfigManager::getInstance().getScale(),
+        static_cast<unsigned int>(journal::SMALL_CHARACTER_SIZE * ConfigManager::getInstance().getScale()),
         journal::BUTTON_COLOR,
         journal::BUTTON_HOVER_COLOR,
         journal::BUTTON_ACTIVE_COLOR,
@@ -374,8 +374,8 @@ void GUIJournal::setContentText()
                 sf::Color statusColor = quest.completed ? journal::POSITIVE_TEXT_COLOR : sf::Color::White;
                 sf::Text statusText = this->getJournalStyleText(statusString, journal::CHARACTER_SIZE, statusColor);
                 statusText.setPosition(
-                    this->contentBox.getPosition().x,
-                    this->contentBox.getPosition().y + this->contentBox.getSize().y / 2.f - statusText.getGlobalBounds().getSize().y / 2.f - journal::MARGIN
+                    { this->contentBox.getPosition().x,
+                    this->contentBox.getPosition().y + this->contentBox.getSize().y / 2.f - statusText.getGlobalBounds().size.y / 2.f - journal::MARGIN }
                 );
                 this->contentText.push_back(statusText);
             }

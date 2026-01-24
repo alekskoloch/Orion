@@ -98,6 +98,11 @@ void SkillManager::loadSkillFromConfig(std::string skillName, std::ifstream& con
     nlohmann::json configJson;
     configFile >> configJson;
 
+    auto textureSkillName = skillName;
+    textureSkillName.erase(std::remove(textureSkillName.begin(), textureSkillName.end(), ' '), textureSkillName.end());
+
+    GUISkill::loadTexturesIntoManager( textureSkillName );
+
     if (!configJson.contains("skills") || !configJson["skills"].is_array())
         throw std::runtime_error("Could not find skills array in config file");
     else

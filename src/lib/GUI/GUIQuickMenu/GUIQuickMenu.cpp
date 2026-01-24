@@ -81,6 +81,12 @@ void GUIQuickMenu::initializeQuickMenu()
     this->quickMenuIcons.clear();
     this->quickMenuIcons.reserve( TILES_NUMBER + 1 );
 
+    for( int i = 0; i < TILES_NUMBER + 1; i++ )
+    {
+        this->quickMenuTiles.push_back( CreateSprite("INACTIVE_TILE") );
+        this->quickMenuIcons.push_back( CreateSprite("INACTIVE_TILE") );
+    }
+
     for (int i = 0; i < TILES_NUMBER; i++)
     {
         this->quickMenuTiles[i] = CreateSprite("INACTIVE_TILE");

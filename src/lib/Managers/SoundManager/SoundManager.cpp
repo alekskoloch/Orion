@@ -1,5 +1,6 @@
-#include "pch.h"
 #include "SoundManager.h"
+#include "pch.h"
+
 
 SoundManager& SoundManager::getInstance()
 {
@@ -7,69 +8,85 @@ SoundManager& SoundManager::getInstance()
     return instance;
 }
 
-void SoundManager::loadSound(const std::string& soundName, const std::string& soundPath)
+void SoundManager::loadSound( const std::string& soundName, const std::string& soundPath )
 {
-    if(soundBuffers.find(soundName) != soundBuffers.end())
+    if ( soundBuffers.find( soundName ) != soundBuffers.end() )
         return;
 
     sf::SoundBuffer soundBuffer;
 
-    if(!soundBuffer.loadFromFile(soundPath))
-        throw std::runtime_error("Failed to load sound: " + soundPath);
+    if ( !soundBuffer.loadFromFile( soundPath ) )
+        throw std::runtime_error( "Failed to load sound: " + soundPath );
 
-    soundBuffers[soundName] = std::move(soundBuffer);
+    soundBuffers[ soundName ] = std::move( soundBuffer );
 }
 
-void SoundManager::playSound(const std::string& soundName)
+void SoundManager::playSound( const std::string& soundName )
 {
-    if(soundBuffers.find(soundName) == soundBuffers.end())
-        loadSound(soundName, ASSETS_PATH + std::string("sounds/") + soundName + ".wav");
-    sounds[soundName].setBuffer(soundBuffers.at(soundName));
-    sounds[soundName].play();
-}
-
-void SoundManager::playLoopedSound(const std::string& soundName)
-{
-    if(soundBuffers.find(soundName) == soundBuffers.end())
-        loadSound(soundName, ASSETS_PATH + std::string("sounds/") + soundName + ".wav");
-    sounds[soundName].setBuffer(soundBuffers.at(soundName));
-    sounds[soundName].setLooping(true);
-    sounds[soundName].play();
-}
-
-void SoundManager::stopLoopedSound(const std::string& soundName)
-{
-    if(soundBuffers.find(soundName) == soundBuffers.end())
+    if ( soundBuffers.find( soundName ) == soundBuffers.end() )
         return;
-    sounds[soundName].stop();
+
+    if ( sounds.find( soundName ) == sounds.end() )
+    {
+        sounds.emplace( soundName, sf::Sound( soundBuffers.at( soundName ) ) );
+    }
+
+    sounds.at( soundName ).play();
 }
 
-bool SoundManager::isLoopedSoundPlaying(const std::string& soundName)
+void SoundManager::playLoopedSound( const std::string& soundName )
 {
-    if(soundBuffers.find(soundName) == soundBuffers.end())
+    if ( soundBuffers.find( soundName ) == soundBuffers.end() )
+        loadSound( soundName, ASSETS_PATH + std::string( "sounds/" ) + soundName + ".wav" );
+
+    if ( sounds.find( soundName ) == sounds.end() )
+    {
+        sounds.emplace( soundName, sf::Sound( soundBuffers.at( soundName ) ) );
+    }
+
+    auto& sound = sounds.at( soundName );
+    sound.setLooping( true );
+    sound.play();
+}
+
+void SoundManager::stopLoopedSound( const std::string& soundName )
+{
+    auto it = sounds.find( soundName );
+    if ( it != sounds.end() )
+    {
+        it->second.stop();
+    }
+}
+
+bool SoundManager::isLoopedSoundPlaying( const std::string& soundName )
+{
+    auto it = sounds.find( soundName );
+    if ( it == sounds.end() )
         return false;
-    return sounds[soundName].getStatus() == sf::Sound::Status::Playing;
+    return it->second.getStatus() == sf::Sound::Status::Playing;
 }
 
-void SoundManager::loadMusic(const std::string& musicName, const std::string& musicPath)
+void SoundManager::loadMusic( const std::string& musicName, const std::string& musicPath )
 {
-    std::unique_ptr<sf::Music> music = std::make_unique<sf::Music>();
-    if (!music->openFromFile(musicPath))
-        throw std::runtime_error("Failed to load music: " + musicPath);
-    this->music[musicName] = std::move(music);
+    auto musicPtr = std::make_unique< sf::Music >();
+    if ( !musicPtr->openFromFile( musicPath ) )
+        throw std::runtime_error( "Failed to load music: " + musicPath );
+    this->music[ musicName ] = std::move( musicPtr );
 }
 
-void SoundManager::playMusic(const std::string& musicName)
+void SoundManager::playMusic( const std::string& musicName )
 {
-    if (this->music.find(musicName) == this->music.end())
-        loadMusic(musicName, ASSETS_PATH + std::string("music/") + musicName + ".wav");
-    this->music[musicName]->play();
+    if ( this->music.find( musicName ) == this->music.end() )
+        loadMusic( musicName, ASSETS_PATH + std::string( "music/" ) + musicName + ".wav" );
+    this->music.at( musicName )->play();
 }
 
-void SoundManager::setLoop(const std::string& soundName, bool loop)
+void SoundManager::setLoop( const std::string& soundName, bool loop )
 {
-    if (music.find(soundName) != music.end())
-        music[soundName]->setLooping(loop);
+    if ( music.find( soundName ) != music.end() )
+        music.at( soundName )->setLooping( loop );
+    else if ( sounds.find( soundName ) != sounds.end() )
+        sounds.at( soundName ).setLooping( loop );
     else
-        throw std::runtime_error("Sound not found: " + soundName);
+        throw std::runtime_error( "Sound/Music not found: " + soundName );
 }

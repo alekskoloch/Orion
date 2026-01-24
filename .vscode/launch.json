@@ -2,16 +2,15 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Debug Orion",
-            "type": "cppvsdbg",
+            "name": "Debug Orion (Clang/LLDB)",
+            "type": "lldb",
             "request": "launch",
             "program": "${workspaceFolder}/build/main.exe",
             "args": [],
-            "stopAtEntry": false,
             "cwd": "${workspaceFolder}/build",
-            "environment": [],
+            "stopOnEntry": false,
             "console": "integratedTerminal",
-            "preLaunchTask": "Build Game" 
+            "preLaunchTask": "Build Game"
         }
     ]
 }

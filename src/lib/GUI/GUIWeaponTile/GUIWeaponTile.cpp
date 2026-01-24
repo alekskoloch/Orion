@@ -62,7 +62,7 @@ void GUIWeaponTile::update()
             float maxCooldown = 5.f;
             this->loadingCircle.setRadius((200.f * ConfigManager::getInstance().getScale()) * (1 - cooldown / maxCooldown));
 
-            this->loadingCircle.setOrigin(this->loadingCircle.getGlobalBounds().width / 2.f, this->loadingCircle.getGlobalBounds().height / 2.f);
+            this->loadingCircle.setOrigin({this->loadingCircle.getGlobalBounds().getCenter()});
             this->loadingCircle.setPosition( sf::Vector2f{ 0, 0 } );
         }
     }
@@ -129,7 +129,7 @@ void GUIShieldTile::update()
 
         this->shiedlStateCircle.setRadius((150.f * ConfigManager::getInstance().getScale()) * (cooldown / shieldDuration));
 
-        this->shiedlStateCircle.setOrigin(this->shiedlStateCircle.getGlobalBounds().width / 2.f, this->shiedlStateCircle.getGlobalBounds().height / 2.f);
+        this->shiedlStateCircle.setOrigin({this->shiedlStateCircle.getGlobalBounds().getCenter()});
     }
 }
 
@@ -160,7 +160,7 @@ GUIMoneyBar::GUIMoneyBar(sf::RenderWindow& window, entt::registry& registry) : w
         0 * ConfigManager::getInstance().getScale() }
     );
 
-    this->moneyText.setCharacterSize(30 * ConfigManager::getInstance().getScale());
+    this->moneyText.setCharacterSize(static_cast<unsigned int>(30 * ConfigManager::getInstance().getScale()));
     this->moneyText.setFillColor(sf::Color::White);
     //TODO: change position
     this->moneyText.setPosition(

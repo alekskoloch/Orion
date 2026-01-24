@@ -1,115 +1,120 @@
-#include "pch.h"
 #include "NotifySystem.h"
+#include "pch.h"
 
-void NotifySystem::notify(const Type type, const std::string& message, float displayTime)
+
+void NotifySystem::notify( const Type type, const std::string& message, float displayTime )
 {
-    sf::Text text{ FontManager::getInstance().getFont("font") };
-    switch (type)
+    sf::Text text{ FontManager::getInstance().getFont( "font" ) };
+    switch ( type )
     {
     case Type::Info:
-        text = sf::Text( FontManager::getInstance().getFont( "font" ),
-                         message, 24 * ConfigManager::getInstance().getScale() );
-        text.setPosition( sf::Vector2f{
-            20.f * ConfigManager::getInstance().getScale(),
-            static_cast<float>(ConfigManager::getInstance().getScreenHeight() / 2)
-        } );
+        text =
+            sf::Text( FontManager::getInstance().getFont( "font" ), message,
+                      static_cast< unsigned int >( 24 * ConfigManager::getInstance().getScale() ) );
 
-        if (!notifications.empty())
-            for (auto& notification : notifications)
-                if (notification.text.getCharacterSize() == 24 * ConfigManager::getInstance().getScale())
-                    notification.text.move( sf::Vector2f{ 0.f, notification.text.getGlobalBounds().size.y + 20.f * ConfigManager::getInstance().getScale() } );
+        text.setPosition(
+            { 20.f * ConfigManager::getInstance().getScale(),
+              static_cast< float >( ConfigManager::getInstance().getScreenHeight() / 2 ) } );
 
-        notifications.push_back({ text, displayTime });
+        if ( !notifications.empty() )
+            for ( auto& notification : notifications )
+                if ( notification.text.getCharacterSize() ==
+                     static_cast< unsigned int >( 24 * ConfigManager::getInstance().getScale() ) )
+                    notification.text.move(
+                        { 0.f, notification.text.getGlobalBounds().size.y +
+                                   20.f * ConfigManager::getInstance().getScale() } );
+
+        notifications.push_back( { text, displayTime } );
         break;
     case Type::BigInfo:
-        text = sf::Text(message, FontManager::getInstance().getFont("font"),
-            48 * ConfigManager::getInstance().getScale()
-        );
-        text.setPosition(
-            3840.f * ConfigManager::getInstance().getScale() / 2.f - text.getGlobalBounds().width / 2.f,
-            200.f * ConfigManager::getInstance().getScale()
-        );
-        text.setOutlineColor(sf::Color::Red);
-        text.setOutlineThickness(2.f);
+        text =
+            sf::Text( FontManager::getInstance().getFont( "font" ), message,
+                      static_cast< unsigned int >( 48 * ConfigManager::getInstance().getScale() ) );
 
-        bigInfoQueue.push({ text, displayTime });
+        text.setPosition( { 3840.f * ConfigManager::getInstance().getScale() / 2.f -
+                                text.getGlobalBounds().size.x / 2.f,
+                            200.f * ConfigManager::getInstance().getScale() } );
+        text.setOutlineColor( sf::Color::Red );
+        text.setOutlineThickness( 2.f );
+
+        bigInfoQueue.push( { text, displayTime } );
         break;
     default:
-        throw std::runtime_error("Unknown notification type");
+        throw std::runtime_error( "Unknown notification type" );
     }
 }
 
-void NotifySystem::notifyDialogBox(sf::RenderWindow& window, const std::string& message, const std::string& buttonMessage, std::function<void()> callback)
+void NotifySystem::notifyDialogBox( sf::RenderWindow& window, const std::string& message,
+                                    const std::string& buttonMessage,
+                                    std::function< void() > callback )
 {
-    if (dialogBox != nullptr)
+    if ( dialogBox != nullptr )
         return;
 
-    std::vector<std::string> messages = { message };
-    dialogBox = std::make_unique<GUIDialogBox>(window, messages, FontManager::getInstance().getFont("font"));
-    dialogBox->setType(GUIDialogBoxType::Ok);
-    dialogBox->setState(GUIDialogBoxState::Idle);
-    dialogBox->setMessage({ message });
+    std::vector< std::string > messages = { message };
+    dialogBox = std::make_unique< GUIDialogBox >( window, messages,
+                                                  FontManager::getInstance().getFont( "font" ) );
+    dialogBox->setType( GUIDialogBoxType::Ok );
+    dialogBox->setState( GUIDialogBoxState::Idle );
+    dialogBox->setMessage( { message } );
 }
 
-bool NotifySystem::isDialogBoxActive()
-{
-    return dialogBox != nullptr;
-}
+bool NotifySystem::isDialogBoxActive() { return dialogBox != nullptr; }
 
-void NotifySystem::update(sf::Time deltaTime)
+void NotifySystem::update( sf::Time deltaTime )
 {
-    for (auto& notification : notifications)
+    for ( auto& notification : notifications )
     {
         notification.displayTime -= deltaTime.asSeconds();
 
-        if (notification.displayTime < 1.f)
-            notification.text.setFillColor(sf::Color(255, 255, 255, 255 * notification.displayTime));
+        if ( notification.displayTime < 1.f )
+            notification.text.setFillColor( sf::Color(
+                255, 255, 255, static_cast< std::uint8_t >( 255 * notification.displayTime ) ) );
     }
 
-    notifications.remove_if([](const Notification& notification)
-    {
-        return notification.displayTime <= 0.f;
-    });
+    notifications.remove_if( []( const Notification& notification )
+                             { return notification.displayTime <= 0.f; } );
 
-    if (!bigInfoQueue.empty())
+    if ( !bigInfoQueue.empty() )
     {
         auto& notification = bigInfoQueue.front();
         notification.displayTime -= deltaTime.asSeconds();
 
-        if (notification.displayTime < 1.f)
-            notification.text.setFillColor(sf::Color(255, 255, 255, 255 * notification.displayTime));
+        if ( notification.displayTime < 1.f )
+            notification.text.setFillColor( sf::Color(
+                255, 255, 255, static_cast< std::uint8_t >( 255 * notification.displayTime ) ) );
 
-        if (notification.displayTime <= 0.f)
+        if ( notification.displayTime <= 0.f )
             bigInfoQueue.pop();
     }
 
-    if (dialogBox != nullptr)
+    if ( dialogBox != nullptr )
     {
         dialogBox->update();
 
-        if (dialogBox->getState() == GUIDialogBoxState::Hidden)
+        if ( dialogBox->getState() == GUIDialogBoxState::Hidden )
             dialogBox = nullptr;
-        else if (dialogBox->getState() == GUIDialogBoxState::Ok)
+        else if ( dialogBox->getState() == GUIDialogBoxState::Ok )
         {
-            dialogBox->setState(GUIDialogBoxState::Hidden);
+            dialogBox->setState( GUIDialogBoxState::Hidden );
         }
     }
 }
 
-void NotifySystem::draw(sf::RenderWindow& window)
+void NotifySystem::draw( sf::RenderWindow& window )
 {
-    for (const auto& notification : notifications)
-            window.draw(notification.text);
+    for ( const auto& notification : notifications )
+        window.draw( notification.text );
 
-    if (!bigInfoQueue.empty())
-        window.draw(bigInfoQueue.front().text);
+    if ( !bigInfoQueue.empty() )
+        window.draw( bigInfoQueue.front().text );
 
-    if (dialogBox != nullptr)
+    if ( dialogBox != nullptr )
         dialogBox->draw();
 }
 
 void NotifySystem::clearNotifications()
 {
     notifications.clear();
-    bigInfoQueue = std::queue<Notification>();
+    bigInfoQueue = std::queue< Notification >();
 }

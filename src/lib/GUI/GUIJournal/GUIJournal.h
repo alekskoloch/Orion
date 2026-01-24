@@ -46,7 +46,7 @@ public:
     
     bool isOpened() const { return this->isOpen; }
 
-    void processInput(sf::Event& event);
+    void processInput(const sf::Event& event);
     void update(sf::Time deltaTime);
     void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 private:

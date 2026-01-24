@@ -48,6 +48,6 @@ private:
 
     virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override
     {
-        target.draw(segmentVertices.data(), segmentVertices.size(), sf::LinesStrip, states);
+        target.draw(segmentVertices.data(), segmentVertices.size(), sf::PrimitiveType::LineStrip, states);
     }
 };

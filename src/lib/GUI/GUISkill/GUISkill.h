@@ -49,9 +49,17 @@ const sf::Color INACTIVE_DESCRIPTION_COLOR = sf::Color(150, 150, 150);
 class GUISkill
 {
 public:
-    GUISkill(sf::RenderWindow& window, entt::registry& registry, GUIDialogBox& dialogBox, sf::Vector2f iconPosition, std::string name, std::vector<std::string> descriptions, std::string iconTextureName, std::vector<std::pair<SkillType, float>> onActivateFunctions, std::vector<RequirementType> requirements, std::vector<std::string> skillToUnlock, unsigned int maxLevel, unsigned int currentLevel, std::vector<std::unique_ptr<GUIStar>>& activeStars);
-    void update(sf::Time& deltaTime);
+    GUISkill( sf::RenderWindow& window, entt::registry& registry, GUIDialogBox& dialogBox,
+              sf::Vector2f iconPosition, std::string name, std::vector< std::string > descriptions,
+              std::string iconTextureName,
+              std::vector< std::pair< SkillType, float > > onActivateFunctions,
+              std::vector< RequirementType > requirements, std::vector< std::string > skillToUnlock,
+              unsigned int maxLevel, unsigned int currentLevel,
+              std::vector< std::unique_ptr< GUIStar > >& activeStars );
+    void update( sf::Time& deltaTime );
     void draw();
+
+    static void loadTexturesIntoManager( const std::string& iconTextureName );
 
 private:
     sf::RenderWindow& window;
@@ -85,7 +93,6 @@ private:
     std::vector<std::unique_ptr<GUICircleSegment>> circleSegments;
     
     void initialize();
-    void loadTexturesIntoManager();
     void initializeIconSprite();
     void initializeText();
     void initStarsForSkill();

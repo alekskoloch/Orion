@@ -13,24 +13,23 @@ GUISkill::GUISkill( sf::RenderWindow& window, entt::registry& registry, GUIDialo
       name( name ), descriptions( descriptions ), iconTextureName( iconTextureName ),
       onActivateFunctions( onActivateFunctions ), requirements( requirements ),
       skillsToUnlock( skillToUnlock ), maxLevel( maxLevel ), currentLevel( currentLevel ),
-      activeStars( activeStars ), iconSprite(CreateSprite(this->iconTextureName))
+      activeStars( activeStars ), iconSprite(CreateSprite("empty")), nameText( FontManager::getInstance().getFont("font") )
 {
     this->initialize();
 }
 
 void GUISkill::initialize()
 {
-    this->loadTexturesIntoManager();
     this->initializeIconSprite();
     this->initializeText();
     this->addCircleSegment();
 }
 
-void GUISkill::loadTexturesIntoManager()
+void GUISkill::loadTexturesIntoManager( const std::string& iconTextureName )
 {
-    TextureManager::getInstance().loadTexture(this->iconTextureName, ASSETS_PATH + std::string("skillAssets/") + this->iconTextureName + ".png");
-    TextureManager::getInstance().loadTexture(this->iconTextureName + "Hover", ASSETS_PATH + std::string("skillAssets/") + this->iconTextureName + "Hover.png");
-    TextureManager::getInstance().loadTexture(this->iconTextureName + "Active", ASSETS_PATH + std::string("skillAssets/") + this->iconTextureName + "Active.png");
+    TextureManager::getInstance().loadTexture( iconTextureName, ASSETS_PATH + std::string("skillAssets/") + iconTextureName + ".png");
+    TextureManager::getInstance().loadTexture( iconTextureName + "Hover", ASSETS_PATH + std::string("skillAssets/") + iconTextureName + "Hover.png");
+    TextureManager::getInstance().loadTexture( iconTextureName + "Active", ASSETS_PATH + std::string("skillAssets/") + iconTextureName + "Active.png");
 }
 
 void GUISkill::initializeIconSprite()
@@ -208,10 +207,10 @@ void GUISkill::addDescriptionLine(const std::string descriptionTextLine)
 
     for (int i = 0; i < this->descriptionTexts.size(); i++)
     {
-        this->descriptionTexts[this->descriptionTexts.size() - 1 - i].setPosition(
+        this->descriptionTexts[this->descriptionTexts.size() - 1 - i].setPosition( sf::Vector2f{
             this->window.getSize().x / 2.f,
-            this->window.getSize().y - MARGIN - (this->descriptionTexts[this->descriptionTexts.size() - 1 - i].getGlobalBounds().height * (i + 1))
-        );
+            this->window.getSize().y - MARGIN - (this->descriptionTexts[this->descriptionTexts.size() - 1 - i].getGlobalBounds().size.y * (i + 1))
+    } );
     }
 }
 
