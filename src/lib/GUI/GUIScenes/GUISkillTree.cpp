@@ -7,24 +7,24 @@ GUISkillTree::GUISkillTree(entt::registry& registry, sf::RenderWindow& window) :
     this->view.zoom(1 / ConfigManager::getInstance().getScale());
 }
 
-void GUISkillTree::update(sf::Time& deltaTime)
+void GUISkillTree::update( sf::Time& deltaTime )
 {
-    SkillManager::getInstance(this->window, this->registry).update(deltaTime);
+    SkillManager::getInstance( this->window, this->registry ).update( deltaTime );
 
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
-        view.move(0, -moveSpeed * deltaTime.asSeconds());
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
-        view.move(-moveSpeed * deltaTime.asSeconds(), 0);
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
-        view.move(0, moveSpeed * deltaTime.asSeconds());
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
-        view.move(moveSpeed * deltaTime.asSeconds(), 0);
+    if ( sf::Keyboard::isKeyPressed( sf::Keyboard::Key::W ) )
+        view.move( sf::Vector2f{ 0, -moveSpeed * deltaTime.asSeconds() } );
+    if ( sf::Keyboard::isKeyPressed( sf::Keyboard::Key::A ) )
+        view.move( sf::Vector2f{ -moveSpeed * deltaTime.asSeconds(), 0 } );
+    if ( sf::Keyboard::isKeyPressed( sf::Keyboard::Key::S ) )
+        view.move( sf::Vector2f{ 0, moveSpeed * deltaTime.asSeconds() } );
+    if ( sf::Keyboard::isKeyPressed( sf::Keyboard::Key::D ) )
+        view.move( sf::Vector2f{ moveSpeed * deltaTime.asSeconds(), 0 } );
 
-    window.setView(view);
+    window.setView( view );
 
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
+    if ( sf::Keyboard::isKeyPressed( sf::Keyboard::Key::Escape ) )
     {
-        SceneManager::getInstance().setCurrentScene(Scene::Game);
+        SceneManager::getInstance().setCurrentScene( Scene::Game );
     }
 }
 

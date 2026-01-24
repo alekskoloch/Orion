@@ -15,9 +15,9 @@ void DebugSystem::renderCollisionBoxes(entt::registry& registry, sf::RenderWindo
 
         sf::RectangleShape rectBox;
 
-        rectBox.setSize(sf::Vector2f(collision.collisionBox.width, collision.collisionBox.height));
+        rectBox.setSize(sf::Vector2f(collision.collisionBox.size.x, collision.collisionBox.size.y));
 
-        rectBox.setPosition(collision.collisionBox.left, collision.collisionBox.top);
+        rectBox.setPosition(sf::Vector2f{ collision.collisionBox.position.x, collision.collisionBox.position.y } );
 
         rectBox.setFillColor(sf::Color::Transparent);
         rectBox.setOutlineColor(sf::Color::White);
@@ -40,8 +40,8 @@ void DebugSystem::renderAttackRangeCircles(entt::registry& registry, sf::RenderW
 
         auto entityPosition = enemiesView.get<Position>(entity);
 
-        attackCircle.setPosition(entityPosition.position.x - attackRange, entityPosition.position.y - attackRange);
-        idleCircle.setPosition(entityPosition.position.x - idleRange, entityPosition.position.y - idleRange);
+        attackCircle.setPosition(sf::Vector2f{ entityPosition.position.x - attackRange, entityPosition.position.y - attackRange } );
+        idleCircle.setPosition(sf::Vector2f{ entityPosition.position.x - idleRange, entityPosition.position.y - idleRange } );
 
         attackCircle.setFillColor(sf::Color::Transparent);
         attackCircle.setOutlineColor(sf::Color::Red);
@@ -66,8 +66,8 @@ void DebugSystem::renderBackgroundTilesFrame(entt::registry& registry, sf::Rende
 
         rectBox.setSize(sf::Vector2f(tile.getSize().x, tile.getSize().y));
 
-        rectBox.setPosition(tile.getPosition().x, tile.getPosition().y);
-        rectBox.setOrigin(tile.getOrigin().x, tile.getOrigin().y);
+        rectBox.setPosition(sf::Vector2f{ tile.getPosition().x, tile.getPosition().y } );
+        rectBox.setOrigin(sf::Vector2f{ tile.getOrigin().x, tile.getOrigin().y } );
 
         rectBox.setFillColor(sf::Color::Transparent);
         rectBox.setOutlineColor(sf::Color::White);
@@ -79,7 +79,7 @@ void DebugSystem::renderBackgroundTilesFrame(entt::registry& registry, sf::Rende
 
 void DebugSystem::creatingEnemies(entt::registry& registry, sf::RenderWindow& window)
 {
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::P))
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::P))
     {
         spawnEnemyOnMousePosition(registry, window);
     }

@@ -16,7 +16,7 @@ void checkBulletCollitions(entt::registry& registry, std::unordered_set<entt::en
         {
             if (entitiesToDestroy.find(bullet) == entitiesToDestroy.end() &&
                 entitiesToDestroy.find(target) == entitiesToDestroy.end() &&
-                bullets.template get<Collision>(bullet).collisionBox.intersects(targetCollision.collisionBox))
+                bullets.template get<Collision>(bullet).collisionBox.findIntersection(targetCollision.collisionBox))
             {
                 //TODO: make onCollision method for each tag
                 if constexpr (std::is_same_v<TargetTag, Player>)
@@ -122,7 +122,7 @@ void checkDropCollision(entt::registry& registry)
             auto& dropCollision = drops.get<Collision>(drop);
             auto& playerCollision = players.get<Collision>(player);
 
-            if (dropCollision.collisionBox.intersects(playerCollision.collisionBox))
+            if (dropCollision.collisionBox.findIntersection(playerCollision.collisionBox))
             {
                 auto dropName = registry.get<DropItem>(drop).name;
 
@@ -203,8 +203,8 @@ void CollisionSystem::updateCollisionBoxes(entt::registry& registry)
         auto& collision = view.get<Collision>(entity);
         auto& position = view.get<Position>(entity);
 
-        collision.collisionBox.left = position.position.x - collision.collisionBox.width / 2.f;
-        collision.collisionBox.top = position.position.y - collision.collisionBox.height / 2.f;
+        collision.collisionBox.position.x = position.position.x - collision.collisionBox.size.x / 2.f;
+        collision.collisionBox.position.y = position.position.y - collision.collisionBox.size.y / 2.f;
     }
 }
 

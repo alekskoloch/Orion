@@ -4,7 +4,7 @@ GUIStar::GUIStar(sf::Vector2f position, sf::Color color, float radius, bool flic
     : position(position), color(color), flicker(flicker), idleTime(idleTime), flickerIdleTime(idleTime), flickerTime(flickerTime), exists(false)
 {
     this->star.setRadius(radius);
-    this->star.setOrigin(radius, radius);
+    this->star.setOrigin( sf::Vector2f{ radius, radius } );
     this->star.setPosition(this->position);
     this->color.a = 0;
     this->star.setFillColor(this->color);

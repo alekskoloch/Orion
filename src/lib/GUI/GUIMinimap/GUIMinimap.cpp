@@ -2,7 +2,8 @@
 #include "GUIMinimap.h"
 
 GUIMinimap::GUIMinimap(sf::RenderWindow& window, entt::registry& registry, std::vector<Quest>& quests)
-    : window(window), registry(registry), font(FontManager::getInstance().getFont("font")), quests(quests)
+    : window(window), registry(registry), font(FontManager::getInstance().getFont("font")), quests(quests), playerMinimapSprite( CreateSprite( "PLAYER_MINIMAP_TEXTURE" ) ), activeQuestMinimapSprite( CreateSprite( "ACTIVE_QUEST_MINIMAP_TEXTURE" ) ),
+    playerCoordinatesText{ this->font }, activeQuestDescriptionText( this->font ), activeQuestTitleText( this->font ), activeQuestDistanceText( this->font )
 {
     initializationMinimap();
     initializePlayerCoordinatesText();
@@ -82,31 +83,28 @@ void GUIMinimap::initializationMinimap()
     backgroundMap.setFillColor(sf::Color(128, 128, 128, 200));
     backgroundMap.setOutlineThickness(4);
     backgroundMap.setOutlineColor(sf::Color::White);
-    backgroundMap.setPosition(3340 * ConfigManager::getInstance().getScale(), 100 * ConfigManager::getInstance().getScale());
+    backgroundMap.setPosition( sf::Vector2f{ 3340 * ConfigManager::getInstance().getScale(), 100 * ConfigManager::getInstance().getScale() } );
 
-    playerMinimapSprite = CreateSprite("PLAYER_MINIMAP_TEXTURE");
-    playerMinimapSprite.setScale(ConfigManager::getInstance().getScale(), ConfigManager::getInstance().getScale());
-    playerMinimapSprite.setPosition(backgroundMap.getPosition().x + backgroundMap.getRadius(), backgroundMap.getPosition().y + backgroundMap.getRadius());
+    playerMinimapSprite.setScale( sf::Vector2f{ ConfigManager::getInstance().getScale(), ConfigManager::getInstance().getScale() } );
+    playerMinimapSprite.setPosition( sf::Vector2f{ backgroundMap.getPosition().x + backgroundMap.getRadius(), backgroundMap.getPosition().y + backgroundMap.getRadius() } );
 
-    activeQuestMinimapSprite = CreateSprite("ACTIVE_QUEST_MINIMAP_TEXTURE");
-    activeQuestMinimapSprite.setScale(ConfigManager::getInstance().getScale(), ConfigManager::getInstance().getScale());
+    activeQuestMinimapSprite.setScale( sf::Vector2f{ ConfigManager::getInstance().getScale(), ConfigManager::getInstance().getScale() } );
 }
 
 void GUIMinimap::initializePlayerCoordinatesText()
 {
-    playerCoordinatesText.setFont(this->font);
     playerCoordinatesText.setCharacterSize(20 * ConfigManager::getInstance().getScale());
     playerCoordinatesText.setFillColor(sf::Color::White);
-    playerCoordinatesText.setPosition(
+    playerCoordinatesText.setPosition( sf::Vector2f{
         backgroundMap.getPosition().x + backgroundMap.getRadius(),
         backgroundMap.getPosition().y + backgroundMap.getRadius() + backgroundMap.getRadius() + 40 * ConfigManager::getInstance().getScale()
-    );
+    } );
 }
 
 void GUIMinimap::updatePlayerCoordinates()
 {
     playerCoordinatesText.setString(std::to_string((int)registry.get<Position>(registry.view<Player, Renderable>().front()).position.x / 100) + "  " + std::to_string((int)registry.get<Position>(registry.view<Player, Renderable>().front()).position.y / 100));
-    playerCoordinatesText.setOrigin(playerCoordinatesText.getGlobalBounds().width / 2.f, playerCoordinatesText.getGlobalBounds().height / 2.f);
+    playerCoordinatesText.setOrigin( playerCoordinatesText.getGlobalBounds().getCenter() );
 }
 
 void GUIMinimap::writePlayerCoordinates()
@@ -116,29 +114,30 @@ void GUIMinimap::writePlayerCoordinates()
 
 void GUIMinimap::initializeActiveQuestText()
 {
-    activeQuestTitleText.setFont(this->font);
-    activeQuestTitleText.setCharacterSize(20 * ConfigManager::getInstance().getScale());
-    activeQuestTitleText.setFillColor(sf::Color::White);
-    activeQuestTitleText.setPosition(
-        playerCoordinatesText.getPosition().x,
-        playerCoordinatesText.getPosition().y + playerCoordinatesText.getGlobalBounds().height + 40 * ConfigManager::getInstance().getScale()
-    );
+    activeQuestTitleText.setFont( this->font );
+    activeQuestTitleText.setCharacterSize( 20 * ConfigManager::getInstance().getScale() );
+    activeQuestTitleText.setFillColor( sf::Color::White );
+    activeQuestTitleText.setPosition( sf::Vector2f{
+        playerCoordinatesText.getPosition().x, playerCoordinatesText.getPosition().y +
+                                                   playerCoordinatesText.getGlobalBounds().size.y +
+                                                   40 * ConfigManager::getInstance().getScale() } );
 
-    activeQuestDescriptionText.setFont(this->font);
-    activeQuestDescriptionText.setCharacterSize(20 * ConfigManager::getInstance().getScale());
-    activeQuestDescriptionText.setFillColor(sf::Color::White);
-    activeQuestDescriptionText.setPosition(
-        activeQuestTitleText.getPosition().x,
-        activeQuestTitleText.getPosition().y + activeQuestTitleText.getGlobalBounds().height + 40 * ConfigManager::getInstance().getScale()
-    );
+    activeQuestDescriptionText.setFont( this->font );
+    activeQuestDescriptionText.setCharacterSize( 20 * ConfigManager::getInstance().getScale() );
+    activeQuestDescriptionText.setFillColor( sf::Color::White );
+    activeQuestDescriptionText.setPosition( sf::Vector2f{
+        activeQuestTitleText.getPosition().x, activeQuestTitleText.getPosition().y +
+                                                  activeQuestTitleText.getGlobalBounds().size.y +
+                                                  40 * ConfigManager::getInstance().getScale() } );
 
-    activeQuestDistanceText.setFont(this->font);
-    activeQuestDistanceText.setCharacterSize(20 * ConfigManager::getInstance().getScale());
-    activeQuestDistanceText.setFillColor(sf::Color::White);
+    activeQuestDistanceText.setFont( this->font );
+    activeQuestDistanceText.setCharacterSize( 20 * ConfigManager::getInstance().getScale() );
+    activeQuestDistanceText.setFillColor( sf::Color::White );
     activeQuestDistanceText.setPosition(
-        activeQuestDescriptionText.getPosition().x,
-        activeQuestDescriptionText.getPosition().y + activeQuestDescriptionText.getGlobalBounds().height + 40 * ConfigManager::getInstance().getScale()
-    );
+        sf::Vector2f{ activeQuestDescriptionText.getPosition().x,
+                      activeQuestDescriptionText.getPosition().y +
+                          activeQuestDescriptionText.getGlobalBounds().size.y +
+                          40 * ConfigManager::getInstance().getScale() } );
 }
 
 void GUIMinimap::updateActiveQuestText()
@@ -152,16 +151,16 @@ void GUIMinimap::updateActiveQuestText()
         if (quest.active && !quest.completed)
         {
             activeQuestTitleText.setString(quest.name);
-            activeQuestTitleText.setOrigin(activeQuestTitleText.getGlobalBounds().width / 2.f, activeQuestTitleText.getGlobalBounds().height / 2.f);
+            activeQuestTitleText.setOrigin(activeQuestTitleText.getGlobalBounds().getCenter() );
 
             activeQuestDescriptionText.setString(quest.stages[quest.currentStage].description);
-            activeQuestDescriptionText.setOrigin(activeQuestDescriptionText.getGlobalBounds().width / 2.f, activeQuestDescriptionText.getGlobalBounds().height / 2.f);
+            activeQuestDescriptionText.setOrigin(activeQuestDescriptionText.getGlobalBounds().getCenter() );
 
             int distance = (int)(quest.stages[quest.currentStage].condition->getTargetDistance(registry)) / 100;
             if (distance > 0)
             {
                 activeQuestDistanceText.setString("Distance: " + std::to_string(distance));
-                activeQuestDistanceText.setOrigin(activeQuestDistanceText.getGlobalBounds().width / 2.f, activeQuestDistanceText.getGlobalBounds().height / 2.f);
+                activeQuestDistanceText.setOrigin(activeQuestDistanceText.getGlobalBounds().getCenter() );
             }
 
             //assuming that only one quest can be active at a time
@@ -209,7 +208,7 @@ void GUIMinimap::updateQuestMarker()
                     activeQuestMinimapSprite.setPosition(questMarkerMinimapPosition);
                 }
 
-                activeQuestMinimapSprite.setOrigin(activeQuestMinimapSprite.getGlobalBounds().width / 2.f, activeQuestMinimapSprite.getGlobalBounds().height / 2.f);
+                activeQuestMinimapSprite.setOrigin(activeQuestMinimapSprite.getGlobalBounds().getCenter());
             }
 
             break;

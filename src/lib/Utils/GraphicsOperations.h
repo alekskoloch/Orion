@@ -6,6 +6,6 @@
 inline sf::Sprite CreateSprite(const std::string& textureName)
 {
     sf::Sprite sprite(TextureManager::getInstance().getTexture(textureName));
-    sprite.setOrigin(sprite.getGlobalBounds().width / 2.f, sprite.getGlobalBounds().height / 2.f);
+    sprite.setOrigin(sprite.getGlobalBounds().getCenter() );
     return sprite;
 }

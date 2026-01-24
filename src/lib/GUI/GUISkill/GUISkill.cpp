@@ -1,23 +1,22 @@
 #include "pch.h"
 #include "GUISkill.h"
 
-GUISkill::GUISkill(sf::RenderWindow& window, entt::registry& registry, GUIDialogBox& dialogBox, sf::Vector2f iconPosition, std::string name, std::vector<std::string> descriptions, std::string iconTextureName, std::vector<std::pair<SkillType, float>> onActivateFunctions, std::vector<RequirementType> requirements, std::vector<std::string> skillToUnlock, unsigned int maxLevel, unsigned int currentLevel, std::vector<std::unique_ptr<GUIStar>>& activeStars)
-    :   window(window),
-        registry(registry),
-        dialogBox(dialogBox),
-        iconPosition(iconPosition),
-        name(name),
-        descriptions(descriptions),
-        iconTextureName(iconTextureName),
-        onActivateFunctions(onActivateFunctions),
-        requirements(requirements),
-        skillsToUnlock(skillToUnlock),
-        maxLevel(maxLevel),
-        currentLevel(currentLevel),
-        activeStars(activeStars)
-    {
-        this->initialize();
-    }
+GUISkill::GUISkill( sf::RenderWindow& window, entt::registry& registry, GUIDialogBox& dialogBox,
+                    sf::Vector2f iconPosition, std::string name,
+                    std::vector< std::string > descriptions, std::string iconTextureName,
+                    std::vector< std::pair< SkillType, float > > onActivateFunctions,
+                    std::vector< RequirementType > requirements,
+                    std::vector< std::string > skillToUnlock, unsigned int maxLevel,
+                    unsigned int currentLevel,
+                    std::vector< std::unique_ptr< GUIStar > >& activeStars )
+    : window( window ), registry( registry ), dialogBox( dialogBox ), iconPosition( iconPosition ),
+      name( name ), descriptions( descriptions ), iconTextureName( iconTextureName ),
+      onActivateFunctions( onActivateFunctions ), requirements( requirements ),
+      skillsToUnlock( skillToUnlock ), maxLevel( maxLevel ), currentLevel( currentLevel ),
+      activeStars( activeStars ), iconSprite(CreateSprite(this->iconTextureName))
+{
+    this->initialize();
+}
 
 void GUISkill::initialize()
 {
@@ -36,7 +35,6 @@ void GUISkill::loadTexturesIntoManager()
 
 void GUISkill::initializeIconSprite()
 {
-    this->iconSprite = CreateSprite(this->iconTextureName);
     this->iconSprite.setPosition(this->iconPosition);
 }
 
@@ -44,7 +42,7 @@ void GUISkill::initializeText()
 {
     this->nameText = this->getConfiguredText(this->name, NAME_CHARACTER_SIZE);
     this->centerText(this->nameText);
-    this->nameText.setPosition(this->iconSprite.getPosition().x, this->iconSprite.getPosition().y + MARGIN);
+    this->nameText.setPosition(sf::Vector2f{ this->iconSprite.getPosition().x, this->iconSprite.getPosition().y + MARGIN } );
 
     this->addDescriptionLine(this->descriptions[0]);
 }
@@ -165,9 +163,7 @@ void GUISkill::draw()
 
 sf::Text GUISkill::getConfiguredText(std::string string, unsigned int characterSize, sf::Color textColor)
 {
-    sf::Text text;
-    text.setFont(FontManager::getInstance().getFont("font"));
-    text.setString(string);
+    sf::Text text{ FontManager::getInstance().getFont("font"), string };
     text.setCharacterSize(characterSize);
     text.setFillColor(textColor);
     text.setOutlineThickness(1);
@@ -175,16 +171,11 @@ sf::Text GUISkill::getConfiguredText(std::string string, unsigned int characterS
     return text;
 }
 
-void GUISkill::centerText(sf::Text& text)
+void GUISkill::centerText( sf::Text& text )
 {
-    text.setOrigin(
-        text.getGlobalBounds().width / 2.f,
-        text.getGlobalBounds().height / 2.f
-    );
+    text.setOrigin( text.getGlobalBounds().getCenter() );
     text.setPosition(
-        this->window.getSize().x / 2.f,
-        this->window.getSize().y / 2.f
-    );
+        sf::Vector2f{ this->window.getSize().x / 2.f, this->window.getSize().y / 2.f } );
 }
 
 sf::Color GUISkill::getStoneColor()
@@ -260,15 +251,16 @@ void GUISkill::handleBackgroundStars()
 
 void GUISkill::handleLeftClick()
 {
-    if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && !this->isMaxLevelReached)
+    if ( sf::Mouse::isButtonPressed( sf::Mouse::Button::Left ) && !this->isMaxLevelReached )
     {
-        if (ExperienceSystem::getSkillPoints(this->registry) > 0)
+        if ( ExperienceSystem::getSkillPoints( this->registry ) > 0 )
         {
-            this->dialogBox.setMessage(this->getMessagesForRequirements(this->requirements[this->currentLevel]));
+            this->dialogBox.setMessage(
+                this->getMessagesForRequirements( this->requirements[ this->currentLevel ] ) );
 
-            this->dialogBox.setType(GUIDialogBoxType::YesNo);
-            this->dialogBox.setState(GUIDialogBoxState::Idle);
-            this->dialogBox.setTarget(this->name);
+            this->dialogBox.setType( GUIDialogBoxType::YesNo );
+            this->dialogBox.setState( GUIDialogBoxState::Idle );
+            this->dialogBox.setTarget( this->name );
         }
         else
         {

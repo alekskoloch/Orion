@@ -13,7 +13,7 @@ private:
     sf::RenderWindow window;
     entt::registry registry;
     sf::Clock clock;
-    sf::Event event{};
+    sf::Event event;
 
     SystemManager systemManager;
     GUIManager guiManager;

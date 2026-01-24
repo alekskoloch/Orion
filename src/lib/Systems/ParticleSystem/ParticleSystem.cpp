@@ -66,7 +66,7 @@ void ParticleSystem::handlePlayerMovementParticles()
             auto playerRotation = playerRenderable.sprite.getRotation();
 
             sf::Transform transform;
-            transform.rotate(playerRotation, position.x, position.y);
+            transform.rotate(playerRotation, sf::Vector2f{ position.x, position.y });
 
             //TODO: This should be configurable
             sf::Vector2f offsetRight(30.f, 30.f);

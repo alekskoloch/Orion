@@ -18,8 +18,8 @@ void PlayerInitializationSystem::initializePlayer(entt::registry& registry)
 
     sf::FloatRect globalBounds = sprite.getGlobalBounds();
 
-    globalBounds.width /= 2.f;
-    globalBounds.height /= 2.f;
+    globalBounds.size.x /= 2.f;
+    globalBounds.size.y /= 2.f;
 
     registry.emplace<Collision>(player, globalBounds);
 

@@ -29,7 +29,7 @@ public:
 
         tile.setFillColor(backgroundTileColor);
 
-        tile.setOrigin(size.x / 2, size.y / 2);
+        tile.setOrigin( sf::Vector2f{ size.x / 2, size.y / 2 } );
 
         //TODO: Temporary, need to find a better way to procedurally generate stars and object
         unsigned int numberOfStars = ProceduralGenerationSystem::GetRandomNumber(0, 4, static_cast<int>(position.x), static_cast<int>(position.y));
@@ -38,10 +38,10 @@ public:
         {
             sf::CircleShape star(ProceduralGenerationSystem::GetRandomNumber(2.f, 4.f, static_cast<int>(position.x) + i, static_cast<int>(position.y) + numberOfStars + i));
             star.setFillColor(color);
-            star.setPosition(
+            star.setPosition( sf::Vector2f{
                 ProceduralGenerationSystem::GetRandomNumber(position.x - size.x / 2, position.x + size.x / 2, static_cast<int>(position.x) + i, static_cast<int>(position.y)),
                 ProceduralGenerationSystem::GetRandomNumber(position.y - size.y / 2, position.y + size.y / 2, static_cast<int>(position.y) + i + numberOfStars, static_cast<int>(position.x))
-            );
+        } );
 
             this->stars.push_back(star);
         }
@@ -52,13 +52,9 @@ public:
         {
             int objectTexture = ProceduralGenerationSystem::GetRandomNumber(1, 3, hasObject, static_cast<int>(position.x) + static_cast<int>(position.y));
 
-            sf::Sprite object;
+            sf::Sprite object{ TextureManager::getInstance().getTexture("STAR1_TEXTURE") };
 
-            if (objectTexture == 1)
-            {
-                object.setTexture(TextureManager::getInstance().getTexture("STAR1_TEXTURE"));
-            }
-            else if (objectTexture == 2)
+            if (objectTexture == 2)
             {
                 object.setTexture(TextureManager::getInstance().getTexture("STAR2_TEXTURE"));
             }
@@ -67,11 +63,14 @@ public:
                 object.setTexture(TextureManager::getInstance().getTexture("STAR3_TEXTURE"));
             }
 
-            object.setScale(0.5f, 0.5f);
-            object.setPosition(
-                ProceduralGenerationSystem::GetRandomNumber(position.x - size.x / 2, position.x + size.x / 2, static_cast<int>(position.x), static_cast<int>(position.y)),
-                ProceduralGenerationSystem::GetRandomNumber(position.y - size.y / 2, position.y + size.y / 2, static_cast<int>(position.y), static_cast<int>(position.x))
-            );
+            object.setScale( sf::Vector2f{ 0.5f, 0.5f } );
+            object.setPosition( sf::Vector2f{
+                ProceduralGenerationSystem::GetRandomNumber(
+                    position.x - size.x / 2, position.x + size.x / 2,
+                    static_cast< int >( position.x ), static_cast< int >( position.y ) ),
+                ProceduralGenerationSystem::GetRandomNumber(
+                    position.y - size.y / 2, position.y + size.y / 2,
+                    static_cast< int >( position.y ), static_cast< int >( position.x ) ) } );
 
             this->objects.push_back(object);
         }

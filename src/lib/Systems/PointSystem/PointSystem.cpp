@@ -13,9 +13,8 @@ void PointSystem::addPointOfInterest(entt::registry& registry, sf::Vector2f poin
     auto pointOfInterest = registry.create();
     registry.emplace<PointOfInterest>(pointOfInterest, id);
     registry.emplace<Position>(pointOfInterest, pointPosition);
-    sf::Sprite sprite;
+    sf::Sprite sprite{ TextureManager::getInstance().getTexture("pointOfInterest") };
     sprite.setPosition(pointPosition);
-    sprite.setTexture(TextureManager::getInstance().getTexture("pointOfInterest"));
     registry.emplace<Renderable>(pointOfInterest, sprite);
 }
 

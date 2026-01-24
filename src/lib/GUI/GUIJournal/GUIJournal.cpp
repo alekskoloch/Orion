@@ -1,14 +1,17 @@
 #include "pch.h"
 #include "GUIJournal.h"
 
-GUIJournal::GUIJournal(sf::RenderWindow& window, entt::registry& registry, std::vector<Quest>& quests) : window(window), registry(registry), quests(quests), font(FontManager::getInstance().getFont("font"))
+GUIJournal::GUIJournal( sf::RenderWindow& window, entt::registry& registry,
+                        std::vector< Quest >& quests )
+    : window( window ), registry( registry ), quests( quests ),
+      font( FontManager::getInstance().getFont( "font" ) ), titleText{ this->font }
 {
     this->initializeGUIJournal();
 }
 
 void GUIJournal::processInput(sf::Event& event)
 {
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::J) && this->isButtonReleased)
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::J) && this->isButtonReleased)
     {
         this->isOpen = !this->isOpen;
         this->isButtonReleased = false;
@@ -18,29 +21,30 @@ void GUIJournal::processInput(sf::Event& event)
             this->sortAndDisplayQuests();
     }
 
-    if (!sf::Keyboard::isKeyPressed(sf::Keyboard::J))
+    if (!sf::Keyboard::isKeyPressed(sf::Keyboard::Key::J))
         this->isButtonReleased = true;
 
-    if (!sf::Mouse::isButtonPressed(sf::Mouse::Left))
+    if (!sf::Mouse::isButtonPressed(sf::Mouse::Button::Left))
         this->isMouseReleased = true;
 
-    if (this->isOpen)
+    if ( this->isOpen )
     {
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape) && this->isButtonReleased)
+        if ( sf::Keyboard::isKeyPressed( sf::Keyboard::Key::Escape ) && this->isButtonReleased )
         {
             this->isOpen = false;
             this->isButtonReleased = false;
         }
 
-        if (this->buttons.size() > this->maxVisibleButtons)
+        if ( this->buttons.size() > this->maxVisibleButtons )
         {
-            if (event.type == sf::Event::MouseWheelScrolled)
+            if ( const auto* mouseWheel = event.getIf< sf::Event::MouseWheelScrolled >() )
             {
-                if (event.mouseWheelScroll.delta > 0 && this->scrollPosition > 0)
+                if ( mouseWheel->delta > 0 && this->scrollPosition > 0 )
                 {
                     this->scrollPosition--;
                 }
-                else if (event.mouseWheelScroll.delta < 0 && this->scrollPosition < this->buttons.size() - this->maxVisibleButtons)
+                else if ( mouseWheel->delta < 0 &&
+                          this->scrollPosition < this->buttons.size() - this->maxVisibleButtons )
                 {
                     this->scrollPosition++;
                 }
@@ -155,22 +159,22 @@ void GUIJournal::initializeBoxes()
 void GUIJournal::initializeBookmarkBar()
 {
     this->bookmarkBar.setSize(sf::Vector2f(this->size.x, this->size.y * journal::BOOKMARK_BAR_HEIGHT_PERCENTAGE));
+    this->bookmarkBar.setPosition(sf::Vector2f{ position.x, position.y - this->size.y / 2.f - this->bookmarkBar.getSize().y / 2.f } );
     this->initializeJournalBoxElement(this->bookmarkBar);
-    this->bookmarkBar.setPosition(position.x, position.y - this->size.y / 2.f - this->bookmarkBar.getSize().y / 2.f);
 }
 
 void GUIJournal::initializeContentBox()
 {    
     this->contentBox.setSize(sf::Vector2f(this->size.x * journal::CONTENT_BOX_WIDTH_PERCENTAGE, this->size.y));
+    this->contentBox.setPosition(sf::Vector2f{ position.x + this->size.x * journal::SELECT_BOX_WIDTH_PERCENTAGE / 2.f, position.y } );
     this->initializeJournalBoxElement(this->contentBox);
-    this->contentBox.setPosition(position.x + this->size.x * journal::SELECT_BOX_WIDTH_PERCENTAGE / 2.f, position.y);
 }
 
 void GUIJournal::initializeSelectBox()
 {
     this->selectBox.setSize(sf::Vector2f(this->size.x * journal::SELECT_BOX_WIDTH_PERCENTAGE, this->size.y));
+    this->selectBox.setPosition(sf::Vector2f{ position.x - this->size.x * journal::CONTENT_BOX_WIDTH_PERCENTAGE / 2.f, position.y } );
     this->initializeJournalBoxElement(this->selectBox);
-    this->selectBox.setPosition(position.x - this->size.x * journal::CONTENT_BOX_WIDTH_PERCENTAGE / 2.f, position.y);
 }
 
 void GUIJournal::initializeJournalBoxElement(sf::RectangleShape& element)
@@ -178,7 +182,7 @@ void GUIJournal::initializeJournalBoxElement(sf::RectangleShape& element)
     element.setFillColor(journal::DEFAULT_BOX_COLOR);
     element.setOutlineColor(journal::DEFAULT_OUTLINE_COLOR);
     element.setOutlineThickness(journal::DEFAULT_OUTLINE_THICKNESS);
-    element.setOrigin(element.getSize().x / 2.f, element.getSize().y / 2.f);
+    element.setOrigin( sf::Vector2f{ element.getSize().x / 2.f, element.getSize().y / 2.f } );
 }
 
 void GUIJournal::initializeTitleText()
@@ -189,12 +193,11 @@ void GUIJournal::initializeTitleText()
 
 sf::Text GUIJournal::getJournalStyleText(const std::string text, const unsigned int characterSize, const sf::Color color)
 {
-    sf::Text journalStyleText;
-    journalStyleText.setFont(this->font);
+    sf::Text journalStyleText{this->font};
     journalStyleText.setCharacterSize(characterSize * ConfigManager::getInstance().getScale());
     journalStyleText.setFillColor(color);
     journalStyleText.setString(text);
-    journalStyleText.setOrigin(journalStyleText.getGlobalBounds().width / 2.f, journalStyleText.getGlobalBounds().height / 2.f);
+    journalStyleText.setOrigin(journalStyleText.getGlobalBounds().getCenter() );
     return journalStyleText;
 }
 
@@ -334,28 +337,35 @@ void GUIJournal::setButtons()
 }
 
 void GUIJournal::setContentText()
-{        
+{
     this->contentText.clear();
 
-    if (this->quests.empty()) return;        
+    if ( this->quests.empty() )
+        return;
 
-    for (const auto& quest : this->quests | std::views::filter(&Quest::active))
+    for ( const auto& quest : this->quests | std::views::filter( &Quest::active ) )
     {
-        sf::Text titleText = this->getJournalStyleText(quest.name);
+        sf::Text titleText = this->getJournalStyleText( quest.name );
         titleText.setPosition(
-            this->contentBox.getPosition().x + this->contentBox.getSize().x / 2.f - titleText.getGlobalBounds().width / 2.f - journal::MARGIN,
-            this->contentBox.getPosition().y - this->contentBox.getSize().y / 2.f + titleText.getGlobalBounds().height / 2.f + journal::MARGIN
-        );
+            sf::Vector2f{ this->contentBox.getPosition().x + this->contentBox.getSize().x / 2.f -
+                              titleText.getGlobalBounds().size.x / 2.f - journal::MARGIN,
+                          this->contentBox.getPosition().y - this->contentBox.getSize().y / 2.f +
+                              titleText.getGlobalBounds().size.y / 2.f + journal::MARGIN } );
         this->contentText.push_back(titleText);
 
         for (int i = 0; i <= quest.currentStage; ++i)
         {
-            sf::Color stageTextColor = (i == quest.currentStage && !quest.completed) ? journal::POSITIVE_TEXT_COLOR : sf::Color::White;
-            sf::Text stageText = this->getJournalStyleText(quest.stages[i].description, journal::SMALL_CHARACTER_SIZE, stageTextColor);
+            sf::Color stageTextColor = ( i == quest.currentStage && !quest.completed )
+                                           ? journal::POSITIVE_TEXT_COLOR
+                                           : sf::Color::White;
+            sf::Text stageText = this->getJournalStyleText(
+                quest.stages[ i ].description, journal::SMALL_CHARACTER_SIZE, stageTextColor );
             stageText.setPosition(
-                this->contentBox.getPosition().x - this->contentBox.getSize().x / 2.f + stageText.getGlobalBounds().getSize().x / 2.f + journal::MARGIN,
-                this->contentBox.getPosition().y - this->contentBox.getSize().y / 2.f + stageText.getGlobalBounds().getSize().y / 2.f + journal::MARGIN + i * journal::BUTTON_HEIGHT
-            );
+                { this->contentBox.getPosition().x - this->contentBox.getSize().x / 2.f +
+                      stageText.getGlobalBounds().size.x / 2.f + journal::MARGIN,
+                  this->contentBox.getPosition().y - this->contentBox.getSize().y / 2.f +
+                      stageText.getGlobalBounds().size.y / 2.f + journal::MARGIN +
+                      i * journal::BUTTON_HEIGHT } );
             this->contentText.push_back(stageText);
 
             if (i == quest.currentStage)

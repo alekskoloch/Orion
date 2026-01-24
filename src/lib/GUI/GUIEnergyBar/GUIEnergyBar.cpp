@@ -66,10 +66,10 @@ void GUIEnergyBar::initializeEnergyBar()
         50 * ConfigManager::getInstance().getScale()
     ));
     this->energyBarSprite.setFillColor(sf::Color::Blue);
-    this->energyBarSprite.setPosition(
+    this->energyBarSprite.setPosition( sf::Vector2f{
         this->window.getSize().x - (300 + 100) * ConfigManager::getInstance().getScale(),
         this->window.getSize().y - (50 + 50) * ConfigManager::getInstance().getScale()
-    );
+    } );
 
     this->energyBarBackgroundSprite.setSize(sf::Vector2f(
         300 * ConfigManager::getInstance().getScale(),
@@ -80,8 +80,8 @@ void GUIEnergyBar::initializeEnergyBar()
     this->energyBarBackgroundSprite.setOutlineThickness(
         std::min(-1.f, std::round(-5.f * ConfigManager::getInstance().getScale()))
     );
-    this->energyBarBackgroundSprite.setPosition(
+    this->energyBarBackgroundSprite.setPosition( sf::Vector2f{
         this->window.getSize().x - (300 + 100) * ConfigManager::getInstance().getScale(),
         this->window.getSize().y - (50 + 50) * ConfigManager::getInstance().getScale()
-    );
+    } );
 }

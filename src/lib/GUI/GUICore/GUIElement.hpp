@@ -27,7 +27,7 @@ concept IsSFMLShape = requires(ShapeType shape) {
     { shape.setOutlineThickness(GLOBAL_OUTLINE) } -> std::same_as<void>;
     { shape.setOrigin({0.0f, 0.0f}) } -> std::same_as<void>;
     { shape.setPosition({0.0f, 0.0f}) } -> std::same_as<void>;
-    { shape.setRotation(0.0f) } -> std::same_as<void>;
+    { shape.setRotation( sf::degrees( 0.0f ) ) } -> std::same_as<void>;
 };
 
 template<typename T>
@@ -70,7 +70,7 @@ public:
     }
     ShapeBuilder& setRotation(float rotation)
     {
-        shape->setRotation(rotation);
+        shape->setRotation( sf::degrees( rotation ) );
         return *this;
     }
     ShapeBuilder& setFillColor(const sf::Color& color)
@@ -454,18 +454,16 @@ public:
     {
         font = FontManager::getInstance().getFont("font");
 
-        sf::Text newText;
-        newText.setFont(font);
+        sf::Text newText{ font };
         newText.setString(text);
 
         newText.setCharacterSize(characterSize);
 
         sf::FloatRect textBounds = newText.getLocalBounds();
         sf::FloatRect shapeBounds = getGlobalBounds();
-        newText.setOrigin(textBounds.left + textBounds.width / 2.0f,
-                          textBounds.top + textBounds.height / 2.0f);
-        newText.setPosition(shapeBounds.left + shapeBounds.width / 2.0f,
-                            shapeBounds.top + shapeBounds.height / 2.0f);
+        newText.setOrigin(textBounds.getCenter());
+        newText.setPosition( sf::Vector2f{ shapeBounds.position.x + shapeBounds.size.x / 2.0f,
+                            shapeBounds.position.y + shapeBounds.size.y / 2.0f } );
 
         newText.setFillColor(sf::Color::White);
 

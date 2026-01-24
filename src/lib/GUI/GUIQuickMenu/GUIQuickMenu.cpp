@@ -75,18 +75,26 @@ void GUIQuickMenu::initializeQuickMenu()
     TextureManager::getInstance().loadTexture("basic_shield_ico", ASSETS_PATH + std::string("basic_shield_ico.png"));
     TextureManager::getInstance().loadTexture("advanced_shield_ico", ASSETS_PATH + std::string("advanced_shield_ico.png"));
 
-    this->quickMenuTiles.resize(TILES_NUMBER + 1);
-    this->quickMenuIcons.resize(TILES_NUMBER + 1);
+    this->quickMenuTiles.clear();
+    this->quickMenuTiles.reserve( TILES_NUMBER + 1 );
+
+    this->quickMenuIcons.clear();
+    this->quickMenuIcons.reserve( TILES_NUMBER + 1 );
 
     for (int i = 0; i < TILES_NUMBER; i++)
     {
         this->quickMenuTiles[i] = CreateSprite("INACTIVE_TILE");
-        this->quickMenuTiles[i].setScale(ConfigManager::getInstance().getScale(), ConfigManager::getInstance().getScale());
-        this->quickMenuTiles[i].setPosition(
-            (this->window.getSize().x / 2.f) + std::sin((i * ANGLE_INCREMENT) * M_PI / 180.f) * (RADIUS * ConfigManager::getInstance().getScale()),
-            (this->window.getSize().y / 2.f) - std::cos((i * ANGLE_INCREMENT) * M_PI / 180.f) * (RADIUS * ConfigManager::getInstance().getScale())
-        );
-        this->quickMenuTiles[i].setRotation(i * ANGLE_INCREMENT);
+        this->quickMenuTiles[i].setScale( sf::Vector2f{ ConfigManager::getInstance().getScale(), ConfigManager::getInstance().getScale() } );
+        this->quickMenuTiles[i].setPosition( sf::Vector2f{
+            static_cast<float>((this->window.getSize().x / 2.f) + (std::sin((i * ANGLE_INCREMENT) * M_PI / 180.f) * (RADIUS * ConfigManager::getInstance().getScale()))),
+            static_cast<float>((this->window.getSize().y / 2.f) - (std::cos((i * ANGLE_INCREMENT) * M_PI / 180.f) * (RADIUS * ConfigManager::getInstance().getScale())))
+        } );
+
+        using namespace sf::Literals;
+        const sf::Angle ANGLE_INCREMENT = 45_deg; 
+
+        sf::Angle angle = i * ANGLE_INCREMENT; 
+        this->quickMenuTiles[i].setRotation(angle);
         
         //TODO: this is a temporary solution for loading bullet ico textures
         if (i == 0)
@@ -110,14 +118,14 @@ void GUIQuickMenu::initializeQuickMenu()
             this->quickMenuIcons[i] = CreateSprite("quad_weapon");
         }
 
-        this->quickMenuIcons[i].setPosition(this->quickMenuTiles[i].getPosition());
-        this->quickMenuIcons[i].setScale(ConfigManager::getInstance().getScale(), ConfigManager::getInstance().getScale());
+        this->quickMenuIcons[ i ].setPosition( this->quickMenuTiles[ i ].getPosition() );
+        this->quickMenuIcons[ i ].setScale( sf::Vector2f{
+            ConfigManager::getInstance().getScale(), ConfigManager::getInstance().getScale() } );
     }
 
-    this->quickMenuTiles[TILES_NUMBER] = CreateSprite("INACTIVE_MIDDLE_TILE");
-    this->quickMenuTiles[TILES_NUMBER].setScale(ConfigManager::getInstance().getScale(), ConfigManager::getInstance().getScale());
-    this->quickMenuTiles[TILES_NUMBER].setPosition(
-        (this->window.getSize().x / 2.f),
-        (this->window.getSize().y / 2.f)
-    );
+    this->quickMenuTiles[ TILES_NUMBER ] = CreateSprite( "INACTIVE_MIDDLE_TILE" );
+    this->quickMenuTiles[ TILES_NUMBER ].setScale( sf::Vector2f{
+        ConfigManager::getInstance().getScale(), ConfigManager::getInstance().getScale() } );
+    this->quickMenuTiles[ TILES_NUMBER ].setPosition(
+        sf::Vector2f{ ( this->window.getSize().x / 2.f ), ( this->window.getSize().y / 2.f ) } );
 }

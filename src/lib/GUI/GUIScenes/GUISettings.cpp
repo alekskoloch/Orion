@@ -47,7 +47,7 @@ GUISettings::GUISettings(entt::registry& registry, sf::RenderWindow& window) : r
     std::vector<std::string> resolutions;
     for (auto& resolution : sf::VideoMode::getFullscreenModes())
     {
-        resolutions.push_back(std::to_string(resolution.width) + "x" + std::to_string(resolution.height));
+        resolutions.push_back(std::to_string(resolution.size.x) + "x" + std::to_string(resolution.size.y));
     }
     
 
@@ -144,7 +144,7 @@ void GUISettings::update(sf::Time& deltaTime)
 
     window.setView(view);
 
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Escape))
     {
         std::ofstream file(CONFIG_PATH + std::string("gameConfig.json"));
         if (file.is_open())

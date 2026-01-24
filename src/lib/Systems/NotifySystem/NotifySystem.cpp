@@ -3,22 +3,21 @@
 
 void NotifySystem::notify(const Type type, const std::string& message, float displayTime)
 {
-    sf::Text text;
+    sf::Text text{ FontManager::getInstance().getFont("font") };
     switch (type)
     {
     case Type::Info:
-        text = sf::Text(message, FontManager::getInstance().getFont("font"),
-            24 * ConfigManager::getInstance().getScale()
-        );
-        text.setPosition(
+        text = sf::Text( FontManager::getInstance().getFont( "font" ),
+                         message, 24 * ConfigManager::getInstance().getScale() );
+        text.setPosition( sf::Vector2f{
             20.f * ConfigManager::getInstance().getScale(),
-            ConfigManager::getInstance().getScreenHeight() / 2
-        );
+            static_cast<float>(ConfigManager::getInstance().getScreenHeight() / 2)
+        } );
 
         if (!notifications.empty())
             for (auto& notification : notifications)
                 if (notification.text.getCharacterSize() == 24 * ConfigManager::getInstance().getScale())
-                    notification.text.move(0.f, notification.text.getGlobalBounds().height + 20.f * ConfigManager::getInstance().getScale());
+                    notification.text.move( sf::Vector2f{ 0.f, notification.text.getGlobalBounds().size.y + 20.f * ConfigManager::getInstance().getScale() } );
 
         notifications.push_back({ text, displayTime });
         break;

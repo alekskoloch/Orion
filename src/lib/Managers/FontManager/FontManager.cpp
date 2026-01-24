@@ -13,7 +13,7 @@ void FontManager::loadFont(const std::string& fontName)
         return;
     
     sf::Font font;
-    if (!font.loadFromFile(ASSETS_PATH + std::string("fonts/") + fontName + ".ttf"))
+    if (!font.openFromFile(ASSETS_PATH + std::string("fonts/") + fontName + ".ttf"))
         throw std::runtime_error("Failed to load font: " + fontName);
 
     fonts[fontName] = std::move(font);

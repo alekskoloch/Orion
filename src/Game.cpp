@@ -6,17 +6,19 @@
 #include "TextureManager.h"
 
 Game::Game()
-    : window( sf::VideoMode( ConfigManager::getInstance().getScreenWidth(),
-                             ConfigManager::getInstance().getScreenHeight() ),
-              "Orion", ConfigManager::getInstance().getWindowStyle() ),
-      systemManager( this->window, this->registry, this->event ),
-      guiManager( this->window, this->registry, this->event, this->systemManager.getQuests() )
+    : window(sf::VideoMode({ConfigManager::getInstance().getScreenWidth(), 
+                            ConfigManager::getInstance().getScreenHeight()}),
+             "Orion", 
+             sf::Style::Default, 
+             ConfigManager::getInstance().getWindowStyle()),
+      event(sf::Event::Closed{}),
+      systemManager(this->window, this->registry, this->event),
+      guiManager(this->window, this->registry, this->event, this->systemManager.getQuests()),
+      cursor(sf::Cursor::createFromSystem(sf::Cursor::Type::Arrow).value())
 {
-    this->window.setFramerateLimit( ConfigManager::getInstance().getFrameRateLimit() );
-
+    this->window.setFramerateLimit(ConfigManager::getInstance().getFrameRateLimit());
     this->loadCursor();
-
-    SceneManager::getInstance().setCurrentScene( Scene::MainMenu );
+    SceneManager::getInstance().setCurrentScene(Scene::MainMenu);
 }
 
 void Game::loadCursor()
@@ -46,7 +48,7 @@ void Game::loadCursor()
         hotSpot = { cursorLargeSize, cursorLargeSize };
     }
 
-    if ( !this->cursor.loadFromPixels( this->cursorTexture.copyToImage().getPixelsPtr(),
+    if ( !this->cursor.createFromPixels( this->cursorTexture.copyToImage().getPixelsPtr(),
                                        this->cursorTexture.getSize(), hotSpot ) )
     {
         std::cerr << "Failed to load cursor texture" << '\n';
@@ -67,36 +69,42 @@ void Game::run()
 
 void Game::processEvents()
 {
-    this->event = sf::Event();
-
-    while ( window.pollEvent( event ) )
+    while (const std::optional event = window.pollEvent())
     {
-        if ( event.type == sf::Event::Closed )
+        this->event = *event; 
+
+        if (event->is<sf::Event::Closed>())
         {
             window.close();
         }
 
-        if ( event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Tab &&
-             !this->guiManager.pause() )
+        if (const auto* keyPressed = event->getIf<sf::Event::KeyPressed>())
         {
-            this->systemManager.enableSlowMotion();
-            this->guiManager.toggleQuickMenu( true );
-        }
-        if ( event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::Tab )
-        {
-            this->systemManager.disableSlowMotion();
-            this->guiManager.toggleQuickMenu( false );
+            if (keyPressed->code == sf::Keyboard::Key::Tab && !this->guiManager.pause())
+            {
+                this->systemManager.enableSlowMotion();
+                this->guiManager.toggleQuickMenu(true);
+            }
+
+            if (keyPressed->code == sf::Keyboard::Key::Grave)
+            {
+                this->systemManager.debugMode = !this->systemManager.debugMode;
+            }
         }
 
-        if ( event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Tilde )
+        if (const auto* keyReleased = event->getIf<sf::Event::KeyReleased>())
         {
-            this->systemManager.debugMode = !this->systemManager.debugMode;
+            if (keyReleased->code == sf::Keyboard::Key::Tab)
+            {
+                this->systemManager.disableSlowMotion();
+                this->guiManager.toggleQuickMenu(false);
+            }
         }
     }
 
     this->guiManager.processInput();
 
-    if ( !this->guiManager.pause() )
+    if (!this->guiManager.pause())
     {
         this->systemManager.executeEventSystems();
     }

@@ -78,26 +78,27 @@ void SystemManager::executeInitializationSystems()
 
 void SystemManager::executeEventSystems()
 {
-    if (SceneManager::getInstance().getCurrentScene() == Scene::Game)
+    if ( SceneManager::getInstance().getCurrentScene() == Scene::Game )
     {
-        if (!this->slowMotion)
-            InputSystem::processInput(this->registry, this->event);
+        if ( !this->slowMotion )
+            InputSystem::processInput( this->registry, this->event );
     }
 
-    //TODO: Refactor this
-    if (this->event.type == sf::Event::MouseWheelScrolled)
+    if ( const auto* mouseWheel = this->event.getIf< sf::Event::MouseWheelScrolled >() )
     {
-        if (this->event.mouseWheelScroll.delta > 0 && this->zoomFactorTarget > 1 / ConfigManager::getInstance().getScale())
+        const float scale = 1.0f / ConfigManager::getInstance().getScale();
+
+        if ( mouseWheel->delta > 0 && this->zoomFactorTarget > scale )
         {
-            this->zoomFactorTarget -= 0.05f * (1 / ConfigManager::getInstance().getScale());
-            if (this->zoomFactorTarget < 1 / ConfigManager::getInstance().getScale())
-                this->zoomFactorTarget = 1 / ConfigManager::getInstance().getScale();
+            this->zoomFactorTarget -= 0.05f * scale;
+            if ( this->zoomFactorTarget < scale )
+                this->zoomFactorTarget = scale;
         }
-        else if (this->event.mouseWheelScroll.delta < 0 && this->zoomFactorTarget < (1 / ConfigManager::getInstance().getScale()) * 2.f)
+        else if ( mouseWheel->delta < 0 && this->zoomFactorTarget < scale * 2.f )
         {
-            this->zoomFactorTarget += 0.05f * (1 / ConfigManager::getInstance().getScale());
-            if (this->zoomFactorTarget > (1 / ConfigManager::getInstance().getScale()) * 2.f)
-                this->zoomFactorTarget = (1 / ConfigManager::getInstance().getScale()) * 2.f;
+            this->zoomFactorTarget += 0.05f * scale;
+            if ( this->zoomFactorTarget > scale * 2.f )
+                this->zoomFactorTarget = scale * 2.f;
         }
     }
 }

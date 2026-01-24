@@ -18,7 +18,7 @@ void DropSystem::drop(entt::registry& registry, entt::entity& entity)
 
     auto drop = registry.create();
 
-    sf::Sprite dropSprite;
+    sf::Sprite dropSprite{ CreateSprite("MONEY_10") };
     switch (ProceduralGenerationSystem::GetRandomNumber(1, 9))
     {
         case 1:
@@ -59,7 +59,7 @@ void DropSystem::drop(entt::registry& registry, entt::entity& entity)
             break;
     }
 
-    dropSprite.setScale(0.5f, 0.5f);
+    dropSprite.setScale(sf::Vector2f{ 0.5f, 0.5f } );
     registry.emplace<Renderable>(drop, dropSprite);
 
     auto dropPosition = registry.get<Position>(entity);

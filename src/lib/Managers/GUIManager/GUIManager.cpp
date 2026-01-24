@@ -26,7 +26,9 @@ GUIManager::GUIManager(sf::RenderWindow& window, entt::registry& registry, sf::E
     shieldTile(window, registry),
     moneyBar(window, registry),
     expInfo(window, registry),
-    journal(window, registry, quests)
+    journal(window, registry, quests),
+    shaderTexture(window.getSize()),
+    shaderSprite(shaderTexture)
 {
     this->initializeShader();
 }
@@ -79,7 +81,7 @@ void GUIManager::update(sf::Time deltaTime)
             this->expInfo.update();
         }
 
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape) && this->readyToQuit)
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Escape) && this->readyToQuit)
         {
             SceneManager::getInstance().setCurrentScene(Scene::MainMenu);
         }
@@ -175,7 +177,12 @@ void GUIManager::toggleQuickMenu(bool value)
 
 void GUIManager::initializeShader()
 {
-    this->shader.loadFromFile(ASSETS_PATH + std::string("shader.frag"), sf::Shader::Fragment);
-    this->shaderTexture.create(this->window.getSize().x, this->window.getSize().y);
+    if (!this->shader.loadFromFile(ASSETS_PATH + std::string("shader.frag"), sf::Shader::Type::Fragment))
+    {
+        throw( "ERROR ");
+    }
+
+    this->shaderTexture.resize(this->window.getSize());
+
     this->shaderSprite.setTexture(this->shaderTexture);
 }

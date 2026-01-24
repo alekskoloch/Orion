@@ -31,7 +31,7 @@ public:
         float rotation = CalculateAzimuthAngleInDegrees(direction, 90.f);
 
         sf::Sprite sprite = CreateSprite(weapon.name + "_bullet");
-        sprite.setRotation(rotation);
+        sprite.setRotation( sf::degrees( rotation ) );
 
         auto bulletEntity = registry.create();
         registry.emplace<Bullet>(bulletEntity);

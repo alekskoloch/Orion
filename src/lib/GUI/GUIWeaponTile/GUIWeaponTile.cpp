@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "GUIWeaponTile.h"
 
-GUIWeaponTile::GUIWeaponTile(sf::RenderWindow& window, entt::registry& registry) : window(window), registry(registry)
+GUIWeaponTile::GUIWeaponTile(sf::RenderWindow& window, entt::registry& registry) : window(window), registry(registry), weaponIcon{ CreateSprite("red_weapon") }
 {
     this->initialize();
 }
@@ -13,23 +13,22 @@ void GUIWeaponTile::initialize()
     this->circle.setOutlineColor(sf::Color::White);
     this->circle.setOutlineThickness(4.f);
     this->circle.setPointCount(50);
-    this->circle.setOrigin(this->circle.getGlobalBounds().width / 2.f, this->circle.getGlobalBounds().height / 2.f);
+    this->circle.setOrigin( this->circle.getGlobalBounds().getCenter() );
 
     this->loadingCircle.setRadius(100.f * ConfigManager::getInstance().getScale());
     this->loadingCircle.setFillColor(sf::Color(255,0,0,50));
     this->circle.setPointCount(50);
-    this->loadingCircle.setOrigin(this->loadingCircle.getGlobalBounds().width / 2.f, this->loadingCircle.getGlobalBounds().height / 2.f);
-    this->loadingCircle.setPosition(0, 0);
+    this->loadingCircle.setOrigin( this->loadingCircle.getGlobalBounds().getCenter() );
+    this->loadingCircle.setPosition( sf::Vector2f{ 0, 0 } );
 
     this->setWeaponTexture("red_weapon");
 }
 
-void GUIWeaponTile::setWeaponTexture(const std::string& textureName)
+void GUIWeaponTile::setWeaponTexture(const std::string& /*textureName*/)
 {
-    this->weaponIcon = CreateSprite(textureName);
-    this->weaponIcon.setScale(ConfigManager::getInstance().getScale(), ConfigManager::getInstance().getScale());
-    float iconWidth = this->weaponIcon.getGlobalBounds().width;
-    this->weaponIcon.setPosition(120 * ConfigManager::getInstance().getScale() - iconWidth / 2, 120 * ConfigManager::getInstance().getScale() - iconWidth / 2);
+    this->weaponIcon.setScale( sf::Vector2f{ ConfigManager::getInstance().getScale(), ConfigManager::getInstance().getScale() } );
+    float iconWidth = this->weaponIcon.getGlobalBounds().size.x;
+    this->weaponIcon.setPosition( sf::Vector2f{ 2120 * ConfigManager::getInstance().getScale() - iconWidth / 2, 120 * ConfigManager::getInstance().getScale() - iconWidth / 2 } );
 }
 
 void GUIWeaponTile::update()
@@ -64,7 +63,7 @@ void GUIWeaponTile::update()
             this->loadingCircle.setRadius((200.f * ConfigManager::getInstance().getScale()) * (1 - cooldown / maxCooldown));
 
             this->loadingCircle.setOrigin(this->loadingCircle.getGlobalBounds().width / 2.f, this->loadingCircle.getGlobalBounds().height / 2.f);
-            this->loadingCircle.setPosition(0, 0);
+            this->loadingCircle.setPosition( sf::Vector2f{ 0, 0 } );
         }
     }
 }
@@ -83,7 +82,7 @@ void GUIWeaponTile::clear()
     this->specialShotAvailable = false;
 }
 
-GUIShieldTile::GUIShieldTile(sf::RenderWindow& window, entt::registry& registry) : window(window), registry(registry)
+GUIShieldTile::GUIShieldTile(sf::RenderWindow& window, entt::registry& registry) : window(window), registry(registry), shieldIcon{ CreateSprite("basic_shield_ico") }
 {
     this->initialize();   
 }
@@ -95,23 +94,22 @@ void GUIShieldTile::initialize()
     this->circle.setOutlineColor(sf::Color::White);
     this->circle.setOutlineThickness(4.f);
     this->circle.setPointCount(50);
-    this->circle.setOrigin(this->circle.getGlobalBounds().width / 2.f, this->circle.getGlobalBounds().height / 2.f);
-    this->circle.setPosition(0, 200 * ConfigManager::getInstance().getScale());
+    this->circle.setOrigin( this->circle.getGlobalBounds().getCenter() );
+    this->circle.setPosition( sf::Vector2f{ 0, 200 * ConfigManager::getInstance().getScale() } );
 
     this->shiedlStateCircle.setRadius(0.f);
     this->shiedlStateCircle.setFillColor(sf::Color(0,0,255,100));
     this->circle.setPointCount(50);
-    this->shiedlStateCircle.setOrigin(this->shiedlStateCircle.getGlobalBounds().width / 2.f, this->shiedlStateCircle.getGlobalBounds().height / 2.f);
-    this->shiedlStateCircle.setPosition(0, 200 * ConfigManager::getInstance().getScale());
+    this->shiedlStateCircle.setOrigin( this->shiedlStateCircle.getGlobalBounds().getCenter() );
+    this->shiedlStateCircle.setPosition( sf::Vector2f{ 0, 200 * ConfigManager::getInstance().getScale() } );
 
     this->setShieldTexture("basic_shield_ico");
 }
 
-void GUIShieldTile::setShieldTexture(const std::string& textureName)
+void GUIShieldTile::setShieldTexture(const std::string&  /*textureName*/)
 {
-    this->shieldIcon = CreateSprite(textureName);
-    this->shieldIcon.setScale(0.8f * ConfigManager::getInstance().getScale(), 0.8f * ConfigManager::getInstance().getScale());
-    this->shieldIcon.setPosition(this->circle.getPosition().x + (55 * ConfigManager::getInstance().getScale()), this->circle.getPosition().y + (55 * ConfigManager::getInstance().getScale()));
+    this->shieldIcon.setScale( sf::Vector2f { 0.8f * ConfigManager::getInstance().getScale(), 0.8f * ConfigManager::getInstance().getScale() } );
+    this->shieldIcon.setPosition( sf::Vector2f{ this->circle.getPosition().x + (55 * ConfigManager::getInstance().getScale()), this->circle.getPosition().y + (55 * ConfigManager::getInstance().getScale()) } );
 }
 
 void GUIShieldTile::update()
@@ -148,7 +146,7 @@ void GUIShieldTile::clear()
     this->shieldDuration = 0.f;
 }
 
-GUIMoneyBar::GUIMoneyBar(sf::RenderWindow& window, entt::registry& registry) : window(window), registry(registry)
+GUIMoneyBar::GUIMoneyBar(sf::RenderWindow& window, entt::registry& registry) : window(window), registry(registry), moneyText{ FontManager::getInstance().getFont("font") }
 {
     this->bar.setSize(sf::Vector2f(
         300 * ConfigManager::getInstance().getScale(),
@@ -158,17 +156,16 @@ GUIMoneyBar::GUIMoneyBar(sf::RenderWindow& window, entt::registry& registry) : w
     this->bar.setOutlineColor(sf::Color::White);
     this->bar.setOutlineThickness(4.f);
     this->bar.setPosition(
-        100 * ConfigManager::getInstance().getScale(),
-        0 * ConfigManager::getInstance().getScale()
+        sf::Vector2f{ 100 * ConfigManager::getInstance().getScale(),
+        0 * ConfigManager::getInstance().getScale() }
     );
 
-    this->moneyText.setFont(FontManager::getInstance().getFont("font"));
     this->moneyText.setCharacterSize(30 * ConfigManager::getInstance().getScale());
     this->moneyText.setFillColor(sf::Color::White);
     //TODO: change position
     this->moneyText.setPosition(
-        250 * ConfigManager::getInstance().getScale(),
-        15 * ConfigManager::getInstance().getScale()
+        sf::Vector2f{ 250 * ConfigManager::getInstance().getScale(),
+        15 * ConfigManager::getInstance().getScale() }
     );
     this->moneyText.setString("0$");
 }

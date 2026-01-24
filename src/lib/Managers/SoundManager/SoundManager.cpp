@@ -48,7 +48,7 @@ bool SoundManager::isLoopedSoundPlaying(const std::string& soundName)
 {
     if(soundBuffers.find(soundName) == soundBuffers.end())
         return false;
-    return sounds[soundName].getStatus() == sf::Sound::Playing;
+    return sounds[soundName].getStatus() == sf::Sound::Status::Playing;
 }
 
 void SoundManager::loadMusic(const std::string& musicName, const std::string& musicPath)
