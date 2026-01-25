@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Window.hpp"
+
 #include "GUIManager.h"
 #include "SystemManager.h"
 
@@ -10,7 +12,7 @@ public:
     void run();
 
 private:
-    sf::RenderWindow window;
+    Window m_window;
     entt::registry registry;
     sf::Clock clock;
     sf::Event event;

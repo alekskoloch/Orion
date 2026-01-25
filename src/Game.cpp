@@ -6,19 +6,12 @@
 #include "TextureManager.h"
 
 Game::Game()
-    : window(sf::VideoMode({ConfigManager::getInstance().getScreenWidth(), 
-                            ConfigManager::getInstance().getScreenHeight()}),
-             "Orion", 
-             sf::Style::Default, 
-             ConfigManager::getInstance().getWindowStyle()),
-      event(sf::Event::Closed{}),
-      systemManager(this->window, this->registry, this->event),
-      guiManager(this->window, this->registry, this->event, this->systemManager.getQuests()),
-      cursor(sf::Cursor::createFromSystem(sf::Cursor::Type::Arrow).value())
+    : event( sf::Event::Closed{} ), systemManager( m_window.getWindow(), this->registry, this->event ),
+      guiManager( m_window.getWindow(), this->registry, this->event, this->systemManager.getQuests() ),
+      cursor( sf::Cursor::createFromSystem( sf::Cursor::Type::Arrow ).value() )
 {
-    this->window.setFramerateLimit(ConfigManager::getInstance().getFrameRateLimit());
     this->loadCursor();
-    SceneManager::getInstance().setCurrentScene(Scene::MainMenu);
+    SceneManager::getInstance().setCurrentScene( Scene::MainMenu );
 }
 
 void Game::loadCursor()
@@ -54,12 +47,12 @@ void Game::loadCursor()
         std::cerr << "Failed to load cursor texture" << '\n';
     }
 
-    this->window.setMouseCursor( this->cursor );
+    m_window.getWindow().setMouseCursor( this->cursor );
 }
 
 void Game::run()
 {
-    while ( window.isOpen() )
+    while ( m_window.getWindow().isOpen() )
     {
         this->processEvents();
         this->update( this->clock.restart() );
@@ -69,13 +62,13 @@ void Game::run()
 
 void Game::processEvents()
 {
-    while (const std::optional event = window.pollEvent())
+    while (const std::optional event = m_window.getWindow().pollEvent())
     {
         this->event = *event; 
 
         if (event->is<sf::Event::Closed>())
         {
-            window.close();
+            m_window.getWindow().close();
         }
 
         if (const auto* keyPressed = event->getIf<sf::Event::KeyPressed>())
@@ -121,10 +114,10 @@ void Game::update( sf::Time deltaTime )
 
 void Game::render()
 {
-    this->window.clear();
+    m_window.getWindow().clear();
 
     this->systemManager.executeRenderSystems();
     this->guiManager.draw();
 
-    this->window.display();
+    m_window.getWindow().display();
 }

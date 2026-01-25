@@ -22,6 +22,8 @@ void ConfigManager::loadConfig()
     this->SCREEN_HEIGHT = config["resolution"]["height"];
     this->FRAME_RATE_LIMIT = config["frameRateLimit"];
     this->WINDOW_STYLE = config["windowMode"].get<std::string>();
+    this->WINDOW_TITLE = config[ "windowTitle" ].get< std::string >();
+    this->ANTIALIASING = config["windowAntialiasing"];
 }
 
 float ConfigManager::getScale()
