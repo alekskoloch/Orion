@@ -47,12 +47,12 @@ void Game::loadCursor()
         std::cerr << "Failed to load cursor texture" << '\n';
     }
 
-    m_window.getWindow().setMouseCursor( this->cursor );
+    m_window.setMouseCursor( this->cursor );
 }
 
 void Game::run()
 {
-    while ( m_window.getWindow().isOpen() )
+    while ( m_window.isOpen() )
     {
         this->processEvents();
         this->update( this->clock.restart() );
@@ -62,13 +62,13 @@ void Game::run()
 
 void Game::processEvents()
 {
-    while (const std::optional event = m_window.getWindow().pollEvent())
+    while ( const auto event = m_window.pollEvent() )
     {
         this->event = *event; 
 
         if (event->is<sf::Event::Closed>())
         {
-            m_window.getWindow().close();
+            m_window.close();
         }
 
         if (const auto* keyPressed = event->getIf<sf::Event::KeyPressed>())
@@ -114,10 +114,10 @@ void Game::update( sf::Time deltaTime )
 
 void Game::render()
 {
-    m_window.getWindow().clear();
+    m_window.clear();
 
     this->systemManager.executeRenderSystems();
     this->guiManager.draw();
 
-    m_window.getWindow().display();
+    m_window.display();
 }

@@ -1,9 +1,12 @@
 #pragma once
 
 #include <memory>
+#include <optional>
 
 namespace sf
 {
+class Cursor;
+class Event;
 class RenderWindow;
 } // namespace sf
 
@@ -21,6 +24,17 @@ public:
 
     void initWindow();
 
+    [[nodiscard]] auto isOpen() const -> bool;
+    void close() const;
+
+    [[nodiscard]] auto pollEvent() const -> std::optional< sf::Event >;
+
+    void clear() const;
+    void display() const;
+
+    void setMouseCursor( const sf::Cursor& cursor );
+
+    // TODO: remove after refactor, temporary solution
     auto getWindow() -> sf::RenderWindow&;
 
 private:

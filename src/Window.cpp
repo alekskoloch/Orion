@@ -34,6 +34,36 @@ void Window::initWindow()
     m_renderWindow->setFramerateLimit( windowFrameRateLimit );
 }
 
+auto Window::isOpen() const -> bool
+{
+    return m_renderWindow->isOpen();
+}
+
+void Window::close() const
+{
+    m_renderWindow->close();
+}
+
+auto Window::pollEvent() const -> std::optional< sf::Event >
+{
+    return m_renderWindow->pollEvent();
+}
+
+void Window::clear() const
+{
+    m_renderWindow->clear();
+}
+
+void Window::display() const
+{
+    m_renderWindow->display();
+}
+
+void Window::setMouseCursor( const sf::Cursor& cursor )
+{
+    m_renderWindow->setMouseCursor( cursor );
+}
+
 auto Window::getWindow() -> sf::RenderWindow&
 {
     return *m_renderWindow;
