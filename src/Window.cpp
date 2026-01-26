@@ -1,11 +1,18 @@
 #include "Window.hpp"
 
+#include <SFML/Graphics.hpp>
+
 #include "ConfigManager.hpp"
 
-Window::Window()
+Window::Window() : m_renderWindow{ std::make_unique< sf::RenderWindow >() }
 {
     initWindow();
 }
+
+Window::~Window() = default;
+
+Window::Window( Window&& ) noexcept = default;
+auto Window::operator=( Window&& ) noexcept -> Window& = default;
 
 void Window::initWindow()
 {
@@ -23,6 +30,11 @@ void Window::initWindow()
     sf::ContextSettings contextSettings;
     contextSettings.antiAliasingLevel = windowAntialiasingLevel;
 
-    m_renderTarget.create( windowVideoMode, windowTitle, windowStyle, contextSettings );
-    m_renderTarget.setFramerateLimit( windowFrameRateLimit );
+    m_renderWindow->create( windowVideoMode, windowTitle, windowStyle, contextSettings );
+    m_renderWindow->setFramerateLimit( windowFrameRateLimit );
+}
+
+auto Window::getWindow() -> sf::RenderWindow&
+{
+    return *m_renderWindow;
 }
