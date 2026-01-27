@@ -116,7 +116,7 @@ void Game::render()
 {
     m_window.clear();
 
-    this->systemManager.executeRenderSystems();
+    this->systemManager.executeRenderSystems( m_window );
     this->guiManager.draw();
 
     m_window.display();

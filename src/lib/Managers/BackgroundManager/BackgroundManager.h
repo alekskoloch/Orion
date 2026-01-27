@@ -8,6 +8,8 @@
 
 #include "player.h"
 
+#include "Window.hpp"
+
 class BackgroundTile
 {
 public:
@@ -76,18 +78,18 @@ public:
         }
     }
 
-    void draw(sf::RenderWindow& window)
+    void draw( Window& window )
     {
-        window.draw(tile);
+        window.draw( tile );
 
-        for (auto& star : stars)
+        for ( auto& star : stars )
         {
-            window.draw(star);
+            window.draw( star );
         }
 
-        for (auto& object : objects)
+        for ( auto& object : objects )
         {
-            window.draw(object);
+            window.draw( object );
         }
     }
 
@@ -108,12 +110,12 @@ private:
 class BackgroundManager
 {
 public:
-    BackgroundManager(entt::registry& registry, sf::RenderWindow& window);
+    BackgroundManager(entt::registry& registry);
 
     void initialize();
 
     void update();
-    void draw();
+    void draw( Window& window );
     
     void clear();
 
@@ -121,7 +123,6 @@ public:
     std::vector<BackgroundTile>& getBackgroundTiles() { return backgroundTiles; }
 private:
     entt::registry& registry;
-    sf::RenderWindow& window;
 
     int currentPlayerTileX = 0;
     int currentPlayerTileY = 0;

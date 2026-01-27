@@ -37,7 +37,7 @@
 
 
 SystemManager::SystemManager(sf::RenderWindow& window, entt::registry& registry, sf::Event& event) :
-    window(window), registry(registry), event(event), backgroundManager(registry, window), particleSystem(registry)
+    window(window), registry(registry), event(event), backgroundManager(registry), particleSystem(registry)
 {
 
 }
@@ -177,14 +177,14 @@ void SystemManager::executeUpdateSystems(sf::Time deltaTime)
     }
 }
 
-void SystemManager::executeRenderSystems()
+void SystemManager::executeRenderSystems( Window& window )
 {
     if (SceneManager::getInstance().getCurrentScene() == Scene::Game)
     {
         CameraSystem::setPlayerCamera(this->registry, this->window);
         CameraSystem::setZoomFactor(this->zoomFactor, this->window);
         
-        backgroundManager.draw();
+        backgroundManager.draw( window );
         
         this->particleSystem.draw(this->window);
         RenderSystem::renderEntities(this->window, this->registry);

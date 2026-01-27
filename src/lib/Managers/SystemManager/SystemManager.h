@@ -26,7 +26,7 @@ public:
     void executeInitializationSystems();
     void executeEventSystems();
     void executeUpdateSystems(sf::Time deltaTime);
-    void executeRenderSystems();
+    void executeRenderSystems( Window& window );
 
     void enableSlowMotion() { this->slowMotion = true; }
     void disableSlowMotion() { this->slowMotion = false; }

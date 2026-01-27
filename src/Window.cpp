@@ -59,6 +59,11 @@ void Window::display() const
     m_renderWindow->display();
 }
 
+void Window::draw( const sf::Drawable& drawable )
+{
+    m_renderWindow->draw( drawable, sf::RenderStates::Default );
+}
+
 void Window::setMouseCursor( const sf::Cursor& cursor )
 {
     m_renderWindow->setMouseCursor( cursor );

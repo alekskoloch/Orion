@@ -3,7 +3,7 @@
 
 //TODO: Color for tiles is only for testing purposes
 
-BackgroundManager::BackgroundManager(entt::registry& registry, sf::RenderWindow& window) : registry(registry), window(window)
+BackgroundManager::BackgroundManager(entt::registry& registry) : registry(registry)
 {
     
 }
@@ -50,11 +50,11 @@ void BackgroundManager::update()
     }
 }
 
-void BackgroundManager::draw()
+void BackgroundManager::draw( Window& window )
 {
-    for (auto& backgroundTile : backgroundTiles)
+    for ( auto& backgroundTile : backgroundTiles )
     {
-        backgroundTile.draw(window);
+        backgroundTile.draw( window );
     }
 }
 

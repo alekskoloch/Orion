@@ -6,7 +6,9 @@
 namespace sf
 {
 class Cursor;
+class Drawable;
 class Event;
+class RenderStates;
 class RenderWindow;
 } // namespace sf
 
@@ -31,6 +33,7 @@ public:
 
     void clear() const;
     void display() const;
+    void draw( const sf::Drawable& drawable );
 
     void setMouseCursor( const sf::Cursor& cursor );
 
