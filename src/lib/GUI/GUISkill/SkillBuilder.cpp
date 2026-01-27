@@ -1,12 +1,6 @@
 #include "pch.h"
 #include "SkillBuilder.h"
 
-SkillBuilder& SkillBuilder::addWindow(sf::RenderWindow& window)
-{
-    this->window = &window;
-    return *this;
-}
-
 SkillBuilder& SkillBuilder::addRegistry(entt::registry& registry)
 {
     this->registry = &registry;
@@ -81,5 +75,5 @@ SkillBuilder& SkillBuilder::addActiveStars(std::vector<std::unique_ptr<GUIStar>>
 
 std::unique_ptr<GUISkill> SkillBuilder::build()
 {
-    return std::make_unique<GUISkill>(*window, *registry, *dialogBox, iconPosition, name, descriptions, iconTextureName, onActivateFunctions, requirements, skillsToUnlock, maxLevel, currentLevel, *activeStars);
+    return std::make_unique<GUISkill>( *registry, *dialogBox, iconPosition, name, descriptions, iconTextureName, onActivateFunctions, requirements, skillsToUnlock, maxLevel, currentLevel, *activeStars );
 }

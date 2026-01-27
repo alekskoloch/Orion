@@ -44,6 +44,21 @@ void Window::close() const
     m_renderWindow->close();
 }
 
+auto Window::getView() const -> const sf::View&
+{
+    return m_renderWindow->getView();
+}
+
+void Window::setView( const sf::View& view )
+{
+    m_renderWindow->setView( view );
+}
+
+void Window::setDefaultView() 
+{
+    m_renderWindow->setView( m_renderWindow->getDefaultView() );
+}
+
 auto Window::pollEvent() const -> std::optional< sf::Event >
 {
     return m_renderWindow->pollEvent();
@@ -62,6 +77,11 @@ void Window::display() const
 void Window::draw( const sf::Drawable& drawable )
 {
     m_renderWindow->draw( drawable, sf::RenderStates::Default );
+}
+
+auto Window::getMousePosition() const -> sf::Vector2i
+{
+    return sf::Mouse::getPosition( *m_renderWindow );
 }
 
 void Window::setMouseCursor( const sf::Cursor& cursor )

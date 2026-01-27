@@ -39,7 +39,7 @@ void GUIManager::processInput()
         this->journal.processInput(this->event);
 }
 
-void GUIManager::update(sf::Time deltaTime)
+void GUIManager::update(sf::Time deltaTime, const sf::Vector2i mousePosition )
 {
     if (SceneManager::getInstance().getCurrentScene() == Scene::Game)
     {
@@ -88,7 +88,7 @@ void GUIManager::update(sf::Time deltaTime)
     }
     else if (SceneManager::getInstance().getCurrentScene() == Scene::SkillTree)
     {
-        this->skillTreeGUI.update(deltaTime);
+        this->skillTreeGUI.update( deltaTime, mousePosition );
         this->quitTimer = 0.f;
     }
     else if (SceneManager::getInstance().getCurrentScene() == Scene::MainMenu)
@@ -101,7 +101,7 @@ void GUIManager::update(sf::Time deltaTime)
     }
 }
 
-void GUIManager::draw()
+void GUIManager::draw( Window& window )
 {
     if (SceneManager::getInstance().getCurrentScene() == Scene::Game)
     {
@@ -126,7 +126,7 @@ void GUIManager::draw()
     }
     else if (SceneManager::getInstance().getCurrentScene() == Scene::SkillTree)
     {
-        this->skillTreeGUI.draw();
+        this->skillTreeGUI.draw( window );
     }
     else if (SceneManager::getInstance().getCurrentScene() == Scene::MainMenu)
     {

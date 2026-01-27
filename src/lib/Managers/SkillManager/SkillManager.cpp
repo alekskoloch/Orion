@@ -1,10 +1,12 @@
 #include "pch.h"
 #include "SkillManager.h"
 
+#include "Window.hpp"
+
 SkillManager::~SkillManager() = default;
 
-SkillManager::SkillManager(sf::RenderWindow& window, entt::registry& registry)
-    : window(window), registry(registry), dialogBox(window, {"Are you sure you want to unlock this skill?"}, this->font), box(600.f * ConfigManager::getInstance().getScale(), 300.f * ConfigManager::getInstance().getScale(), sf::Vector2f(350.f * ConfigManager::getInstance().getScale(), 200.f * ConfigManager::getInstance().getScale()), this->font)
+SkillManager::SkillManager( entt::registry& registry )
+    : registry(registry), dialogBox( { "Are you sure you want to unlock this skill?" }, this->font ), box(600.f * ConfigManager::getInstance().getScale(), 300.f * ConfigManager::getInstance().getScale(), sf::Vector2f(350.f * ConfigManager::getInstance().getScale(), 200.f * ConfigManager::getInstance().getScale()), this->font)
 {
     this->font.openFromFile(ASSETS_PATH + std::string("fonts/font.ttf"));
 
@@ -13,43 +15,52 @@ SkillManager::SkillManager(sf::RenderWindow& window, entt::registry& registry)
     this->initBox();
 }
 
-void SkillManager::update(sf::Time& deltaTime)
+void SkillManager::update( sf::Time& deltaTime, const sf::Vector2i& mousePosition )
 {
     this->updateBox();
     this->box.update();
 
-    for (size_t i = 0; i < this->activeStars.size(); ++i)
+    for ( size_t i = 0; i < this->activeStars.size(); ++i )
     {
-        this->activeStars[i]->update(deltaTime.asSeconds());
+        this->activeStars[ i ]->update( deltaTime.asSeconds() );
     }
 
-    for (size_t i = 0; i < this->skills.size(); ++i)
+    for ( size_t i = 0; i < this->skills.size(); ++i )
     {
-        this->skills[i]->update(deltaTime);
+        this->skills[ i ]->update( deltaTime, mousePosition );
     }
 
-    if (this->dialogBox.getState() != GUIDialogBoxState::Hidden)
-        this->dialogBox.update();
+    if ( this->dialogBox.getState() != GUIDialogBoxState::Hidden )
+    {
+        this->dialogBox.update( mousePosition );
+    }
 }
 
-void SkillManager::draw()
+void SkillManager::draw( Window& window )
 {
     for (auto& star : this->activeStars)
-        this->window.draw(*star);
+    {
+        window.draw( *star );
+    }
 
     for (auto& skill : this->skills)
-        skill->draw();
+    {
+        skill->draw( window );
+    }
 
-    sf::View view = window.getView();
+    //TODO: getWindow will be deleted
+    sf::View view = window.getWindow().getView();
 
-    this->window.setView(this->window.getDefaultView());
+    window.setDefaultView();
 
     if (this->dialogBox.getState() != GUIDialogBoxState::Hidden)
-        this->dialogBox.draw();
+    {
+        this->dialogBox.draw( window );
+    }
 
-    this->window.draw(this->box);
+    window.draw( this->box );
 
-    this->window.setView(view);
+    window.setView( view );
 }
 
 void SkillManager::unlockSkills(std::vector<std::string> skillsToUnlock)
@@ -93,44 +104,51 @@ void SkillManager::clear()
     this->activeStars.clear();
 }
 
-void SkillManager::loadSkillFromConfig(std::string skillName, std::ifstream& configFile)
+void SkillManager::loadSkillFromConfig( std::string skillName, std::ifstream& configFile )
 {
     nlohmann::json configJson;
     configFile >> configJson;
 
     auto textureSkillName = skillName;
-    textureSkillName.erase(std::remove(textureSkillName.begin(), textureSkillName.end(), ' '), textureSkillName.end());
+    textureSkillName.erase( std::remove( textureSkillName.begin(), textureSkillName.end(), ' ' ),
+                            textureSkillName.end() );
 
     GUISkill::loadTexturesIntoManager( textureSkillName );
 
-    if (!configJson.contains("skills") || !configJson["skills"].is_array())
-        throw std::runtime_error("Could not find skills array in config file");
-    else
+    if ( !configJson.contains( "skills" ) || !configJson[ "skills" ].is_array() )
     {
-        for (const auto& skillJson : configJson["skills"])
-        {
-            if (skillJson.contains("name") && skillJson["name"] == skillName)
-            {   
-                this->skills.push_back(
-                    SkillBuilder()
-                        .addWindow(this->window)
-                        .addRegistry(this->registry)
-                        .addDialogBox(this->dialogBox)
-                        .addIconPosition(sf::Vector2f(skillJson["position"]["x"].get<float>(), skillJson["position"]["y"].get<float>()))
-                        .addName(skillJson["name"].get<std::string>())
-                        .addDescriptions(skillJson["descriptions"].get<std::vector<std::string>>())
-                        .addIconTextureName(removeWhitespace(skillJson["name"].get<std::string>()))
-                        .addOnActivateFunctions(this->loadOnActivateFunctions(configFile, skillJson))
-                        .addRequirements(skillJson["requirements"].get<std::vector<RequirementType>>())
-                        .addSkillsToUnlock(skillJson["skillsToUnlock"].get<std::vector<std::string>>())
-                        .addMaxLevel(static_cast<unsigned int>(skillJson["descriptions"].get<std::vector<std::string>>().size()))
-                        .addCurrentLevel(0)
-                        .addActiveStars(this->activeStars)
-                        .build()
-                        );
+        throw std::runtime_error( "Could not find skills array in config file" );
+    }
 
-                return;
-            }
+    for ( const auto& skillJson : configJson[ "skills" ] )
+    {
+        if ( skillJson.contains( "name" ) && skillJson[ "name" ] == skillName )
+        {
+            this->skills.push_back(
+                SkillBuilder()
+                    .addRegistry( this->registry )
+                    .addDialogBox( this->dialogBox )
+                    .addIconPosition(
+                        sf::Vector2f( skillJson[ "position" ][ "x" ].get< float >(),
+                                      skillJson[ "position" ][ "y" ].get< float >() ) )
+                    .addName( skillJson[ "name" ].get< std::string >() )
+                    .addDescriptions(
+                        skillJson[ "descriptions" ].get< std::vector< std::string > >() )
+                    .addIconTextureName(
+                        removeWhitespace( skillJson[ "name" ].get< std::string >() ) )
+                    .addOnActivateFunctions(
+                        this->loadOnActivateFunctions( configFile, skillJson ) )
+                    .addRequirements(
+                        skillJson[ "requirements" ].get< std::vector< RequirementType > >() )
+                    .addSkillsToUnlock(
+                        skillJson[ "skillsToUnlock" ].get< std::vector< std::string > >() )
+                    .addMaxLevel( static_cast< unsigned int >(
+                        skillJson[ "descriptions" ].get< std::vector< std::string > >().size() ) )
+                    .addCurrentLevel( 0 )
+                    .addActiveStars( this->activeStars )
+                    .build() );
+
+            return;
         }
     }
 }

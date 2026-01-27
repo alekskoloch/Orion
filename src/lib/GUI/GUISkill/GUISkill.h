@@ -49,20 +49,19 @@ const sf::Color INACTIVE_DESCRIPTION_COLOR = sf::Color(150, 150, 150);
 class GUISkill
 {
 public:
-    GUISkill( sf::RenderWindow& window, entt::registry& registry, GUIDialogBox& dialogBox,
+    GUISkill( entt::registry& registry, GUIDialogBox& dialogBox,
               sf::Vector2f iconPosition, std::string name, std::vector< std::string > descriptions,
               std::string iconTextureName,
               std::vector< std::pair< SkillType, float > > onActivateFunctions,
               std::vector< RequirementType > requirements, std::vector< std::string > skillToUnlock,
               unsigned int maxLevel, unsigned int currentLevel,
               std::vector< std::unique_ptr< GUIStar > >& activeStars );
-    void update( sf::Time& deltaTime );
-    void draw();
+    void update( sf::Time& deltaTime, const sf::Vector2i& mousePosition );
+    void draw( Window& window );
 
     static void loadTexturesIntoManager( const std::string& iconTextureName );
 
 private:
-    sf::RenderWindow& window;
     entt::registry& registry;
     GUIDialogBox& dialogBox;
 
@@ -106,7 +105,7 @@ private:
     sf::Color getStoneColor();
     sf::Vector2f calculateStarPosition();
 
-    void updateHoverState();
+    void updateHoverState( const sf::Vector2i& mousePosition );
     void handleHover();
     void handleBackgroundStars();
     void handleLeftClick();

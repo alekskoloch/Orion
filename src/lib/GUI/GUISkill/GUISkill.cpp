@@ -1,7 +1,8 @@
+#include "Window.hpp"
 #include "pch.h"
 #include "GUISkill.h"
 
-GUISkill::GUISkill( sf::RenderWindow& window, entt::registry& registry, GUIDialogBox& dialogBox,
+GUISkill::GUISkill( entt::registry& registry, GUIDialogBox& dialogBox,
                     sf::Vector2f iconPosition, std::string name,
                     std::vector< std::string > descriptions, std::string iconTextureName,
                     std::vector< std::pair< SkillType, float > > onActivateFunctions,
@@ -9,7 +10,7 @@ GUISkill::GUISkill( sf::RenderWindow& window, entt::registry& registry, GUIDialo
                     std::vector< std::string > skillToUnlock, unsigned int maxLevel,
                     unsigned int currentLevel,
                     std::vector< std::unique_ptr< GUIStar > >& activeStars )
-    : window( window ), registry( registry ), dialogBox( dialogBox ), iconPosition( iconPosition ),
+    : registry( registry ), dialogBox( dialogBox ), iconPosition( iconPosition ),
       name( name ), descriptions( descriptions ), iconTextureName( iconTextureName ),
       onActivateFunctions( onActivateFunctions ), requirements( requirements ),
       skillsToUnlock( skillToUnlock ), maxLevel( maxLevel ), currentLevel( currentLevel ),
@@ -98,11 +99,11 @@ void GUISkill::initStarsForSkill()
     this->isStarExists = true;
 }
 
-void GUISkill::update(sf::Time& deltaTime)
+void GUISkill::update( sf::Time& deltaTime, const sf::Vector2i& mousePosition )
 {
     if (this->dialogBox.getState() == GUIDialogBoxState::Hidden)
     {
-        this->updateHoverState();
+        this->updateHoverState( mousePosition );
 
         if (this->hover)
         {
@@ -137,27 +138,35 @@ void GUISkill::update(sf::Time& deltaTime)
     }
 }
 
-void GUISkill::draw()
+void GUISkill::draw( Window& window )
 {
-    for (auto& star : this->stars)
-        this->window.draw(*star);
+    for ( auto& star : this->stars )
+    {
+        window.draw( *star );
+    }
 
-    this->window.draw(this->iconSprite);
+    window.draw( this->iconSprite );
 
-    this->window.draw(this->nameText);
+    window.draw( this->nameText );
 
     sf::View view = window.getView();
 
-    this->window.setView(this->window.getDefaultView());
+    window.setDefaultView();
 
-    if (this->hover)
-        for (auto& descriptionText : this->descriptionTexts)
-            this->window.draw(descriptionText);
+    if ( this->hover )
+    {
+        for ( auto& descriptionText : this->descriptionTexts )
+        {
+            window.draw( descriptionText );
+        }
+    }
 
-    this->window.setView(view);
+    window.setView( view );
 
-    for (auto& circleSegment : this->circleSegments)
-        this->window.draw(*circleSegment);
+    for ( auto& circleSegment : this->circleSegments )
+    {
+        window.draw( *circleSegment );
+    }
 }
 
 sf::Text GUISkill::getConfiguredText(std::string string, unsigned int characterSize, sf::Color textColor)
@@ -172,9 +181,10 @@ sf::Text GUISkill::getConfiguredText(std::string string, unsigned int characterS
 
 void GUISkill::centerText( sf::Text& text )
 {
+    const auto screenWidth = ConfigManager::getInstance().getScreenWidth();
+    const auto screenHeight = ConfigManager::getInstance().getScreenHeight();
     text.setOrigin( text.getGlobalBounds().getCenter() );
-    text.setPosition(
-        sf::Vector2f{ this->window.getSize().x / 2.f, this->window.getSize().y / 2.f } );
+    text.setPosition( sf::Vector2f{ screenWidth / 2.f, screenHeight / 2.f } );
 }
 
 sf::Color GUISkill::getStoneColor()
@@ -202,22 +212,29 @@ sf::Vector2f GUISkill::calculateStarPosition()
 
 void GUISkill::addDescriptionLine(const std::string descriptionTextLine)
 {
+    const auto screenWidth = ConfigManager::getInstance().getScreenWidth();
+    const auto screenHeight = ConfigManager::getInstance().getScreenHeight();
+
     this->descriptionTexts.push_back(this->getConfiguredText(descriptionTextLine, DESCRIPTION_CHARACTER_SIZE * ConfigManager::getInstance().getScale(), INACTIVE_DESCRIPTION_COLOR));
     this->centerText(this->descriptionTexts[this->descriptionTexts.size() - 1]);
 
     for (int i = 0; i < this->descriptionTexts.size(); i++)
     {
         this->descriptionTexts[this->descriptionTexts.size() - 1 - i].setPosition( sf::Vector2f{
-            this->window.getSize().x / 2.f,
-            this->window.getSize().y - MARGIN - (this->descriptionTexts[this->descriptionTexts.size() - 1 - i].getGlobalBounds().size.y * (i + 1))
+            screenWidth / 2.f,
+            screenHeight - MARGIN - (this->descriptionTexts[this->descriptionTexts.size() - 1 - i].getGlobalBounds().size.y * (i + 1))
     } );
     }
 }
 
-void GUISkill::updateHoverState()
+void GUISkill::updateHoverState( const sf::Vector2i& mousePosition )
 {
-    if (utils::isMouseOverSprite(this->iconSprite, utils::getMousePositionInWindow(this->window)) && this->dialogBox.getState() == GUIDialogBoxState::Hidden)
+    // TODO: need fix - mouse position is related to window
+    if ( utils::isMouseOverSprite( this->iconSprite, mousePosition ) &&
+         this->dialogBox.getState() == GUIDialogBoxState::Hidden )
+    {
         this->hover = true;
+    }
     else
     {
         this->hoverSoundPlayed = false;
@@ -462,10 +479,13 @@ bool GUISkill::decrementStone(unsigned int& stoneCount)
 
 void GUISkill::applySkill()
 {
-    if (this->currentLevel == 0)
-        SkillManager::getInstance(this->window, this->registry).unlockSkills(this->skillsToUnlock);
+    if ( this->currentLevel == 0 )
+    {
+        SkillManager::getInstance( this->registry ).unlockSkills( this->skillsToUnlock );
+    }
 
-    SkillSystem::modifySkill(this->registry, this->onActivateFunctions[this->currentLevel].first, this->onActivateFunctions[this->currentLevel].second);
+    SkillSystem::modifySkill( this->registry, this->onActivateFunctions[ this->currentLevel ].first,
+                              this->onActivateFunctions[ this->currentLevel ].second );
 }
 
 void GUISkill::updateDescription()

@@ -8,7 +8,6 @@ class GUISkill;
 class SkillBuilder
 {
 public:
-    SkillBuilder& addWindow(sf::RenderWindow& window);
     SkillBuilder& addRegistry(entt::registry& registry);
     SkillBuilder& addDialogBox(GUIDialogBox& dialogBox);
     SkillBuilder& addIconPosition(sf::Vector2f iconPosition);
@@ -25,7 +24,6 @@ public:
     std::unique_ptr<GUISkill> build();
 
 private:
-    sf::RenderWindow* window;
     entt::registry* registry;
     GUIDialogBox* dialogBox;
     sf::Vector2f iconPosition;

@@ -14,8 +14,8 @@ class GUISkillTree
 public:
     GUISkillTree(entt::registry& registry, sf::RenderWindow& window);
 
-    void update(sf::Time& deltaTime);
-    void draw();
+    void update( sf::Time& deltaTime, sf::Vector2i mousePosition );
+    void draw( Window& window );
 private:
     entt::registry& registry;
     sf::RenderWindow& window;

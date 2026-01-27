@@ -56,8 +56,8 @@ void SystemManager::startNewGame()
     this->initializeZoom();
     this->executeInitializationSystems();
 
-    SkillManager::getInstance(this->window, this->registry).clear();
-    SkillManager::getInstance(this->window, this->registry).initializeFirstSkill();
+    SkillManager::getInstance( this->registry ).clear();
+    SkillManager::getInstance( this->registry ).initializeFirstSkill();
 
     NotifySystem::clearNotifications();
 
@@ -119,13 +119,13 @@ void SystemManager::updateZoomFactor(sf::Time deltaTime)
     }
 }
 
-void SystemManager::executeUpdateSystems(sf::Time deltaTime)
+void SystemManager::executeUpdateSystems( sf::Time deltaTime, const sf::Vector2i mousePosition )
 {
     if (SceneManager::getInstance().getCurrentScene() == Scene::Game)
     {
         if (SceneManager::getInstance().isGameStarted())
         {
-            NotifySystem::update(deltaTime);
+            NotifySystem::update( deltaTime, mousePosition );
 
             //TODO: should be handled by GameState
             if (!NotifySystem::isDialogBoxActive())
@@ -198,6 +198,6 @@ void SystemManager::executeRenderSystems( Window& window )
 
         CameraSystem::setDefaultCamera(this->window);
 
-        NotifySystem::draw(this->window);
+        NotifySystem::draw( window );
     }
 }

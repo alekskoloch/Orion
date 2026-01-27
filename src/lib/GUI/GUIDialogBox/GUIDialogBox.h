@@ -19,13 +19,15 @@ enum class GUIDialogBoxType
     Ok
 };
 
+class Window;
+
 class GUIDialogBox
 {
 public:
-    GUIDialogBox(sf::RenderWindow& window, std::vector<std::string> messages, sf::Font& font);
+    GUIDialogBox( std::vector< std::string > messages, sf::Font& font );
 
-    void update();
-    void draw();
+    void update( const sf::Vector2i& mousePosition );
+    void draw( Window& window );
 
     GUIDialogBoxState getState() const { return this->state; }
     void setState(GUIDialogBoxState state) { this->state = state; }
@@ -36,7 +38,6 @@ public:
     void setMessage(std::vector<std::string> message);
     void setType(GUIDialogBoxType type) { this->type = type; }
 private:
-    sf::RenderWindow& window;
     std::vector<std::string> messages;
     std::string target;
 

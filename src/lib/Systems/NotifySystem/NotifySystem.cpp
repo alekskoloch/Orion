@@ -1,4 +1,5 @@
 #include "NotifySystem.h"
+#include "Window.hpp"
 #include "pch.h"
 
 
@@ -52,8 +53,8 @@ void NotifySystem::notifyDialogBox( sf::RenderWindow& window, const std::string&
         return;
 
     std::vector< std::string > messages = { message };
-    dialogBox = std::make_unique< GUIDialogBox >( window, messages,
-                                                  FontManager::getInstance().getFont( "font" ) );
+    dialogBox =
+        std::make_unique< GUIDialogBox >( messages, FontManager::getInstance().getFont( "font" ) );
     dialogBox->setType( GUIDialogBoxType::Ok );
     dialogBox->setState( GUIDialogBoxState::Idle );
     dialogBox->setMessage( { message } );
@@ -61,7 +62,7 @@ void NotifySystem::notifyDialogBox( sf::RenderWindow& window, const std::string&
 
 bool NotifySystem::isDialogBoxActive() { return dialogBox != nullptr; }
 
-void NotifySystem::update( sf::Time deltaTime )
+void NotifySystem::update( sf::Time deltaTime, const sf::Vector2i& mousePosition )
 {
     for ( auto& notification : notifications )
     {
@@ -90,7 +91,7 @@ void NotifySystem::update( sf::Time deltaTime )
 
     if ( dialogBox != nullptr )
     {
-        dialogBox->update();
+        dialogBox->update( mousePosition );
 
         if ( dialogBox->getState() == GUIDialogBoxState::Hidden )
             dialogBox = nullptr;
@@ -101,7 +102,7 @@ void NotifySystem::update( sf::Time deltaTime )
     }
 }
 
-void NotifySystem::draw( sf::RenderWindow& window )
+void NotifySystem::draw( Window& window )
 {
     for ( const auto& notification : notifications )
         window.draw( notification.text );
@@ -110,7 +111,7 @@ void NotifySystem::draw( sf::RenderWindow& window )
         window.draw( bigInfoQueue.front().text );
 
     if ( dialogBox != nullptr )
-        dialogBox->draw();
+        dialogBox->draw( window );
 }
 
 void NotifySystem::clearNotifications()

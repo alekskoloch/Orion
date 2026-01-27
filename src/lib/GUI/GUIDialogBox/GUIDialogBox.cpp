@@ -1,8 +1,10 @@
 #include "GUIDialogBox.h"
 
-GUIDialogBox::GUIDialogBox( sf::RenderWindow& window, std::vector< std::string > messages,
+#include "Window.hpp"
+
+GUIDialogBox::GUIDialogBox( std::vector< std::string > messages,
                             sf::Font& font )
-    : window( window ), messages( messages ), font( font ), noText( font ), yesText( font ), okText( font )
+    : messages( messages ), font( font ), noText( font ), yesText( font ), okText( font )
 {
     this->initialize();
 }
@@ -15,14 +17,17 @@ void GUIDialogBox::initialize()
 
 void GUIDialogBox::initializeBox()
 {
+    const auto getScreenWidth = ConfigManager::getInstance().getScreenWidth();
+    const auto getScreenHeight = ConfigManager::getInstance().getScreenHeight();
+
     this->box.setSize( sf::Vector2f( 800 * ConfigManager::getInstance().getScale(),
                                      300 * ConfigManager::getInstance().getScale() ) );
     this->box.setFillColor( sf::Color( 0, 0, 0, 200 ) );
     this->box.setOutlineColor( sf::Color( 255, 255, 255, 255 ) );
     this->box.setOutlineThickness( 2 );
     this->box.setOrigin( sf::Vector2f{ this->box.getSize().x / 2, this->box.getSize().y / 2 } );
-    this->box.setPosition( sf::Vector2f{ static_cast< float >( this->window.getSize().x / 2 ),
-                                         static_cast< float >( this->window.getSize().y / 2 ) } );
+    this->box.setPosition( sf::Vector2f{ static_cast< float >( getScreenWidth / 2 ),
+                                         static_cast< float >( getScreenHeight / 2 ) } );
 }
 
 void GUIDialogBox::initializeText()
@@ -88,14 +93,16 @@ void GUIDialogBox::updateText()
                                                 60 * ConfigManager::getInstance().getScale() } );
 }
 
-void GUIDialogBox::update()
+void GUIDialogBox::update( const sf::Vector2i& mousePosition )
 {
     this->updateText();
 
+    const auto& mousePos = sf::Vector2f{ static_cast< float >( mousePosition.x ),
+                                         static_cast< float >( mousePosition.y ) };
+
     if ( this->type == GUIDialogBoxType::YesNo )
     {
-        if ( this->noText.getGlobalBounds().contains(
-                 sf::Vector2f( sf::Mouse::getPosition( this->window ) ) ) )
+        if ( this->noText.getGlobalBounds().contains( mousePos ) )
         {
             if ( this->noText.getFillColor() != sf::Color::Red )
             {
@@ -110,8 +117,7 @@ void GUIDialogBox::update()
             this->noText.setFillColor( sf::Color::White );
         }
 
-        if ( this->yesText.getGlobalBounds().contains(
-                 sf::Vector2f( sf::Mouse::getPosition( this->window ) ) ) )
+        if ( this->yesText.getGlobalBounds().contains( mousePos ) )
         {
             if ( this->yesText.getFillColor() != sf::Color::Green )
             {
@@ -128,8 +134,7 @@ void GUIDialogBox::update()
     }
     else if ( this->type == GUIDialogBoxType::Ok )
     {
-        if ( this->okText.getGlobalBounds().contains(
-                 sf::Vector2f( sf::Mouse::getPosition( this->window ) ) ) )
+        if ( this->okText.getGlobalBounds().contains( mousePos ) )
         {
             if ( this->okText.getFillColor() != sf::Color::Green )
             {
@@ -146,20 +151,20 @@ void GUIDialogBox::update()
     }
 }
 
-void GUIDialogBox::draw()
+void GUIDialogBox::draw( Window& window )
 {
-    this->window.draw( this->box );
+    window.draw( this->box );
     for ( auto text : this->messageTexts )
-        this->window.draw( text );
+        window.draw( text );
 
     if ( this->type == GUIDialogBoxType::YesNo )
     {
-        this->window.draw( this->noText );
-        this->window.draw( this->yesText );
+        window.draw( this->noText );
+        window.draw( this->yesText );
     }
     else if ( this->type == GUIDialogBoxType::Ok )
     {
-        this->window.draw( this->okText );
+        window.draw( this->okText );
     }
 }
 
@@ -194,6 +199,9 @@ void GUIDialogBox::setMessage( std::vector< std::string > message )
         return longestText;
     };
 
+    const auto screenWidth = ConfigManager::getInstance().getScreenWidth();
+    const auto screenHeight = ConfigManager::getInstance().getScreenHeight();
+
     this->box.setSize(
         sf::Vector2f( findLongestLine( this->messageTexts ).getGlobalBounds().size.x +
                           100 * ConfigManager::getInstance().getScale(),
@@ -202,7 +210,7 @@ void GUIDialogBox::setMessage( std::vector< std::string > message )
     this->box.setOrigin( sf::Vector2f( this->box.getSize().x / 2, this->box.getSize().y / 2 ) );
 
     this->box.setPosition(
-        sf::Vector2f( this->window.getSize().x / 2, this->window.getSize().y / 2 ) );
+        sf::Vector2f( screenWidth / 2, screenHeight / 2 ) );
 
     this->updateText();
 }

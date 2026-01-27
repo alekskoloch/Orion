@@ -26,9 +26,9 @@ class GUISkill;
 class SkillManager
 {
 public:
-    static SkillManager& getInstance(sf::RenderWindow& window, entt::registry& registry)
+    static SkillManager& getInstance( entt::registry& registry )
     {
-        static SkillManager instance(window, registry);
+        static SkillManager instance( registry );
         return instance;
     }
 
@@ -37,8 +37,8 @@ public:
 
     ~SkillManager();
 
-    void update(sf::Time& deltaTime);
-    void draw();
+    void update( sf::Time& deltaTime, const sf::Vector2i& mousePosition );
+    void draw( Window& window );
 
     void unlockSkills(std::vector<std::string> skillsToUnlock);
     void addSkill(std::string skillName);
@@ -48,9 +48,8 @@ public:
     void initializeFirstSkill();
     void clear();
 private:
-    SkillManager(sf::RenderWindow& window, entt::registry& registry);
+    explicit SkillManager( entt::registry& registry );
 
-    sf::RenderWindow& window;
     entt::registry& registry;
     std::vector<std::unique_ptr<GUISkill>> skills;
     std::vector<std::unique_ptr<GUIStar>> activeStars;
