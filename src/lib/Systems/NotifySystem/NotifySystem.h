@@ -24,7 +24,7 @@ public:
     };
 
     static void notify(const Type type, const std::string& message, float displayTime = 4.f);
-    static void notifyDialogBox(sf::RenderWindow& window, const std::string& message, const std::string& buttonMessage, std::function<void()> callback);
+    static void notifyDialogBox(const std::string& message, const std::string& buttonMessage, std::function<void()> callback);
     static bool isDialogBoxActive();
     static void update( sf::Time deltaTime, const Mouse::MouseState& mouseState );
     static void draw( Window& window );

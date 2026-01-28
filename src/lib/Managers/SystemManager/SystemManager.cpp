@@ -160,7 +160,7 @@ void SystemManager::executeUpdateSystems( sf::Time deltaTime, const Mouse::Mouse
                 DropSystem::updateDrop(this->registry, deltaTime);
                 this->particleSystem.update(deltaTime);
                 CollisionSystem::updateCollisionBoxes(this->registry);      
-                CollisionSystem::checkCollisions(this->registry, this->window);
+                CollisionSystem::checkCollisions(this->registry);
                 PointSystem::update(this->registry, deltaTime);
                 InfoSystem::update(this->registry, deltaTime);
 

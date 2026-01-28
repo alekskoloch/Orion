@@ -45,7 +45,7 @@ void NotifySystem::notify( const Type type, const std::string& message, float di
     }
 }
 
-void NotifySystem::notifyDialogBox( sf::RenderWindow& window, const std::string& message,
+void NotifySystem::notifyDialogBox( const std::string& message,
                                     const std::string& buttonMessage,
                                     std::function< void() > callback )
 {

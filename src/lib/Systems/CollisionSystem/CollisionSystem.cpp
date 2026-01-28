@@ -2,7 +2,7 @@
 #include "CollisionSystem.h"
 
 template <typename BulletOwnerTag, typename TargetTag>
-void checkBulletCollitions(entt::registry& registry, std::unordered_set<entt::entity>& entitiesToDestroy, sf::RenderWindow& window)
+void checkBulletCollitions(entt::registry& registry, std::unordered_set<entt::entity>& entitiesToDestroy)
 {
     auto bullets = registry.view<Collision, BulletOwnerTag>();
     auto targets = registry.view<Collision, TargetTag>();
@@ -34,7 +34,6 @@ void checkBulletCollitions(entt::registry& registry, std::unordered_set<entt::en
                         else
                         {
                             NotifySystem::notifyDialogBox(
-                                window,
                                 "You have been defeated. However, you can continue the game.",
                                 "Ok",
                                 []() {}
@@ -208,12 +207,12 @@ void CollisionSystem::updateCollisionBoxes(entt::registry& registry)
     }
 }
 
-void CollisionSystem::checkCollisions(entt::registry& registry, sf::RenderWindow& window)
+void CollisionSystem::checkCollisions(entt::registry& registry)
 {
     std::unordered_set<entt::entity> entitiesToDestroy;
 
-    checkBulletCollitions<PlayerBullet, Enemy>(registry, entitiesToDestroy, window);
-    checkBulletCollitions<EnemyBullet, Player>(registry, entitiesToDestroy, window);
+    checkBulletCollitions<PlayerBullet, Enemy>(registry, entitiesToDestroy);
+    checkBulletCollitions<EnemyBullet, Player>(registry, entitiesToDestroy);
 
     checkDropCollision(registry);
     
