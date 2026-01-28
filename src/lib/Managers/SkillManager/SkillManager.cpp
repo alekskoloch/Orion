@@ -15,7 +15,7 @@ SkillManager::SkillManager( entt::registry& registry )
     this->initBox();
 }
 
-void SkillManager::update( sf::Time& deltaTime, const sf::Vector2i& mousePosition )
+void SkillManager::update( sf::Time& deltaTime, const Mouse::MouseState& mouseState )
 {
     this->updateBox();
     this->box.update();
@@ -27,12 +27,12 @@ void SkillManager::update( sf::Time& deltaTime, const sf::Vector2i& mousePositio
 
     for ( size_t i = 0; i < this->skills.size(); ++i )
     {
-        this->skills[ i ]->update( deltaTime, mousePosition );
+        this->skills[ i ]->update( deltaTime, mouseState );
     }
 
     if ( this->dialogBox.getState() != GUIDialogBoxState::Hidden )
     {
-        this->dialogBox.update( mousePosition );
+        this->dialogBox.update( mouseState );
     }
 }
 

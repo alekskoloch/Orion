@@ -37,7 +37,7 @@ public:
 
     ~SkillManager();
 
-    void update( sf::Time& deltaTime, const sf::Vector2i& mousePosition );
+    void update( sf::Time& deltaTime, const Mouse::MouseState& mousePosition );
     void draw( Window& window );
 
     void unlockSkills(std::vector<std::string> skillsToUnlock);

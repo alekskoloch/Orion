@@ -79,9 +79,13 @@ void Window::draw( const sf::Drawable& drawable )
     m_renderWindow->draw( drawable, sf::RenderStates::Default );
 }
 
-auto Window::getMousePosition() const -> sf::Vector2i
+auto Window::getMouseState() const -> Mouse::MouseState
 {
-    return sf::Mouse::getPosition( *m_renderWindow );
+    const auto screenPosition = sf::Mouse::getPosition( *m_renderWindow );
+    const auto worldPosition = m_renderWindow->mapPixelToCoords( screenPosition, m_renderWindow->getView() );
+
+    return { .screenPosition = { .x = screenPosition.x, .y = screenPosition.y },
+             .worldPosition = { .x = worldPosition.x, .y = worldPosition.y } };
 }
 
 void Window::setMouseCursor( const sf::Cursor& cursor )

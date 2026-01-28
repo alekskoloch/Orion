@@ -119,13 +119,13 @@ void SystemManager::updateZoomFactor(sf::Time deltaTime)
     }
 }
 
-void SystemManager::executeUpdateSystems( sf::Time deltaTime, const sf::Vector2i mousePosition )
+void SystemManager::executeUpdateSystems( sf::Time deltaTime, const Mouse::MouseState& mouseState )
 {
     if (SceneManager::getInstance().getCurrentScene() == Scene::Game)
     {
         if (SceneManager::getInstance().isGameStarted())
         {
-            NotifySystem::update( deltaTime, mousePosition );
+            NotifySystem::update( deltaTime, mouseState );
 
             //TODO: should be handled by GameState
             if (!NotifySystem::isDialogBoxActive())

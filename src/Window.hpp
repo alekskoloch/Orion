@@ -3,7 +3,7 @@
 #include <memory>
 #include <optional>
 
-#include <SFML/System/Vector2.hpp>
+#include "InputData.hpp"
 
 namespace sf
 {
@@ -42,7 +42,7 @@ public:
     void display() const;
     void draw( const sf::Drawable& drawable );
 
-    [[nodiscard]] auto getMousePosition() const -> sf::Vector2i;
+    [[nodiscard]] auto getMouseState() const -> Mouse::MouseState;
     void setMouseCursor( const sf::Cursor& cursor );
 
     // TODO: remove after refactor, temporary solution

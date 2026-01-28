@@ -21,12 +21,17 @@ enum class GUIDialogBoxType
 
 class Window;
 
+namespace Mouse
+{
+class MouseState;
+} // namespace Mouse
+
 class GUIDialogBox
 {
 public:
     GUIDialogBox( std::vector< std::string > messages, sf::Font& font );
 
-    void update( const sf::Vector2i& mousePosition );
+    void update( const Mouse::MouseState& mouseState );
     void draw( Window& window );
 
     GUIDialogBoxState getState() const { return this->state; }

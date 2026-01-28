@@ -93,12 +93,12 @@ void GUIDialogBox::updateText()
                                                 60 * ConfigManager::getInstance().getScale() } );
 }
 
-void GUIDialogBox::update( const sf::Vector2i& mousePosition )
+void GUIDialogBox::update( const Mouse::MouseState& mouseState )
 {
     this->updateText();
 
-    const auto& mousePos = sf::Vector2f{ static_cast< float >( mousePosition.x ),
-                                         static_cast< float >( mousePosition.y ) };
+    const auto& mousePos = sf::Vector2f{ static_cast< float >( mouseState.screenPosition.x ),
+                                         static_cast< float >( mouseState.screenPosition.y ) };
 
     if ( this->type == GUIDialogBoxType::YesNo )
     {

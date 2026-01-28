@@ -25,7 +25,7 @@ public:
 
     void executeInitializationSystems();
     void executeEventSystems();
-    void executeUpdateSystems( sf::Time deltaTime, sf::Vector2i mousePosition );
+    void executeUpdateSystems( sf::Time deltaTime, const Mouse::MouseState& mouseState );
     void executeRenderSystems( Window& window );
 
     void enableSlowMotion() { this->slowMotion = true; }

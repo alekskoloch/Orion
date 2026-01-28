@@ -99,11 +99,11 @@ void GUISkill::initStarsForSkill()
     this->isStarExists = true;
 }
 
-void GUISkill::update( sf::Time& deltaTime, const sf::Vector2i& mousePosition )
+void GUISkill::update( sf::Time& deltaTime, const Mouse::MouseState& mouseState )
 {
     if (this->dialogBox.getState() == GUIDialogBoxState::Hidden)
     {
-        this->updateHoverState( mousePosition );
+        this->updateHoverState( mouseState );
 
         if (this->hover)
         {
@@ -227,10 +227,10 @@ void GUISkill::addDescriptionLine(const std::string descriptionTextLine)
     }
 }
 
-void GUISkill::updateHoverState( const sf::Vector2i& mousePosition )
+void GUISkill::updateHoverState( const Mouse::MouseState& mouseState )
 {
     // TODO: need fix - mouse position is related to window
-    if ( utils::isMouseOverSprite( this->iconSprite, mousePosition ) &&
+    if ( utils::isMouseOverSprite( this->iconSprite, mouseState.worldPosition ) &&
          this->dialogBox.getState() == GUIDialogBoxState::Hidden )
     {
         this->hover = true;

@@ -10,7 +10,7 @@ IndentWidth: 4
 TabWidth: 4
 UseTab: Never
 PointerAlignment: Left
-ColumnLimit: 100
+ColumnLimit: 130
 AccessModifierOffset: -4
 SortIncludes: true
 MaxEmptyLinesToKeep: 1

@@ -7,9 +7,9 @@ GUISkillTree::GUISkillTree(entt::registry& registry, sf::RenderWindow& window) :
     this->view.zoom(1 / ConfigManager::getInstance().getScale());
 }
 
-void GUISkillTree::update( sf::Time& deltaTime, const sf::Vector2i mousePosition )
+void GUISkillTree::update( sf::Time& deltaTime, const Mouse::MouseState& mouseState )
 {
-    SkillManager::getInstance( this->registry ).update( deltaTime, mousePosition );
+    SkillManager::getInstance( this->registry ).update( deltaTime, mouseState );
 
     if ( sf::Keyboard::isKeyPressed( sf::Keyboard::Key::W ) )
         view.move( sf::Vector2f{ 0, -moveSpeed * deltaTime.asSeconds() } );

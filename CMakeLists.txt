@@ -62,7 +62,7 @@ FetchContent_MakeAvailable(googletest)
 
 enable_testing()
 
-add_executable(main src/main.cpp src/Game.h src/Game.cpp src/Window.hpp src/Window.cpp)
+add_executable(main src/main.cpp src/Game.h src/Game.cpp src/Window.hpp src/Window.cpp src/InputData.hpp)
 
 target_precompile_headers(main PRIVATE src/pch.h)
 set(PCH_DIR "${PROJECT_SOURCE_DIR}/src" CACHE INTERNAL "")

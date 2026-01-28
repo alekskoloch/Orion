@@ -62,7 +62,7 @@ void NotifySystem::notifyDialogBox( sf::RenderWindow& window, const std::string&
 
 bool NotifySystem::isDialogBoxActive() { return dialogBox != nullptr; }
 
-void NotifySystem::update( sf::Time deltaTime, const sf::Vector2i& mousePosition )
+void NotifySystem::update( sf::Time deltaTime, const Mouse::MouseState& mouseState )
 {
     for ( auto& notification : notifications )
     {
@@ -91,7 +91,7 @@ void NotifySystem::update( sf::Time deltaTime, const sf::Vector2i& mousePosition
 
     if ( dialogBox != nullptr )
     {
-        dialogBox->update( mousePosition );
+        dialogBox->update( mouseState );
 
         if ( dialogBox->getState() == GUIDialogBoxState::Hidden )
             dialogBox = nullptr;

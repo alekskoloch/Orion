@@ -9,6 +9,7 @@ ConfigManager& ConfigManager::getInstance()
 
 void ConfigManager::loadConfig()
 {
+    // TODO: some info needed if ANY ERROR here
     std::ifstream file(CONFIG_PATH + std::string("gameConfig.json"));
     nlohmann::json config;
 

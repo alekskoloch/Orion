@@ -17,7 +17,7 @@ public:
     GUIManager(sf::RenderWindow& window, entt::registry& registry, sf::Event& event, std::vector<Quest>& quests);
 
     void processInput();
-    void update( sf::Time deltaTime, sf::Vector2i mousePosition );
+    void update( sf::Time deltaTime, const Mouse::MouseState& mousePosition );
     void draw( Window& window );
 
     void toggleQuickMenu(bool value);

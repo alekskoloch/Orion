@@ -56,7 +56,7 @@ public:
               std::vector< RequirementType > requirements, std::vector< std::string > skillToUnlock,
               unsigned int maxLevel, unsigned int currentLevel,
               std::vector< std::unique_ptr< GUIStar > >& activeStars );
-    void update( sf::Time& deltaTime, const sf::Vector2i& mousePosition );
+    void update( sf::Time& deltaTime, const Mouse::MouseState& mouseState );
     void draw( Window& window );
 
     static void loadTexturesIntoManager( const std::string& iconTextureName );
@@ -105,7 +105,7 @@ private:
     sf::Color getStoneColor();
     sf::Vector2f calculateStarPosition();
 
-    void updateHoverState( const sf::Vector2i& mousePosition );
+    void updateHoverState( const Mouse::MouseState& mouseState );
     void handleHover();
     void handleBackgroundStars();
     void handleLeftClick();
