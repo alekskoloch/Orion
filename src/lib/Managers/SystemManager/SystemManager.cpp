@@ -37,9 +37,8 @@
 
 
 SystemManager::SystemManager(sf::RenderWindow& window, entt::registry& registry, sf::Event& event) :
-    window(window), registry(registry), event(event), backgroundManager(registry), particleSystem(registry)
+    window(window), registry(registry), event(event), backgroundManager(registry), particleSystem(registry), gameView( window.getDefaultView() )
 {
-
 }
 
 void SystemManager::startNewGame()
@@ -132,6 +131,12 @@ void SystemManager::executeUpdateSystems( sf::Time deltaTime, const Mouse::Mouse
             {
                 this->updateZoomFactor(deltaTime);
 
+                this->gameView = this->window.getDefaultView();
+
+                CameraSystem::updateCamera( this->gameView, this->registry, this->zoomFactor );
+
+                this->window.setView( this->gameView );
+
                 if (this->slowMotion || this->slowMotionFactor != 1.0f)
                 {
                     TimeControlSystem::updateSlowMotion(this->slowMotionFactor, this->slowMotion, SLOW_MOTION_SPEED, TARGET_SLOW_MOTION_FACTOR, deltaTime.asSeconds());
@@ -139,7 +144,9 @@ void SystemManager::executeUpdateSystems( sf::Time deltaTime, const Mouse::Mouse
                 }
 
                 if (!this->slowMotion)
+                {
                     RotateTowardsMouseSystem::rotateTowardsMouse(this->registry, deltaTime, this->window);
+                }
 
                 backgroundManager.update();
 
@@ -181,11 +188,9 @@ void SystemManager::executeRenderSystems( Window& window )
 {
     if (SceneManager::getInstance().getCurrentScene() == Scene::Game)
     {
-        CameraSystem::setPlayerCamera(this->registry, this->window);
-        CameraSystem::setZoomFactor(this->zoomFactor, this->window);
-        
+        this->window.setView( this->gameView );
+
         backgroundManager.draw( window );
-        
         this->particleSystem.draw(this->window);
         RenderSystem::renderEntities(this->window, this->registry);
         InfoSystem::draw(this->registry, this->window);
@@ -196,7 +201,7 @@ void SystemManager::executeRenderSystems( Window& window )
             DebugSystem::renderBackgroundTilesFrame(this->registry, this->window, backgroundManager.getBackgroundTiles());
         }
 
-        CameraSystem::setDefaultCamera(this->window);
+        this->window.setView( this->window.getDefaultView() );
 
         NotifySystem::draw( window );
     }

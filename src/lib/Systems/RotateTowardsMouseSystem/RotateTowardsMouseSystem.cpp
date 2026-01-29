@@ -3,9 +3,6 @@
 
 void RotateTowardsMouseSystem::rotateTowardsMouse(entt::registry& registry, sf::Time deltaTime, sf::RenderWindow& window)
 {
-    //TODO: Temporary solution for player camera
-    CameraSystem::setPlayerCamera(registry, window);
-
     auto view = registry.view<RotationTowardsMouse, Position, Renderable>();
 
     for (auto entity : view)
@@ -41,6 +38,4 @@ void RotateTowardsMouseSystem::rotateTowardsMouse(entt::registry& registry, sf::
             }
         }
     }
-
-    CameraSystem::setDefaultCamera(window);
 }

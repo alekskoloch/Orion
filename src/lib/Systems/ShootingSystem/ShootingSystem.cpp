@@ -115,10 +115,8 @@ void handleEnemyShooting(entt::registry& registry, sf::Time deltaTime, sf::Rende
 void ShootingSystem::shoot(entt::registry& registry, sf::Time deltaTime, sf::RenderWindow& window)
 {
     //TODO: Temporary solution for player camera
-    CameraSystem::setPlayerCamera(registry, window);
     handlePlayerShooting(registry, deltaTime, window);
     ShootingSystem::handleQueue(registry, deltaTime, window);
-    CameraSystem::setDefaultCamera(window);
 
     handleEnemyShooting(registry, deltaTime, window);
 }

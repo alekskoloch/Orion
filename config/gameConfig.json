@@ -4,7 +4,5 @@
         "height": 1440,
         "width": 2560
     },
-    "windowMode": "Windowed",
-    "windowTitle": "Orion",
-    "windowAntialiasing": 4
+    "windowMode": "Windowed"
 }

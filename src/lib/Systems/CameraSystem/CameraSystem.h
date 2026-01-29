@@ -9,8 +9,5 @@
 class CameraSystem
 {
 public:
-    static void setDefaultCamera(sf::RenderWindow& window);
-    static void setPlayerCamera(entt::registry& registry, sf::RenderWindow& window);
-    static void setZoomFactor(float zoomFactor, sf::RenderWindow& window);
-private:
+    static void updateCamera( sf::View& view, entt::registry& registry, float zoomFactor );
 };

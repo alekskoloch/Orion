@@ -1,27 +1,18 @@
-#include "pch.h"
 #include "CameraSystem.h"
+#include "pch.h"
 
-void CameraSystem::setDefaultCamera(sf::RenderWindow& window)
+void CameraSystem::updateCamera( sf::View& view, entt::registry& registry, float zoomFactor )
 {
-    window.setView(window.getDefaultView());
-}
+    sf::Vector2f targetPosition = { 0.f, 0.f };
+    auto playerView = registry.view< Player, Position >();
 
-void CameraSystem::setPlayerCamera(entt::registry& registry, sf::RenderWindow& window)
-{
-    auto view = registry.view<Player, Position>();
-    for (auto entity : view)
+    for ( auto entity : playerView )
     {
-        auto& playerPosition = view.get<Position>(entity);
-
-        sf::View view = window.getView();
-        view.setCenter(playerPosition.position);
-        window.setView(view);
+        targetPosition = playerView.get< Position >( entity ).position;
+        break;
     }
-}
 
-void CameraSystem::setZoomFactor(float zoomFactor, sf::RenderWindow& window)
-{
-    sf::View view = window.getView();
-    view.zoom(zoomFactor);
-    window.setView(view);
+    view.setCenter( targetPosition );
+
+    view.zoom( zoomFactor );
 }

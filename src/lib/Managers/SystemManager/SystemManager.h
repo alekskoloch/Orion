@@ -39,6 +39,8 @@ private:
     entt::registry& registry;
     sf::Event& event;
 
+    sf::View gameView;
+
     BackgroundManager backgroundManager;
 
     QuestSystem questSystem;
