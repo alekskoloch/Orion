@@ -118,63 +118,63 @@ void SystemManager::updateZoomFactor(sf::Time deltaTime)
     }
 }
 
-void SystemManager::executeUpdateSystems( sf::Time deltaTime, const Mouse::MouseState& mouseState )
+void SystemManager::executeUpdateSystems( sf::Time deltaTime, const Window& window )
 {
-    if (SceneManager::getInstance().getCurrentScene() == Scene::Game)
+    if ( SceneManager::getInstance().getCurrentScene() == Scene::Game )
     {
-        if (SceneManager::getInstance().isGameStarted())
+        if ( SceneManager::getInstance().isGameStarted() )
         {
-            NotifySystem::update( deltaTime, mouseState );
+            Mouse::MouseState uiMouse = window.getMouseState();
+            NotifySystem::update( deltaTime, uiMouse );
 
-            //TODO: should be handled by GameState
-            if (!NotifySystem::isDialogBoxActive())
+            if ( !NotifySystem::isDialogBoxActive() )
             {
-                this->updateZoomFactor(deltaTime);
+                this->updateZoomFactor( deltaTime );
 
                 this->gameView = this->window.getDefaultView();
-
                 CameraSystem::updateCamera( this->gameView, this->registry, this->zoomFactor );
 
                 this->window.setView( this->gameView );
+                Mouse::MouseState gameMouse = window.getMouseState();
 
-                if (this->slowMotion || this->slowMotionFactor != 1.0f)
+                if ( this->slowMotion || this->slowMotionFactor != 1.0f )
                 {
-                    TimeControlSystem::updateSlowMotion(this->slowMotionFactor, this->slowMotion, SLOW_MOTION_SPEED, TARGET_SLOW_MOTION_FACTOR, deltaTime.asSeconds());
+                    TimeControlSystem::updateSlowMotion( this->slowMotionFactor, this->slowMotion, SLOW_MOTION_SPEED,
+                                                         TARGET_SLOW_MOTION_FACTOR, deltaTime.asSeconds() );
                     deltaTime *= this->slowMotionFactor;
                 }
 
-                if (!this->slowMotion)
+                if ( !this->slowMotion )
                 {
-                    RotateTowardsMouseSystem::rotateTowardsMouse(this->registry, deltaTime, this->window);
+                    RotateTowardsMouseSystem::rotateTowardsMouse( this->registry, gameMouse, deltaTime );
                 }
 
                 backgroundManager.update();
+                RemovalSystem::update( this->registry );
+                this->enemyGroupSystem.updateEnemyGroup( this->registry );
 
-                RemovalSystem::update(this->registry);
-                this->enemyGroupSystem.updateEnemyGroup(this->registry);
-                
-                WaypointsMovementSystem::updateWaypoints(this->registry, deltaTime);
-                CooldownSystem::updateCooldowns(this->registry, deltaTime);
-                EnergySystem::updateEnergy(this->registry, deltaTime);
-                WeaponsSystem::updateWeaponCooldown(this->registry, deltaTime);
-                EntityStateSystem::updateEntityState(this->registry, deltaTime);
-                ShootingSystem::shoot(this->registry, deltaTime, this->window);
-                BulletSystem::updateShurikenBullet(this->registry, deltaTime);
-                AccelerationSystem::accelerate(this->registry, deltaTime);
-                MovementSystem::updateMovement(this->registry, deltaTime);
-                ShieldSystem::updateShield(this->registry, deltaTime);
-                HealthSystem::updateHealth(this->registry);
-                DropSystem::updateDrop(this->registry, deltaTime);
-                this->particleSystem.update(deltaTime);
-                CollisionSystem::updateCollisionBoxes(this->registry);      
-                CollisionSystem::checkCollisions(this->registry);
-                PointSystem::update(this->registry, deltaTime);
-                InfoSystem::update(this->registry, deltaTime);
+                WaypointsMovementSystem::updateWaypoints( this->registry, deltaTime );
+                CooldownSystem::updateCooldowns( this->registry, deltaTime );
+                EnergySystem::updateEnergy( this->registry, deltaTime );
+                WeaponsSystem::updateWeaponCooldown( this->registry, deltaTime );
+                EntityStateSystem::updateEntityState( this->registry, deltaTime );
+                ShootingSystem::shoot( this->registry, deltaTime, this->window );
+                BulletSystem::updateShurikenBullet( this->registry, deltaTime );
+                AccelerationSystem::accelerate( this->registry, deltaTime );
+                MovementSystem::updateMovement( this->registry, deltaTime );
+                ShieldSystem::updateShield( this->registry, deltaTime );
+                HealthSystem::updateHealth( this->registry );
+                DropSystem::updateDrop( this->registry, deltaTime );
+                this->particleSystem.update( deltaTime );
+                CollisionSystem::updateCollisionBoxes( this->registry );
+                CollisionSystem::checkCollisions( this->registry );
+                PointSystem::update( this->registry, deltaTime );
+                InfoSystem::update( this->registry, deltaTime );
 
-                this->questSystem.update(this->registry, deltaTime);
+                this->questSystem.update( this->registry, deltaTime );
 
-                if (this->debugMode)
-                    DebugSystem::update(this->registry, this->window);
+                if ( this->debugMode )
+                    DebugSystem::update( this->registry, this->window );
             }
         }
         else

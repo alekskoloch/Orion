@@ -1,18 +1,15 @@
 #pragma once
 
-#include <entt/entt.hpp>
 #include <SFML/Graphics.hpp>
+#include <entt/entt.hpp>
 
-#include "CameraSystem.h"
-
-#include "MathOperations.h"
-
-#include "rotationTowardsMouse.h"
-#include "position.h"
-#include "renderable.h"
+namespace Mouse
+{
+struct MouseState;
+} // namespace Mouse
 
 class RotateTowardsMouseSystem
 {
 public:
-    static void rotateTowardsMouse(entt::registry& registry, sf::Time deltaTime, sf::RenderWindow& window);
+    static void rotateTowardsMouse( entt::registry& registry, const Mouse::MouseState& mouseState, sf::Time deltaTime );
 };

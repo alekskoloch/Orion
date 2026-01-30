@@ -1,41 +1,57 @@
-#include "pch.h"
 #include "RotateTowardsMouseSystem.h"
 
-void RotateTowardsMouseSystem::rotateTowardsMouse(entt::registry& registry, sf::Time deltaTime, sf::RenderWindow& window)
+#include "pch.h"
+
+#include <numbers>
+
+#include "position.h"
+#include "renderable.h"
+#include "rotationTowardsMouse.h"
+
+#include "InputData.hpp"
+
+void RotateTowardsMouseSystem::rotateTowardsMouse( entt::registry& registry, const Mouse::MouseState& mouseState,
+                                                   sf::Time deltaTime )
 {
-    auto view = registry.view<RotationTowardsMouse, Position, Renderable>();
+    constexpr auto fullCircle = 360.0F;
+    constexpr auto halfCircle = 360.0F / 2;
+    constexpr auto quarterCircle = 360.0F / 4;
 
-    for (auto entity : view)
+    auto view = registry.view< RotationTowardsMouse, Position, Renderable >();
+
+    for ( auto entity : view )
     {
-        auto& rotation = view.get<RotationTowardsMouse>(entity);
-        auto& position = view.get<Position>(entity);
-        auto& renderable = view.get<Renderable>(entity);
+        auto& rotation = view.get< RotationTowardsMouse >( entity );
+        auto& position = view.get< Position >( entity );
+        auto& renderable = view.get< Renderable >( entity );
 
-        if (rotation.enabled)
+        if ( rotation.enabled )
         {
-            sf::Vector2f mousePosition = static_cast<sf::Vector2f>(sf::Mouse::getPosition(window));
-            mousePosition = window.mapPixelToCoords(sf::Mouse::getPosition(window));
-                        
-            float distanceToMouse = CalculateDistance(mousePosition, position.position);
+            sf::Vector2f mousePos{ mouseState.worldPosition.x, mouseState.worldPosition.y };
+            sf::Vector2f direction = mousePos - position.position;
 
-            if (distanceToMouse > rotation.minimalActivationDistance)
+            const auto angleRad = std::atan2( direction.y, direction.x );
+            auto targetAngleDeg = angleRad * halfCircle / std::numbers::pi_v< float >;
+            targetAngleDeg += quarterCircle;
+
+            const auto currentAngleDeg = renderable.sprite.getRotation().asDegrees();
+            auto diff = targetAngleDeg - currentAngleDeg;
+
+            while ( diff <= -halfCircle )
             {
-                float targetAngle = CalculateAzimuthAngleInDegrees(mousePosition - position.position, 90.f);
-                auto currentAngle = renderable.sprite.getRotation();
-                float angleDifference = AngleDifference(targetAngle, currentAngle.asRadians());
-
-                float rotationAmount = angleDifference;
-                if (rotationAmount > rotation.sensitivity * deltaTime.asSeconds())
-                {
-                    rotationAmount = rotation.sensitivity * deltaTime.asSeconds();
-                }
-                else if (rotationAmount < -rotation.sensitivity * deltaTime.asSeconds())
-                {
-                    rotationAmount = -rotation.sensitivity * deltaTime.asSeconds();
-                }
-
-                renderable.sprite.setRotation(sf::degrees( currentAngle.asRadians() + rotationAmount ) );
+                diff += fullCircle;
             }
+
+            while ( diff > halfCircle )
+            {
+                diff -= fullCircle;
+            }
+
+            const auto maxStep = rotation.sensitivity * deltaTime.asSeconds();
+            diff = std::min( diff, maxStep );
+            diff = std::max( diff, -maxStep );
+
+            renderable.sprite.setRotation( sf::degrees( currentAngleDeg + diff ) );
         }
     }
 }

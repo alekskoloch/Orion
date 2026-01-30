@@ -108,7 +108,7 @@ void Game::update( sf::Time deltaTime )
     this->guiManager.update( deltaTime, m_window.getMouseState() );
     if ( !this->guiManager.pause() )
     {
-        this->systemManager.executeUpdateSystems( deltaTime, m_window.getMouseState() );
+        this->systemManager.executeUpdateSystems( deltaTime, m_window );
     }
 }
 
