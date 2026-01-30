@@ -1,12 +1,17 @@
 #include "pch.h"
 #include "DebugSystem.h"
 
-void DebugSystem::update(entt::registry& registry, sf::RenderWindow& window)
+namespace Mouse
 {
-    creatingEnemies(registry, window);
+struct MouseState;
+} // namespace Mouse
+
+void DebugSystem::update(entt::registry& registry, const Mouse::MouseState& mouseState )
+{
+    creatingEnemies( registry, mouseState );
 }
 
-void DebugSystem::renderCollisionBoxes(entt::registry& registry, sf::RenderWindow& window)
+void DebugSystem::renderCollisionBoxes(entt::registry& registry, sf::RenderWindow& window  )
 {
     auto collisionView = registry.view<Collision>();
     for (auto entity : collisionView)
@@ -27,7 +32,7 @@ void DebugSystem::renderCollisionBoxes(entt::registry& registry, sf::RenderWindo
     }
 }
 
-void DebugSystem::renderAttackRangeCircles(entt::registry& registry, sf::RenderWindow& window)
+void DebugSystem::renderAttackRangeCircles(entt::registry& registry, sf::RenderWindow& window  )
 {
     auto enemiesView = registry.view<Enemy, Position, EntityState>();
     for (auto entity : enemiesView)
@@ -77,29 +82,20 @@ void DebugSystem::renderBackgroundTilesFrame(entt::registry& registry, sf::Rende
     }
 }
 
-void DebugSystem::creatingEnemies(entt::registry& registry, sf::RenderWindow& window)
+void DebugSystem::creatingEnemies(entt::registry& registry, const Mouse::MouseState& mouseState )
 {
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::P))
     {
-        spawnEnemyOnMousePosition(registry, window);
+        spawnEnemyOnMousePosition(registry, mouseState );
     }
 }
 
-void DebugSystem::spawnEnemyOnMousePosition(entt::registry& registry, sf::RenderWindow& window)
+void DebugSystem::spawnEnemyOnMousePosition(entt::registry& registry, const Mouse::MouseState& mouseState )
 {
-    auto mousePosition = sf::Mouse::getPosition(window);
-    auto worldMousePosition = window.mapPixelToCoords(mousePosition);
+    const sf::Vector2f targetPosition{ mouseState.worldPosition.x, mouseState.worldPosition.y };
+
     auto player = registry.view<Player>();
     auto playerPosition = registry.get<Position>(player.front()).position;
 
-    auto windowSize = window.getSize();
-
-    auto finalPosition = sf::Vector2f(
-        worldMousePosition.x + playerPosition.x - windowSize.x / 2,
-        worldMousePosition.y + playerPosition.y - windowSize.y / 2
-    );
-
-
-
-    EnemyInitializationSystem::spawnEnemy(registry, finalPosition, "Sparkle");
+    EnemyInitializationSystem::spawnEnemy(registry, targetPosition, "Sparkle");
 }

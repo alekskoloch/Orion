@@ -15,13 +15,13 @@
 class DebugSystem
 {
 public:
-    static void update(entt::registry& registry, sf::RenderWindow& window);
+    static void update(entt::registry& registry, const Mouse::MouseState& mouseState );
 
-    static void renderCollisionBoxes(entt::registry& registry, sf::RenderWindow& window);
-    static void renderAttackRangeCircles(entt::registry& registry, sf::RenderWindow& window);
-    static void renderBackgroundTilesFrame(entt::registry& registry, sf::RenderWindow& window, std::vector<BackgroundTile>& backgroundTiles);
+    static void renderCollisionBoxes(entt::registry& registry, sf::RenderWindow& window );
+    static void renderAttackRangeCircles(entt::registry& registry, sf::RenderWindow& window );
+    static void renderBackgroundTilesFrame(entt::registry& registry, sf::RenderWindow& window , std::vector<BackgroundTile>& backgroundTiles);
 
 private:
-    static void creatingEnemies(entt::registry& registry, sf::RenderWindow& window);
-    static void spawnEnemyOnMousePosition(entt::registry& registry, sf::RenderWindow& window);
+    static void creatingEnemies(entt::registry& registry, const Mouse::MouseState& mouseState );
+    static void spawnEnemyOnMousePosition(entt::registry& registry, const Mouse::MouseState& mouseState );
 };

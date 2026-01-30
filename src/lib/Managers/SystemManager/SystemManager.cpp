@@ -172,7 +172,7 @@ void SystemManager::executeUpdateSystems( sf::Time deltaTime, const Window& wind
 
                 if ( this->debugMode )
                 {
-                    DebugSystem::update( this->registry, this->window );
+                    DebugSystem::update( this->registry, gameMouse );
                 }
             }
         }
