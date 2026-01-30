@@ -140,13 +140,12 @@ ShotFunction WeaponsSystem::getWeaponShotFunction(ShotType shotType)
     case ShotType::None:
         throw std::runtime_error("None shot type is not allowed");
     case ShotType::SingleShot:
-        return [](entt::registry& registry, sf::RenderWindow& window, entt::entity& entity)
+        return [](entt::registry& registry, const Mouse::MouseState& mouseState, entt::entity& entity)
         {
             if (registry.any_of<Player>(entity))
             {
-                sf::Vector2f targetPosition = window.mapPixelToCoords(sf::Mouse::getPosition(window));
-
-                BulletSystem::createBullet<PlayerBullet>(registry, entity, targetPosition);
+                const sf::Vector2f targetPosition{ mouseState.worldPosition.x, mouseState.worldPosition.y };
+                BulletSystem::createBullet< PlayerBullet >( registry, entity, targetPosition );
             }
             else if (registry.any_of<Enemy>(entity))
             {
@@ -163,16 +162,18 @@ ShotFunction WeaponsSystem::getWeaponShotFunction(ShotType shotType)
             }
         };
     case ShotType::TripleShot:
-        return [](entt::registry& registry, sf::RenderWindow& window, entt::entity& entity)
+        return [](entt::registry& registry,  const Mouse::MouseState& mouseState, entt::entity& entity)
         {
             if (registry.any_of<Player>(entity))
             {
-                sf::Vector2f targetPosition = window.mapPixelToCoords(sf::Mouse::getPosition(window));
+                const sf::Vector2f targetPosition{ mouseState.worldPosition.x, mouseState.worldPosition.y };
 
-                float angleOffset[] = { -10.f, 0.f, 10.f };
+                const auto angleOffset = { -10.F, 0.F, 10.F };
 
                 for (auto offset : angleOffset)
+                {
                     BulletSystem::createBullet<PlayerBullet>(registry, entity, targetPosition, false, offset);
+                }
             }
             else if (registry.any_of<Enemy>(entity))
             {
@@ -181,10 +182,12 @@ ShotFunction WeaponsSystem::getWeaponShotFunction(ShotType shotType)
 
                 sf::Vector2f targetPosition = registry.get<Position>(playerEntity).position;
 
-                float angleOffset[] = { -10.f, 0.f, 10.f };
+                const auto angleOffset = { -10.F, 0.F, 10.F };
 
-                for (auto offset : angleOffset)
-                    BulletSystem::createBullet<EnemyBullet>(registry, entity, targetPosition, false, offset);
+                for ( auto offset : angleOffset )
+                {
+                    BulletSystem::createBullet< EnemyBullet >( registry, entity, targetPosition, false, offset );
+                }
             }
             else
             {
@@ -192,13 +195,12 @@ ShotFunction WeaponsSystem::getWeaponShotFunction(ShotType shotType)
             }
         };
     case ShotType::Shuriken:
-        return [](entt::registry& registry, sf::RenderWindow& window, entt::entity& entity)
+        return []( entt::registry& registry, const Mouse::MouseState& mouseState, entt::entity& entity )
         {
-            if (registry.any_of<Player>(entity))
+            if ( registry.any_of< Player >( entity ) )
             {
-                sf::Vector2f targetPosition = window.mapPixelToCoords(sf::Mouse::getPosition(window));
-
-                BulletSystem::createBullet<PlayerBullet>(registry, entity, targetPosition);
+                const sf::Vector2f targetPosition{ mouseState.worldPosition.x, mouseState.worldPosition.y };
+                BulletSystem::createBullet< PlayerBullet >( registry, entity, targetPosition );
             }
             else if (registry.any_of<Enemy>(entity))
             {
@@ -215,11 +217,11 @@ ShotFunction WeaponsSystem::getWeaponShotFunction(ShotType shotType)
             }
         };
     case ShotType::DoubleShuriken:
-        return [](entt::registry& registry, sf::RenderWindow& window, entt::entity& entity)
+        return [](entt::registry& registry, const Mouse::MouseState& mouseState, entt::entity& entity)
         {
             if (registry.any_of<Player>(entity))
             {
-                sf::Vector2f targetPosition = window.mapPixelToCoords(sf::Mouse::getPosition(window));
+                const sf::Vector2f targetPosition{ mouseState.worldPosition.x, mouseState.worldPosition.y };
 
                 BulletSystem::createBullet<PlayerBullet>(registry, entity, targetPosition, false);
                 BulletSystem::createBullet<PlayerBullet>(registry, entity, targetPosition, true);
@@ -240,21 +242,23 @@ ShotFunction WeaponsSystem::getWeaponShotFunction(ShotType shotType)
             }
         };
     case ShotType::Nail:
-        return [](entt::registry& registry, sf::RenderWindow& window, entt::entity& entity)
+        return [](entt::registry& registry, const Mouse::MouseState& mouseState, entt::entity& entity)
         {
             throw std::runtime_error("Nail shot type is not implemented");
         };
     case ShotType::QuadShot:
-        return [](entt::registry& registry, sf::RenderWindow& window, entt::entity& entity)
+        return [](entt::registry& registry, const Mouse::MouseState& mouseState, entt::entity& entity)
         {
             if (registry.any_of<Player>(entity))
             {
-                sf::Vector2f targetPosition = window.mapPixelToCoords(sf::Mouse::getPosition(window));
+                const sf::Vector2f targetPosition{ mouseState.worldPosition.x, mouseState.worldPosition.y };
 
-                BulletSystem::createBullet<PlayerBullet>(registry, entity, targetPosition, false, 0.f, sf::Vector2f(-45.f, 0.f));
-                BulletSystem::createBullet<PlayerBullet>(registry, entity, targetPosition, false, 0.f, sf::Vector2f(-15.f, 0.f));
-                BulletSystem::createBullet<PlayerBullet>(registry, entity, targetPosition, false, 0.f, sf::Vector2f(15.f, 0.f));
-                BulletSystem::createBullet<PlayerBullet>(registry, entity, targetPosition, false, 0.f, sf::Vector2f(45.f, 0.f));
+                const auto offsets = { -45.F, -15.F, 15.F, 45.F, };
+
+                for ( auto offset : offsets )
+                {
+                    BulletSystem::createBullet<PlayerBullet>(registry, entity, targetPosition, false, 0.F, sf::Vector2f( offset, 0.F));
+                }
             }
             else if (registry.any_of<Enemy>(entity))
             {
@@ -271,16 +275,18 @@ ShotFunction WeaponsSystem::getWeaponShotFunction(ShotType shotType)
             }
         };
     case ShotType::FullCircle:
-        return [](entt::registry& registry, sf::RenderWindow& window, entt::entity& entity)
+        return [](entt::registry& registry, const Mouse::MouseState& mouseState, entt::entity& entity)
         {
             if (registry.any_of<Player>(entity))
             {
-                sf::Vector2f targetPosition = window.mapPixelToCoords(sf::Mouse::getPosition(window));
+                const sf::Vector2f targetPosition{ mouseState.worldPosition.x, mouseState.worldPosition.y };
 
-                float angleOffset[] = { 0.f, 45.f, 90.f, 135.f, 180.f, 225.f, 270.f, 315.f };
+                const auto angleOffset = { 0.F, 45.F, 90.F, 135.F, 180.F, 225.F, 270.F, 315.F };
 
                 for (auto offset : angleOffset)
-                    BulletSystem::createBullet<PlayerBullet>(registry, entity, targetPosition, false, offset);
+                {
+                    BulletSystem::createBullet< PlayerBullet >( registry, entity, targetPosition, false, offset );
+                }
             }
             else if (registry.any_of<Enemy>(entity))
             {
@@ -300,14 +306,17 @@ ShotFunction WeaponsSystem::getWeaponShotFunction(ShotType shotType)
             }
         };
     case ShotType::TripleSalvo:
-        return [](entt::registry& registry, sf::RenderWindow& window, entt::entity& entity)
+        return [](entt::registry& registry, const Mouse::MouseState& /*mouseState*/, entt::entity& entity)
         {
             if (registry.any_of<Player>(entity))
             {
+                constexpr auto bulletNumber = 5;
+                constexpr auto bulletCooldown = 0.03F;
+
                 auto& playerWeapon = registry.get<Weapon>(entity);
 
-                playerWeapon.bulletsInQueue = 5;
-                playerWeapon.queueCooldown = 0.03f;
+                playerWeapon.bulletsInQueue = bulletNumber;
+                playerWeapon.queueCooldown = bulletCooldown;
             }
             else if (registry.any_of<Enemy>(entity))
             {
@@ -319,14 +328,17 @@ ShotFunction WeaponsSystem::getWeaponShotFunction(ShotType shotType)
             }
         };
     case ShotType::SpinningShot:
-        return [](entt::registry& registry, sf::RenderWindow& window, entt::entity& entity)
+        return [](entt::registry& registry, const Mouse::MouseState& /*mouseState*/, entt::entity& entity)
         {
             if (registry.any_of<Player>(entity))
             {
+                constexpr auto bulletNumber = 10;
+                constexpr auto bulletCooldown = 0.03F;
+
                 auto& playerWeapon = registry.get<Weapon>(entity);
 
-                playerWeapon.bulletsInQueue = 10;
-                playerWeapon.queueCooldown = 0.03f;
+                playerWeapon.bulletsInQueue = bulletNumber;
+                playerWeapon.queueCooldown = bulletCooldown;
             }
             else if (registry.any_of<Enemy>(entity))
             {

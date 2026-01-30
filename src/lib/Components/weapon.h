@@ -5,7 +5,9 @@
 #include <entt/entt.hpp>
 #include <SFML/Graphics.hpp>
 
-enum class WeaponType
+#include "InputData.hpp"
+
+enum class WeaponType : std::uint8_t
 {
     SingleShot,
     TrippleShot,
@@ -24,10 +26,12 @@ struct Weapon
     float specialShotCost;
     float shotCooldown;
     float specialShotCooldown;
-    std::function<void(entt::registry& registry, sf::RenderWindow& window, entt::entity& entity)> shot = [](entt::registry& registry, sf::RenderWindow& window, entt::entity& entity) {};
-    std::function<void(entt::registry& registry, sf::RenderWindow& window, entt::entity& entity)> specialShot = [](entt::registry& registry, sf::RenderWindow& window, entt::entity& entity) {};
+    std::function< void( entt::registry& registry, const Mouse::MouseState& mouseState, entt::entity& entity ) > shot =
+        []( entt::registry& registry, const Mouse::MouseState& mouseState, entt::entity& entity ) {};
+    std::function< void( entt::registry& registry, const Mouse::MouseState& mouseState, entt::entity& entity ) > specialShot =
+        []( entt::registry& registry, const Mouse::MouseState& mouseState, entt::entity& entity ) {};
 
-//TODO: This should be handled in a different way
+    // TODO: This should be handled in a different way
     bool autofire = false;
 
     unsigned bulletsInSalvo = 0;

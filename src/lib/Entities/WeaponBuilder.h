@@ -2,25 +2,27 @@
 
 #include "weapon.h"
 
-using ShotFunction = std::function<void(entt::registry& registry, sf::RenderWindow& window, entt::entity& entity)>;
+#include "InputData.hpp"
+
+using ShotFunction = std::function< void( entt::registry& registry, const Mouse::MouseState& mouseState, entt::entity& entity ) >;
 
 class WeaponBuilder
 {
 public:
     WeaponBuilder();
 
-    WeaponBuilder& addName(std::string name);
-    WeaponBuilder& addType(WeaponType type);
-    WeaponBuilder& addDamage(float damage);
-    WeaponBuilder& addBulletSpeed(float bulletSpeed);
-    WeaponBuilder& addShotCost(float shotCost);
-    WeaponBuilder& addSpecialShotCost(float specialShotCost);
-    WeaponBuilder& addShotCooldown(float shotCooldown);
-    WeaponBuilder& addSpecialShotCooldown(float specialShotCooldown);
-    WeaponBuilder& addShotFunction(ShotFunction shotFunction);
-    WeaponBuilder& addSpecialShotFunction(ShotFunction specialShotFunction);
-    
-    Weapon build();
+    auto addName( std::string name ) -> WeaponBuilder&;
+    auto addType( WeaponType type ) -> WeaponBuilder&;
+    auto addDamage( float damage ) -> WeaponBuilder&;
+    auto addBulletSpeed( float bulletSpeed ) -> WeaponBuilder&;
+    auto addShotCost( float shotCost ) -> WeaponBuilder&;
+    auto addSpecialShotCost( float specialShotCost ) -> WeaponBuilder&;
+    auto addShotCooldown( float shotCooldown ) -> WeaponBuilder&;
+    auto addSpecialShotCooldown( float specialShotCooldown ) -> WeaponBuilder&;
+    auto addShotFunction( ShotFunction shotFunction ) -> WeaponBuilder&;
+    auto addSpecialShotFunction( ShotFunction specialShotFunction ) -> WeaponBuilder&;
+
+    auto build() -> Weapon;
 
 private:
     Weapon weapon;

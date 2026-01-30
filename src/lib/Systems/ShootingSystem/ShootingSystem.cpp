@@ -1,6 +1,28 @@
 #include "pch.h"
 #include "ShootingSystem.h"
 
+#include "CameraSystem.h"
+#include "EnergySystem.h"
+#include "SkillSystem.h"
+#include "WeaponsSystem.h"
+#include "CooldownSystem.h"
+#include "ProceduralGenerationSystem.h"
+#include "ShieldSystem.h"
+#include "BulletSystem.h"
+
+#include "TextureManager.h"
+
+#include "player.h"
+#include "enemy.h"
+#include "weapon.h"
+#include "input.h"
+#include "position.h"
+#include "entityState.h"
+
+
+#include "MathOperations.h"
+#include "GraphicsOperations.h"
+
 template <typename BulletOwnerTag>
 void handleShoot(entt::registry& registry, entt::entity& entity, sf::Vector2f targetPosition)
 {
@@ -28,14 +50,14 @@ void handleShoot(entt::registry& registry, entt::entity& entity, sf::Vector2f ta
     }
 }
 
-void handleSpecialShoot(entt::registry& registry, sf::RenderWindow& window, entt::entity& entity)
+void handleSpecialShoot(entt::registry& registry, const Mouse::MouseState& mouseState, entt::entity& entity)
 {
     auto& weapon = registry.get<Weapon>(entity);
 
-    weapon.specialShot(registry, window, entity);
+    weapon.specialShot(registry, mouseState, entity);
 }
 
-void handlePlayerShooting(entt::registry& registry, sf::Time deltaTime, sf::RenderWindow& window)
+void handlePlayerShooting(entt::registry& registry, sf::Time deltaTime, const Mouse::MouseState& mouseState)
 {
     auto view = registry.view<Weapon, Input>();
     for (auto entity : view)
@@ -65,7 +87,7 @@ void handlePlayerShooting(entt::registry& registry, sf::Time deltaTime, sf::Rend
                 SoundManager::getInstance().playSound("SpecialShot");
                 EnergySystem::removeEnergy<Player>(registry, WeaponsSystem::getWeaponSpecialShotEnergyCost(registry));
                 CooldownSystem::setCooldown(registry, entity, "specialShot", weapon.specialShotCooldown);
-                weapon.specialShot(registry, window, entity);
+                weapon.specialShot(registry, mouseState, entity);
                 //handleSpecialShoot(registry, entity, window.mapPixelToCoords(sf::Mouse::getPosition(window)));
                 //TODO: Chance should be configurable
                 if (SkillSystem::isSkillEnabled(registry, SkillType::ShieldChanceForSingleSpecialShot) || SkillSystem::isSkillEnabled(registry, SkillType::ShieldChanceForTripleSpecialShot))
@@ -78,7 +100,7 @@ void handlePlayerShooting(entt::registry& registry, sf::Time deltaTime, sf::Rend
         if (canShoot && EnergySystem::hasEnoughEnergy<Player>(registry, WeaponsSystem::getWeaponShotEnergyCost(registry)))
         {
             EnergySystem::removeEnergy<Player>(registry, WeaponsSystem::getWeaponShotEnergyCost(registry));
-            weapon.shot(registry, window, entity);
+            weapon.shot(registry, mouseState, entity);
             SoundManager::getInstance().playSound("Shot");
             //handleShoot<PlayerBullet>(registry, entity, window.mapPixelToCoords(sf::Mouse::getPosition(window)));
             weapon.SetCooldown();
@@ -88,7 +110,7 @@ void handlePlayerShooting(entt::registry& registry, sf::Time deltaTime, sf::Rend
     }
 }
 
-void handleEnemyShooting(entt::registry& registry, sf::Time deltaTime, sf::RenderWindow& window)
+void handleEnemyShooting(entt::registry& registry, sf::Time deltaTime, const Mouse::MouseState& mouseState)
 {
     auto enemyView = registry.view<Enemy, Weapon, Position, EntityState>();
     auto playerPosition = registry.view<Player, Position>().get<Position>(registry.view<Player>().front()).position;
@@ -104,7 +126,7 @@ void handleEnemyShooting(entt::registry& registry, sf::Time deltaTime, sf::Rende
 
             if (enemyWeapon.currentCooldownTime <= 0.f)
             {
-                enemyWeapon.shot(registry, window, enemyEntity);
+                enemyWeapon.shot(registry, mouseState, enemyEntity);
                 SoundManager::getInstance().playSound("EnemyShot");
                 enemyWeapon.SetCooldown();
             }
@@ -112,16 +134,16 @@ void handleEnemyShooting(entt::registry& registry, sf::Time deltaTime, sf::Rende
     }
 }
 
-void ShootingSystem::shoot(entt::registry& registry, sf::Time deltaTime, sf::RenderWindow& window)
+void ShootingSystem::shoot(entt::registry& registry, sf::Time deltaTime, const Mouse::MouseState& mouseState)
 {
     //TODO: Temporary solution for player camera
-    handlePlayerShooting(registry, deltaTime, window);
-    ShootingSystem::handleQueue(registry, deltaTime, window);
+    handlePlayerShooting(registry, deltaTime, mouseState);
+    ShootingSystem::handleQueue(registry, deltaTime, mouseState);
 
-    handleEnemyShooting(registry, deltaTime, window);
+    handleEnemyShooting(registry, deltaTime, mouseState);
 }
 
-void ShootingSystem::handleQueue(entt::registry& registry, sf::Time deltaTime, sf::RenderWindow& window)
+void ShootingSystem::handleQueue(entt::registry& registry, sf::Time deltaTime, const Mouse::MouseState& mouseState)
 {
     auto playerView = registry.view<Player, Weapon>();
     for (auto playerEntity : playerView)
@@ -135,22 +157,37 @@ void ShootingSystem::handleQueue(entt::registry& registry, sf::Time deltaTime, s
                 weapon.queueCooldownTime = 0.f;
 
                 //TODO: Temporary solution, should support queue for each type of weapon
+                const sf::Vector2f targetPosition{ mouseState.worldPosition.x, mouseState.worldPosition.y };
                 if (weapon.type == WeaponType::TrippleShot)
                 {
-                    float angleOffset[] = { -10.f, 0.f, 10.f };
+                    const auto angleOffset = { -10.F, 0.F, 10.F };
+
                     for (auto offset : angleOffset)
-                        BulletSystem::createBullet<PlayerBullet>(registry, playerEntity, window.mapPixelToCoords(sf::Mouse::getPosition(window)), false, offset);
+                    {
+                        BulletSystem::createBullet<PlayerBullet>(registry, playerEntity, targetPosition, false, offset);
+                    }
                 }
-                else if (weapon.type == WeaponType::SingleShot)
+                else if ( weapon.type == WeaponType::SingleShot )
                 {
-                    sf::Vector2f targetPosition = window.mapPixelToCoords(sf::Mouse::getPosition(window));
+                    const sf::Vector2f targetPosition{ mouseState.worldPosition.x, mouseState.worldPosition.y };
 
-                    float angleOffset[8];
-                    for (int i = 0; i < 8; i++)
-                        angleOffset[i] = i * 45.f + (weapon.bulletsInQueue * 10.f);
+                    constexpr auto fullCircle{ 360.F };
+                    constexpr auto numberOfBullets{ 8 };
+                    constexpr auto offset{ fullCircle / numberOfBullets };
+                    constexpr auto additionalOffset{ 10.0F };
 
-                    for (auto offset : angleOffset)
-                        BulletSystem::createBullet<PlayerBullet>(registry, playerEntity, window.mapPixelToCoords(sf::Mouse::getPosition(window)), false, offset);
+                    std::vector< float > angleOffset;
+                    angleOffset.resize( numberOfBullets );
+                    for ( int i = 0; i < numberOfBullets; i++ )
+                    {
+                        angleOffset[ i ] = static_cast< float >( i ) * offset +
+                                           ( static_cast< float >( weapon.bulletsInQueue ) * additionalOffset );
+                    }
+
+                    for ( auto offset : angleOffset )
+                    {
+                        BulletSystem::createBullet< PlayerBullet >( registry, playerEntity, targetPosition, false, offset );
+                    }
                 }
 
                 weapon.bulletsInQueue--;

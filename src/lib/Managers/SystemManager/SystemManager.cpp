@@ -158,7 +158,7 @@ void SystemManager::executeUpdateSystems( sf::Time deltaTime, const Window& wind
                 EnergySystem::updateEnergy( this->registry, deltaTime );
                 WeaponsSystem::updateWeaponCooldown( this->registry, deltaTime );
                 EntityStateSystem::updateEntityState( this->registry, deltaTime );
-                ShootingSystem::shoot( this->registry, deltaTime, this->window );
+                ShootingSystem::shoot( this->registry, deltaTime, gameMouse );
                 BulletSystem::updateShurikenBullet( this->registry, deltaTime );
                 AccelerationSystem::accelerate( this->registry, deltaTime );
                 MovementSystem::updateMovement( this->registry, deltaTime );
@@ -174,7 +174,9 @@ void SystemManager::executeUpdateSystems( sf::Time deltaTime, const Window& wind
                 this->questSystem.update( this->registry, deltaTime );
 
                 if ( this->debugMode )
+                {
                     DebugSystem::update( this->registry, this->window );
+                }
             }
         }
         else

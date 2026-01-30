@@ -16,8 +16,6 @@
 #include "skills.h"
 #include "enemy.h"
 
-using ShotFunction = std::function<void(entt::registry& registry, sf::RenderWindow& window, entt::entity& entity)>;
-
 enum class Weapons
 {
     None = 0,
