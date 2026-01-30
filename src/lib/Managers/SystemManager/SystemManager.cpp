@@ -124,9 +124,6 @@ void SystemManager::executeUpdateSystems( sf::Time deltaTime, const Window& wind
     {
         if ( SceneManager::getInstance().isGameStarted() )
         {
-            Mouse::MouseState uiMouse = window.getMouseState();
-            NotifySystem::update( deltaTime, uiMouse );
-
             if ( !NotifySystem::isDialogBoxActive() )
             {
                 this->updateZoomFactor( deltaTime );

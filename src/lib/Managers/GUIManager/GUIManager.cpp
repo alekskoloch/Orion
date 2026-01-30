@@ -50,6 +50,10 @@ void GUIManager::update(sf::Time deltaTime, const Mouse::MouseState& mouseState 
             this->shieldTile.clear();
             SceneManager::getInstance().setGameStarted(true);
         }
+        else
+        {
+            NotifySystem::update( deltaTime, mouseState );
+        }
 
         //TODO: this solution is temporary, change of scenes should be done in a different way
         if (this->quitTimer < 0.2f)
