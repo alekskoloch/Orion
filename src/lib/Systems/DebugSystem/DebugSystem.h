@@ -1,27 +1,28 @@
 #pragma once
 
-#include <entt/entt.hpp>
 #include <SFML/Graphics.hpp>
+#include <entt/entt.hpp>
 
 #include "BackgroundManager.h"
 
-#include "EnemyInitializationSystem.h"
+namespace Mouse
+{
+struct MouseState;
+} // namespace Mouse
 
-#include "position.h"
-#include "collision.h"
-#include "entityState.h"
-#include "enemy.h"
+class Window;
 
 class DebugSystem
 {
 public:
-    static void update(entt::registry& registry, const Mouse::MouseState& mouseState );
+    static void update( entt::registry& registry, const Mouse::MouseState& mouseState );
 
-    static void renderCollisionBoxes(entt::registry& registry, sf::RenderWindow& window );
-    static void renderAttackRangeCircles(entt::registry& registry, sf::RenderWindow& window );
-    static void renderBackgroundTilesFrame(entt::registry& registry, sf::RenderWindow& window , std::vector<BackgroundTile>& backgroundTiles);
+    static void renderCollisionBoxes( entt::registry& registry, Window& window );
+    static void renderAttackRangeCircles( entt::registry& registry, Window& window );
+    static void renderBackgroundTilesFrame( entt::registry& registry, Window& window,
+                                            std::vector< BackgroundTile >& backgroundTiles );
 
 private:
-    static void creatingEnemies(entt::registry& registry, const Mouse::MouseState& mouseState );
-    static void spawnEnemyOnMousePosition(entt::registry& registry, const Mouse::MouseState& mouseState );
+    static void creatingEnemies( entt::registry& registry, const Mouse::MouseState& mouseState );
+    static void spawnEnemyOnMousePosition( entt::registry& registry, const Mouse::MouseState& mouseState );
 };

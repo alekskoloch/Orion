@@ -19,7 +19,6 @@ void SkillManager::update( sf::Time& deltaTime, const Mouse::MouseState& mouseSt
 {
     this->updateBox();
     this->box.update();
-
     for ( size_t i = 0; i < this->activeStars.size(); ++i )
     {
         this->activeStars[ i ]->update( deltaTime.asSeconds() );
@@ -32,7 +31,12 @@ void SkillManager::update( sf::Time& deltaTime, const Mouse::MouseState& mouseSt
 
     if ( this->dialogBox.getState() != GUIDialogBoxState::Hidden )
     {
-        this->dialogBox.update( mouseState );
+        Mouse::MouseState uiMouseState = mouseState;
+
+        uiMouseState.worldPosition.x = static_cast< float >( mouseState.screenPosition.x );
+        uiMouseState.worldPosition.y = static_cast< float >( mouseState.screenPosition.y );
+
+        this->dialogBox.update( uiMouseState );
     }
 }
 

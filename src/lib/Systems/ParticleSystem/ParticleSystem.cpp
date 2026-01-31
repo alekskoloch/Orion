@@ -11,6 +11,8 @@
 
 #include "MathOperations.h"
 
+#include "Window.hpp"
+
 //TODO: Only temprorary variables
 const float lifetime = 0.25f;
 const float particleRadius = 3.f;
@@ -38,11 +40,11 @@ void ParticleSystem::update(sf::Time deltaTime)
     this->handleEnemyExplosionParticles();
 }
 
-void ParticleSystem::draw(sf::RenderWindow &window)
+void ParticleSystem::draw( Window& window )
 {
-    for (auto &particle : particles)
+    for ( auto& particle : particles )
     {
-        window.draw(particle->particle);
+        window.draw( particle->particle );
     }
 }
 

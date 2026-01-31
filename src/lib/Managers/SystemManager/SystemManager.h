@@ -20,12 +20,12 @@ const constexpr float SLOW_MOTION_SPEED = 3.f;
 class SystemManager
 {
 public:
-    SystemManager(sf::RenderWindow& window, entt::registry& registry, sf::Event& event);
+    SystemManager(entt::registry& registry, sf::Event& event);
     void startNewGame();
 
     void executeInitializationSystems();
     void executeEventSystems();
-    void executeUpdateSystems( sf::Time deltaTime, const Window& window );
+    void executeUpdateSystems( sf::Time deltaTime, const Mouse::MouseState& mouseState );
     void executeRenderSystems( Window& window );
 
     void enableSlowMotion() { this->slowMotion = true; }
@@ -35,11 +35,8 @@ public:
 
     bool debugMode = false;
 private:
-    sf::RenderWindow& window;
     entt::registry& registry;
     sf::Event& event;
-
-    sf::View gameView;
 
     BackgroundManager backgroundManager;
 
@@ -49,10 +46,4 @@ private:
 
     bool slowMotion = false;
     float slowMotionFactor = 1.0f;
-
-    //TODO: transfer it to some system
-    void initializeZoom();
-    float zoomFactorTarget;
-    float zoomFactor;
-    void updateZoomFactor(sf::Time deltaTime);
 };

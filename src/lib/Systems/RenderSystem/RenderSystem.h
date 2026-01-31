@@ -6,8 +6,10 @@
 #include "renderable.h"
 #include "position.h"
 
+class Window;
+
 class RenderSystem
 {
 public:
-    static void renderEntities(sf::RenderWindow& window, entt::registry& registry);
+    static void renderEntities( Window& window, entt::registry& registry);
 };

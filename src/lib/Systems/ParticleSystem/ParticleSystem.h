@@ -6,13 +6,15 @@
 
 #include "../Entities/ParticleFactory.h"
 
+class Window;
+
 class ParticleSystem
 {
 public:
     ParticleSystem(entt::registry& registry);
 
     void update(sf::Time deltaTime);
-    void draw(sf::RenderWindow &window);
+    void draw( Window& window );
 
     void clear();
 private:

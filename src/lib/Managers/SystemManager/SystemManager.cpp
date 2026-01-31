@@ -35,9 +35,8 @@
 
 #include "MathOperations.h"
 
-
-SystemManager::SystemManager(sf::RenderWindow& window, entt::registry& registry, sf::Event& event) :
-    window(window), registry(registry), event(event), backgroundManager(registry), particleSystem(registry), gameView( window.getDefaultView() )
+SystemManager::SystemManager( entt::registry& registry, sf::Event& event )
+    : registry( registry ), event( event ), backgroundManager( registry ), particleSystem( registry )
 {
 }
 
@@ -52,7 +51,6 @@ void SystemManager::startNewGame()
 
     this->backgroundManager.initialize();
 
-    this->initializeZoom();
     this->executeInitializationSystems();
 
     SkillManager::getInstance( this->registry ).clear();
@@ -85,40 +83,11 @@ void SystemManager::executeEventSystems()
 
     if ( const auto* mouseWheel = this->event.getIf< sf::Event::MouseWheelScrolled >() )
     {
-        const float scale = 1.0f / ConfigManager::getInstance().getScale();
-
-        if ( mouseWheel->delta > 0 && this->zoomFactorTarget > scale )
-        {
-            this->zoomFactorTarget -= 0.05f * scale;
-            if ( this->zoomFactorTarget < scale )
-                this->zoomFactorTarget = scale;
-        }
-        else if ( mouseWheel->delta < 0 && this->zoomFactorTarget < scale * 2.f )
-        {
-            this->zoomFactorTarget += 0.05f * scale;
-            if ( this->zoomFactorTarget > scale * 2.f )
-                this->zoomFactorTarget = scale * 2.f;
-        }
+        CameraSystem::zoomFactorChange( mouseWheel->delta );
     }
 }
 
-void SystemManager::initializeZoom()
-{
-    this->zoomFactor = 1 / ConfigManager::getInstance().getScale();
-    this->zoomFactorTarget = this->zoomFactor;
-}
-
-void SystemManager::updateZoomFactor(sf::Time deltaTime)
-{
-    if (this->zoomFactor != this->zoomFactorTarget)
-    {
-        float zoomFactorDelta = this->zoomFactorTarget - this->zoomFactor;
-        float zoomFactorChange = zoomFactorDelta * deltaTime.asSeconds() * 5.f;
-        this->zoomFactor += zoomFactorChange;
-    }
-}
-
-void SystemManager::executeUpdateSystems( sf::Time deltaTime, const Window& window )
+void SystemManager::executeUpdateSystems( sf::Time deltaTime, const Mouse::MouseState& mouseState )
 {
     if ( SceneManager::getInstance().getCurrentScene() == Scene::Game )
     {
@@ -126,14 +95,6 @@ void SystemManager::executeUpdateSystems( sf::Time deltaTime, const Window& wind
         {
             if ( !NotifySystem::isDialogBoxActive() )
             {
-                this->updateZoomFactor( deltaTime );
-
-                this->gameView = this->window.getDefaultView();
-                CameraSystem::updateCamera( this->gameView, this->registry, this->zoomFactor );
-
-                this->window.setView( this->gameView );
-                Mouse::MouseState gameMouse = window.getMouseState();
-
                 if ( this->slowMotion || this->slowMotionFactor != 1.0f )
                 {
                     TimeControlSystem::updateSlowMotion( this->slowMotionFactor, this->slowMotion, SLOW_MOTION_SPEED,
@@ -143,7 +104,7 @@ void SystemManager::executeUpdateSystems( sf::Time deltaTime, const Window& wind
 
                 if ( !this->slowMotion )
                 {
-                    RotateTowardsMouseSystem::rotateTowardsMouse( this->registry, gameMouse, deltaTime );
+                    RotateTowardsMouseSystem::rotateTowardsMouse( this->registry, mouseState, deltaTime );
                 }
 
                 backgroundManager.update();
@@ -155,7 +116,7 @@ void SystemManager::executeUpdateSystems( sf::Time deltaTime, const Window& wind
                 EnergySystem::updateEnergy( this->registry, deltaTime );
                 WeaponsSystem::updateWeaponCooldown( this->registry, deltaTime );
                 EntityStateSystem::updateEntityState( this->registry, deltaTime );
-                ShootingSystem::shoot( this->registry, deltaTime, gameMouse );
+                ShootingSystem::shoot( this->registry, deltaTime, mouseState );
                 BulletSystem::updateShurikenBullet( this->registry, deltaTime );
                 AccelerationSystem::accelerate( this->registry, deltaTime );
                 MovementSystem::updateMovement( this->registry, deltaTime );
@@ -172,7 +133,7 @@ void SystemManager::executeUpdateSystems( sf::Time deltaTime, const Window& wind
 
                 if ( this->debugMode )
                 {
-                    DebugSystem::update( this->registry, gameMouse );
+                    DebugSystem::update( this->registry, mouseState );
                 }
             }
         }
@@ -185,23 +146,18 @@ void SystemManager::executeUpdateSystems( sf::Time deltaTime, const Window& wind
 
 void SystemManager::executeRenderSystems( Window& window )
 {
-    if (SceneManager::getInstance().getCurrentScene() == Scene::Game)
+    if ( SceneManager::getInstance().getCurrentScene() == Scene::Game )
     {
-        this->window.setView( this->gameView );
-
         backgroundManager.draw( window );
-        this->particleSystem.draw(this->window);
-        RenderSystem::renderEntities(this->window, this->registry);
-        InfoSystem::draw(this->registry, this->window);
-        if (this->debugMode)
+        this->particleSystem.draw( window );
+        RenderSystem::renderEntities( window, this->registry );
+        InfoSystem::draw( this->registry, window );
+
+        if ( this->debugMode )
         {
-            DebugSystem::renderCollisionBoxes(this->registry, this->window);
-            DebugSystem::renderAttackRangeCircles(this->registry, this->window);
-            DebugSystem::renderBackgroundTilesFrame(this->registry, this->window, backgroundManager.getBackgroundTiles());
+            DebugSystem::renderCollisionBoxes( this->registry, window );
+            DebugSystem::renderAttackRangeCircles( this->registry, window );
+            DebugSystem::renderBackgroundTilesFrame( this->registry, window, backgroundManager.getBackgroundTiles() );
         }
-
-        this->window.setView( this->window.getDefaultView() );
-
-        NotifySystem::draw( window );
     }
 }

@@ -97,8 +97,8 @@ void GUIDialogBox::update( const Mouse::MouseState& mouseState )
 {
     this->updateText();
 
-    const auto& mousePos = sf::Vector2f{ static_cast< float >( mouseState.screenPosition.x ),
-                                         static_cast< float >( mouseState.screenPosition.y ) };
+    const auto& mousePos = sf::Vector2f{ static_cast< float >( mouseState.worldPosition.x ),
+                                         static_cast< float >( mouseState.worldPosition.y ) };
 
     if ( this->type == GUIDialogBoxType::YesNo )
     {

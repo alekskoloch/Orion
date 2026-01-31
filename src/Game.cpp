@@ -5,8 +5,10 @@
 #include "SceneManager.h"
 #include "TextureManager.h"
 
+#include "CameraSystem.h"
+
 Game::Game()
-    : event( sf::Event::Closed{} ), systemManager( m_window.getWindow(), this->registry, this->event ),
+    : event( sf::Event::Closed{} ), systemManager( this->registry, this->event ),
       guiManager( m_window.getWindow(), this->registry, this->event, this->systemManager.getQuests() ),
       cursor( sf::Cursor::createFromSystem( sf::Cursor::Type::Arrow ).value() )
 {
@@ -108,7 +110,12 @@ void Game::update( sf::Time deltaTime )
     this->guiManager.update( deltaTime, m_window.getMouseState() );
     if ( !this->guiManager.pause() )
     {
-        this->systemManager.executeUpdateSystems( deltaTime, m_window );
+        CameraSystem::updateZoomFactor( deltaTime );
+        CameraSystem::updateCamera( m_gameView, this->registry );
+
+        m_window.setView( m_gameView );
+
+        this->systemManager.executeUpdateSystems( deltaTime, m_window.getMouseState() );
     }
 }
 
@@ -116,7 +123,20 @@ void Game::render()
 {
     m_window.clear();
 
-    this->systemManager.executeRenderSystems( m_window );
+    if ( SceneManager::getInstance().getCurrentScene() == Scene::Game )
+    {
+        m_window.setView( m_gameView );
+
+        this->systemManager.executeRenderSystems( m_window );
+    }
+
+    m_window.setDefaultView();
+
+    if ( SceneManager::getInstance().getCurrentScene() == Scene::Game )
+    {
+        NotifySystem::draw( m_window );
+    }
+
     this->guiManager.draw( m_window );
 
     m_window.display();

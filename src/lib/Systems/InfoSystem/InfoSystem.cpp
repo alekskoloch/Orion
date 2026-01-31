@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "InfoSystem.h"
 
+#include "Window.hpp"
+
 void InfoSystem::update(entt::registry& registry, sf::Time deltaTime)
 {
     auto infoView = registry.view<Info>();
@@ -29,14 +31,14 @@ void InfoSystem::update(entt::registry& registry, sf::Time deltaTime)
     }
 }
 
-void InfoSystem::draw(entt::registry& registry, sf::RenderWindow& window)
+void InfoSystem::draw( entt::registry& registry, Window& window )
 {
-    auto infoView = registry.view<Info>();
+    auto infoView = registry.view< Info >();
 
-    for (auto info : infoView)
+    for ( auto info : infoView )
     {
-        auto& infoComponent = infoView.get<Info>(info);
+        auto& infoComponent = infoView.get< Info >( info );
 
-        window.draw(infoComponent.text);
+        window.draw( infoComponent.text );
     }
 }

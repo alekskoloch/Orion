@@ -25,6 +25,8 @@ private:
     sf::Texture cursorTexture;
     sf::Cursor cursor;
 
+    sf::View m_gameView;
+
     void processEvents();
     void update( sf::Time deltaTime );
     void render();
