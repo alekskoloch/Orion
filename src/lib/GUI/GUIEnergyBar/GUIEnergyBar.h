@@ -2,22 +2,18 @@
 
 #include <entt/entt.hpp>
 #include <SFML/Graphics.hpp>
-#include "ConfigManager.hpp"
-#include "EventManager.h"
 
-#include "energy.h"
-#include "player.h"
+class Window;
 
 class GUIEnergyBar
 {
 public:
-    GUIEnergyBar(sf::RenderWindow& window, entt::registry& registry);
+    explicit GUIEnergyBar( entt::registry& registry );
 
-    void update(sf::Time deltaTime);
-    void draw();
+    void update( sf::Time deltaTime );
+    void draw( Window& window );
 
 private:
-    sf::RenderWindow& window;
     entt::registry& registry;
 
     sf::RectangleShape energyBarSprite;
@@ -26,7 +22,7 @@ private:
     void initializeEnergyBar();
 
     bool isNotEnoughEnergy = false;
-    float notEnoughEnergyTimer = 1.f;
+    float notEnoughEnergyTimer = 1.F;
     bool blink = false;
-    float blinkTimer = 0.2f;
+    float blinkTimer = 0.2F;
 };

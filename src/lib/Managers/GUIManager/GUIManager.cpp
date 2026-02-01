@@ -17,7 +17,7 @@
 
 GUIManager::GUIManager(sf::RenderWindow& window, entt::registry& registry, sf::Event& event, std::vector<Quest>& quests) : window(window), registry(registry), event(event),
     quickMenu( registry ),
-    energyBar(window, registry),
+    energyBar( registry ),
     minimap(window, registry, quests),
     mainMenu(registry, window),
     settings(registry, window),
@@ -110,7 +110,7 @@ void GUIManager::draw( Window& window )
 {
     if ( SceneManager::getInstance().getCurrentScene() == Scene::Game )
     {
-        this->energyBar.draw();
+        this->energyBar.draw( window );
         this->minimap.draw();
         this->expInfo.draw( this->window, sf::RenderStates::Default );
         this->moneyBar.draw( this->window, sf::RenderStates::Default );
