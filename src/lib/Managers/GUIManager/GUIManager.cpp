@@ -16,7 +16,7 @@
 #include "Mouse.h"
 
 GUIManager::GUIManager(sf::RenderWindow& window, entt::registry& registry, sf::Event& event, std::vector<Quest>& quests) : window(window), registry(registry), event(event),
-    quickMenu(window, registry),
+    quickMenu( registry ),
     energyBar(window, registry),
     minimap(window, registry, quests),
     mainMenu(registry, window),
@@ -39,7 +39,7 @@ void GUIManager::processInput()
         this->journal.processInput(this->event);
 }
 
-void GUIManager::update(sf::Time deltaTime, const Mouse::MouseState& mouseState )
+void GUIManager::update( sf::Time deltaTime, const Mouse::MouseState& mouseState )
 {
     if (SceneManager::getInstance().getCurrentScene() == Scene::Game)
     {
@@ -64,9 +64,10 @@ void GUIManager::update(sf::Time deltaTime, const Mouse::MouseState& mouseState 
         else
             this->readyToQuit = true;
 
-
-        if (this->quickMenuActive)
-            this->quickMenu.update();
+        if ( this->quickMenuActive )
+        {
+            this->quickMenu.update( mouseState );
+        }
 
         if (this->journal.isOpened())
         {
@@ -107,36 +108,37 @@ void GUIManager::update(sf::Time deltaTime, const Mouse::MouseState& mouseState 
 
 void GUIManager::draw( Window& window )
 {
-    if (SceneManager::getInstance().getCurrentScene() == Scene::Game)
+    if ( SceneManager::getInstance().getCurrentScene() == Scene::Game )
     {
         this->energyBar.draw();
         this->minimap.draw();
-        this->expInfo.draw(this->window, sf::RenderStates::Default);
-        this->moneyBar.draw(this->window, sf::RenderStates::Default);
-        this->shieldTile.draw(this->window, sf::RenderStates::Default);
-        this->weaponTile.draw(this->window, sf::RenderStates::Default);
+        this->expInfo.draw( this->window, sf::RenderStates::Default );
+        this->moneyBar.draw( this->window, sf::RenderStates::Default );
+        this->shieldTile.draw( this->window, sf::RenderStates::Default );
+        this->weaponTile.draw( this->window, sf::RenderStates::Default );
 
-        if (this->journal.isOpened())
-            this->journal.draw(this->window, sf::RenderStates::Default);
-        
-        if (this->quickMenuActive)
+        if ( this->journal.isOpened() )
         {
-            this->shaderTexture.update(this->window);
-            this->window.draw(this->shaderSprite, &this->shader);
-
-            this->quickMenu.draw();
+            this->journal.draw( this->window, sf::RenderStates::Default );
         }
 
+        if ( this->quickMenuActive )
+        {
+            this->shaderTexture.update( this->window );
+            this->window.draw( this->shaderSprite, &this->shader );
+
+            this->quickMenu.draw( window );
+        }
     }
-    else if (SceneManager::getInstance().getCurrentScene() == Scene::SkillTree)
+    else if ( SceneManager::getInstance().getCurrentScene() == Scene::SkillTree )
     {
         this->skillTreeGUI.draw( window );
     }
-    else if (SceneManager::getInstance().getCurrentScene() == Scene::MainMenu)
+    else if ( SceneManager::getInstance().getCurrentScene() == Scene::MainMenu )
     {
         this->mainMenu.draw();
     }
-    else if (SceneManager::getInstance().getCurrentScene() == Scene::Settings)
+    else if ( SceneManager::getInstance().getCurrentScene() == Scene::Settings )
     {
         this->settings.draw();
     }

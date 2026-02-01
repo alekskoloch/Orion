@@ -10,18 +10,24 @@
 #include "Mouse.h"
 #include "GraphicsOperations.h"
 
+namespace Mouse
+{
+struct MouseState;
+} // namespace Mouse
+
+class Window;
+
 class GUIQuickMenu
 {
 public:
-    GUIQuickMenu(sf::RenderWindow& window, entt::registry& registry);
+    GUIQuickMenu( entt::registry& registry );
 
-    void update();
-    void draw();
+    void update( const Mouse::MouseState& mouseState );
+    void draw( Window& window );
 
     uint8_t getSelectedTile() const { return this->selectedTile; }
 
 private:
-    sf::RenderWindow& window;
     entt::registry& registry;
 
     std::vector<sf::Sprite> quickMenuTiles;
