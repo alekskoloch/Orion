@@ -3,22 +3,24 @@
 #include <entt/entt.hpp>
 #include <SFML/Graphics.hpp>
 
-#include "SkillManager.h"
-#include "SceneManager.h"
+class Window;
 
-#include "GraphicsOperations.h"
-#include "Mouse.h"
+namespace Mouse
+{
+struct MouseState;
+} // namespace Mouse
 
 class GUISkillTree
 {
 public:
-    GUISkillTree(entt::registry& registry, sf::RenderWindow& window);
+    explicit GUISkillTree( entt::registry& registry );
 
-    void update( sf::Time& deltaTime, const Mouse::MouseState& mousePosition );
+    void update( sf::Time& deltaTime, const Mouse::MouseState& mouseState );
     void draw( Window& window );
+
+    auto getView() const -> const sf::View&;
 private:
     entt::registry& registry;
-    sf::RenderWindow& window;
     sf::View view;
     float moveSpeed = 1000.0f;
 

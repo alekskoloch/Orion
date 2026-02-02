@@ -11,7 +11,7 @@
 
 GUIManager::GUIManager( sf::RenderWindow& window, entt::registry& registry, sf::Event& event, std::vector< Quest >& quests )
     : window( window ), registry( registry ), event( event ), quickMenu( registry ), energyBar( registry ),
-      minimap( registry, quests ), skillTreeGUI( registry, window ),
+      minimap( registry, quests ), skillTreeGUI( registry ),
       weaponTile( window, registry ), shieldTile( window, registry ), moneyBar( window, registry ), expInfo( window, registry ),
       journal( window, registry, quests ), shaderTexture( window.getSize() ), shaderSprite( shaderTexture )
 {
@@ -76,10 +76,21 @@ void GUIManager::update( sf::Time deltaTime, const Mouse::MouseState& mouseState
             SceneManager::getInstance().setCurrentScene(Scene::MainMenu);
         }
     }
-    else if (SceneManager::getInstance().getCurrentScene() == Scene::SkillTree)
+    else if ( SceneManager::getInstance().getCurrentScene() == Scene::SkillTree )
     {
-        this->skillTreeGUI.update( deltaTime, mouseState );
-        this->quitTimer = 0.f;
+        const sf::View& currentSkillView = this->skillTreeGUI.getView();
+
+        sf::Vector2i mousePixelPos =
+            sf::Vector2i( static_cast< int >( mouseState.screenPosition.x ), static_cast< int >( mouseState.screenPosition.y ) );
+
+        sf::Vector2f mouseWorldPos = this->window.mapPixelToCoords( mousePixelPos, currentSkillView );
+
+        Mouse::MouseState skillTreeMouseState = mouseState;
+        skillTreeMouseState.worldPosition = { mouseWorldPos.x, mouseWorldPos.y };
+
+        this->skillTreeGUI.update( deltaTime, skillTreeMouseState );
+
+        this->quitTimer = 0.F;
     }
     else if (SceneManager::getInstance().getCurrentScene() == Scene::MainMenu)
     {
