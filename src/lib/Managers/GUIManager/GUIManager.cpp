@@ -9,15 +9,9 @@
 #include "WeaponsSystem.h"
 #include "ShieldSystem.h"
 
-#include "PlayerInitializationSystem.h"
-#include "WeaponsSchema.h"
-
-#include "GraphicsOperations.h"
-#include "Mouse.h"
-
 GUIManager::GUIManager( sf::RenderWindow& window, entt::registry& registry, sf::Event& event, std::vector< Quest >& quests )
     : window( window ), registry( registry ), event( event ), quickMenu( registry ), energyBar( registry ),
-      minimap( registry, quests ), settings( registry, window ), skillTreeGUI( registry, window ),
+      minimap( registry, quests ), skillTreeGUI( registry, window ),
       weaponTile( window, registry ), shieldTile( window, registry ), moneyBar( window, registry ), expInfo( window, registry ),
       journal( window, registry, quests ), shaderTexture( window.getSize() ), shaderSprite( shaderTexture )
 {
@@ -93,7 +87,7 @@ void GUIManager::update( sf::Time deltaTime, const Mouse::MouseState& mouseState
     }
     else if (SceneManager::getInstance().getCurrentScene() == Scene::Settings)
     {
-        this->settings.update(deltaTime);
+        this->settings.update( mouseState, deltaTime );
     }
 }
 
@@ -131,7 +125,7 @@ void GUIManager::draw( Window& window )
     }
     else if ( SceneManager::getInstance().getCurrentScene() == Scene::Settings )
     {
-        this->settings.draw();
+        this->settings.draw( window );
     }
 }
 

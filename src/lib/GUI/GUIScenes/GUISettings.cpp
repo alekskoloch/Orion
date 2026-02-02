@@ -4,10 +4,16 @@
 #include "nlohmann/json.hpp"
 #include <fstream>
 
-GUISettings::GUISettings(entt::registry& registry, sf::RenderWindow& window) : registry(registry), window(window)
+#include "SceneManager.h"
+
+#include "ConfigManager.hpp"
+
+#include "Window.hpp"
+#include "InputData.hpp"
+
+GUISettings::GUISettings()
 {
     this->initialize();
-    this->view = this->window.getDefaultView();
 
     unsigned int currentWidth;
     unsigned int currentHeight;
@@ -133,86 +139,85 @@ GUISettings::GUISettings(entt::registry& registry, sf::RenderWindow& window) : r
     ));
 }
 
-void GUISettings::update(sf::Time& deltaTime)
+void GUISettings::update( const Mouse::MouseState& mouseState, sf::Time& deltaTime )
 {
-    sf::Vector2f mousePosition = sf::Vector2f(sf::Mouse::getPosition(this->window).x, sf::Mouse::getPosition(this->window).y);
+    sf::Vector2f mousePosition{ static_cast< float >( mouseState.screenPosition.x ),
+                                static_cast< float >( mouseState.screenPosition.y ) };
 
-    for (auto& element : elements)
+    for ( auto& element : elements )
     {
-        element->update(deltaTime, mousePosition);
+        element->update( deltaTime, mousePosition );
     }
 
-    window.setView(view);
-
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Escape))
+    if ( sf::Keyboard::isKeyPressed( sf::Keyboard::Key::Escape ) )
     {
-        std::ofstream file(CONFIG_PATH + std::string("gameConfig.json"));
-        if (file.is_open())
+        std::ofstream file( CONFIG_PATH + std::string( "gameConfig.json" ) );
+        if ( file.is_open() )
         {
             nlohmann::json config;
-            config["resolution"]["width"] = std::stoi(elements[2]->getText());
-            config["resolution"]["height"] = std::stoi(elements[2]->getText().substr(elements[2]->getText().find('x') + 1));
-            if (elements[4]->getText() == "unlimited")
+            config[ "resolution" ][ "width" ] = std::stoi( elements[ 2 ]->getText() );
+            config[ "resolution" ][ "height" ] =
+                std::stoi( elements[ 2 ]->getText().substr( elements[ 2 ]->getText().find( 'x' ) + 1 ) );
+            if ( elements[ 4 ]->getText() == "unlimited" )
             {
-                config["frameRateLimit"] = 0;
+                config[ "frameRateLimit" ] = 0;
             }
             else
             {
-                config["frameRateLimit"] = std::stoi(elements[4]->getText());
+                config[ "frameRateLimit" ] = std::stoi( elements[ 4 ]->getText() );
             }
 
-            if (elements[6]->getText() == "Fullscreen")
+            if ( elements[ 6 ]->getText() == "Fullscreen" )
             {
-                config["windowMode"] = "Fullscreen";
+                config[ "windowMode" ] = "Fullscreen";
             }
             else
             {
-                config["windowMode"] = "Windowed";
+                config[ "windowMode" ] = "Windowed";
             }
-            file << config.dump(4);
+            file << config.dump( 4 );
         }
         else
         {
-            throw std::runtime_error("Could not open gameConfig.json");
+            throw std::runtime_error( "Could not open gameConfig.json" );
         }
 
-
-        SceneManager::getInstance().setCurrentScene(Scene::MainMenu);
+        SceneManager::getInstance().setCurrentScene( Scene::MainMenu );
     }
 
-    //TODO: this is horrible, refactor this
-    if (this->elements[2]->getText() != this->loadedResolution || this->elements[4]->getText() != this->loadedFrameRate || this->elements[6]->getText() != this->loadedWindowMode)
+    // TODO: this is horrible, refactor this
+    if ( this->elements[ 2 ]->getText() != this->loadedResolution || this->elements[ 4 ]->getText() != this->loadedFrameRate ||
+         this->elements[ 6 ]->getText() != this->loadedWindowMode )
     {
-        if (elements.size() == 7)
+        if ( elements.size() == 7 )
         {
-            elements.push_back(GUIElementFactory::createText(
-                sf::Vector2f(SCREEN_WIDTH / 2, SCREEN_HEIGHT - SCREEN_HEIGHT / 10),
-                "Changes will be applied after restarting the game",
-                BUTTONS_FONT_SIZE
-            ));
+            elements.push_back(
+                GUIElementFactory::createText( sf::Vector2f( SCREEN_WIDTH / 2, SCREEN_HEIGHT - SCREEN_HEIGHT / 10 ),
+                                               "Changes will be applied after restarting the game", BUTTONS_FONT_SIZE ) );
         }
     }
     else
     {
-        if (elements.size() == 8)
+        if ( elements.size() == 8 )
         {
             elements.pop_back();
         }
     }
 }
 
-void GUISettings::draw()
+void GUISettings::draw( Window& window )
 {
     for (auto& element : elements)
     {
-        this->window.draw(*element);
+       window.draw(*element);
     }
 }
 
 void GUISettings::initialize()
 {
-    this->SCREEN_WIDTH = this->window.getSize().x;
-    this->SCREEN_HEIGHT = this->window.getSize().y;
+    // TODO: Same part in GUIMainMenu, refactor
+    this->SCREEN_WIDTH = ConfigManager::getInstance().getScreenWidth();
+    this->SCREEN_HEIGHT = ConfigManager::getInstance().getScreenHeight();
 
     this->BUTTON_WIDTH = this->SCREEN_WIDTH / 6;
     this->BUTTON_HEIGHT = this->SCREEN_HEIGHT / 20;

@@ -5,20 +5,22 @@
 #include <vector>
 #include <memory>
 
-#include "SceneManager.h"
-
+#include "Window.hpp"
 #include "GUIElement.hpp"
+
+namespace Mouse
+{
+struct MouseState;
+} // namespace Mouse
 
 class GUISettings
 {
 public:
-    GUISettings(entt::registry& registry, sf::RenderWindow& window);
+    GUISettings();
 
-    void update(sf::Time& deltaTime);
-    void draw();
+    void update( const Mouse::MouseState& mouseState, sf::Time& deltaTime );
+    void draw( Window& window );
 private:
-    entt::registry& registry;
-    sf::RenderWindow& window;
     sf::View view;
 
     std::vector<std::unique_ptr<GUIElement>> elements;
