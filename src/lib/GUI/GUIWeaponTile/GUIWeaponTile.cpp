@@ -106,8 +106,8 @@ void GUIWeaponTile::clear()
     this->specialShotAvailable = false;
 }
 
-GUIShieldTile::GUIShieldTile( sf::RenderWindow& window, entt::registry& registry )
-    : window( window ), registry( registry ), shieldIcon{ CreateSprite( "basic_shield_ico" ) }
+GUIShieldTile::GUIShieldTile( entt::registry& registry )
+    : registry( registry ), shieldIcon{ CreateSprite( "basic_shield_ico" ) }
 {
     this->initialize();
 }
@@ -164,9 +164,17 @@ void GUIShieldTile::update()
 
 void GUIShieldTile::draw( sf::RenderTarget& target, sf::RenderStates states ) const
 {
+    // TODO: remove this version
     target.draw( this->circle, states );
     target.draw( this->shiedlStateCircle, states );
     target.draw( this->shieldIcon, states );
+}
+
+void GUIShieldTile::draw( Window& window )
+{
+    window.draw( this->circle );
+    window.draw( this->shiedlStateCircle );
+    window.draw( this->shieldIcon );
 }
 
 void GUIShieldTile::clear()

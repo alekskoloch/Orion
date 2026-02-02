@@ -34,16 +34,16 @@ private:
 class GUIShieldTile : public sf::Drawable
 {
 public:
-    GUIShieldTile(sf::RenderWindow& window, entt::registry& registry);
+    explicit GUIShieldTile( entt::registry& registry );
 
     void setShieldTexture(const std::string& textureName);
 
     void update();
     void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
+    void draw( Window& window );
 
     void clear();
 private:
-    sf::RenderWindow& window;
     entt::registry& registry;
 
     void initialize();
