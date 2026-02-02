@@ -2,34 +2,22 @@
 
 #include <entt/entt.hpp>
 #include <SFML/Graphics.hpp>
-#include "ConfigManager.hpp"
-#include "TextureManager.h"
-#include "FontManager.h"
 
-#include "MoneySystem.h"
-#include "CooldownSystem.h"
-#include "SkillSystem.h"
-
-#include "weapon.h"
-#include "shield.h"
-#include "moneyInventory.h"
-#include "player.h"
-
-#include "GraphicsOperations.h"
+class Window;
 
 class GUIWeaponTile : public sf::Drawable
 {
 public:
-    GUIWeaponTile(sf::RenderWindow& window, entt::registry& registry);
+    explicit GUIWeaponTile( entt::registry& registry );
 
     void setWeaponTexture(const std::string& textureName);
 
     void update();
-    void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
+    void draw( sf::RenderTarget& target, sf::RenderStates states ) const override;
+    void draw( Window& window );
 
     void clear();
 private:
-    sf::RenderWindow& window;
     entt::registry& registry;
 
     void initialize();
