@@ -1,43 +1,36 @@
 #pragma once
 
-#include <entt/entt.hpp>
 #include <SFML/Graphics.hpp>
+#include <entt/entt.hpp>
 
-#include "ConfigManager.hpp"
+class Window;
 
-#include "QuestSystem.h"
-
-#include "renderable.h"
-#include "position.h"
-#include "player.h"
-#include "enemy.h"
-
-#include "GraphicsOperations.h"
+struct Quest;
 
 class GUIMinimap
 {
 public:
-    GUIMinimap(sf::RenderWindow& window, entt::registry& registry, std::vector<Quest>& quests);
+    GUIMinimap( entt::registry& registry, std::vector< Quest >& quests );
 
     void update();
-    void draw();
+    void draw( Window& window );
+
 private:
     entt::registry& registry;
-    sf::RenderWindow& window;
-    std::vector<Quest>& quests;
+    std::vector< Quest >& quests;
 
     sf::CircleShape backgroundMap;
     sf::Sprite playerMinimapSprite;
     sf::Sprite activeQuestMinimapSprite;
     bool drawQuestMarker = false;
-    std::vector<sf::CircleShape> mapObjects;
+    std::vector< sf::CircleShape > mapObjects;
     void updateQuestMarker();
 
     void initializationMinimap();
 
     void initializePlayerCoordinatesText();
     void updatePlayerCoordinates();
-    void writePlayerCoordinates();
+    void writePlayerCoordinates( Window& window );
     sf::Font& font;
     sf::Text playerCoordinatesText;
 
@@ -47,5 +40,5 @@ private:
 
     void initializeActiveQuestText();
     void updateActiveQuestText();
-    void drawActiveQuestText();
+    void drawActiveQuestText( Window& window );
 };

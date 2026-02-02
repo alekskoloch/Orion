@@ -18,7 +18,7 @@
 GUIManager::GUIManager(sf::RenderWindow& window, entt::registry& registry, sf::Event& event, std::vector<Quest>& quests) : window(window), registry(registry), event(event),
     quickMenu( registry ),
     energyBar( registry ),
-    minimap(window, registry, quests),
+    minimap( registry, quests ),
     mainMenu(registry, window),
     settings(registry, window),
     skillTreeGUI(registry, window),
@@ -111,7 +111,7 @@ void GUIManager::draw( Window& window )
     if ( SceneManager::getInstance().getCurrentScene() == Scene::Game )
     {
         this->energyBar.draw( window );
-        this->minimap.draw();
+        this->minimap.draw( window );
         this->expInfo.draw( this->window, sf::RenderStates::Default );
         this->moneyBar.draw( this->window, sf::RenderStates::Default );
         this->shieldTile.draw( this->window, sf::RenderStates::Default );
