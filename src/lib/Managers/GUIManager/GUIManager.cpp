@@ -15,20 +15,11 @@
 #include "GraphicsOperations.h"
 #include "Mouse.h"
 
-GUIManager::GUIManager(sf::RenderWindow& window, entt::registry& registry, sf::Event& event, std::vector<Quest>& quests) : window(window), registry(registry), event(event),
-    quickMenu( registry ),
-    energyBar( registry ),
-    minimap( registry, quests ),
-    mainMenu(registry, window),
-    settings(registry, window),
-    skillTreeGUI(registry, window),
-    weaponTile(window, registry),
-    shieldTile(window, registry),
-    moneyBar(window, registry),
-    expInfo(window, registry),
-    journal(window, registry, quests),
-    shaderTexture(window.getSize()),
-    shaderSprite(shaderTexture)
+GUIManager::GUIManager( sf::RenderWindow& window, entt::registry& registry, sf::Event& event, std::vector< Quest >& quests )
+    : window( window ), registry( registry ), event( event ), quickMenu( registry ), energyBar( registry ),
+      minimap( registry, quests ), settings( registry, window ), skillTreeGUI( registry, window ),
+      weaponTile( window, registry ), shieldTile( window, registry ), moneyBar( window, registry ), expInfo( window, registry ),
+      journal( window, registry, quests ), shaderTexture( window.getSize() ), shaderSprite( shaderTexture )
 {
     this->initializeShader();
 }
@@ -98,7 +89,7 @@ void GUIManager::update( sf::Time deltaTime, const Mouse::MouseState& mouseState
     }
     else if (SceneManager::getInstance().getCurrentScene() == Scene::MainMenu)
     {
-        this->mainMenu.update(deltaTime);
+        this->mainMenu.update( mouseState, deltaTime );
     }
     else if (SceneManager::getInstance().getCurrentScene() == Scene::Settings)
     {
@@ -136,7 +127,7 @@ void GUIManager::draw( Window& window )
     }
     else if ( SceneManager::getInstance().getCurrentScene() == Scene::MainMenu )
     {
-        this->mainMenu.draw();
+        this->mainMenu.draw( window );
     }
     else if ( SceneManager::getInstance().getCurrentScene() == Scene::Settings )
     {

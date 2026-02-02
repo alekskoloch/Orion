@@ -1,27 +1,33 @@
 #pragma once
 
-#include <entt/entt.hpp>
 #include <SFML/Graphics.hpp>
-#include <vector>
+#include <entt/entt.hpp>
 #include <memory>
+#include <vector>
 
 #include "SceneManager.h"
 
 #include "GUIElement.hpp"
 
+class Window;
+
+namespace Mouse
+{
+struct MouseState;
+} // namespace Mouse
+
 class GUIMainMenu
 {
 public:
-    GUIMainMenu(entt::registry& registry, sf::RenderWindow& window);
+    GUIMainMenu();
 
-    void update(sf::Time& deltaTime);
-    void draw();
+    void update( const Mouse::MouseState& mouseState, sf::Time& deltaTime );
+    void draw( Window& window );
+
 private:
-    entt::registry& registry;
-    sf::RenderWindow& window;
     sf::View view;
 
-    std::vector<std::unique_ptr<GUIElement>> elements;
+    std::vector< std::unique_ptr< GUIElement > > elements;
 
     void initialize();
     unsigned int SCREEN_WIDTH;

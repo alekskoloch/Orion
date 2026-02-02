@@ -66,9 +66,14 @@ void Game::processEvents()
 {
     while ( const auto event = m_window.pollEvent() )
     {
-        this->event = *event; 
+        this->event = *event;
 
-        if (event->is<sf::Event::Closed>())
+        if ( event->is< sf::Event::Closed >() )
+        {
+            m_window.close();
+        }
+
+        if ( SceneManager::getInstance().getCurrentScene() == Scene::QuitGame )
         {
             m_window.close();
         }

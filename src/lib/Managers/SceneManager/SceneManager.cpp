@@ -1,28 +1,28 @@
-#include "pch.h"
 #include "SceneManager.h"
+#include "pch.h"
 
-SceneManager& SceneManager::getInstance()
+auto SceneManager::getInstance() -> SceneManager&
 {
     static SceneManager instance;
     return instance;
 }
 
-void SceneManager::setCurrentScene(Scene scene)
-{
+void SceneManager::setCurrentScene( Scene scene )
+{ 
     this->currentScene = scene;
 }
 
-Scene SceneManager::getCurrentScene()
+auto SceneManager::getCurrentScene() -> Scene
 {
     return this->currentScene;
 }
 
-bool SceneManager::isGameStarted()
+auto SceneManager::isGameStarted() const -> bool
 {
     return this->gameStarted;
 }
 
-void SceneManager::setGameStarted(bool gameStarted)
+void SceneManager::setGameStarted( bool gameStarted )
 {
     this->gameStarted = gameStarted;
 }

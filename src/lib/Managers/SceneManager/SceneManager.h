@@ -1,19 +1,20 @@
 #pragma once
 
-enum class Scene
+enum class Scene : std::uint8_t
 {
     MainMenu,
     Settings,
     Game,
     SkillTree,
-    GameOver
+    GameOver,
+    QuitGame
 };
 
 class SceneManager
 {
 private:
     SceneManager() = default;
-    Scene currentScene;
+    Scene currentScene{ Scene::MainMenu };
 
     //TODO: This should be handled by GameState?
     bool gameStarted = false;
@@ -24,8 +25,8 @@ public:
     void operator=(SceneManager const&) = delete;
 
     void setCurrentScene(Scene scene);
-    Scene getCurrentScene();
+    auto getCurrentScene() -> Scene;
 
-    bool isGameStarted();
+    [[nodiscard]] auto isGameStarted() const -> bool;
     void setGameStarted(bool gameStarted);
 };
