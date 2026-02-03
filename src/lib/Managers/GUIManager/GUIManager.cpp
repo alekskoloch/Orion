@@ -13,12 +13,11 @@
 #include "NotifySystem.h"
 
 
-GUIManager::GUIManager( sf::RenderWindow& window, entt::registry& registry, sf::Event& event, std::vector< Quest >& quests )
-    : window( window ), registry( registry ), event( event ), quickMenu( registry ), energyBar( registry ),
+GUIManager::GUIManager( entt::registry& registry, sf::Event& event, std::vector< Quest >& quests )
+    : registry( registry ), event( event ), quickMenu( registry ), energyBar( registry ),
       minimap( registry, quests ), skillTreeGUI( registry ), weaponTile( registry ), shieldTile( registry ), moneyBar( registry ),
-      expInfo( registry ), journal( quests ), shaderTexture( window.getSize() ), shaderSprite( shaderTexture )
+      expInfo( registry ), journal( quests )
 {
-    this->initializeShader();
 }
 
 void GUIManager::processInput()
@@ -35,7 +34,6 @@ void GUIManager::update( sf::Time deltaTime, const Mouse::MouseState& mouseState
     {
         if ( !SceneManager::getInstance().isGameStarted() )
         {
-            // TODO: This is horrible, temporary solution
             this->weaponTile.clear();
             this->shieldTile.clear();
             SceneManager::getInstance().setGameStarted( true );
@@ -45,7 +43,6 @@ void GUIManager::update( sf::Time deltaTime, const Mouse::MouseState& mouseState
             NotifySystem::update( deltaTime, mouseState );
         }
 
-        // TODO: this solution is temporary, change of scenes should be done in a different way
         if ( this->quitTimer < 0.2f )
         {
             this->readyToQuit = false;
@@ -83,18 +80,7 @@ void GUIManager::update( sf::Time deltaTime, const Mouse::MouseState& mouseState
     }
     else if ( SceneManager::getInstance().getCurrentScene() == Scene::SkillTree )
     {
-        const sf::View& currentSkillView = this->skillTreeGUI.getView();
-
-        sf::Vector2i mousePixelPos =
-            sf::Vector2i( static_cast< int >( mouseState.screenPosition.x ), static_cast< int >( mouseState.screenPosition.y ) );
-
-        sf::Vector2f mouseWorldPos = this->window.mapPixelToCoords( mousePixelPos, currentSkillView );
-
-        Mouse::MouseState skillTreeMouseState = mouseState;
-        skillTreeMouseState.worldPosition = { mouseWorldPos.x, mouseWorldPos.y };
-
-        this->skillTreeGUI.update( deltaTime, skillTreeMouseState );
-
+        this->skillTreeGUI.update( deltaTime, mouseState );
         this->quitTimer = 0.F;
     }
     else if ( SceneManager::getInstance().getCurrentScene() == Scene::MainMenu )
@@ -125,9 +111,6 @@ void GUIManager::draw( Window& window )
 
         if ( this->quickMenuActive )
         {
-            this->shaderTexture.update( this->window );
-            this->window.draw( this->shaderSprite, &this->shader );
-
             this->quickMenu.draw( window );
         }
     }
@@ -180,16 +163,4 @@ void GUIManager::toggleQuickMenu( bool value )
             break;
         }
     }
-}
-
-void GUIManager::initializeShader()
-{
-    if ( !this->shader.loadFromFile( ASSETS_PATH + std::string( "shader.frag" ), sf::Shader::Type::Fragment ) )
-    {
-        throw( "ERROR " );
-    }
-
-    this->shaderTexture.resize( this->window.getSize() );
-
-    this->shaderSprite.setTexture( this->shaderTexture );
 }

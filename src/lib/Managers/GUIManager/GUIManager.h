@@ -14,7 +14,7 @@
 class GUIManager
 {
 public:
-    GUIManager(sf::RenderWindow& window, entt::registry& registry, sf::Event& event, std::vector<Quest>& quests);
+    GUIManager( entt::registry& registry, sf::Event& event, std::vector<Quest>& quests );
 
     void processInput();
     void update( sf::Time deltaTime, const Mouse::MouseState& mousePosition );
@@ -22,10 +22,13 @@ public:
 
     void toggleQuickMenu(bool value);
 
+    auto getSkillTreeView() const -> const sf::View& {
+        return this->skillTreeGUI.getView();
+    }
+
     bool pause() const { return this->pauseFromGUI; }
 private:
     entt::registry& registry;
-    sf::RenderWindow& window;
     sf::Event& event;
 
     GUIQuickMenu quickMenu;
@@ -47,10 +50,4 @@ private:
     float quitTimer = 0.f;
 
     bool tilesReady = false;
-
-//TODO: move shader
-    sf::Shader shader;
-    sf::Texture shaderTexture;
-    sf::Sprite shaderSprite;
-    void initializeShader();
 };

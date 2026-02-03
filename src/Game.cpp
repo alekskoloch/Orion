@@ -9,7 +9,7 @@
 
 Game::Game()
     : event( sf::Event::Closed{} ), systemManager( this->registry, this->event ),
-      guiManager( m_window.getWindow(), this->registry, this->event, this->systemManager.getQuests() ),
+      guiManager( this->registry, this->event, this->systemManager.getQuests() ),
       cursor( sf::Cursor::createFromSystem( sf::Cursor::Type::Arrow ).value() )
 {
     this->loadCursor();
@@ -112,7 +112,26 @@ void Game::processEvents()
 
 void Game::update( sf::Time deltaTime )
 {
-    this->guiManager.update( deltaTime, m_window.getMouseState() );
+    auto rawMouseState = m_window.getMouseState();
+    sf::Vector2i mousePixelPos( static_cast< int >( rawMouseState.screenPosition.x ),
+                                static_cast< int >( rawMouseState.screenPosition.y ) );
+
+    auto uiMouseState = rawMouseState;
+    sf::Vector2f uiWorldPos;
+
+    if ( SceneManager::getInstance().getCurrentScene() == Scene::SkillTree )
+    {
+        uiWorldPos = m_window.getWindow().mapPixelToCoords( mousePixelPos, this->guiManager.getSkillTreeView() );
+    }
+    else
+    {
+        uiWorldPos = m_window.getWindow().mapPixelToCoords( mousePixelPos, m_window.getWindow().getDefaultView() );
+    }
+
+    uiMouseState.worldPosition = { .x=uiWorldPos.x, .y=uiWorldPos.y };
+
+    this->guiManager.update( deltaTime, uiMouseState );
+
     if ( !this->guiManager.pause() )
     {
         CameraSystem::updateZoomFactor( deltaTime );
@@ -120,7 +139,11 @@ void Game::update( sf::Time deltaTime )
 
         m_window.setView( m_gameView );
 
-        this->systemManager.executeUpdateSystems( deltaTime, m_window.getMouseState() );
+        auto gameMouseState = rawMouseState;
+        sf::Vector2f gameWorldPos = m_window.getWindow().mapPixelToCoords( mousePixelPos, m_gameView );
+        gameMouseState.worldPosition = { gameWorldPos.x, gameWorldPos.y };
+
+        this->systemManager.executeUpdateSystems( deltaTime, gameMouseState );
     }
 }
 
