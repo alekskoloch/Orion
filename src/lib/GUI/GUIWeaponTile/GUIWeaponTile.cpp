@@ -39,6 +39,8 @@ void GUIWeaponTile::initialize()
 
 void GUIWeaponTile::setWeaponTexture( const std::string& textureName )
 {
+    this->weaponIcon.setTexture( TextureManager::getInstance().getTexture( textureName ) );
+
     float scale = ConfigManager::getInstance().getScale();
     this->weaponIcon.setScale( { scale, scale } );
 
@@ -51,7 +53,9 @@ void GUIWeaponTile::update()
 {
     auto view = this->registry.view< Player >();
     if ( view.empty() )
+    {
         return;
+    }
 
     auto playerEntity = view[ 0 ];
     auto& playerWeaponComponent = this->registry.get< Weapon >( playerEntity );
