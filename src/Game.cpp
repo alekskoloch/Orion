@@ -43,13 +43,19 @@ void Game::loadCursor()
         hotSpot = { cursorLargeSize, cursorLargeSize };
     }
 
-    if ( !this->cursor.createFromPixels( this->cursorTexture.copyToImage().getPixelsPtr(),
-                                       this->cursorTexture.getSize(), hotSpot ) )
+    sf::Image cursorImage = this->cursorTexture.copyToImage();
+
+    auto loadedCursor = sf::Cursor::createFromPixels( cursorImage.getPixelsPtr(), cursorImage.getSize(), hotSpot );
+
+    if ( loadedCursor.has_value() )
+    {
+        this->cursor = std::move( loadedCursor.value() );
+        m_window.setMouseCursor( this->cursor );
+    }
+    else
     {
         std::cerr << "Failed to load cursor texture" << '\n';
     }
-
-    m_window.setMouseCursor( this->cursor );
 }
 
 void Game::run()
