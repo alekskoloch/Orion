@@ -1,21 +1,17 @@
 #include "GUIWeaponTile.h"
 #include "pch.h"
 
-
 #include "ConfigManager.hpp"
-#include "FontManager.h"
-
 #include "CooldownSystem.h"
+#include "FontManager.h"
+#include "GraphicsOperations.h"
 #include "SkillSystem.h"
-
+#include "Window.hpp"
 #include "moneyInventory.h"
 #include "player.h"
 #include "shield.h"
 #include "weapon.h"
 
-#include "Window.hpp"
-
-#include "GraphicsOperations.h"
 
 GUIWeaponTile::GUIWeaponTile( entt::registry& registry ) : registry( registry ), weaponIcon{ CreateSprite( "red_weapon" ) }
 {
@@ -24,34 +20,42 @@ GUIWeaponTile::GUIWeaponTile( entt::registry& registry ) : registry( registry ),
 
 void GUIWeaponTile::initialize()
 {
-    this->circle.setRadius( 200.f * ConfigManager::getInstance().getScale() );
+    float scale = ConfigManager::getInstance().getScale();
+    float radius = 200.f * scale;
+
+    this->circle.setRadius( radius );
     this->circle.setFillColor( sf::Color( 0, 0, 0 ) );
     this->circle.setOutlineColor( sf::Color::White );
     this->circle.setOutlineThickness( 4.f );
-    this->circle.setPointCount( 50 );
-    this->circle.setOrigin( this->circle.getGlobalBounds().getCenter() );
+    this->circle.setPointCount( 100 );
+    this->circle.setOrigin( { radius, radius } );
+    this->circle.setPosition( { 0.f, 0.f } );
 
-    this->loadingCircle.setRadius( 100.f * ConfigManager::getInstance().getScale() );
     this->loadingCircle.setFillColor( sf::Color( 255, 0, 0, 50 ) );
-    this->circle.setPointCount( 50 );
-    this->loadingCircle.setOrigin( this->loadingCircle.getGlobalBounds().getCenter() );
-    this->loadingCircle.setPosition( sf::Vector2f{ 0, 0 } );
+    this->loadingCircle.setPointCount( 100 );
 
     this->setWeaponTexture( "red_weapon" );
 }
 
-void GUIWeaponTile::setWeaponTexture( const std::string& /*textureName*/ )
+void GUIWeaponTile::setWeaponTexture( const std::string& textureName )
 {
-    this->weaponIcon.setScale( sf::Vector2f{ ConfigManager::getInstance().getScale(), ConfigManager::getInstance().getScale() } );
-    float iconWidth = this->weaponIcon.getGlobalBounds().size.x;
-    this->weaponIcon.setPosition( sf::Vector2f{ 2120 * ConfigManager::getInstance().getScale() - iconWidth / 2,
-                                                120 * ConfigManager::getInstance().getScale() - iconWidth / 2 } );
+    float scale = ConfigManager::getInstance().getScale();
+    this->weaponIcon.setScale( { scale, scale } );
+
+    sf::FloatRect bounds = this->weaponIcon.getLocalBounds();
+    this->weaponIcon.setOrigin( { bounds.size.x / 2.f, bounds.size.y / 2.f } );
+    this->weaponIcon.setPosition( { 50.f * scale, 50.f * scale } );
 }
 
 void GUIWeaponTile::update()
 {
-    // TODO: refactor this
-    auto playerWeaponComponent = this->registry.get< Weapon >( this->registry.view< Player >()[ 0 ] );
+    auto view = this->registry.view< Player >();
+    if ( view.empty() )
+        return;
+
+    auto playerEntity = view[ 0 ];
+    auto& playerWeaponComponent = this->registry.get< Weapon >( playerEntity );
+
     if ( playerWeaponComponent.type == WeaponType::SingleShot )
     {
         this->specialShotAvailable = SkillSystem::isSkillEnabled( this->registry, SkillType::SingleShotWeaponSpecialShot );
@@ -61,27 +65,24 @@ void GUIWeaponTile::update()
         this->specialShotAvailable = SkillSystem::isSkillEnabled( this->registry, SkillType::TripleShotWeaponSpecialShot );
     }
 
-    // TODO: make update loading circle function
     if ( this->specialShotAvailable )
     {
-        auto playerEntity = this->registry.view< Player >()[ 0 ];
-
-        if ( CooldownSystem::getCooldown( this->registry, playerEntity, "specialShot" ) != -1.f )
+        float cooldown = CooldownSystem::getCooldown( this->registry, playerEntity, "specialShot" );
+        if ( cooldown != -1.f )
         {
-            float cooldown = CooldownSystem::getCooldown( this->registry, playerEntity, "specialShot" );
-            // TODO: get this from weapon
+            float scale = ConfigManager::getInstance().getScale();
             float maxCooldown = 5.f;
-            this->loadingCircle.setRadius( ( 200.f * ConfigManager::getInstance().getScale() ) * ( 1 - cooldown / maxCooldown ) );
+            float currentRadius = ( 200.f * scale ) * ( 1.f - ( cooldown / maxCooldown ) );
 
-            this->loadingCircle.setOrigin( { this->loadingCircle.getGlobalBounds().getCenter() } );
-            this->loadingCircle.setPosition( sf::Vector2f{ 0, 0 } );
+            this->loadingCircle.setRadius( currentRadius );
+            this->loadingCircle.setOrigin( { currentRadius, currentRadius } );
+            this->loadingCircle.setPosition( { 0.f, 0.f } );
         }
     }
 }
 
 void GUIWeaponTile::draw( sf::RenderTarget& target, sf::RenderStates states ) const
 {
-    // TODO: remove this version
     target.draw( this->circle, states );
     if ( this->specialShotAvailable )
     {
@@ -106,65 +107,72 @@ void GUIWeaponTile::clear()
     this->specialShotAvailable = false;
 }
 
-GUIShieldTile::GUIShieldTile( entt::registry& registry )
-    : registry( registry ), shieldIcon{ CreateSprite( "basic_shield_ico" ) }
+GUIShieldTile::GUIShieldTile( entt::registry& registry ) : registry( registry ), shieldIcon{ CreateSprite( "basic_shield_ico" ) }
 {
     this->initialize();
 }
 
 void GUIShieldTile::initialize()
 {
-    this->circle.setRadius( 150.f * ConfigManager::getInstance().getScale() );
+    float scale = ConfigManager::getInstance().getScale();
+    float radius = 150.f * scale;
+
+    this->circle.setRadius( radius );
     this->circle.setFillColor( sf::Color( 0, 0, 0 ) );
     this->circle.setOutlineColor( sf::Color::White );
     this->circle.setOutlineThickness( 4.f );
-    this->circle.setPointCount( 50 );
-    this->circle.setOrigin( this->circle.getGlobalBounds().getCenter() );
-    this->circle.setPosition( sf::Vector2f{ 0, 200 * ConfigManager::getInstance().getScale() } );
+    this->circle.setPointCount( 100 );
+    this->circle.setOrigin( { radius, radius } );
+    this->circle.setPosition( { 0.f, 250.f * scale } );
 
-    this->shiedlStateCircle.setRadius( 0.f );
     this->shiedlStateCircle.setFillColor( sf::Color( 0, 0, 255, 100 ) );
-    this->circle.setPointCount( 50 );
-    this->shiedlStateCircle.setOrigin( this->shiedlStateCircle.getGlobalBounds().getCenter() );
-    this->shiedlStateCircle.setPosition( sf::Vector2f{ 0, 200 * ConfigManager::getInstance().getScale() } );
+    this->shiedlStateCircle.setPointCount( 100 );
 
     this->setShieldTexture( "basic_shield_ico" );
 }
 
-void GUIShieldTile::setShieldTexture( const std::string& /*textureName*/ )
+void GUIShieldTile::setShieldTexture( const std::string& textureName )
 {
-    this->shieldIcon.setScale(
-        sf::Vector2f{ 0.8f * ConfigManager::getInstance().getScale(), 0.8f * ConfigManager::getInstance().getScale() } );
-    this->shieldIcon.setPosition(
-        sf::Vector2f{ this->circle.getPosition().x + ( 55 * ConfigManager::getInstance().getScale() ),
-                      this->circle.getPosition().y + ( 55 * ConfigManager::getInstance().getScale() ) } );
+    float scale = ConfigManager::getInstance().getScale();
+    this->shieldIcon.setScale( { 0.8f * scale, 0.8f * scale } );
+
+    sf::FloatRect bounds = this->shieldIcon.getLocalBounds();
+    this->shieldIcon.setOrigin( { bounds.size.x / 2.f, bounds.size.y / 2.f } );
+    this->shieldIcon.setPosition( { 40.f * scale, 290.f * scale } );
 }
 
 void GUIShieldTile::update()
 {
-    // TODO: make update shield state circle function
-    auto playerEntity = this->registry.view< Player >()[ 0 ];
+    auto view = this->registry.view< Player >();
+    if ( view.empty() )
+        return;
 
-    // TODO: find better way to do this
-    if ( !this->registry.get< Shield >( playerEntity ).active &&
-         this->shieldDuration != this->registry.get< Shield >( playerEntity ).duration )
+    auto playerEntity = view[ 0 ];
+    auto& shieldComp = this->registry.get< Shield >( playerEntity );
+
+    if ( !shieldComp.active && this->shieldDuration != shieldComp.duration )
     {
-        this->shieldDuration = this->registry.get< Shield >( playerEntity ).duration;
+        this->shieldDuration = shieldComp.duration;
     }
 
-    if ( CooldownSystem::getCooldown( this->registry, playerEntity, "shieldCooldown" ) != -1.f )
+    float cooldown = CooldownSystem::getCooldown( this->registry, playerEntity, "shieldCooldown" );
+    if ( cooldown != -1.f && shieldDuration > 0.f )
     {
-        float cooldown = CooldownSystem::getCooldown( this->registry, playerEntity, "shieldCooldown" );
+        float scale = ConfigManager::getInstance().getScale();
+        float currentRadius = ( 150.f * scale ) * ( cooldown / shieldDuration );
 
-        this->shiedlStateCircle.setRadius( ( 150.f * ConfigManager::getInstance().getScale() ) * ( cooldown / shieldDuration ) );
-
-        this->shiedlStateCircle.setOrigin( { this->shiedlStateCircle.getGlobalBounds().getCenter() } );
+        this->shiedlStateCircle.setRadius( currentRadius );
+        this->shiedlStateCircle.setOrigin( { currentRadius, currentRadius } );
+        this->shiedlStateCircle.setPosition( this->circle.getPosition() );
+    }
+    else
+    {
+        this->shiedlStateCircle.setRadius( 0.f );
     }
 }
 
 void GUIShieldTile::draw( sf::RenderTarget& target, sf::RenderStates states ) const
 {
-    // TODO: remove this version
     target.draw( this->circle, states );
     target.draw( this->shiedlStateCircle, states );
     target.draw( this->shieldIcon, states );
@@ -180,25 +188,23 @@ void GUIShieldTile::draw( Window& window )
 void GUIShieldTile::clear()
 {
     this->initialize();
-    this->shieldDuration = 0.F;
+    this->shieldDuration = 0.f;
 }
 
 GUIMoneyBar::GUIMoneyBar( entt::registry& registry )
     : registry( registry ), moneyText{ FontManager::getInstance().getFont( "font" ) }
 {
-    this->bar.setSize(
-        sf::Vector2f( 300 * ConfigManager::getInstance().getScale(), 50 * ConfigManager::getInstance().getScale() ) );
+    float scale = ConfigManager::getInstance().getScale();
+
+    this->bar.setSize( { 300.f * scale, 50.f * scale } );
     this->bar.setFillColor( sf::Color( 0, 0, 0 ) );
     this->bar.setOutlineColor( sf::Color::White );
     this->bar.setOutlineThickness( 4.f );
-    this->bar.setPosition(
-        sf::Vector2f{ 100 * ConfigManager::getInstance().getScale(), 0 * ConfigManager::getInstance().getScale() } );
+    this->bar.setPosition( { 150.f * scale, 10.f * scale } );
 
-    this->moneyText.setCharacterSize( static_cast< unsigned int >( 30 * ConfigManager::getInstance().getScale() ) );
+    this->moneyText.setCharacterSize( static_cast< unsigned int >( 30 * scale ) );
     this->moneyText.setFillColor( sf::Color::White );
-    // TODO: change position
-    this->moneyText.setPosition(
-        sf::Vector2f{ 250 * ConfigManager::getInstance().getScale(), 15 * ConfigManager::getInstance().getScale() } );
+    this->moneyText.setPosition( { 170.f * scale, 15.f * scale } );
     this->moneyText.setString( "0$" );
 }
 
@@ -206,7 +212,11 @@ void GUIMoneyBar::setString( const std::string& string ) { this->moneyText.setSt
 
 void GUIMoneyBar::update()
 {
-    auto& playerMoney = this->registry.get< MoneyInventory >( this->registry.view< Player >()[ 0 ] );
+    auto view = this->registry.view< Player >();
+    if ( view.empty() )
+        return;
+
+    auto& playerMoney = this->registry.get< MoneyInventory >( view[ 0 ] );
     this->moneyText.setString( std::to_string( playerMoney.money ) + "$" );
 }
 
