@@ -12,7 +12,7 @@
 GUIManager::GUIManager( sf::RenderWindow& window, entt::registry& registry, sf::Event& event, std::vector< Quest >& quests )
     : window( window ), registry( registry ), event( event ), quickMenu( registry ), energyBar( registry ),
       minimap( registry, quests ), skillTreeGUI( registry ),
-      weaponTile( registry ), shieldTile( registry ), moneyBar( window, registry ), expInfo( window, registry ),
+      weaponTile( registry ), shieldTile( registry ), moneyBar( registry ), expInfo( registry ),
       journal( window, registry, quests ), shaderTexture( window.getSize() ), shaderSprite( shaderTexture )
 {
     this->initializeShader();
@@ -108,8 +108,8 @@ void GUIManager::draw( Window& window )
     {
         this->energyBar.draw( window );
         this->minimap.draw( window );
-        this->expInfo.draw( this->window, sf::RenderStates::Default );
-        this->moneyBar.draw( this->window, sf::RenderStates::Default );
+        this->expInfo.draw( window );
+        this->moneyBar.draw( window );
         this->shieldTile.draw( window );
         this->weaponTile.draw( window );
 

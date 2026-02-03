@@ -59,14 +59,15 @@ private:
 class GUIMoneyBar : public sf::Drawable
 {
 public:
-    GUIMoneyBar(sf::RenderWindow& window, entt::registry& registry);
+    explicit GUIMoneyBar( entt::registry& registry );
 
     void setString(const std::string& string);
 
     void update();
     void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
+    void draw( Window& window );
+
 private:
-    sf::RenderWindow& window;
     entt::registry& registry;
 
     sf::RectangleShape bar;

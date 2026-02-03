@@ -183,8 +183,8 @@ void GUIShieldTile::clear()
     this->shieldDuration = 0.F;
 }
 
-GUIMoneyBar::GUIMoneyBar( sf::RenderWindow& window, entt::registry& registry )
-    : window( window ), registry( registry ), moneyText{ FontManager::getInstance().getFont( "font" ) }
+GUIMoneyBar::GUIMoneyBar( entt::registry& registry )
+    : registry( registry ), moneyText{ FontManager::getInstance().getFont( "font" ) }
 {
     this->bar.setSize(
         sf::Vector2f( 300 * ConfigManager::getInstance().getScale(), 50 * ConfigManager::getInstance().getScale() ) );
@@ -214,4 +214,10 @@ void GUIMoneyBar::draw( sf::RenderTarget& target, sf::RenderStates states ) cons
 {
     target.draw( this->bar, states );
     target.draw( this->moneyText, states );
+}
+
+void GUIMoneyBar::draw( Window& window )
+{
+    window.draw( this->bar );
+    window.draw( this->moneyText );
 }
