@@ -12,8 +12,7 @@
 
 #include "GUIBaseElement.h"
 
-using GameWidget = GUIBaseElement< GUIQuickMenu, GUIEnergyBar, GUIMinimap, GUIMoneyBar, GUIWeaponTile, GUIShieldTile, GUIExpInfo,
-                                   GUIJournal, GUIMainMenu, GUISkillTree, GUISettings >;
+using GameWidget = GUIBaseElement< GUIEnergyBar, GUIMinimap, GUIMoneyBar, GUIExpInfo >;
 
 class GUIManager
 {
@@ -35,13 +34,11 @@ private:
     entt::registry& registry;
     sf::Event& event;
 
+    std::vector< GameWidget > m_widgets;
+
     GUIQuickMenu quickMenu;
-    GUIEnergyBar energyBar;
-    GUIMinimap minimap;
-    GUIMoneyBar moneyBar;
     GUIWeaponTile weaponTile;
     GUIShieldTile shieldTile;
-    GUIExpInfo expInfo;
     GUIJournal journal;
     GUIMainMenu mainMenu;
     GUISkillTree skillTreeGUI;

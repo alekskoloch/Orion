@@ -12,12 +12,17 @@
 
 #include "NotifySystem.h"
 
-
 GUIManager::GUIManager( entt::registry& registry, sf::Event& event, std::vector< Quest >& quests )
-    : registry( registry ), event( event ), quickMenu( registry ), energyBar( registry ),
-      minimap( registry, quests ), skillTreeGUI( registry ), weaponTile( registry ), shieldTile( registry ), moneyBar( registry ),
-      expInfo( registry ), journal( quests )
+    : registry( registry ), event( event ), quickMenu( registry ), skillTreeGUI( registry ), journal( quests ),
+      weaponTile( registry ), shieldTile( registry )
 {
+    m_widgets.reserve( 4 );
+
+    m_widgets.emplace_back( GUIEnergyBar( registry ) );
+    m_widgets.emplace_back( GUIMinimap( registry, quests ) );
+    m_widgets.emplace_back( GUIMoneyBar( registry ) );
+    m_widgets.emplace_back( GUIExpInfo( registry ) );
+
 }
 
 void GUIManager::processInput()
@@ -65,12 +70,13 @@ void GUIManager::update( sf::Time deltaTime, const Mouse::MouseState& mouseState
         {
             this->pauseFromGUI = false;
 
-            this->energyBar.update( deltaTime );
-            this->minimap.update();
+            for ( auto& widget : m_widgets )
+            {
+                widget.update( deltaTime, this->event, mouseState );
+            }
+
             this->weaponTile.update();
             this->shieldTile.update();
-            this->moneyBar.update();
-            this->expInfo.update();
         }
 
         if ( sf::Keyboard::isKeyPressed( sf::Keyboard::Key::Escape ) && this->readyToQuit )
@@ -97,10 +103,11 @@ void GUIManager::draw( Window& window )
 {
     if ( SceneManager::getInstance().getCurrentScene() == Scene::Game )
     {
-        this->energyBar.draw( window );
-        this->minimap.draw( window );
-        this->expInfo.draw( window );
-        this->moneyBar.draw( window );
+        for ( auto& widget : m_widgets )
+        {
+            widget.draw( window );
+        }
+        
         this->shieldTile.draw( window );
         this->weaponTile.draw( window );
 
