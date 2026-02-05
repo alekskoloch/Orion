@@ -3,13 +3,17 @@
 #include "GUIMainMenu.hpp"
 #include "GUISkillTree.h"
 #include "GUISettings.hpp"
-
 #include "GUIQuickMenu.h"
 #include "GUIEnergyBar.h"
 #include "GUIMinimap.h"
 #include "GUIWeaponTile.h"
 #include "GUIExpInfo.h"
 #include "GUIJournal.h"
+
+#include "GUIBaseElement.h"
+
+using GameWidget = GUIBaseElement< GUIQuickMenu, GUIEnergyBar, GUIMinimap, GUIMoneyBar, GUIWeaponTile, GUIShieldTile, GUIExpInfo,
+                                   GUIJournal, GUIMainMenu, GUISkillTree, GUISettings >;
 
 class GUIManager
 {
@@ -39,7 +43,6 @@ private:
     GUIShieldTile shieldTile;
     GUIExpInfo expInfo;
     GUIJournal journal;
-
     GUIMainMenu mainMenu;
     GUISkillTree skillTreeGUI;
     GUISettings settings;
