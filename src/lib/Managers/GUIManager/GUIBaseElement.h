@@ -9,11 +9,14 @@
 
 // Engine
 #include "GUIConcept.h"
+#include "InputContext.hpp"
 
 namespace Mouse
 {
 struct MouseState;
 } // namespace Mouse
+
+struct FrameContext;
 
 template < typename... WidgetTypes >
     requires( ( IsGUIWidget< WidgetTypes > && IsCacheFriendly< WidgetTypes > ) && ... )
@@ -24,11 +27,32 @@ public:
         requires( ( std::same_as< std::remove_cvref_t< WidgetType >, WidgetTypes > || ... ) )
     constexpr explicit GUIBaseElement( WidgetType&& widget ) : m_storage( std::forward< WidgetType >( widget ) ){};
 
+    // TODO: temporary during refactor
     void update( sf::Time deltaTime, const sf::Event event, const Mouse::MouseState& mouseState )
     {
         std::visit( [ deltaTime, &event, &mouseState ]( auto& element )
-                    { dispatchUpdate( element, deltaTime, event, mouseState ); }, m_storage );
+                    {
+                        dispatchUpdate( element, deltaTime, event, mouseState );
+                    }, m_storage );
     }
+
+    // REFACTOR STAGE
+    void handleEvent( const InputContext& inputContext )
+    {
+        std::visit( [ inputContext ]( auto& element )
+        {
+            element.handleEvent( inputContext );
+        }, m_storage );
+    }
+
+    void update( sf::Time deltaTime )
+    {
+        std::visit( [ deltaTime ]( auto& element )
+        {
+            element.update( deltaTime );
+        }, m_storage );
+    }
+    // REFACTOR STAGE END
 
     void draw( Window& window )
     {
