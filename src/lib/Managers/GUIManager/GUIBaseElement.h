@@ -41,7 +41,10 @@ public:
     {
         std::visit( [ inputContext ]( auto& element )
         {
-            element.handleEvent( inputContext );
+            if constexpr ( requires { element.handleEvent( inputContext ); } )
+            {
+                element.handleEvent( inputContext );
+            }
         }, m_storage );
     }
 
@@ -49,7 +52,10 @@ public:
     {
         std::visit( [ deltaTime ]( auto& element )
         {
-            element.update( deltaTime );
+            if constexpr ( requires { element.update( deltaTime ); } )
+            {
+                element.update( deltaTime );
+            }
         }, m_storage );
     }
     // REFACTOR STAGE END

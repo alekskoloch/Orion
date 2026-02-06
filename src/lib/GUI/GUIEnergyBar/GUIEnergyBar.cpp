@@ -15,9 +15,12 @@ constexpr auto ENERGY_BAR_WIDTH = 300;
 constexpr auto ENERGY_BAR_HEIGHT = 50;
 constexpr auto ENERGY_BAR_OFFSET = 100;
 constexpr auto ENERGY_BAR_OUTLINE_THICKNESS = 5.F;
+constexpr auto BLINK_TIMER = 0.2F;
+constexpr auto NOT_ENOUGH_ENERGY_TIMER = 1.0F;
 } // namespace
 
-GUIEnergyBar::GUIEnergyBar( entt::registry& registry ) : registry( registry )
+GUIEnergyBar::GUIEnergyBar( entt::registry& registry )
+    : registry{ registry }, m_blinkTimer{ BLINK_TIMER }, m_notEnoughEnergyTimer{ NOT_ENOUGH_ENERGY_TIMER }
 {
     this->initializeEnergyBar();
 }
@@ -27,45 +30,45 @@ void GUIEnergyBar::update( sf::Time deltaTime )
     constexpr auto BLINK_INTERVAL = 0.2F;
     constexpr auto NOT_ENOUGH_ENERGY_DURATION = 2.F;
 
-    EventManager::getInstance().subscribe( EventManager::Event::NotEnoughEnergy, [ this ]() { this->isNotEnoughEnergy = true; } );
+    EventManager::getInstance().subscribe( EventManager::Event::NotEnoughEnergy, [ this ]() { m_isNotEnoughEnergy = true; } );
 
-    if ( this->isNotEnoughEnergy )
+    if ( m_isNotEnoughEnergy )
     {
-        if ( this->blinkTimer <= 0.F )
+        if ( m_blinkTimer <= 0.F )
         {
-            this->blink = !this->blink;
-            this->blinkTimer = BLINK_INTERVAL;
+            m_blink = !m_blink;
+            m_blinkTimer = BLINK_INTERVAL;
         }
 
-        if ( this->blink )
+        if ( m_blink )
         {
-            this->energyBarBackgroundSprite.setOutlineColor( sf::Color::Red );
+            m_energyBarBackgroundSprite.setOutlineColor( sf::Color::Red );
         }
         else
         {
-            this->energyBarBackgroundSprite.setOutlineColor( sf::Color::White );
+            m_energyBarBackgroundSprite.setOutlineColor( sf::Color::White );
         }
 
-        this->notEnoughEnergyTimer -= deltaTime.asSeconds();
-        this->blinkTimer -= deltaTime.asSeconds();
+        m_notEnoughEnergyTimer -= deltaTime.asSeconds();
+        m_blinkTimer -= deltaTime.asSeconds();
 
-        if ( this->notEnoughEnergyTimer <= 0.F )
+        if ( m_notEnoughEnergyTimer <= 0.F )
         {
-            this->isNotEnoughEnergy = false;
-            this->notEnoughEnergyTimer = NOT_ENOUGH_ENERGY_DURATION;
+            m_isNotEnoughEnergy = false;
+            m_notEnoughEnergyTimer = NOT_ENOUGH_ENERGY_DURATION;
         }
     }
     else
     {
-        this->energyBarBackgroundSprite.setOutlineColor( sf::Color::White );
+        m_energyBarBackgroundSprite.setOutlineColor( sf::Color::White );
     }
 
-    auto playerEnergyView = this->registry.view< Player, Energy >();
+    auto playerEnergyView = registry.view< Player, Energy >();
     for ( auto player : playerEnergyView )
     {
         auto& playerEnergy = playerEnergyView.get< Energy >( player );
 
-        this->energyBarSprite.setSize( sf::Vector2f( ( playerEnergy.currentEnergyValue / playerEnergy.maxEnergyValue ) *
+        m_energyBarSprite.setSize( sf::Vector2f( ( playerEnergy.currentEnergyValue / playerEnergy.maxEnergyValue ) *
                                                          ENERGY_BAR_WIDTH * ConfigManager::getInstance().getScale(),
                                                      ENERGY_BAR_HEIGHT * ConfigManager::getInstance().getScale() ) );
     }
@@ -73,8 +76,8 @@ void GUIEnergyBar::update( sf::Time deltaTime )
 
 void GUIEnergyBar::draw( Window& window )
 {
-    window.draw( energyBarSprite );
-    window.draw( energyBarBackgroundSprite );
+    window.draw( m_energyBarSprite );
+    window.draw( m_energyBarBackgroundSprite );
 }
 
 void GUIEnergyBar::initializeEnergyBar()
@@ -86,14 +89,14 @@ void GUIEnergyBar::initializeEnergyBar()
     auto position = sf::Vector2f{ static_cast< float >( windowWidth ) - ( ( ENERGY_BAR_WIDTH + ENERGY_BAR_OFFSET ) * scale ),
                                   static_cast< float >( windowHeight ) - ( ( ENERGY_BAR_HEIGHT + ENERGY_BAR_HEIGHT ) * scale ) };
 
-    this->energyBarSprite.setSize( sf::Vector2f( ENERGY_BAR_WIDTH * scale, ENERGY_BAR_HEIGHT * scale ) );
-    this->energyBarSprite.setFillColor( sf::Color::Blue );
-    this->energyBarSprite.setPosition( position );
+    m_energyBarSprite.setSize( sf::Vector2f( ENERGY_BAR_WIDTH * scale, ENERGY_BAR_HEIGHT * scale ) );
+    m_energyBarSprite.setFillColor( sf::Color::Blue );
+    m_energyBarSprite.setPosition( position );
 
-    this->energyBarBackgroundSprite.setSize( sf::Vector2f( ENERGY_BAR_WIDTH * scale, ENERGY_BAR_HEIGHT * scale ) );
-    this->energyBarBackgroundSprite.setFillColor( sf::Color::Transparent );
-    this->energyBarBackgroundSprite.setOutlineColor( sf::Color::White );
-    this->energyBarBackgroundSprite.setOutlineThickness(
+    m_energyBarBackgroundSprite.setSize( sf::Vector2f( ENERGY_BAR_WIDTH * scale, ENERGY_BAR_HEIGHT * scale ) );
+    m_energyBarBackgroundSprite.setFillColor( sf::Color::Transparent );
+    m_energyBarBackgroundSprite.setOutlineColor( sf::Color::White );
+    m_energyBarBackgroundSprite.setOutlineThickness(
         std::min( -1.F, std::round( -static_cast< float >( ENERGY_BAR_OUTLINE_THICKNESS ) * scale ) ) );
-    this->energyBarBackgroundSprite.setPosition( position );
+    m_energyBarBackgroundSprite.setPosition( position );
 }

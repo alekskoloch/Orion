@@ -16,13 +16,14 @@ public:
 private:
     entt::registry& registry;
 
-    sf::RectangleShape energyBarSprite;
-    sf::RectangleShape energyBarBackgroundSprite;
+    sf::RectangleShape m_energyBarSprite;
+    sf::RectangleShape m_energyBarBackgroundSprite;
 
     void initializeEnergyBar();
 
-    bool isNotEnoughEnergy = false;
-    float notEnoughEnergyTimer = 1.F;
-    bool blink = false;
-    float blinkTimer = 0.2F;
+    bool m_isNotEnoughEnergy = false;
+    float m_notEnoughEnergyTimer;
+
+    bool m_blink{ false };
+    float m_blinkTimer;
 };
