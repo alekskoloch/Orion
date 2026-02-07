@@ -84,33 +84,35 @@ void Game::processEvents()
             m_window.close();
         }
 
-        if (const auto* keyPressed = event->getIf<sf::Event::KeyPressed>())
+        if ( const auto* keyPressed = event->getIf< sf::Event::KeyPressed >() )
         {
-            if (keyPressed->code == sf::Keyboard::Key::Tab && !this->guiManager.pause())
+            if ( keyPressed->code == sf::Keyboard::Key::Tab && !this->guiManager.pause() )
             {
                 this->systemManager.enableSlowMotion();
-                this->guiManager.toggleQuickMenu(true);
+                this->guiManager.toggleQuickMenu( true );
             }
 
-            if (keyPressed->code == sf::Keyboard::Key::Grave)
+            if ( keyPressed->code == sf::Keyboard::Key::Grave )
             {
                 this->systemManager.debugMode = !this->systemManager.debugMode;
             }
         }
 
-        if (const auto* keyReleased = event->getIf<sf::Event::KeyReleased>())
+        if ( const auto* keyReleased = event->getIf< sf::Event::KeyReleased >() )
         {
-            if (keyReleased->code == sf::Keyboard::Key::Tab)
+            if ( keyReleased->code == sf::Keyboard::Key::Tab )
             {
                 this->systemManager.disableSlowMotion();
-                this->guiManager.toggleQuickMenu(false);
+                this->guiManager.toggleQuickMenu( false );
             }
         }
+
+        auto mouseState = m_window.getMouseState();
+        InputContext inputContext( *event, mouseState );
+        this->guiManager.processInput( inputContext );
     }
 
-    this->guiManager.processInput();
-
-    if (!this->guiManager.pause())
+    if ( !this->guiManager.pause() )
     {
         this->systemManager.executeEventSystems();
     }
@@ -134,7 +136,7 @@ void Game::update( sf::Time deltaTime )
         uiWorldPos = m_window.getWindow().mapPixelToCoords( mousePixelPos, m_window.getWindow().getDefaultView() );
     }
 
-    uiMouseState.worldPosition = { .x=uiWorldPos.x, .y=uiWorldPos.y };
+    uiMouseState.worldPosition = { .x = uiWorldPos.x, .y = uiWorldPos.y };
 
     this->guiManager.update( deltaTime, uiMouseState );
 

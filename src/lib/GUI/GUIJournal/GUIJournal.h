@@ -3,8 +3,9 @@
 #include <SFML/Graphics.hpp>
 #include <entt/entt.hpp>
 
-
 #include "GUIButton.h"
+
+#include "InputContext.hpp"
 
 class Window;
 
@@ -52,8 +53,8 @@ public:
 
     bool isOpened() const { return this->isOpen; }
 
-    void processInput( const sf::Event& event );
-    void update( const Mouse::MouseState& mouseState, sf::Time deltaTime );
+    void handleEvent( const InputContext& inputContext );
+    void update( sf::Time deltaTime );
     void draw( Window& window );
 
 private:
@@ -85,8 +86,6 @@ private:
     void setAllQuestsInactive();
 
     bool isOpen = false;
-    bool isButtonReleased = false;
-    bool isMouseReleased = false;
 
     std::vector< Quest >& quests;
     std::vector< std::reference_wrapper< Quest > > sortedQuests;
@@ -98,7 +97,7 @@ private:
     sf::RectangleShape contentBox;
     sf::RectangleShape bookmarkBar;
     sf::RectangleShape selectBox;
-    sf::Font font;
+    const sf::Font& font;
 
     sf::Text titleText;
     std::vector< sf::Text > contentText;

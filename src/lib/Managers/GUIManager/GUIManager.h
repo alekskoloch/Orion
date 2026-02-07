@@ -11,15 +11,16 @@
 #include "GUIJournal.h"
 
 #include "GUIBaseElement.h"
+#include "InputContext.hpp"
 
-using GameWidget = GUIBaseElement< GUIEnergyBar, GUIMinimap, GUIMoneyBar, GUIExpInfo >;
+using GameWidget = GUIBaseElement< GUIEnergyBar, GUIMinimap, GUIMoneyBar, GUIExpInfo, GUIJournal >;
 
 class GUIManager
 {
 public:
     GUIManager( entt::registry& registry, sf::Event& event, std::vector<Quest>& quests );
 
-    void processInput();
+    void processInput( const InputContext& inputContext );
     void update( sf::Time deltaTime, const Mouse::MouseState& mousePosition );
     void draw( Window& window );
 
@@ -39,7 +40,6 @@ private:
     GUIQuickMenu quickMenu;
     GUIWeaponTile weaponTile;
     GUIShieldTile shieldTile;
-    GUIJournal journal;
     GUIMainMenu mainMenu;
     GUISkillTree skillTreeGUI;
     GUISettings settings;

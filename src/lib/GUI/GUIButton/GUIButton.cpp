@@ -1,104 +1,147 @@
-#include "pch.h"
 #include "GUIButton.h"
+#include "Window.hpp"
+#include "pch.h"
 
-GUIButton::GUIButton(const sf::Vector2f& position, const sf::Vector2f& size,
-                     const std::string& textString, unsigned int maxFontSize, const sf::Color& normalColor,
-                     const sf::Color& hoverColor, const sf::Color& activeColor, ButtonStyle style)
-    : normalColor(normalColor), hoverColor(hoverColor), activeColor(activeColor), style(style), maxFontSize(maxFontSize), text{ FontManager::getInstance().getFont("font"), textString }
+
+GUIButton::GUIButton( const sf::Vector2f& position, const sf::Vector2f& size, const std::string& textString,
+                      unsigned int maxFontSize, const sf::Color& normalColor, const sf::Color& hoverColor,
+                      const sf::Color& activeColor, ButtonStyle style )
+    : normalColor( normalColor ), hoverColor( hoverColor ), activeColor( activeColor ), style( style ),
+      maxFontSize( maxFontSize ), text{ FontManager::getInstance().getFont( "font" ), textString }
 {
-    this->setOrigin( sf::Vector2f{ size.x / 2.f, size.y / 2.f } );
-    this->setPosition(position);
-    this->setSize(size);
-    this->setFillColor(normalColor);
+    m_shape.setSize( size );
+    m_shape.setOrigin( { size.x / 2.f, size.y / 2.f } );
+    m_shape.setFillColor( normalColor );
 
-    if (style == ButtonStyle::Bordered)
+    this->setPosition( position );
+
+    if ( style == ButtonStyle::Bordered )
     {
-        this->setOutlineThickness(2);
-        this->setOutlineColor(sf::Color::White);
+        m_shape.setOutlineThickness( 2.f );
+        m_shape.setOutlineColor( sf::Color::White );
     }
     else
     {
-        this->setOutlineThickness(0);
+        m_shape.setOutlineThickness( 0.f );
     }
 
-    text.setFillColor(sf::Color::White);
+    text.setFillColor( sf::Color::White );
     adjustTextSize();
 }
 
-void GUIButton::setPosition(const sf::Vector2f& position)
+void GUIButton::setPosition( const sf::Vector2f& position )
 {
-    sf::RectangleShape::setPosition(position);
-    text.setPosition(position);
+    m_shape.setPosition( position );
+    text.setPosition( position );
 }
 
-void GUIButton::setText(const std::string& textString)
+void GUIButton::setSize( const sf::Vector2f& size )
 {
-    text.setString(textString);
+    m_shape.setSize( size );
+    m_shape.setOrigin( { size.x / 2.f, size.y / 2.f } );
     adjustTextSize();
 }
 
-void GUIButton::setOnClick(std::function<void()> onClick)
+sf::FloatRect GUIButton::getGlobalBounds() const { return m_shape.getGlobalBounds(); }
+
+const sf::Vector2f& GUIButton::getPosition() const { return m_shape.getPosition(); }
+
+void GUIButton::setText( const std::string& textString )
 {
-    this->onClick = onClick;
+    text.setString( textString );
+    adjustTextSize();
 }
+
+void GUIButton::setOnClick( std::function< void() > onClick ) { this->onClick = onClick; }
 
 void GUIButton::setDefaultState()
 {
     this->selectedState = false;
-    this->setFillColor(normalColor);
+    m_shape.setFillColor( normalColor );
 }
 
-void GUIButton::setSelectedState(bool selectedState)
-{
-    this->selectedState = selectedState;
-}
+void GUIButton::setSelectedState( bool selectedState ) { this->selectedState = selectedState; }
 
-void GUIButton::update(const sf::Vector2f& mousePos, bool& mouseReleased)
+void GUIButton::handleEvent( const InputContext& inputContext )
 {
-    if (this->getGlobalBounds().contains(static_cast<sf::Vector2f>(mousePos)))
+    const auto& event = inputContext.getEvent();
+    const auto& mouse = inputContext.getMouseState();
+
+    const auto mousePosition =
+        sf::Vector2f{ static_cast< float >( mouse.screenPosition.x ), static_cast< float >( mouse.screenPosition.y ) };
+
+    if ( m_shape.getGlobalBounds().contains( mousePosition ) )
     {
-        
-        if (sf::Mouse::isButtonPressed( sf::Mouse::Button::Left ) && mouseReleased)
+        m_isHovered = true;
+
+        if ( const auto* pressed = event.getIf< sf::Event::MouseButtonPressed >() )
         {
-            this->setFillColor(activeColor);
-            mouseReleased = false;
-            if (onClick)
+            if ( pressed->button == sf::Mouse::Button::Left )
             {
-                onClick();
+                m_isPressed = true;
             }
         }
-        else if (mouseReleased)
+        else if ( const auto* released = event.getIf< sf::Event::MouseButtonReleased >() )
         {
-            this->setFillColor(hoverColor);
+            if ( released->button == sf::Mouse::Button::Left )
+            {
+                if ( m_isPressed && onClick )
+                {
+                    onClick();
+                }
+                m_isPressed = false;
+            }
         }
     }
-    else if (mouseReleased)
+    else
     {
-        if (this->selectedState)
-            this->setFillColor(selectedColor);
-        else
-            this->setFillColor(normalColor);
+        m_isHovered = false;
+        m_isPressed = false;
     }
 }
 
-void GUIButton::draw(sf::RenderTarget& target, sf::RenderStates states) const
+void GUIButton::update( sf::Time /*deltaTime*/ )
 {
-    target.draw(static_cast<sf::RectangleShape>(*this), states);
-    target.draw(text, states);
+    auto targetColor = normalColor;
+
+    if ( this->selectedState )
+    {
+        targetColor = selectedColor;
+    }
+
+    if ( m_isPressed )
+    {
+        targetColor = activeColor;
+    }
+    else if ( m_isHovered )
+    {
+        targetColor = hoverColor;
+    }
+
+    m_shape.setFillColor( targetColor );
+}
+void GUIButton::draw( Window& window ) const
+{
+    window.draw( m_shape );
+    window.draw( text );
 }
 
 void GUIButton::adjustTextSize()
 {
-    auto buttonBounds = this->getGlobalBounds();
+    auto buttonBounds = m_shape.getGlobalBounds();
     float maxTextWidth = buttonBounds.size.x - 20.f;
 
-    text.setCharacterSize(maxFontSize);
-    while (text.getGlobalBounds().size.x > maxTextWidth && text.getCharacterSize() > 1)
+    text.setCharacterSize( maxFontSize );
+
+    if ( maxTextWidth > 0 )
     {
-        text.setCharacterSize(text.getCharacterSize() - 1);
+        while ( text.getGlobalBounds().size.x > maxTextWidth && text.getCharacterSize() > 5 )
+        {
+            text.setCharacterSize( text.getCharacterSize() - 1 );
+        }
     }
 
     sf::FloatRect textRect = text.getLocalBounds();
     text.setOrigin( textRect.getCenter() );
-    text.setPosition(this->getPosition());
+    text.setPosition( m_shape.getPosition() );
 }

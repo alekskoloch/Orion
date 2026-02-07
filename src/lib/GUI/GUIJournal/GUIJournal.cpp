@@ -1,96 +1,124 @@
 #include "GUIJournal.h"
+#include "GUIButton.h"
 #include "QuestCore/Quest.h"
 #include "pch.h"
 
 #include "ConfigManager.hpp"
-
 #include "Window.hpp"
 
 GUIJournal::GUIJournal( std::vector< Quest >& quests )
     : quests( quests ), font( FontManager::getInstance().getFont( "font" ) ), titleText{ this->font }
 {
+    this->isOpen = false;
+    this->sortType = SortType::All;
+    this->scrollPosition = 0;
+    this->maxVisibleButtons = 0;
+
     this->initializeGUIJournal();
 }
 
-void GUIJournal::processInput( const sf::Event& event )
+void GUIJournal::handleEvent( const InputContext& inputContext )
 {
-    if ( sf::Keyboard::isKeyPressed( sf::Keyboard::Key::J ) && this->isButtonReleased )
+    const auto& event = inputContext.getEvent();
+
+    if ( const auto* keyEvent = event.getIf< sf::Event::KeyPressed >() )
     {
-        this->isOpen = !this->isOpen;
-        this->isButtonReleased = false;
-        this->contentText.clear();
-
-        if ( this->isOpen )
-            this->sortAndDisplayQuests();
-    }
-
-    if ( !sf::Keyboard::isKeyPressed( sf::Keyboard::Key::J ) )
-        this->isButtonReleased = true;
-
-    if ( !sf::Mouse::isButtonPressed( sf::Mouse::Button::Left ) )
-        this->isMouseReleased = true;
-
-    if ( this->isOpen )
-    {
-        if ( sf::Keyboard::isKeyPressed( sf::Keyboard::Key::Escape ) && this->isButtonReleased )
+        if ( keyEvent->scancode == sf::Keyboard::Scan::J )
         {
-            this->isOpen = false;
-            this->isButtonReleased = false;
+            this->isOpen = !this->isOpen;
+
+            if ( this->isOpen )
+            {
+                this->initializeGUIJournal();
+            }
+            return;
         }
 
-        if ( this->buttons.size() > this->maxVisibleButtons )
+        if ( this->isOpen && keyEvent->scancode == sf::Keyboard::Scan::Escape )
         {
-            if ( const auto* mouseWheel = event.getIf< sf::Event::MouseWheelScrolled >() )
+            this->isOpen = false;
+            return;
+        }
+    }
+
+    if ( !this->isOpen )
+        return;
+
+    if ( this->buttons.size() > this->maxVisibleButtons && this->maxVisibleButtons > 0 )
+    {
+        if ( const auto* mouseWheel = event.getIf< sf::Event::MouseWheelScrolled >() )
+        {
+            if ( mouseWheel->delta > 0 && this->scrollPosition > 0 )
             {
-                if ( mouseWheel->delta > 0 && this->scrollPosition > 0 )
-                {
-                    this->scrollPosition--;
-                }
-                else if ( mouseWheel->delta < 0 && this->scrollPosition < this->buttons.size() - this->maxVisibleButtons )
-                {
-                    this->scrollPosition++;
-                }
+                this->scrollPosition--;
+            }
+
+            else if ( mouseWheel->delta < 0 && this->scrollPosition < (int)this->buttons.size() - this->maxVisibleButtons )
+            {
+                this->scrollPosition++;
             }
         }
     }
-}
 
-void GUIJournal::update( const Mouse::MouseState& mouseState, sf::Time deltaTime )
-{
-    auto mousePosition =
-        sf::Vector2f{ static_cast< float >( mouseState.screenPosition.x ), static_cast< float >( mouseState.screenPosition.y ) };
-
-    if ( this->buttons.size() > this->maxVisibleButtons )
+    if ( this->buttons.size() > this->maxVisibleButtons && this->maxVisibleButtons > 0 )
     {
-        for ( int i = this->scrollPosition; i < this->maxVisibleButtons + this->scrollPosition; i++ )
+        int end = std::min( (int)this->buttons.size(), this->scrollPosition + this->maxVisibleButtons );
+        for ( int i = this->scrollPosition; i < end; i++ )
         {
-            this->buttons[ i ].setPosition( sf::Vector2f(
-                this->selectBox.getPosition().x, this->selectBox.getPosition().y - ( this->selectBox.getSize().y / 2.f ) +
-                                                     ( journal::BUTTON_HEIGHT / 2.f ) + journal::DEFAULT_OUTLINE_THICKNESS +
-                                                     ( ( i - this->scrollPosition ) * journal::BUTTON_HEIGHT ) ) );
-        }
-
-        for ( int i = scrollPosition; i < this->maxVisibleButtons + this->scrollPosition; i++ )
-        {
-            this->buttons[ i ].update( mousePosition, this->isMouseReleased );
+            this->buttons[ i ].handleEvent( inputContext );
         }
     }
     else
     {
         for ( auto& button : this->buttons )
         {
-            button.update( mousePosition, this->isMouseReleased );
+            button.handleEvent( inputContext );
         }
     }
 
     for ( auto& button : this->sortButtons )
     {
-        button.update( mousePosition, this->isMouseReleased );
+        button.handleEvent( inputContext );
+    }
+}
+
+void GUIJournal::update( sf::Time deltaTime )
+{
+    if ( !this->isOpen )
+        return;
+
+    if ( this->buttons.size() > this->maxVisibleButtons && this->maxVisibleButtons > 0 )
+    {
+        int end = std::min( (int)this->buttons.size(), this->scrollPosition + this->maxVisibleButtons );
+        for ( int i = this->scrollPosition; i < end; i++ )
+        {
+            float yPos = this->selectBox.getPosition().y - ( this->selectBox.getSize().y / 2.f ) +
+                         ( journal::BUTTON_HEIGHT / 2.f ) + journal::DEFAULT_OUTLINE_THICKNESS +
+                         ( ( i - this->scrollPosition ) * journal::BUTTON_HEIGHT );
+
+            this->buttons[ i ].setPosition( sf::Vector2f( this->selectBox.getPosition().x, yPos ) );
+            this->buttons[ i ].update( deltaTime );
+        }
+    }
+    else
+    {
+        for ( auto& button : this->buttons )
+        {
+            button.update( deltaTime );
+        }
+    }
+
+    for ( auto& button : this->sortButtons )
+    {
+        button.update( deltaTime );
     }
 }
 
 void GUIJournal::draw( Window& window )
 {
+    if ( !this->isOpen )
+        return;
+
     window.draw( this->contentBox );
     window.draw( this->selectBox );
     window.draw( this->bookmarkBar );
@@ -101,200 +129,61 @@ void GUIJournal::draw( Window& window )
         window.draw( text );
     }
 
-    if ( this->buttons.size() > this->maxVisibleButtons )
+    if ( this->buttons.size() > this->maxVisibleButtons && this->maxVisibleButtons > 0 )
     {
-        for ( int i = scrollPosition; i < this->maxVisibleButtons + this->scrollPosition; i++ )
+        int end = std::min( (int)this->buttons.size(), this->scrollPosition + this->maxVisibleButtons );
+
+        for ( int i = scrollPosition; i < end; i++ )
         {
-            window.draw( this->buttons[ i ] );
+            this->buttons[ i ].draw( window );
         }
     }
     else
     {
         for ( auto& button : this->buttons )
         {
-            window.draw( button );
+            button.draw( window );
         }
     }
 
     for ( auto& button : this->sortButtons )
     {
-        window.draw( button );
+        button.draw( window );
     }
-}
-
-void GUIJournal::initializeGUIJournal()
-{
-    this->initializeGUIJournalSize();
-    this->initializeGUIJournalPosition();
-    this->initializeBoxes();
-    this->initializeTitleText();
-    this->initializeButtons();
-
-    this->sortAndDisplayQuests();
-    this->setButtons();
-}
-
-void GUIJournal::initializeGUIJournalSize()
-{
-    const auto windowWidth = ConfigManager::getInstance().getScreenWidth();
-    const auto windowHeight = ConfigManager::getInstance().getScreenHeight();
-
-    this->size = sf::Vector2f( windowWidth * journal::WINDOW_WIDTH_PERCENTAGE, windowHeight * journal::WINDOW_HEIGHT_PERCENTAGE );
-}
-
-void GUIJournal::initializeGUIJournalPosition()
-{
-    const auto windowWidth = ConfigManager::getInstance().getScreenWidth();
-    const auto windowHeight = ConfigManager::getInstance().getScreenHeight();
-
-    this->position =
-        sf::Vector2f( windowWidth * journal::WINDOW_POSITION_X_PERCENTAGE, windowHeight * journal::WINDOW_POSITION_Y_PERCENTAGE );
-}
-
-void GUIJournal::initializeBoxes()
-{
-    this->initializeBookmarkBar();
-    this->initializeContentBox();
-    this->initializeSelectBox();
-}
-
-void GUIJournal::initializeBookmarkBar()
-{
-    this->bookmarkBar.setSize( sf::Vector2f( this->size.x, this->size.y * journal::BOOKMARK_BAR_HEIGHT_PERCENTAGE ) );
-    this->bookmarkBar.setPosition(
-        sf::Vector2f{ position.x, position.y - this->size.y / 2.f - this->bookmarkBar.getSize().y / 2.f } );
-    this->initializeJournalBoxElement( this->bookmarkBar );
-}
-
-void GUIJournal::initializeContentBox()
-{
-    this->contentBox.setSize( sf::Vector2f( this->size.x * journal::CONTENT_BOX_WIDTH_PERCENTAGE, this->size.y ) );
-    this->contentBox.setPosition(
-        sf::Vector2f{ position.x + this->size.x * journal::SELECT_BOX_WIDTH_PERCENTAGE / 2.f, position.y } );
-    this->initializeJournalBoxElement( this->contentBox );
-}
-
-void GUIJournal::initializeSelectBox()
-{
-    this->selectBox.setSize( sf::Vector2f( this->size.x * journal::SELECT_BOX_WIDTH_PERCENTAGE, this->size.y ) );
-    this->selectBox.setPosition(
-        sf::Vector2f{ position.x - this->size.x * journal::CONTENT_BOX_WIDTH_PERCENTAGE / 2.f, position.y } );
-    this->initializeJournalBoxElement( this->selectBox );
-}
-
-void GUIJournal::initializeJournalBoxElement( sf::RectangleShape& element )
-{
-    element.setFillColor( journal::DEFAULT_BOX_COLOR );
-    element.setOutlineColor( journal::DEFAULT_OUTLINE_COLOR );
-    element.setOutlineThickness( journal::DEFAULT_OUTLINE_THICKNESS );
-    element.setOrigin( sf::Vector2f{ element.getSize().x / 2.f, element.getSize().y / 2.f } );
-}
-
-void GUIJournal::initializeTitleText()
-{
-    this->titleText = this->getJournalStyleText( journal::TITLE_TEXT );
-    this->titleText.setPosition( this->bookmarkBar.getPosition() );
-}
-
-sf::Text GUIJournal::getJournalStyleText( const std::string text, const unsigned int characterSize, const sf::Color color )
-{
-    sf::Text journalStyleText{ this->font };
-    journalStyleText.setCharacterSize( static_cast< unsigned int >( characterSize * ConfigManager::getInstance().getScale() ) );
-    journalStyleText.setFillColor( color );
-    journalStyleText.setString( text );
-    journalStyleText.setOrigin( journalStyleText.getGlobalBounds().getCenter() );
-    return journalStyleText;
-}
-
-void GUIJournal::initializeMaxVisibleButtons() { this->maxVisibleButtons = this->calculateMaxVisibleButtons(); }
-
-unsigned int GUIJournal::calculateMaxVisibleButtons()
-{
-    return static_cast< unsigned int >(
-        std::floor( ( this->selectBox.getSize().y - journal::BUTTON_HEIGHT ) / journal::BUTTON_HEIGHT ) );
-}
-
-void GUIJournal::initializeButtons()
-{
-    this->initializeMaxVisibleButtons();
-    this->initializeSortButtons();
-}
-
-void GUIJournal::initializeSortButtons()
-{
-    std::array< std::string, static_cast< size_t >( SortType::SORT_TYPE_COUNT ) > sortButtonNames = { "All", "Current",
-                                                                                                      "Completed" };
-    sf::Vector2f basePosition = this->selectBox.getPosition();
-    float offsetX = this->selectBox.getSize().x / static_cast< int >( SortType::SORT_TYPE_COUNT );
-    float positionY = basePosition.y + this->selectBox.getSize().y / 2.f - journal::BUTTON_HEIGHT / 2.f;
-
-    for ( size_t i = 0; i < sortButtonNames.size(); ++i )
-    {
-        float positionX = basePosition.x - offsetX + offsetX * i;
-        GUIButton sortButton = this->getJournalButtonStyle(
-            sortButtonNames[ i ], sf::Vector2f( positionX, positionY ),
-            sf::Vector2f( this->selectBox.getSize().x / static_cast< int >( SortType::SORT_TYPE_COUNT ), journal::BUTTON_HEIGHT ),
-            ButtonStyle::Bordered );
-        SortType sortType = static_cast< SortType >( i );
-
-        sortButton.setOnClick(
-            [ this, sortType ]()
-            {
-                this->sortType = sortType;
-                this->sortAndDisplayQuests();
-
-                for ( auto& button : this->sortButtons )
-                    button.setDefaultState();
-
-                this->sortButtons[ static_cast< size_t >( sortType ) ].setSelectedState();
-            } );
-
-        this->sortButtons.push_back( sortButton );
-    }
-}
-
-GUIButton GUIJournal::getJournalButtonStyle( const std::string text, const sf::Vector2f position, const sf::Vector2f size,
-                                             ButtonStyle style )
-{
-    return GUIButton( position, size, text,
-                      static_cast< unsigned int >( journal::SMALL_CHARACTER_SIZE * ConfigManager::getInstance().getScale() ),
-                      journal::BUTTON_COLOR, journal::BUTTON_HOVER_COLOR, journal::BUTTON_ACTIVE_COLOR, style );
 }
 
 void GUIJournal::sortAndDisplayQuests()
 {
     this->sortedQuests.clear();
-
     this->contentText.clear();
 
-    for ( auto& sortButton : this->sortButtons )
-        sortButton.setDefaultState();
+    if ( !this->sortButtons.empty() )
+    {
+        for ( auto& sortButton : this->sortButtons )
+            sortButton.setDefaultState();
+        this->sortButtons[ static_cast< size_t >( this->sortType ) ].setSelectedState();
+    }
 
     switch ( sortType )
     {
     case SortType::All:
         for ( auto& quest : this->quests )
             this->sortedQuests.push_back( quest );
-        this->sortButtons[ 0 ].setSelectedState();
         break;
     case SortType::Current:
         for ( auto& quest : this->quests )
-        {
             if ( !quest.completed )
                 this->sortedQuests.push_back( quest );
-        }
-        this->sortButtons[ 1 ].setSelectedState();
         break;
     case SortType::Completed:
         for ( auto& quest : this->quests )
-        {
             if ( quest.completed )
                 this->sortedQuests.push_back( quest );
-        }
-        this->sortButtons[ 2 ].setSelectedState();
         break;
     default:
-        throw std::runtime_error( "Invalid SortType for quests in journal" );
+        for ( auto& quest : this->quests )
+            this->sortedQuests.push_back( quest );
+        break;
     }
 
     this->scrollPosition = 0;
@@ -305,48 +194,177 @@ void GUIJournal::setButtons()
 {
     this->buttons.clear();
 
-    for ( auto& quest : this->sortedQuests )
+    for ( size_t i = 0; i < this->sortedQuests.size(); ++i )
     {
+        auto& questRef = this->sortedQuests[ i ];
+
+        float yPos = this->selectBox.getPosition().y - this->selectBox.getSize().y / 2.f + ( journal::BUTTON_HEIGHT / 2.f ) +
+                     journal::DEFAULT_OUTLINE_THICKNESS + this->buttons.size() * journal::BUTTON_HEIGHT;
+
         GUIButton button = this->getJournalButtonStyle(
-            quest.get().name,
-            sf::Vector2f( this->selectBox.getPosition().x,
-                          this->selectBox.getPosition().y - this->selectBox.getSize().y / 2.f + ( journal::BUTTON_HEIGHT / 2.f ) +
-                              journal::DEFAULT_OUTLINE_THICKNESS + this->buttons.size() * journal::BUTTON_HEIGHT ),
-            sf::Vector2f( this->selectBox.getSize().x, journal::BUTTON_HEIGHT ) );
+            questRef.get().name, sf::Vector2f( this->selectBox.getPosition().x, yPos ),
+            sf::Vector2f( this->selectBox.getSize().x, journal::BUTTON_HEIGHT ), ButtonStyle::Bordered );
+
+        Quest* qPtr = &questRef.get();
 
         button.setOnClick(
-            [ this, &quest ]()
+            [ this, qPtr ]()
             {
                 this->setAllQuestsInactive();
-                quest.get().active = true;
+                if ( qPtr )
+                    qPtr->active = true;
                 this->setContentText();
 
-                for ( auto& button : this->buttons )
-                    button.setDefaultState();
-
-                this->buttons[ &quest - &this->sortedQuests[ 0 ] ].setSelectedState();
+                for ( auto& btn : this->buttons )
+                    btn.setDefaultState();
             } );
 
         this->buttons.push_back( button );
     }
 }
 
+void GUIJournal::initializeSortButtons()
+{
+    this->sortButtons.clear();
+
+    std::array< std::string, static_cast< size_t >( SortType::SORT_TYPE_COUNT ) > sortButtonNames = { "All", "Current",
+                                                                                                      "Completed" };
+
+    float boxWidth = ( this->selectBox.getSize().x > 0 ) ? this->selectBox.getSize().x : 100.f;
+
+    sf::Vector2f basePosition = this->selectBox.getPosition();
+    float offsetX = boxWidth / static_cast< int >( SortType::SORT_TYPE_COUNT );
+    float positionY = basePosition.y + this->selectBox.getSize().y / 2.f - journal::BUTTON_HEIGHT / 2.f;
+
+    for ( size_t i = 0; i < sortButtonNames.size(); ++i )
+    {
+        float positionX = basePosition.x - offsetX + offsetX * i;
+
+        GUIButton sortButton = this->getJournalButtonStyle(
+            sortButtonNames[ i ], sf::Vector2f( positionX, positionY ),
+            sf::Vector2f( boxWidth / static_cast< int >( SortType::SORT_TYPE_COUNT ), journal::BUTTON_HEIGHT ),
+            ButtonStyle::Bordered );
+
+        SortType type = static_cast< SortType >( i );
+
+        sortButton.setOnClick(
+            [ this, type ]()
+            {
+                this->sortType = type;
+                this->sortAndDisplayQuests();
+            } );
+
+        this->sortButtons.push_back( sortButton );
+    }
+}
+
+void GUIJournal::initializeGUIJournal()
+{
+    this->initializeGUIJournalSize();
+    this->initializeGUIJournalPosition();
+    this->initializeBoxes();
+    this->initializeTitleText();
+
+    this->initializeMaxVisibleButtons();
+
+    this->initializeSortButtons();
+
+    this->sortAndDisplayQuests();
+}
+
+void GUIJournal::initializeGUIJournalSize()
+{
+    const auto w = ConfigManager::getInstance().getScreenWidth();
+    const auto h = ConfigManager::getInstance().getScreenHeight();
+
+    this->size = sf::Vector2f( ( w > 0 ? w : 800 ) * journal::WINDOW_WIDTH_PERCENTAGE,
+                               ( h > 0 ? h : 600 ) * journal::WINDOW_HEIGHT_PERCENTAGE );
+}
+void GUIJournal::initializeGUIJournalPosition()
+{
+    const auto w = ConfigManager::getInstance().getScreenWidth();
+    const auto h = ConfigManager::getInstance().getScreenHeight();
+    this->position = sf::Vector2f( w * journal::WINDOW_POSITION_X_PERCENTAGE, h * journal::WINDOW_POSITION_Y_PERCENTAGE );
+}
+void GUIJournal::initializeBoxes()
+{
+    this->initializeBookmarkBar();
+    this->initializeContentBox();
+    this->initializeSelectBox();
+}
+void GUIJournal::initializeBookmarkBar()
+{
+    this->bookmarkBar.setSize( sf::Vector2f( this->size.x, this->size.y * journal::BOOKMARK_BAR_HEIGHT_PERCENTAGE ) );
+    this->bookmarkBar.setPosition(
+        sf::Vector2f{ position.x, position.y - this->size.y / 2.f - this->bookmarkBar.getSize().y / 2.f } );
+    this->initializeJournalBoxElement( this->bookmarkBar );
+}
+void GUIJournal::initializeContentBox()
+{
+    this->contentBox.setSize( sf::Vector2f( this->size.x * journal::CONTENT_BOX_WIDTH_PERCENTAGE, this->size.y ) );
+    this->contentBox.setPosition(
+        sf::Vector2f{ position.x + this->size.x * journal::SELECT_BOX_WIDTH_PERCENTAGE / 2.f, position.y } );
+    this->initializeJournalBoxElement( this->contentBox );
+}
+void GUIJournal::initializeSelectBox()
+{
+    this->selectBox.setSize( sf::Vector2f( this->size.x * journal::SELECT_BOX_WIDTH_PERCENTAGE, this->size.y ) );
+    this->selectBox.setPosition(
+        sf::Vector2f{ position.x - this->size.x * journal::CONTENT_BOX_WIDTH_PERCENTAGE / 2.f, position.y } );
+    this->initializeJournalBoxElement( this->selectBox );
+}
+void GUIJournal::initializeJournalBoxElement( sf::RectangleShape& element )
+{
+    element.setFillColor( journal::DEFAULT_BOX_COLOR );
+    element.setOutlineColor( journal::DEFAULT_OUTLINE_COLOR );
+    element.setOutlineThickness( journal::DEFAULT_OUTLINE_THICKNESS );
+    element.setOrigin( sf::Vector2f{ element.getSize().x / 2.f, element.getSize().y / 2.f } );
+}
+void GUIJournal::initializeTitleText()
+{
+    this->titleText = this->getJournalStyleText( journal::TITLE_TEXT );
+    this->titleText.setPosition( this->bookmarkBar.getPosition() );
+}
+void GUIJournal::initializeMaxVisibleButtons() { this->maxVisibleButtons = this->calculateMaxVisibleButtons(); }
+unsigned int GUIJournal::calculateMaxVisibleButtons()
+{
+    float h = this->selectBox.getSize().y;
+    if ( h <= 0 )
+        return 0;
+    return static_cast< unsigned int >( std::floor( ( h - journal::BUTTON_HEIGHT ) / journal::BUTTON_HEIGHT ) );
+}
+void GUIJournal::initializeButtons() { this->initializeMaxVisibleButtons(); }
+GUIButton GUIJournal::getJournalButtonStyle( const std::string text, const sf::Vector2f position, const sf::Vector2f size,
+                                             ButtonStyle style )
+{
+    return GUIButton( position, size, text,
+                      static_cast< unsigned int >( journal::SMALL_CHARACTER_SIZE * ConfigManager::getInstance().getScale() ),
+                      journal::BUTTON_COLOR, journal::BUTTON_HOVER_COLOR, journal::BUTTON_ACTIVE_COLOR, style );
+}
+sf::Text GUIJournal::getJournalStyleText( const std::string text, const unsigned int characterSize, const sf::Color color )
+{
+    sf::Text journalStyleText{ this->font };
+    journalStyleText.setCharacterSize( static_cast< unsigned int >( characterSize * ConfigManager::getInstance().getScale() ) );
+    journalStyleText.setFillColor( color );
+    journalStyleText.setString( text );
+    journalStyleText.setOrigin( journalStyleText.getGlobalBounds().getCenter() );
+    return journalStyleText;
+}
 void GUIJournal::setContentText()
 {
     this->contentText.clear();
-
     if ( this->quests.empty() )
         return;
-
-    for ( const auto& quest : this->quests | std::views::filter( &Quest::active ) )
+    for ( const auto& quest : this->quests )
     {
+        if ( !quest.active )
+            continue;
         sf::Text titleText = this->getJournalStyleText( quest.name );
         titleText.setPosition( sf::Vector2f{ this->contentBox.getPosition().x + this->contentBox.getSize().x / 2.f -
                                                  titleText.getGlobalBounds().size.x / 2.f - journal::MARGIN,
                                              this->contentBox.getPosition().y - this->contentBox.getSize().y / 2.f +
                                                  titleText.getGlobalBounds().size.y / 2.f + journal::MARGIN } );
         this->contentText.push_back( titleText );
-
         for ( int i = 0; i <= quest.currentStage; ++i )
         {
             sf::Color stageTextColor =
@@ -359,7 +377,6 @@ void GUIJournal::setContentText()
                                          stageText.getGlobalBounds().size.y / 2.f + journal::MARGIN +
                                          i * journal::BUTTON_HEIGHT } );
             this->contentText.push_back( stageText );
-
             if ( i == quest.currentStage )
             {
                 std::string statusString = quest.completed ? "Quest completed" : quest.stages[ i ].condition->getProgress();
@@ -373,7 +390,6 @@ void GUIJournal::setContentText()
         }
     }
 }
-
 void GUIJournal::setAllQuestsInactive()
 {
     for ( auto& quest : this->quests )

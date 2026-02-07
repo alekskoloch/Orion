@@ -13,23 +13,24 @@
 #include "NotifySystem.h"
 
 GUIManager::GUIManager( entt::registry& registry, sf::Event& event, std::vector< Quest >& quests )
-    : registry( registry ), event( event ), quickMenu( registry ), skillTreeGUI( registry ), journal( quests ),
+    : registry( registry ), event( event ), quickMenu( registry ), skillTreeGUI( registry ),
       weaponTile( registry ), shieldTile( registry )
 {
-    m_widgets.reserve( 4 );
+    m_widgets.reserve( 5 );
 
     m_widgets.emplace_back( GUIEnergyBar( registry ) );
     m_widgets.emplace_back( GUIMinimap( registry, quests ) );
     m_widgets.emplace_back( GUIMoneyBar( registry ) );
     m_widgets.emplace_back( GUIExpInfo( registry ) );
+    m_widgets.emplace_back( GUIJournal( quests ) );
 
 }
 
-void GUIManager::processInput()
+void GUIManager::processInput( const InputContext& inputContext )
 {
-    if ( !this->quickMenuActive )
+    for ( auto& widget : m_widgets )
     {
-        this->journal.processInput( this->event );
+        widget.handleEvent( inputContext );
     }
 }
 
@@ -61,23 +62,17 @@ void GUIManager::update( sf::Time deltaTime, const Mouse::MouseState& mouseState
             this->quickMenu.update( mouseState );
         }
 
-        if ( this->journal.isOpened() )
-        {
-            this->pauseFromGUI = true;
-            this->journal.update( mouseState, deltaTime );
-        }
-        else
-        {
-            this->pauseFromGUI = false;
 
-            for ( auto& widget : m_widgets )
-            {
-                widget.update( deltaTime, this->event, mouseState );
-            }
+        this->pauseFromGUI = false;
 
-            this->weaponTile.update();
-            this->shieldTile.update();
+        for ( auto& widget : m_widgets )
+        {
+            widget.update( deltaTime, this->event, mouseState );
         }
+
+        this->weaponTile.update();
+        this->shieldTile.update();
+        
 
         if ( sf::Keyboard::isKeyPressed( sf::Keyboard::Key::Escape ) && this->readyToQuit )
         {
@@ -110,11 +105,6 @@ void GUIManager::draw( Window& window )
         
         this->shieldTile.draw( window );
         this->weaponTile.draw( window );
-
-        if ( this->journal.isOpened() )
-        {
-            this->journal.draw( window );
-        }
 
         if ( this->quickMenuActive )
         {
