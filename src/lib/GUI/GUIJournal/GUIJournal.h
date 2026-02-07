@@ -51,6 +51,12 @@ class GUIJournal
 public:
     explicit GUIJournal( std::vector< Quest >& quests );
 
+    void setOnOpenCallback( std::function< void() > callback );
+    void setOnCloseCallback( std::function< void() > callback );
+
+    void onOpen();
+    void onClose();
+
     bool isOpened() const { return this->isOpen; }
 
     void handleEvent( const InputContext& inputContext );
@@ -115,4 +121,7 @@ private:
 
     int scrollPosition = 0;
     int maxVisibleButtons;
+
+    std::function< void() > m_onOpenCallback;
+    std::function< void() > m_onCloseCallback;
 };

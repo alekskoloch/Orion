@@ -18,11 +18,23 @@ GUIManager::GUIManager( entt::registry& registry, sf::Event& event, std::vector<
 {
     m_widgets.reserve( 5 );
 
+    GUIJournal journal( quests );
+
+    journal.setOnOpenCallback( [ this ]()
+    {
+        pauseFromGUI = true;
+    } );
+    journal.setOnCloseCallback( [ this ]()
+    {
+        pauseFromGUI = false;
+        quitTimer = 0.0F;
+    } );
+
     m_widgets.emplace_back( GUIEnergyBar( registry ) );
     m_widgets.emplace_back( GUIMinimap( registry, quests ) );
     m_widgets.emplace_back( GUIMoneyBar( registry ) );
     m_widgets.emplace_back( GUIExpInfo( registry ) );
-    m_widgets.emplace_back( GUIJournal( quests ) );
+    m_widgets.emplace_back( std::move( journal ) );
 
 }
 
@@ -55,15 +67,14 @@ void GUIManager::update( sf::Time deltaTime, const Mouse::MouseState& mouseState
             this->quitTimer += deltaTime.asSeconds();
         }
         else
+        {
             this->readyToQuit = true;
+        }
 
         if ( this->quickMenuActive )
         {
             this->quickMenu.update( mouseState );
         }
-
-
-        this->pauseFromGUI = false;
 
         for ( auto& widget : m_widgets )
         {
@@ -74,7 +85,7 @@ void GUIManager::update( sf::Time deltaTime, const Mouse::MouseState& mouseState
         this->shieldTile.update();
         
 
-        if ( sf::Keyboard::isKeyPressed( sf::Keyboard::Key::Escape ) && this->readyToQuit )
+        if ( sf::Keyboard::isKeyPressed( sf::Keyboard::Key::Escape ) && !pauseFromGUI && this->readyToQuit )
         {
             SceneManager::getInstance().setCurrentScene( Scene::MainMenu );
         }

@@ -17,6 +17,32 @@ GUIJournal::GUIJournal( std::vector< Quest >& quests )
     this->initializeGUIJournal();
 }
 
+void GUIJournal::setOnOpenCallback( std::function< void() > callback )
+{
+    m_onOpenCallback = callback;
+}
+
+void GUIJournal::setOnCloseCallback( std::function< void() > callback )
+{
+    m_onCloseCallback = callback;
+}
+
+void GUIJournal::onOpen()
+{
+    if ( m_onOpenCallback )
+    {
+        m_onOpenCallback();
+    }
+}
+
+void GUIJournal::onClose()
+{
+    if ( m_onCloseCallback )
+    {
+        m_onCloseCallback();
+    }
+}
+
 void GUIJournal::handleEvent( const InputContext& inputContext )
 {
     const auto& event = inputContext.getEvent();
@@ -29,7 +55,12 @@ void GUIJournal::handleEvent( const InputContext& inputContext )
 
             if ( this->isOpen )
             {
+                onOpen();
                 this->initializeGUIJournal();
+            }
+            else
+            {
+                onClose();
             }
             return;
         }
@@ -37,12 +68,15 @@ void GUIJournal::handleEvent( const InputContext& inputContext )
         if ( this->isOpen && keyEvent->scancode == sf::Keyboard::Scan::Escape )
         {
             this->isOpen = false;
+            this->onClose();
             return;
         }
     }
 
     if ( !this->isOpen )
+    {
         return;
+    }
 
     if ( this->buttons.size() > this->maxVisibleButtons && this->maxVisibleButtons > 0 )
     {
