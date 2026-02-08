@@ -10,6 +10,8 @@
 #include "Mouse.h"
 #include "GraphicsOperations.h"
 
+#include "InputContext.hpp"
+
 namespace Mouse
 {
 struct MouseState;
@@ -20,9 +22,15 @@ class Window;
 class GUIQuickMenu
 {
 public:
-    GUIQuickMenu( entt::registry& registry );
+    explicit GUIQuickMenu( entt::registry& registry );
 
-    void update( const Mouse::MouseState& mouseState );
+    void setOnOpenCallback( std::function< void() > callback );
+    void setOnCloseCallback( std::function< void( int ) > callback );
+
+    void onOpen();
+    void onClose();
+
+    void handleEvent( const InputContext& inputContext );
     void draw( Window& window );
 
     uint8_t getSelectedTile() const { return this->selectedTile; }
@@ -36,4 +44,9 @@ private:
     uint8_t selectedTile = 0;
 
     void initializeQuickMenu();
+
+    bool isOpen{ false };
+
+    std::function< void() > m_onOpenCallback;
+    std::function< void( int ) > m_onCloseCallback;
 };

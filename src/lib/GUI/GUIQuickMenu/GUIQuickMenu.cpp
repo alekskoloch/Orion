@@ -12,54 +12,110 @@ const float ANGLE_INCREMENT = 45.f;
 
 GUIQuickMenu::GUIQuickMenu( entt::registry& registry ) : registry( registry ) { this->initializeQuickMenu(); }
 
-void GUIQuickMenu::update( const Mouse::MouseState& mouseState )
+void GUIQuickMenu::setOnOpenCallback( std::function< void() > callback )
 {
-    sf::Vector2i mousePosition = { mouseState.screenPosition.x, mouseState.screenPosition.y };
+    m_onOpenCallback = callback;
+}
 
-    for ( int i = 0; i < TILES_NUMBER; i++ )
+void GUIQuickMenu::setOnCloseCallback( std::function< void( int ) > callback )
+{
+    m_onCloseCallback = callback;
+}
+
+void GUIQuickMenu::onOpen()
+{
+    if ( m_onOpenCallback )
     {
-        if ( utils::isMouseOverSprite( this->quickMenuTiles[ i ], mousePosition ) )
+        m_onOpenCallback();
+    }
+}
+
+void GUIQuickMenu::onClose()
+{
+    if ( m_onCloseCallback )
+    {
+        m_onCloseCallback( selectedTile );
+    }
+}
+
+void GUIQuickMenu::handleEvent( const InputContext& inputContext )
+{
+    const auto& event = inputContext.getEvent();
+
+    if ( const auto* keyPressed = event.getIf< sf::Event::KeyPressed >() )
+    {
+        if ( keyPressed->code == sf::Keyboard::Key::Tab && !this->isOpen )
         {
-            if ( this->selectedTile != i + 1 )
+            this->isOpen = true;
+            onOpen();
+        }
+    }
+
+    if ( const auto* keyReleased = event.getIf< sf::Event::KeyReleased >() )
+    {
+        if ( keyReleased->code == sf::Keyboard::Key::Tab && this->isOpen )
+        {
+            this->isOpen = false;
+            onClose();
+            this->selectedTile = 0;
+        }
+    }
+
+    if ( isOpen )
+    {
+        const auto& mousePosition{
+            sf::Vector2i{ inputContext.getMouseState().screenPosition.x, inputContext.getMouseState().screenPosition.y } };
+
+        for ( int i = 0; i < TILES_NUMBER; i++ )
+        {
+            if ( utils::isMouseOverSprite( this->quickMenuTiles[ i ], mousePosition ) )
+            {
+                if ( this->selectedTile != i + 1 )
+                {
+                    SoundManager::getInstance().playSound( "MouseHover" );
+                }
+
+                this->quickMenuTiles[ i ].setTexture( TextureManager::getInstance().getTexture( "ACTIVE_TILE" ) );
+                this->selectedTile = i + 1;
+            }
+            else
+            {
+                this->quickMenuTiles[ i ].setTexture( TextureManager::getInstance().getTexture( "INACTIVE_TILE" ) );
+                if ( this->selectedTile == i + 1 )
+                {
+                    this->selectedTile = 0;
+                }
+            }
+        }
+
+        if ( utils::isMouseOverSprite( this->quickMenuTiles[ TILES_NUMBER ], mousePosition ) )
+        {
+            if ( this->selectedTile != TILES_NUMBER + 1 )
             {
                 SoundManager::getInstance().playSound( "MouseHover" );
             }
 
-            this->quickMenuTiles[ i ].setTexture( TextureManager::getInstance().getTexture( "ACTIVE_TILE" ) );
-            this->selectedTile = i + 1;
+            this->quickMenuTiles[ TILES_NUMBER ].setTexture( TextureManager::getInstance().getTexture( "ACTIVE_MIDDLE_TILE" ) );
+            this->selectedTile = TILES_NUMBER + 1;
         }
         else
         {
-            this->quickMenuTiles[ i ].setTexture( TextureManager::getInstance().getTexture( "INACTIVE_TILE" ) );
-            if ( this->selectedTile == i + 1 )
+            this->quickMenuTiles[ TILES_NUMBER ].setTexture( TextureManager::getInstance().getTexture( "INACTIVE_MIDDLE_TILE" ) );
+            if ( this->selectedTile == 9 )
             {
-                this->selectedTile = 0;
+                this->selectedTile = TILES_NUMBER + 1;
             }
-        }
-    }
-
-    if ( utils::isMouseOverSprite( this->quickMenuTiles[ TILES_NUMBER ], mousePosition ) )
-    {
-        if ( this->selectedTile != 9 )
-        {
-            SoundManager::getInstance().playSound( "MouseHover" );
-        }
-
-        this->quickMenuTiles[ TILES_NUMBER ].setTexture( TextureManager::getInstance().getTexture( "ACTIVE_MIDDLE_TILE" ) );
-        this->selectedTile = 9;
-    }
-    else
-    {
-        this->quickMenuTiles[ TILES_NUMBER ].setTexture( TextureManager::getInstance().getTexture( "INACTIVE_MIDDLE_TILE" ) );
-        if ( this->selectedTile == 9 )
-        {
-            this->selectedTile = 0;
         }
     }
 }
 
 void GUIQuickMenu::draw( Window& window )
 {
+    if( !isOpen )
+    {
+        return;
+    }
+
     for ( auto& tile : this->quickMenuTiles )
     {
         window.draw( tile );

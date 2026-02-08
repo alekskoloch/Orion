@@ -13,10 +13,10 @@
 #include "NotifySystem.h"
 
 GUIManager::GUIManager( entt::registry& registry, sf::Event& event, std::vector< Quest >& quests )
-    : registry( registry ), event( event ), quickMenu( registry ), skillTreeGUI( registry ),
+    : registry( registry ), event( event ), skillTreeGUI( registry ),
       weaponTile( registry ), shieldTile( registry )
 {
-    m_widgets.reserve( 5 );
+    m_widgets.reserve( 6 );
 
     GUIJournal journal( quests );
 
@@ -30,12 +30,26 @@ GUIManager::GUIManager( entt::registry& registry, sf::Event& event, std::vector<
         quitTimer = 0.0F;
     } );
 
+    GUIQuickMenu quickMenu( registry );
+
+    quickMenu.setOnOpenCallback( [ this ]()
+    {
+        slowMotionFromGUI = true;
+        quickMenuActive = true;
+    });
+    quickMenu.setOnCloseCallback( [ this ]( int tile )
+    {
+        slowMotionFromGUI = false;
+        onQuickMenuClose( tile );
+        quickMenuActive = false;
+    });
+
     m_widgets.emplace_back( GUIEnergyBar( registry ) );
     m_widgets.emplace_back( GUIMinimap( registry, quests ) );
     m_widgets.emplace_back( GUIMoneyBar( registry ) );
     m_widgets.emplace_back( GUIExpInfo( registry ) );
     m_widgets.emplace_back( std::move( journal ) );
-
+    m_widgets.emplace_back( std::move( quickMenu ) );
 }
 
 void GUIManager::processInput( const InputContext& inputContext )
@@ -69,11 +83,6 @@ void GUIManager::update( sf::Time deltaTime, const Mouse::MouseState& mouseState
         else
         {
             this->readyToQuit = true;
-        }
-
-        if ( this->quickMenuActive )
-        {
-            this->quickMenu.update( mouseState );
         }
 
         for ( auto& widget : m_widgets )
@@ -116,11 +125,6 @@ void GUIManager::draw( Window& window )
         
         this->shieldTile.draw( window );
         this->weaponTile.draw( window );
-
-        if ( this->quickMenuActive )
-        {
-            this->quickMenu.draw( window );
-        }
     }
     else if ( SceneManager::getInstance().getCurrentScene() == Scene::SkillTree )
     {
@@ -136,39 +140,34 @@ void GUIManager::draw( Window& window )
     }
 }
 
-void GUIManager::toggleQuickMenu( bool value )
+void GUIManager::onQuickMenuClose( int selectedTile )
 {
-    this->quickMenuActive = value;
-    // TODO: temporary solution for changing weapon
-    if ( !this->quickMenuActive )
+    switch ( selectedTile )
     {
-        switch ( this->quickMenu.getSelectedTile() )
-        {
-        case 1:
-            WeaponsSystem::changeWeapon( this->registry, Weapons::RedWeapon );
-            this->weaponTile.setWeaponTexture( "red_weapon" );
-            break;
-        case 2:
-            WeaponsSystem::changeWeapon( this->registry, Weapons::BlueWeapon );
-            this->weaponTile.setWeaponTexture( "blue_weapon" );
-            break;
-        case 3:
-            ShieldSystem::changeShield( this->registry, basicShield );
-            this->shieldTile.setShieldTexture( "basic_shield_ico" );
-            break;
-        case 4:
-            ShieldSystem::changeShield( this->registry, advancedShield );
-            this->shieldTile.setShieldTexture( "advanced_shield_ico" );
-            break;
-        case 5:
-            WeaponsSystem::changeWeapon( this->registry, Weapons::QuadWeapon );
-            this->weaponTile.setWeaponTexture( "quad_weapon" );
-            break;
-        case 9:
-            SceneManager::getInstance().setCurrentScene( Scene::SkillTree );
-            break;
-        default:
-            break;
-        }
+    case 1:
+        WeaponsSystem::changeWeapon( this->registry, Weapons::RedWeapon );
+        this->weaponTile.setWeaponTexture( "red_weapon" );
+        break;
+    case 2:
+        WeaponsSystem::changeWeapon( this->registry, Weapons::BlueWeapon );
+        this->weaponTile.setWeaponTexture( "blue_weapon" );
+        break;
+    case 3:
+        ShieldSystem::changeShield( this->registry, basicShield );
+        this->shieldTile.setShieldTexture( "basic_shield_ico" );
+        break;
+    case 4:
+        ShieldSystem::changeShield( this->registry, advancedShield );
+        this->shieldTile.setShieldTexture( "advanced_shield_ico" );
+        break;
+    case 5:
+        WeaponsSystem::changeWeapon( this->registry, Weapons::QuadWeapon );
+        this->weaponTile.setWeaponTexture( "quad_weapon" );
+        break;
+    case 9:
+        SceneManager::getInstance().setCurrentScene( Scene::SkillTree );
+        break;
+    default:
+        break;
     }
 }

@@ -86,24 +86,9 @@ void Game::processEvents()
 
         if ( const auto* keyPressed = event->getIf< sf::Event::KeyPressed >() )
         {
-            if ( keyPressed->code == sf::Keyboard::Key::Tab && !this->guiManager.pause() )
-            {
-                this->systemManager.enableSlowMotion();
-                this->guiManager.toggleQuickMenu( true );
-            }
-
             if ( keyPressed->code == sf::Keyboard::Key::Grave )
             {
                 this->systemManager.debugMode = !this->systemManager.debugMode;
-            }
-        }
-
-        if ( const auto* keyReleased = event->getIf< sf::Event::KeyReleased >() )
-        {
-            if ( keyReleased->code == sf::Keyboard::Key::Tab )
-            {
-                this->systemManager.disableSlowMotion();
-                this->guiManager.toggleQuickMenu( false );
             }
         }
 
@@ -111,6 +96,8 @@ void Game::processEvents()
         InputContext inputContext( *event, mouseState );
         this->guiManager.processInput( inputContext );
     }
+
+    guiManager.slowMotion() ? this->systemManager.enableSlowMotion() : this->systemManager.disableSlowMotion();
 
     if ( !this->guiManager.pause() )
     {

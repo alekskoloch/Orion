@@ -13,7 +13,7 @@
 #include "GUIBaseElement.h"
 #include "InputContext.hpp"
 
-using GameWidget = GUIBaseElement< GUIEnergyBar, GUIMinimap, GUIMoneyBar, GUIExpInfo, GUIJournal >;
+using GameWidget = GUIBaseElement< GUIEnergyBar, GUIMinimap, GUIMoneyBar, GUIExpInfo, GUIJournal, GUIQuickMenu >;
 
 class GUIManager
 {
@@ -24,20 +24,18 @@ public:
     void update( sf::Time deltaTime, const Mouse::MouseState& mousePosition );
     void draw( Window& window );
 
-    void toggleQuickMenu(bool value);
-
     auto getSkillTreeView() const -> const sf::View& {
         return this->skillTreeGUI.getView();
     }
 
     bool pause() const { return this->pauseFromGUI; }
+    bool slowMotion() const { return this->slowMotionFromGUI; }
 private:
     entt::registry& registry;
     sf::Event& event;
 
     std::vector< GameWidget > m_widgets;
 
-    GUIQuickMenu quickMenu;
     GUIWeaponTile weaponTile;
     GUIShieldTile shieldTile;
     GUIMainMenu mainMenu;
@@ -46,8 +44,12 @@ private:
 
     bool quickMenuActive = false;
     bool pauseFromGUI = false;
+    bool slowMotionFromGUI = false;
     bool readyToQuit = true;
     float quitTimer = 0.f;
 
     bool tilesReady = false;
+
+    //TODO: temporary:
+    void onQuickMenuClose( int selectedTile );
 };
