@@ -25,7 +25,7 @@ public:
     explicit GUIQuickMenu( entt::registry& registry );
 
     void setOnOpenCallback( std::function< void() > callback );
-    void setOnCloseCallback( std::function< void( int ) > callback );
+    void setOnCloseCallback( std::function< void() > callback );
 
     void onOpen();
     void onClose();
@@ -48,5 +48,5 @@ private:
     bool isOpen{ false };
 
     std::function< void() > m_onOpenCallback;
-    std::function< void( int ) > m_onCloseCallback;
+    std::function< void() > m_onCloseCallback;
 };

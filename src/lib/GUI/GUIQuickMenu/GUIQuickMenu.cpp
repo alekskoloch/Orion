@@ -5,6 +5,12 @@
 #include "InputData.hpp"
 #include "Window.hpp"
 
+#include "../Managers/SceneManager/SceneManager.h"
+
+#include "../Systems/EnergySystem/EnergySystem.h"
+#include "../Systems/WeaponSystem/WeaponsSystem.h"
+#include "../Systems/ShieldSystem/ShieldSystem.h"
+
 
 const uint8_t TILES_NUMBER = 8;
 const float RADIUS = 360.f;
@@ -17,7 +23,7 @@ void GUIQuickMenu::setOnOpenCallback( std::function< void() > callback )
     m_onOpenCallback = callback;
 }
 
-void GUIQuickMenu::setOnCloseCallback( std::function< void( int ) > callback )
+void GUIQuickMenu::setOnCloseCallback( std::function< void() > callback )
 {
     m_onCloseCallback = callback;
 }
@@ -32,9 +38,33 @@ void GUIQuickMenu::onOpen()
 
 void GUIQuickMenu::onClose()
 {
+    switch ( selectedTile )
+    {
+    case 1:
+        WeaponsSystem::changeWeapon( this->registry, Weapons::RedWeapon );
+        break;
+    case 2:
+        WeaponsSystem::changeWeapon( this->registry, Weapons::BlueWeapon );
+        break;
+    case 3:
+        ShieldSystem::changeShield( this->registry, basicShield );
+        break;
+    case 4:
+        ShieldSystem::changeShield( this->registry, advancedShield );
+        break;
+    case 5:
+        WeaponsSystem::changeWeapon( this->registry, Weapons::QuadWeapon );
+        break;
+    case 9:
+        SceneManager::getInstance().setCurrentScene( Scene::SkillTree );
+        break;
+    default:
+        break;
+    }
+
     if ( m_onCloseCallback )
     {
-        m_onCloseCallback( selectedTile );
+        m_onCloseCallback();
     }
 }
 

@@ -5,9 +5,9 @@
 
 #include "ShieldSchema.h"
 
-#include "EnergySystem.h"
-#include "SkillSystem.h"
-#include "CooldownSystem.h"
+#include "../EnergySystem/EnergySystem.h"
+#include "../SkillSystem/SkillSystem.h"
+#include "../CooldownSystem/CooldownSystem.h"
 
 #include "position.h"
 #include "shield.h"

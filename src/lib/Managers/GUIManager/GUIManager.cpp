@@ -7,9 +7,6 @@
 
 #include "SceneManager.h"
 
-#include "ShieldSystem.h"
-#include "WeaponsSystem.h"
-
 #include "NotifySystem.h"
 
 GUIManager::GUIManager( entt::registry& registry, sf::Event& event, std::vector< Quest >& quests )
@@ -36,10 +33,9 @@ GUIManager::GUIManager( entt::registry& registry, sf::Event& event, std::vector<
         slowMotionFromGUI = true;
         quickMenuActive = true;
     });
-    quickMenu.setOnCloseCallback( [ this ]( int tile )
+    quickMenu.setOnCloseCallback( [ this ]()
     {
         slowMotionFromGUI = false;
-        onQuickMenuClose( tile );
         quickMenuActive = false;
     });
 
@@ -129,32 +125,5 @@ void GUIManager::draw( Window& window )
     else if ( SceneManager::getInstance().getCurrentScene() == Scene::Settings )
     {
         this->settings.draw( window );
-    }
-}
-
-void GUIManager::onQuickMenuClose( int selectedTile )
-{
-    switch ( selectedTile )
-    {
-    case 1:
-        WeaponsSystem::changeWeapon( this->registry, Weapons::RedWeapon );
-        break;
-    case 2:
-        WeaponsSystem::changeWeapon( this->registry, Weapons::BlueWeapon );
-        break;
-    case 3:
-        ShieldSystem::changeShield( this->registry, basicShield );
-        break;
-    case 4:
-        ShieldSystem::changeShield( this->registry, advancedShield );
-        break;
-    case 5:
-        WeaponsSystem::changeWeapon( this->registry, Weapons::QuadWeapon );
-        break;
-    case 9:
-        SceneManager::getInstance().setCurrentScene( Scene::SkillTree );
-        break;
-    default:
-        break;
     }
 }

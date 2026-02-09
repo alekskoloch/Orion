@@ -47,7 +47,4 @@ private:
     float quitTimer = 0.f;
 
     bool tilesReady = false;
-
-    //TODO: temporary:
-    void onQuickMenuClose( int selectedTile );
 };

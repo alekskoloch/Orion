@@ -3,7 +3,7 @@
 #include <entt/entt.hpp>
 #include <SFML/System.hpp>
 
-#include "EventManager.h"
+#include "../Managers/EventManager/EventManager.h"
 #include "SoundManager.h"
 
 #include "uniqueTag.h"
