@@ -31,21 +31,20 @@ private:
 };
 
 //TODO: Refactor this to one tile class
-class GUIShieldTile : public sf::Drawable
+class GUIShieldTile
 {
 public:
     explicit GUIShieldTile( entt::registry& registry );
 
-    void setShieldTexture(const std::string& textureName);
-
     void update();
-    void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
     void draw( Window& window );
-
+    
     void clear();
 private:
     entt::registry& registry;
-
+    
+    void setShieldTexture(const std::string& textureName);
+    
     void initialize();
 
     sf::CircleShape circle;
@@ -53,6 +52,8 @@ private:
     float shieldDuration;
     sf::Texture shieldTexture;
     sf::Sprite shieldIcon;
+
+    std::string m_shieldName;
 };
 
 //TODO: Refactor this to one tile class

@@ -13,7 +13,7 @@
 #include "GUIBaseElement.h"
 #include "InputContext.hpp"
 
-using GameWidget = GUIBaseElement< GUIEnergyBar, GUIMinimap, GUIMoneyBar, GUIExpInfo, GUIJournal, GUIQuickMenu, GUIWeaponTile >;
+using GameWidget = GUIBaseElement< GUIEnergyBar, GUIMinimap, GUIMoneyBar, GUIExpInfo, GUIJournal, GUIQuickMenu, GUIWeaponTile, GUIShieldTile >;
 
 class GUIManager
 {
@@ -36,7 +36,6 @@ private:
 
     std::vector< GameWidget > m_widgets;
 
-    GUIShieldTile shieldTile;
     GUIMainMenu mainMenu;
     GUISkillTree skillTreeGUI;
     GUISettings settings;

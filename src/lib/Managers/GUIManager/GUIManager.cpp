@@ -13,7 +13,7 @@
 #include "NotifySystem.h"
 
 GUIManager::GUIManager( entt::registry& registry, sf::Event& event, std::vector< Quest >& quests )
-    : registry( registry ), event( event ), skillTreeGUI( registry ), shieldTile( registry )
+    : registry( registry ), event( event ), skillTreeGUI( registry )
 {
     m_widgets.reserve( 7 );
 
@@ -50,6 +50,7 @@ GUIManager::GUIManager( entt::registry& registry, sf::Event& event, std::vector<
     m_widgets.emplace_back( std::move( journal ) );
     m_widgets.emplace_back( std::move( quickMenu ) );
     m_widgets.emplace_back( GUIWeaponTile( registry ) );
+    m_widgets.emplace_back( GUIShieldTile( registry ) );
 }
 
 void GUIManager::processInput( const InputContext& inputContext )
@@ -66,7 +67,6 @@ void GUIManager::update( sf::Time deltaTime, const Mouse::MouseState& mouseState
     {
         if ( !SceneManager::getInstance().isGameStarted() )
         {
-            this->shieldTile.clear();
             SceneManager::getInstance().setGameStarted( true );
         }
         else
@@ -88,9 +88,6 @@ void GUIManager::update( sf::Time deltaTime, const Mouse::MouseState& mouseState
         {
             widget.update( deltaTime, this->event, mouseState );
         }
-
-        this->shieldTile.update();
-        
 
         if ( sf::Keyboard::isKeyPressed( sf::Keyboard::Key::Escape ) && !pauseFromGUI && this->readyToQuit )
         {
@@ -120,8 +117,6 @@ void GUIManager::draw( Window& window )
         {
             widget.draw( window );
         }
-        
-        this->shieldTile.draw( window );
     }
     else if ( SceneManager::getInstance().getCurrentScene() == Scene::SkillTree )
     {
@@ -149,11 +144,9 @@ void GUIManager::onQuickMenuClose( int selectedTile )
         break;
     case 3:
         ShieldSystem::changeShield( this->registry, basicShield );
-        this->shieldTile.setShieldTexture( "basic_shield_ico" );
         break;
     case 4:
         ShieldSystem::changeShield( this->registry, advancedShield );
-        this->shieldTile.setShieldTexture( "advanced_shield_ico" );
         break;
     case 5:
         WeaponsSystem::changeWeapon( this->registry, Weapons::QuadWeapon );

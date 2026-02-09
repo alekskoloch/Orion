@@ -186,13 +186,25 @@ void GUIShieldTile::update()
     {
         this->shiedlStateCircle.setRadius( 0.f );
     }
-}
 
-void GUIShieldTile::draw( sf::RenderTarget& target, sf::RenderStates states ) const
-{
-    target.draw( this->circle, states );
-    target.draw( this->shiedlStateCircle, states );
-    target.draw( this->shieldIcon, states );
+    //TODO: change shield tile setting texture 
+    const auto shieldName = shieldComp.shieldTextureName;
+    if( m_shieldName != shieldName )
+    {
+        m_shieldName = shieldName;
+        if( m_shieldName == "shield" )
+        {
+            setShieldTexture( "basic_shield_ico" );
+        }
+        else if( m_shieldName == "shield_advanced" )
+        {
+            setShieldTexture( "advanced_shield_ico" );
+        }
+        else
+        {
+            assert( !"Wrong shield name for shield tile!" );
+        }
+    }
 }
 
 void GUIShieldTile::draw( Window& window )
