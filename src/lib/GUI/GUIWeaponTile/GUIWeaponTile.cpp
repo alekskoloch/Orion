@@ -83,16 +83,29 @@ void GUIWeaponTile::update()
             this->loadingCircle.setPosition( { 0.f, 0.f } );
         }
     }
-}
 
-void GUIWeaponTile::draw( sf::RenderTarget& target, sf::RenderStates states ) const
-{
-    target.draw( this->circle, states );
-    if ( this->specialShotAvailable )
+    //TODO: change weapon tile setting texture 
+    const auto weaponName = playerWeaponComponent.name;
+    if( m_weaponName != weaponName )
     {
-        target.draw( this->loadingCircle, states );
+        m_weaponName = weaponName;
+        if( m_weaponName == "Red Weapon" )
+        {
+            setWeaponTexture( "red_weapon" );
+        }
+        else if( m_weaponName == "Blue Weapon" )
+        {
+            setWeaponTexture( "blue_weapon" );
+        }
+        else if( m_weaponName == "Quad Weapon" )
+        {
+            setWeaponTexture( "quad_weapon" );
+        }
+        else
+        {
+            assert( !"Wrong weapon name for weapon tile!" );
+        }
     }
-    target.draw( this->weaponIcon, states );
 }
 
 void GUIWeaponTile::draw( Window& window )

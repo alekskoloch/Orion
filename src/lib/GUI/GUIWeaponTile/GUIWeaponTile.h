@@ -5,15 +5,12 @@
 
 class Window;
 
-class GUIWeaponTile : public sf::Drawable
+class GUIWeaponTile
 {
 public:
     explicit GUIWeaponTile( entt::registry& registry );
 
-    void setWeaponTexture(const std::string& textureName);
-
     void update();
-    void draw( sf::RenderTarget& target, sf::RenderStates states ) const override;
     void draw( Window& window );
 
     void clear();
@@ -21,11 +18,14 @@ private:
     entt::registry& registry;
 
     void initialize();
+    void setWeaponTexture( const std::string& textureName );
 
     sf::CircleShape circle;
     sf::CircleShape loadingCircle;
     sf::Texture weaponTexture;
     sf::Sprite weaponIcon;
+
+    std::string m_weaponName;
 
     bool specialShotAvailable = false;
 };
