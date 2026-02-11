@@ -13,12 +13,16 @@
 #include "GUIBaseElement.h"
 #include "InputContext.hpp"
 
+#include "MainMenu.hpp"
+
+#include "GameState.hpp"
+
 using GameWidget = GUIBaseElement< GUIEnergyBar, GUIMinimap, GUIMoneyBar, GUIExpInfo, GUIJournal, GUIQuickMenu, GUIWeaponTile, GUIShieldTile >;
 
 class GUIManager
 {
 public:
-    GUIManager( entt::registry& registry, sf::Event& event, std::vector<Quest>& quests );
+    GUIManager( entt::registry& registry, sf::Event& event, std::vector<Quest>& quests, GameState* gameState );
 
     void processInput( const InputContext& inputContext );
     void update( sf::Time deltaTime, const Mouse::MouseState& mousePosition );
@@ -39,6 +43,10 @@ private:
     GUIMainMenu mainMenu;
     GUISkillTree skillTreeGUI;
     GUISettings settings;
+
+    GameState* m_gameState;
+    
+    MainMenu m_mainMenu;
 
     bool quickMenuActive = false;
     bool pauseFromGUI = false;

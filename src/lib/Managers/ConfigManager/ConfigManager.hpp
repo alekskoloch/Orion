@@ -31,6 +31,6 @@ public:
     unsigned int getWindowAntialiasing() const { return ANTIALIASING; }
     sf::State getWindowStyle() const { return this->WINDOW_STYLE == "Fullscreen" ? sf::State::Fullscreen : sf::State::Windowed; }
     
-    float getScale();
+    float getScale() const;
 };
 

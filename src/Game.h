@@ -2,6 +2,8 @@
 
 #include "Window.hpp"
 
+#include "GameState.hpp"
+
 #include "GUIManager.h"
 #include "SystemManager.h"
 
@@ -16,6 +18,8 @@ private:
     entt::registry registry;
     sf::Clock clock;
     sf::Event event;
+
+    GameState m_gameState{ GameState::Menu };
 
     SystemManager systemManager;
     GUIManager guiManager;

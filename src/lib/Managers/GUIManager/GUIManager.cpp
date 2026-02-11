@@ -9,10 +9,10 @@
 
 #include "NotifySystem.h"
 
-GUIManager::GUIManager( entt::registry& registry, sf::Event& event, std::vector< Quest >& quests )
-    : registry( registry ), event( event ), skillTreeGUI( registry )
+GUIManager::GUIManager( entt::registry& registry, sf::Event& event, std::vector< Quest >& quests, GameState* gameState )
+    : registry( registry ), event( event ), skillTreeGUI( registry ), m_gameState( gameState ), m_mainMenu( gameState )
 {
-    m_widgets.reserve( 7 );
+    // m_widgets.reserve( 7 );
 
     GUIJournal journal( quests );
 
@@ -51,79 +51,124 @@ GUIManager::GUIManager( entt::registry& registry, sf::Event& event, std::vector<
 
 void GUIManager::processInput( const InputContext& inputContext )
 {
-    for ( auto& widget : m_widgets )
+    if ( *m_gameState == GameState::Menu )
     {
-        widget.handleEvent( inputContext );
+        m_mainMenu.handleEvent( inputContext );
+    }
+    else if ( *m_gameState == GameState::Game )
+    {
+        for ( auto& widget : m_widgets )
+        {
+            widget.handleEvent( inputContext );
+        }
+    }
+    else if ( *m_gameState == GameState::Player )
+    {
+        // TODO: PlayerPanel
     }
 }
 
 void GUIManager::update( sf::Time deltaTime, const Mouse::MouseState& mouseState )
 {
-    if ( SceneManager::getInstance().getCurrentScene() == Scene::Game )
+    if ( *m_gameState == GameState::Menu )
     {
-        if ( !SceneManager::getInstance().isGameStarted() )
-        {
-            SceneManager::getInstance().setGameStarted( true );
-        }
-        else
-        {
-            NotifySystem::update( deltaTime, mouseState );
-        }
-
-        if ( this->quitTimer < 0.2f )
-        {
-            this->readyToQuit = false;
-            this->quitTimer += deltaTime.asSeconds();
-        }
-        else
-        {
-            this->readyToQuit = true;
-        }
-
+        m_mainMenu.update( deltaTime );
+    }
+    else if ( *m_gameState == GameState::Game )
+    {
         for ( auto& widget : m_widgets )
         {
-            widget.update( deltaTime, this->event, mouseState );
+            widget.update( deltaTime );
         }
 
-        if ( sf::Keyboard::isKeyPressed( sf::Keyboard::Key::Escape ) && !pauseFromGUI && this->readyToQuit )
-        {
-            SceneManager::getInstance().setCurrentScene( Scene::MainMenu );
-        }
+        NotifySystem::update( deltaTime, mouseState );
     }
-    else if ( SceneManager::getInstance().getCurrentScene() == Scene::SkillTree )
+    else if ( *m_gameState == GameState::Player )
     {
-        this->skillTreeGUI.update( deltaTime, mouseState );
-        this->quitTimer = 0.F;
+        // TODO: PlayerPanel
     }
-    else if ( SceneManager::getInstance().getCurrentScene() == Scene::MainMenu )
-    {
-        this->mainMenu.update( mouseState, deltaTime );
-    }
-    else if ( SceneManager::getInstance().getCurrentScene() == Scene::Settings )
-    {
-        this->settings.update( mouseState, deltaTime );
-    }
+
+    // if ( SceneManager::getInstance().getCurrentScene() == Scene::Game )
+    // {
+    //     if ( !SceneManager::getInstance().isGameStarted() )
+    //     {
+    //         SceneManager::getInstance().setGameStarted( true );
+    //     }
+    //     else
+    //     {
+    //         NotifySystem::update( deltaTime, mouseState );
+    //     }
+
+    //     if ( this->quitTimer < 0.2f )
+    //     {
+    //         this->readyToQuit = false;
+    //         this->quitTimer += deltaTime.asSeconds();
+    //     }
+    //     else
+    //     {
+    //         this->readyToQuit = true;
+    //     }
+
+    //     for ( auto& widget : m_widgets )
+    //     {
+    //         widget.update( deltaTime, this->event, mouseState );
+    //     }
+
+    //     if ( sf::Keyboard::isKeyPressed( sf::Keyboard::Key::Escape ) && !pauseFromGUI && this->readyToQuit )
+    //     {
+    //         SceneManager::getInstance().setCurrentScene( Scene::MainMenu );
+    //     }
+    // }
+    // else if ( SceneManager::getInstance().getCurrentScene() == Scene::SkillTree )
+    // {
+    //     this->skillTreeGUI.update( deltaTime, mouseState );
+    //     this->quitTimer = 0.F;
+    // }
+    // else if ( SceneManager::getInstance().getCurrentScene() == Scene::MainMenu )
+    // {
+    //     this->mainMenu.update( mouseState, deltaTime );
+    // }
+    // else if ( SceneManager::getInstance().getCurrentScene() == Scene::Settings )
+    // {
+    //     this->settings.update( mouseState, deltaTime );
+    // }
 }
 
 void GUIManager::draw( Window& window )
 {
-    if ( SceneManager::getInstance().getCurrentScene() == Scene::Game )
+    if ( *m_gameState == GameState::Menu )
+    {
+        m_mainMenu.draw( window );
+    }
+    else if ( *m_gameState == GameState::Game )
     {
         for ( auto& widget : m_widgets )
         {
             widget.draw( window );
         }
     }
-    else if ( SceneManager::getInstance().getCurrentScene() == Scene::SkillTree )
+    else if ( *m_gameState == GameState::Player )
     {
-        this->skillTreeGUI.draw( window );
+        // TODO: PlayerPanel
     }
-    else if ( SceneManager::getInstance().getCurrentScene() == Scene::MainMenu )
-    {
-        this->mainMenu.draw( window );
-    }
-    else if ( SceneManager::getInstance().getCurrentScene() == Scene::Settings )
-    {
-        this->settings.draw( window );
-    }
+
+    // if ( SceneManager::getInstance().getCurrentScene() == Scene::Game )
+    // {
+    //     for ( auto& widget : m_widgets )
+    //     {
+    //         widget.draw( window );
+    //     }
+    // }
+    // else if ( SceneManager::getInstance().getCurrentScene() == Scene::SkillTree )
+    // {
+    //     this->skillTreeGUI.draw( window );
+    // }
+    // else if ( SceneManager::getInstance().getCurrentScene() == Scene::MainMenu )
+    // {
+    //     this->mainMenu.draw( window );
+    // }
+    // else if ( SceneManager::getInstance().getCurrentScene() == Scene::Settings )
+    // {
+    //     this->settings.draw( window );
+    // }
 }

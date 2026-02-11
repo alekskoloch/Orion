@@ -8,8 +8,8 @@
 #include "CameraSystem.h"
 
 Game::Game()
-    : event( sf::Event::Closed{} ), systemManager( this->registry, this->event ),
-      guiManager( this->registry, this->event, this->systemManager.getQuests() ),
+    : event( sf::Event::Closed{} ), systemManager( this->registry, this->event, &m_gameState ),
+      guiManager( this->registry, this->event, this->systemManager.getQuests(), &m_gameState ),
       cursor( sf::Cursor::createFromSystem( sf::Cursor::Type::Arrow ).value() )
 {
     this->loadCursor();
@@ -79,7 +79,7 @@ void Game::processEvents()
             m_window.close();
         }
 
-        if ( SceneManager::getInstance().getCurrentScene() == Scene::QuitGame )
+        if ( SceneManager::getInstance().getCurrentScene() == Scene::QuitGame || m_gameState == GameState::Quit )
         {
             m_window.close();
         }
@@ -146,7 +146,7 @@ void Game::render()
 {
     m_window.clear();
 
-    if ( SceneManager::getInstance().getCurrentScene() == Scene::Game )
+    if ( m_gameState == GameState::Game )
     {
         m_window.setView( m_gameView );
 
@@ -155,7 +155,7 @@ void Game::render()
 
     m_window.setDefaultView();
 
-    if ( SceneManager::getInstance().getCurrentScene() == Scene::Game )
+    if ( m_gameState == GameState::Game )
     {
         NotifySystem::draw( m_window );
     }

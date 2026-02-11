@@ -27,7 +27,7 @@ void ConfigManager::loadConfig()
     this->ANTIALIASING = config["windowAntialiasing"];
 }
 
-float ConfigManager::getScale()
+float ConfigManager::getScale() const
 {
     constexpr unsigned int k4KWidth = 3840;
     constexpr unsigned int k4KHeight = 2160;

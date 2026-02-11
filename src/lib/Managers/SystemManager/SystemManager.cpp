@@ -35,8 +35,8 @@
 
 #include "MathOperations.h"
 
-SystemManager::SystemManager( entt::registry& registry, sf::Event& event )
-    : registry( registry ), event( event ), backgroundManager( registry ), particleSystem( registry )
+SystemManager::SystemManager( entt::registry& registry, sf::Event& event, GameState* gameState )
+    : registry( registry ), event( event ), backgroundManager( registry ), particleSystem( registry ), m_gameState( gameState )
 {
 }
 
@@ -60,6 +60,8 @@ void SystemManager::startNewGame()
 
     MovementSystem::clearMovementBoost();
 
+    SceneManager::getInstance().setGameStarted( true );
+
     //TODO: Only for testing
     this->questSystem.addRandomQuest(this->registry, "First Random Quest");
     this->questSystem.addRandomQuest(this->registry, "Second Random Quest");
@@ -75,7 +77,7 @@ void SystemManager::executeInitializationSystems()
 
 void SystemManager::executeEventSystems()
 {
-    if ( SceneManager::getInstance().getCurrentScene() == Scene::Game )
+    if ( *m_gameState == GameState::Game )
     {
         if ( !this->slowMotion )
             InputSystem::processInput( this->registry, this->event );
@@ -89,7 +91,7 @@ void SystemManager::executeEventSystems()
 
 void SystemManager::executeUpdateSystems( sf::Time deltaTime, const Mouse::MouseState& mouseState )
 {
-    if ( SceneManager::getInstance().getCurrentScene() == Scene::Game )
+    if ( *m_gameState == GameState::Game )
     {
         if ( SceneManager::getInstance().isGameStarted() )
         {
@@ -146,7 +148,7 @@ void SystemManager::executeUpdateSystems( sf::Time deltaTime, const Mouse::Mouse
 
 void SystemManager::executeRenderSystems( Window& window )
 {
-    if ( SceneManager::getInstance().getCurrentScene() == Scene::Game )
+    if ( *m_gameState == GameState::Game )
     {
         backgroundManager.draw( window );
         this->particleSystem.draw( window );
