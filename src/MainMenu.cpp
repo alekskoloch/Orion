@@ -36,15 +36,28 @@ void MainMenu::draw( Window& window )
 
 void MainMenu::initButtons()
 {
+    constexpr auto margin = 200.F;
+    constexpr auto spacingBetweenButtons = 260.F;
+
     const auto& config = ConfigManager::getInstance();
 
-    const auto centerX = static_cast< float >( config.getScreenWidth() ) / 2.F;
-    const auto startY = static_cast< float >( config.getScreenHeight() ) * 0.4F;
-    float spacing = 100.F * config.getScale();
+    const auto posX = static_cast< float >( config.getScreenWidth() ) * 0.83F;
+    const auto startY = static_cast< float >( config.getScreenHeight() ) * 0.33F;
 
-    m_elements.emplace_back( Button( "GUI/button", sf::Vector2f{ centerX, startY },
+    float spacing = spacingBetweenButtons * config.getScale();
+
+    m_elements.emplace_back( Button( "GUI/button", sf::Vector2f{ posX, startY },
                                      [ this ]() { *m_gameState = GameState::Game; } ) );
 
-    m_elements.emplace_back( Button( "GUI/button", sf::Vector2f{ centerX, startY + spacing },
+    m_elements.emplace_back( Button( "GUI/button", sf::Vector2f{ posX, startY + spacing },
+                                     [ this ]() { *m_gameState = GameState::Game; } ) );
+
+    m_elements.emplace_back( Button( "GUI/button", sf::Vector2f{ posX, startY + spacing * 2 },
+                                     [ this ]() {} ) );
+
+    m_elements.emplace_back( Button( "GUI/button", sf::Vector2f{ posX, startY + spacing * 3 },
+                                     [ this ]() {} ) );
+
+    m_elements.emplace_back( Button( "GUI/button", sf::Vector2f{ posX, startY + spacing * 4 },
                                      [ this ]() { *m_gameState = GameState::Quit; } ) );
 }

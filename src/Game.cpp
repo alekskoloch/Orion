@@ -88,6 +88,11 @@ void Game::processEvents()
             {
                 this->systemManager.debugMode = !this->systemManager.debugMode;
             }
+
+            if ( keyPressed->code == sf::Keyboard::Key::Escape )
+            {
+                m_gameState = GameState::Menu;
+            }
         }
 
         auto mouseState = m_window.getMouseState();

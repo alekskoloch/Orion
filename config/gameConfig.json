@@ -1,10 +1,10 @@
 {
     "frameRateLimit": 144,
     "resolution": {
-        "height": 1440,
-        "width": 2560
+        "height": 2160,
+        "width": 3840
     },
-    "windowMode": "Windowed",
+    "windowMode": "Fullscreen",
     "windowTitle": "Orion",
     "windowAntialiasing": 4
 }
