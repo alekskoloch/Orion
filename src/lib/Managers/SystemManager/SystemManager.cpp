@@ -60,7 +60,7 @@ void SystemManager::startNewGame()
 
     MovementSystem::clearMovementBoost();
 
-    SceneManager::getInstance().setGameStarted( true );
+    m_gameInit = true;
 
     //TODO: Only for testing
     this->questSystem.addRandomQuest(this->registry, "First Random Quest");
@@ -93,7 +93,7 @@ void SystemManager::executeUpdateSystems( sf::Time deltaTime, const Mouse::Mouse
 {
     if ( *m_gameState == GameState::Game )
     {
-        if ( SceneManager::getInstance().isGameStarted() )
+        if ( m_gameInit )
         {
             if ( !NotifySystem::isDialogBoxActive() )
             {

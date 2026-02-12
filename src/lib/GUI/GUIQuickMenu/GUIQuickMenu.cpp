@@ -5,8 +5,6 @@
 #include "InputData.hpp"
 #include "Window.hpp"
 
-#include "../Managers/SceneManager/SceneManager.h"
-
 #include "../Systems/EnergySystem/EnergySystem.h"
 #include "../Systems/WeaponSystem/WeaponsSystem.h"
 #include "../Systems/ShieldSystem/ShieldSystem.h"
@@ -56,7 +54,7 @@ void GUIQuickMenu::onClose()
         WeaponsSystem::changeWeapon( this->registry, Weapons::QuadWeapon );
         break;
     case 9:
-        SceneManager::getInstance().setCurrentScene( Scene::SkillTree );
+        // TODO: SkillTreeScene
         break;
     default:
         break;

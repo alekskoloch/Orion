@@ -17,7 +17,6 @@ target_link_libraries(${PROJECT_NAME}
     ConfigManager
     PlayerInitializationSystem
     SkillManager
-    SceneManager
     ParticleSystem
     QuestSystem
     EnemyGroupSystem

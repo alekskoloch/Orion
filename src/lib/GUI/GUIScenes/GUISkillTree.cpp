@@ -4,7 +4,6 @@
 #include "Window.hpp"
 
 #include "SkillManager.h"
-#include "SceneManager.h"
 
 GUISkillTree::GUISkillTree(entt::registry& registry) : registry(registry)
 {
@@ -42,7 +41,7 @@ void GUISkillTree::update( sf::Time& deltaTime, const Mouse::MouseState& mouseSt
 
     if ( sf::Keyboard::isKeyPressed( sf::Keyboard::Key::Escape ) )
     {
-        SceneManager::getInstance().setCurrentScene( Scene::Game );
+        // TODO: escape from SkillTree
     }
 }
 

@@ -21,7 +21,6 @@ target_link_libraries(${PROJECT_NAME}
     GUIWeaponTile
     GUIExpInfo
     GUIJournal
-    SceneManager
     WeaponSystem
     ShieldSystem
     PlayerInitializationSystem

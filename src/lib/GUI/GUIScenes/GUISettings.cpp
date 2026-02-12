@@ -4,8 +4,6 @@
 #include "nlohmann/json.hpp"
 #include <fstream>
 
-#include "SceneManager.h"
-
 #include "ConfigManager.hpp"
 
 #include "Window.hpp"
@@ -181,8 +179,6 @@ void GUISettings::update( const Mouse::MouseState& mouseState, sf::Time& deltaTi
         {
             throw std::runtime_error( "Could not open gameConfig.json" );
         }
-
-        SceneManager::getInstance().setCurrentScene( Scene::MainMenu );
     }
 
     // TODO: this is horrible, refactor this

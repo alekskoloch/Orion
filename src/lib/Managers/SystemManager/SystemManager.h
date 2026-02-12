@@ -3,7 +3,6 @@
 #include <SFML/Graphics.hpp>
 #include <entt/entt.hpp>
 
-#include "SceneManager.h"
 #include "SkillManager.h"
 
 #include "ParticleSystem.h"
@@ -49,4 +48,6 @@ private:
 
     bool slowMotion = false;
     float slowMotionFactor = 1.0f;
+
+    bool m_gameInit{ false };
 };

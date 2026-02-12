@@ -5,8 +5,6 @@
 #include <memory>
 #include <vector>
 
-#include "SceneManager.h"
-
 #include "GUIElement.hpp"
 
 class Window;

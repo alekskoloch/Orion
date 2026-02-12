@@ -2,7 +2,6 @@
 #include "pch.h"
 
 #include "ConfigManager.hpp"
-#include "SceneManager.h"
 #include "TextureManager.h"
 
 #include "CameraSystem.h"
@@ -13,7 +12,6 @@ Game::Game()
       cursor( sf::Cursor::createFromSystem( sf::Cursor::Type::Arrow ).value() )
 {
     this->loadCursor();
-    SceneManager::getInstance().setCurrentScene( Scene::MainMenu );
 }
 
 void Game::loadCursor()
@@ -79,7 +77,7 @@ void Game::processEvents()
             m_window.close();
         }
 
-        if ( SceneManager::getInstance().getCurrentScene() == Scene::QuitGame || m_gameState == GameState::Quit )
+        if ( m_gameState == GameState::Quit )
         {
             m_window.close();
         }
@@ -114,7 +112,7 @@ void Game::update( sf::Time deltaTime )
     auto uiMouseState = rawMouseState;
     sf::Vector2f uiWorldPos;
 
-    if ( SceneManager::getInstance().getCurrentScene() == Scene::SkillTree )
+    if ( false /* TODO: SkillTree scene */ )
     {
         uiWorldPos = m_window.getWindow().mapPixelToCoords( mousePixelPos, this->guiManager.getSkillTreeView() );
     }

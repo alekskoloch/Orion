@@ -21,7 +21,6 @@ target_link_libraries(${PROJECT_NAME} PUBLIC
     GUIElement
     ConfigManager
     SkillManager
-    SceneManager
     nlohmann_json
 )
 
