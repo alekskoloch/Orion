@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Button.hpp"
+#include "Title.hpp"
 #include "GUIBaseElement.h"
 
 #include "GameState.hpp"
@@ -14,7 +15,7 @@ struct InputContext;
 
 class Window;
 
-using MenuElement = GUIBaseElement< Button >;
+using MenuElement = GUIBaseElement< Button, Title >;
 
 class MainMenu
 {
