@@ -48,8 +48,8 @@ void MainMenu::initButtons()
     
     const auto titleY = static_cast< float >( config.getScreenHeight() ) * 0.30F;
     
-    const auto titlePosX = static_cast< float >( config.getScreenWidth() ) * 0.25F;
-    m_elements.emplace_back( Title( "Orion", sf::Vector2f{ titlePosX, titleY }, 450 ) );
+    const auto titlePosX = static_cast< float >( config.getScreenWidth() ) * 0.30F;
+    m_elements.emplace_back( Title( "Orion", sf::Vector2f{ titlePosX, titleY }, 550 * config.getScale() ) );
 
 
     m_elements.emplace_back( Button( "GUI/button", "Continue", sf::Vector2f{ posX, startY },
