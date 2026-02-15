@@ -1,0 +1,2 @@
+llvm-vs-code-extensions.vscode-clangd
+usernamehw.errorlens

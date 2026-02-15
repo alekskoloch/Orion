@@ -35,20 +35,34 @@ if (-not (Get-Command "code" -ErrorAction SilentlyContinue)) {
 
 Write-Host "Checking VSCode extensions..." -ForegroundColor Cyan
 
-$InstalledExtensions = & $CodePath --list-extensions
-$ExtensionId = "llvm-vs-code-extensions.vscode-clangd"
+$ExtensionsListPath = Join-Path $PSScriptRoot "env\vscode_extensions.txt"
 
-if ($InstalledExtensions -like "*$ExtensionId*") {
-	Write-Host "Extension '$ExtensionId' is already installed." -ForegroundColor Green
+if (Test-Path $ExtensionsListPath) {
+    $InstalledExtensions = & $CodePath --list-extensions
+    $ExtensionsToInstall = Get-Content $ExtensionsListPath
+
+    foreach ($ExtensionId in $ExtensionsToInstall) {
+        $ExtensionId = $ExtensionId.Trim()
+
+        if ([string]::IsNullOrWhiteSpace($ExtensionId) -or $ExtensionId.StartsWith("#")) {
+            continue
+        }
+
+        if ($InstalledExtensions -like "*$ExtensionId*") {
+            Write-Host "Extension '$ExtensionId' is already installed." -ForegroundColor Green
+        } else {
+            Write-Host "Extension '$ExtensionId' is missing." -ForegroundColor Yellow
+            $UserInput = Read-Host "Do you want install '$ExtensionId'? (Y/N)"
+
+            if ($UserInput -eq 'Y') {
+                Write-Host "Installing extension '$ExtensionId'..." -ForegroundColor Cyan
+                & $CodePath --install-extension $ExtensionId --force
+                Write-Host "Extension installation finished!" -ForegroundColor Green
+            } else {
+                Write-Host "Extension installation skipped by user." -ForegroundColor Gray
+            }
+        }
+    }
 } else {
-	Write-Host "Extension '$ExtensionId' is missing." -ForegroundColor Yellow
-	$UserInput = Read-Host "Do you want install '$ExtensionId'? (Y/N)"
-
-	if ($UserInput -eq 'Y') {
-		Write-Host "Installing extension '$ExtensionId'..." -ForegroundColor Cyan
-		& $CodePath --install-extension $ExtensionId --force
-		Write-Host "Extension installation finished!" -ForegroundColor Green
-	} else {
-		Write-Host "Extension installation skipped by user." -ForegroundColor Gray
-	}
+    Write-Host "Warning: Extensions list file not found at $ExtensionsListPath" -ForegroundColor Red
 }
