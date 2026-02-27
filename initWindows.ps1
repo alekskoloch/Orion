@@ -60,6 +60,63 @@ if ($CMakeCommand) {
     }
 }
 
+# =========================================== LLVM step
+
+$Tools = @{
+    "clang"        = "Compiler"
+    "clang-tidy"   = "Static Analysis"
+    "clang-format" = "Formatter"
+    "lld"          = "Linker"
+    "lldb"          = "Debugger"
+}
+
+function Get-MissingTools {
+    $missing = @()
+    foreach ($Tool in $Tools.Keys) {
+        if (-not (Get-Command $Tool -ErrorAction SilentlyContinue)) {
+            $missing += "$Tool ($($Tools[$Tool]))"
+        }
+    }
+    return $missing
+}
+
+$DefaultLlvmBin = "C:\Program Files\LLVM\bin"
+$MissingBefore = Get-MissingTools
+
+if ($MissingBefore.Count -eq 0) {
+    Write-Host "Full LLVM toolchain is already installed and in PATH." -ForegroundColor Green
+} else {
+    Write-Host "LLVM tools are missing from PATH." -ForegroundColor Yellow
+
+    if (Test-Path "$DefaultLlvmBin\clang.exe") {
+        Write-Host "Detected LLVM files at $DefaultLlvmBin. Fixing PATH..." -ForegroundColor Cyan
+        
+        $CurrentPath = [System.Environment]::GetEnvironmentVariable("Path", "Machine")
+        
+        if ($CurrentPath -notlike "*LLVM*") {
+            $NewPath = $CurrentPath + ";" + $DefaultLlvmBin
+            [System.Environment]::SetEnvironmentVariable("Path", $NewPath, "Machine")
+            Write-Host "PATH updated in System Registry." -ForegroundColor Green
+        }
+        
+        $env:Path += ";$DefaultLlvmBin"
+    } 
+    else {
+        Write-Host "LLVM not found on disk. Installing via Winget..." -ForegroundColor Cyan
+        winget install --id LLVM.LLVM -e --source winget --silent --accept-package-agreements --accept-source-agreements --override "/S /Add-Path=1 /AllUsers"
+        
+        if (Test-Path $DefaultLlvmBin) { $env:Path += ";$DefaultLlvmBin" }
+    }
+
+    $MissingAfter = Get-MissingTools
+    if ($MissingAfter.Count -eq 0) {
+        Write-Host "LLVM toolchain is now functional!" -ForegroundColor Green
+    } else {
+        Write-Host "ERROR: Still cannot find LLVM tools. You may need to restart the PC." -ForegroundColor Red
+        foreach ($M in $MissingAfter) { Write-Host " - Missing: $M" -ForegroundColor Red }
+    }
+}
+
 # =========================================== VSCode step
 
 
