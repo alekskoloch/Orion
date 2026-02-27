@@ -33,6 +33,33 @@ if ($GitCommand) {
     }
 }
 
+# =========================================== CMake step
+
+$CMakeCommand = Get-Command "cmake" -ErrorAction SilentlyContinue
+
+if ($CMakeCommand) {
+    Write-Host "CMake is currently installed." -ForegroundColor Green
+} else {
+    Write-Host "CMake is missing." -ForegroundColor Yellow
+    $UserInput = Read-Host "Do you want install CMake? (Y/N)"
+
+    if ($UserInput -eq 'Y') {
+        Write-Host "Starting CMake installation process..." -ForegroundColor Cyan
+        
+        winget install --id Kitware.CMake -e --source winget --silent --accept-package-agreements --accept-source-agreements
+        
+        $env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User")
+        
+        if (Get-Command "cmake" -ErrorAction SilentlyContinue) {
+            Write-Host "Installation finished and CMake is now available!" -ForegroundColor Green
+        } else {
+            Write-Host "CMake was installed, but you might need to restart the terminal to use it." -ForegroundColor Yellow
+        }
+    } else {
+        Write-Host "Installation skipped by user." -ForegroundColor Gray
+    }
+}
+
 # =========================================== VSCode step
 
 
