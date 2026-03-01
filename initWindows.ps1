@@ -117,6 +117,100 @@ if ($MissingBefore.Count -eq 0) {
     }
 }
 
+# =========================================== Boost step
+
+$EnvDir = Join-Path $PSScriptRoot "env"
+$BoostVerFile = Join-Path $EnvDir "boost_version.txt"
+
+if (-not (Test-Path $BoostVerFile)) {
+    Write-Host "Warning: $BoostVerFile not found. Creating default (1.90.0)..." -ForegroundColor Yellow
+    if (-not (Test-Path $EnvDir)) { New-Item -ItemType Directory -Path $EnvDir | Out-Null }
+    Set-Content -Path $BoostVerFile -Value "1.90.0"
+}
+
+$BoostVersion = (Get-Content $BoostVerFile).Trim()
+$BoostVerUnderscore = $BoostVersion -replace '\.', '_'
+$BoostDirName = "boost_$BoostVerUnderscore"
+
+$BoostRootBase = "C:\Boost"
+$TargetBoostPath = Join-Path $BoostRootBase $BoostDirName
+
+$BoostStageLib = Join-Path $TargetBoostPath "stage\lib"
+
+if (Test-Path $BoostStageLib) {
+    Write-Host "Boost $BoostVersion is already installed and compiled at $TargetBoostPath" -ForegroundColor Green
+} else {
+    Write-Host "Boost $BoostVersion libraries are missing." -ForegroundColor Yellow
+    $UserInput = Read-Host "Do you want to download and compile Boost $BoostVersion? (This will take time!) (Y/N)"
+
+    if ($UserInput -eq 'Y') {
+        if (-not (Test-Path $BoostRootBase)) { New-Item -ItemType Directory -Path $BoostRootBase | Out-Null }
+        
+        $BoostUrl = "https://archives.boost.io/release/$BoostVersion/source/$BoostDirName.zip"
+        $ZipPath = Join-Path $env:TEMP "$BoostDirName.zip"
+
+        Write-Host "Downloading Boost from $BoostUrl..." -ForegroundColor Cyan
+        try {
+            Invoke-WebRequest -Uri $BoostUrl -OutFile $ZipPath -ErrorAction Stop
+        } catch {
+            Write-Host "Error downloading Boost. Check internet connection or version number in boost_version.txt." -ForegroundColor Red
+            Write-Host "Failed URL: $BoostUrl" -ForegroundColor Red
+            exit
+        }
+
+        Write-Host "Extracting Boost (please wait)..." -ForegroundColor Cyan
+        if (Test-Path $TargetBoostPath) { Remove-Item $TargetBoostPath -Recurse -Force }
+        
+        Expand-Archive -Path $ZipPath -DestinationPath $BoostRootBase -Force
+        Remove-Item $ZipPath -Force
+
+        Write-Host "Compiling Boost libraries (Bootstrap + B2)..." -ForegroundColor Cyan
+        Set-Location $TargetBoostPath
+        
+        if (Test-Path "bootstrap.bat") {
+            cmd /c "bootstrap.bat"
+            
+            if ($LASTEXITCODE -eq 0) {
+                Write-Host "Bootstrap successful. Starting build..." -ForegroundColor Cyan
+                cmd /c "b2.exe link=static threading=multi runtime-link=shared address-model=64 variant=debug,release stage"
+            } else {
+                Write-Host "Error: Bootstrap failed." -ForegroundColor Red
+                exit
+            }
+        } else {
+            Write-Host "Error: bootstrap.bat not found in $TargetBoostPath" -ForegroundColor Red
+            exit
+        }
+
+        Write-Host "Boost compilation finished!" -ForegroundColor Green
+    } else {
+        Write-Host "Boost installation skipped." -ForegroundColor Gray
+    }
+}
+
+$CurrentBoostEnv = [System.Environment]::GetEnvironmentVariable("BOOST_ROOT", "Machine")
+
+if ($CurrentBoostEnv -ne $TargetBoostPath) {
+    Write-Host "Setting global BOOST_ROOT to $TargetBoostPath" -ForegroundColor Cyan
+    [System.Environment]::SetEnvironmentVariable("BOOST_ROOT", $TargetBoostPath, "Machine")
+    $env:BOOST_ROOT = $TargetBoostPath
+}
+
+$CurrentBoostInc = [System.Environment]::GetEnvironmentVariable("BOOST_INCLUDEDIR", "Machine")
+if ($CurrentBoostInc -ne $TargetBoostPath) {
+    [System.Environment]::SetEnvironmentVariable("BOOST_INCLUDEDIR", $TargetBoostPath, "Machine")
+    $env:BOOST_INCLUDEDIR = $TargetBoostPath
+}
+
+$LibPath = Join-Path $TargetBoostPath "stage\lib"
+$CurrentBoostLib = [System.Environment]::GetEnvironmentVariable("BOOST_LIBRARYDIR", "Machine")
+if ($CurrentBoostLib -ne $LibPath) {
+    [System.Environment]::SetEnvironmentVariable("BOOST_LIBRARYDIR", $LibPath, "Machine")
+    $env:BOOST_LIBRARYDIR = $LibPath
+}
+
+Write-Host "Boost environment variables configured." -ForegroundColor Green
+
 # =========================================== VSCode step
 
 

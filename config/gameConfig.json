@@ -1,8 +1,8 @@
 {
     "frameRateLimit": 144,
     "resolution": {
-        "height": 1440,
-        "width": 2560
+        "height": 1080,
+        "width": 1920
     },
     "windowMode": "Windowed",
     "windowTitle": "Orion",
