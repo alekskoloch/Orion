@@ -117,6 +117,33 @@ if ($MissingBefore.Count -eq 0) {
     }
 }
 
+# =========================================== Ninja step
+
+$NinjaCommand = Get-Command "ninja" -ErrorAction SilentlyContinue
+
+if ($NinjaCommand) {
+    Write-Host "Ninja is currently installed." -ForegroundColor Green
+} else {
+    Write-Host "Ninja is missing." -ForegroundColor Yellow
+    $UserInput = Read-Host "Do you want install Ninja? (Y/N)"
+
+    if ($UserInput -eq 'Y') {
+        Write-Host "Starting Ninja installation process..." -ForegroundColor Cyan
+        
+        winget install --id Ninja-build.Ninja -e --source winget --silent --accept-package-agreements --accept-source-agreements
+
+        $env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User")
+        
+        if (Get-Command "ninja" -ErrorAction SilentlyContinue) {
+            Write-Host "Installation finished and Ninja is now available!" -ForegroundColor Green
+        } else {
+            Write-Host "Ninja was installed, but you might need to restart the terminal." -ForegroundColor Yellow
+        }
+    } else {
+        Write-Host "Installation skipped by user." -ForegroundColor Gray
+    }
+}
+
 # =========================================== Boost step
 
 $EnvDir = Join-Path $PSScriptRoot "env"
