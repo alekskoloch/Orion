@@ -1,5 +1,7 @@
 cmake_minimum_required(VERSION 3.14)
 
+set(CMAKE_POLICY_VERSION_MINIMUM 3.5)
+
 add_compile_definitions(_USE_MATH_DEFINES)
 
 project(Orion)
@@ -12,9 +14,6 @@ add_definitions(-DASSETS_PATH=\"${CMAKE_SOURCE_DIR}/assets/\")
 add_definitions(-DCONFIG_PATH=\"${CMAKE_SOURCE_DIR}/config/\")
 
 set(CMAKE_CXX_STANDARD 23)
-
-set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -fuse-ld=lld" CACHE INTERNAL "")
-set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -fuse-ld=lld" CACHE INTERNAL "")
 
 include(FetchContent)
 
@@ -58,6 +57,7 @@ FetchContent_Declare(
     GIT_REPOSITORY https://github.com/google/googletest
     GIT_TAG release-1.12.1
 )
+set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(googletest)
 
 enable_testing()
