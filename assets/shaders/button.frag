@@ -8,23 +8,23 @@ uniform float u_time;
 uniform float u_winHeight;
 uniform float u_skew;
 
-const vec3 C_HEX = vec3( 0.05, 0.95, 1.0 );
+const vec3 C_HEX = vec3( 1.00, 0.0, 0.65 );
 const vec3 C_LEFT = vec3( 1.0, 0.0, 0.7 );
 const vec3 C_RIGHT = vec3( 0.05, 0.95, 1.0 );
 const vec3 C_BG = vec3( 0.02, 0.02, 0.04 );
 
-const float HEX_SCALE = 32.0;
-const float HEX_LINE_WIDTH = 0.08;
+const float HEX_SCALE = 38.0;
+const float HEX_LINE_WIDTH = 0.06;
 const float HEX_LINE_SHARP = 0.04;
 
 const float BASE_BRIGHTNESS = 0.05;
 const float MOUSE_RADIUS = 220.0;
-const float MOUSE_INTENSITY = 0.1;
+const float MOUSE_INTENSITY = 0.3;
 const float PULSE_SPEED = 0.1;
 const float PULSE_INTENSITY = 0.05;
 
-const float VIGNETTE_WIDTH = 300.0;
-const float VIGNETTE_OFFSET = 10.0;
+const float VIGNETTE_WIDTH = 500.0;
+const float VIGNETTE_OFFSET = 80.0;
 
 const float BORDER_WIDTH = 1.5;
 const float BORDER_AA = 1.5;
@@ -62,7 +62,7 @@ void main()
 
     float d_right = p.x - halfW;
 
-    vec2 normalLeft = normalize( vec2( -1.0, u_skew ) );
+    vec2 normalLeft = normalize( vec2( -1.0, -u_skew ) );
     float leftAnchor = -halfW + ( u_skew * halfH );
     float d_left = dot( p - vec2( leftAnchor, 0.0 ), normalLeft );
 

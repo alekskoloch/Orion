@@ -26,13 +26,13 @@ class Button
 public:
     using Callback = std::function< void() >;
 
-    static constexpr float DEFAULT_WIDTH = 620.f;
-    static constexpr float DEFAULT_HEIGHT = 130.f;
+    static constexpr float DEFAULT_WIDTH = 650.f;
+    static constexpr float DEFAULT_HEIGHT = 135.f;
 
-    static constexpr float EXPANSION_AMOUNT = 30.f;
+    static constexpr float EXPANSION_AMOUNT = 38.f;
     static constexpr float ANIM_SPEED = 15.0f;
 
-    static constexpr float CANVAS_MARGIN = 30.f;
+    static constexpr float CANVAS_MARGIN = 40.f;
 
     Button( std::string_view text, sf::Vector2f position, Callback callback, Alignment align = Alignment::Right )
         : m_callback( std::move( callback ) ), m_font( std::make_shared< sf::Font >() ), m_text( *m_font ), m_alignment( align ),
@@ -61,7 +61,7 @@ public:
         }
 
         m_text.setString( std::string( text ) );
-        m_text.setCharacterSize( static_cast< unsigned int >( 40 * scale ) );
+        m_text.setCharacterSize( static_cast< unsigned int >( 60 * scale ) );
         m_text.setFillColor( sf::Color::White );
 
         updateTextGeometry();
@@ -88,7 +88,7 @@ public:
         if ( m_isHovered )
             m_text.setFillColor( sf::Color( 220, 220, 255 ) );
         else
-            m_text.setFillColor( sf::Color( 200, 200, 200 ) );
+            m_text.setFillColor( sf::Color( sf::Color::White ) );
 
         if ( const auto* pressed = event.getIf< sf::Event::MouseButtonPressed >() )
         {
