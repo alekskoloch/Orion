@@ -1,29 +1,20 @@
 #pragma once
 
-#include <SFML/Graphics/Font.hpp>
-#include <SFML/Graphics/Rect.hpp>
-#include <SFML/Graphics/RenderWindow.hpp>
-#include <SFML/Graphics/Sprite.hpp>
-#include <SFML/Graphics/Text.hpp>
-#include <SFML/System/Vector2.hpp>
-#include <SFML/Window/Event.hpp>
+#include <SFML/Graphics.hpp>
 #include <algorithm>
 #include <cmath>
 #include <functional>
 #include <iostream>
 #include <memory>
+#include <string>
 #include <string_view>
+
 
 #include "ConfigManager.hpp"
 #include "InputContext.hpp"
-#include "TextureManager.h"
 #include "Window.hpp"
 
-#ifndef ASSETS_PATH
-    #define ASSETS_PATH "assets/"
-#endif
-
-enum class Alignment
+enum class Alignment : std::uint8_t
 {
     Center,
     Right,
@@ -35,53 +26,44 @@ class Button
 public:
     using Callback = std::function< void() >;
 
-    // TODO: Sprite Wrapper
-    static constexpr int FRAME_W = 960;
-    static constexpr int FRAME_H = 257;
-    static constexpr int GAP = 2;
-    static constexpr int START_X = 1;
-    static constexpr int START_Y = 1;
-    static constexpr int TOTAL_FRAMES = 48;
-    static constexpr float FPS = 600.0F;
+    static constexpr float DEFAULT_WIDTH = 620.f;
+    static constexpr float DEFAULT_HEIGHT = 130.f;
 
-    Button( std::string_view textureName, std::string_view text, sf::Vector2f position, Callback callback, Alignment align = Alignment::Right )
-        : m_callback( std::move( callback ) )
-        , m_sprite( TextureManager::getInstance().getTexture( std::string( textureName ) ) )
-        , m_font( std::make_shared< sf::Font >() )
-        , m_text( *m_font )
-        , m_alignment( align )
+    static constexpr float EXPANSION_AMOUNT = 30.f;
+    static constexpr float ANIM_SPEED = 15.0f;
+
+    static constexpr float CANVAS_MARGIN = 30.f;
+
+    Button( std::string_view text, sf::Vector2f position, Callback callback, Alignment align = Alignment::Right )
+        : m_callback( std::move( callback ) ), m_font( std::make_shared< sf::Font >() ), m_text( *m_font ), m_alignment( align ),
+          m_skew( 0.5f ), m_currentWidth( DEFAULT_WIDTH )
     {
         float scale = ConfigManager::getInstance().getScale();
-        m_sprite.setScale( { scale, scale } );
 
-        updateTextureRect();
+        float maxPossibleWidth = DEFAULT_WIDTH + EXPANSION_AMOUNT + CANVAS_MARGIN;
 
-        auto bounds = m_sprite.getLocalBounds();
-        m_sprite.setOrigin( { bounds.size.x / 2.F, bounds.size.y / 2.F } );
-        m_sprite.setPosition( position );
+        m_canvasSize = { maxPossibleWidth * scale, ( DEFAULT_HEIGHT + CANVAS_MARGIN ) * scale };
+        m_canvas.setSize( m_canvasSize );
+        m_canvas.setOrigin( m_canvasSize / 2.f );
+        m_canvas.setPosition( position );
+        m_canvas.setFillColor( sf::Color::White );
+
+        std::string shaderPath = std::string( ASSETS_PATH ) + "shaders/button.frag";
+        if ( !m_shader.loadFromFile( shaderPath, sf::Shader::Type::Fragment ) )
+        {
+            std::cerr << "CRITICAL: Shader load failed: " << shaderPath << std::endl;
+        }
 
         std::string fontPath = std::string( ASSETS_PATH ) + "fonts/ScienceGothic-Regular.ttf";
         if ( !m_font->openFromFile( fontPath ) )
         {
-            std::cerr << "ERROR: Failed to load font: " << fontPath << std::endl;
+            std::cerr << "ERROR: Font load failed: " << fontPath << std::endl;
         }
 
         m_text.setString( std::string( text ) );
-        m_text.setCharacterSize( static_cast< unsigned int >( 70 * scale ) );
+        m_text.setCharacterSize( static_cast< unsigned int >( 40 * scale ) );
         m_text.setFillColor( sf::Color::White );
 
-        updateTextGeometry();
-    }
-
-    void setText( std::string_view text )
-    {
-        m_text.setString( std::string( text ) );
-        updateTextGeometry();
-    }
-
-    void setAlignment( Alignment align )
-    {
-        m_alignment = align;
         updateTextGeometry();
     }
 
@@ -91,115 +73,159 @@ public:
         const auto& mouseState = inputContext.getMouseState();
         sf::Vector2f mousePos{ mouseState.worldPosition.x, mouseState.worldPosition.y };
 
-        bool isInside = m_sprite.getGlobalBounds().contains( mousePos );
+        bool isInside = isPointInside( mousePos );
         m_isHovered = isInside;
 
+        float scale = ConfigManager::getInstance().getScale();
+        float widthDelta = ( m_currentWidth - DEFAULT_WIDTH ) * scale;
+        float centerShift = widthDelta / 2.0f;
+
+        sf::Vector2f effectiveCenter = m_canvas.getPosition();
+        effectiveCenter.x -= centerShift;
+
+        m_mouseLocalPos = mousePos - effectiveCenter;
+
         if ( m_isHovered )
-             m_text.setFillColor( sf::Color( 220, 220, 255 ) );
+            m_text.setFillColor( sf::Color( 220, 220, 255 ) );
         else
-             m_text.setFillColor( sf::Color::White );
+            m_text.setFillColor( sf::Color( 200, 200, 200 ) );
 
         if ( const auto* pressed = event.getIf< sf::Event::MouseButtonPressed >() )
         {
-            if ( pressed->button == sf::Mouse::Button::Left && isInside )
+            if ( pressed->button == sf::Mouse::Button::Left && isInside && m_callback )
             {
-                if ( m_callback ) m_callback();
+                m_callback();
             }
         }
     }
 
     void update( sf::Time deltaTime )
     {
-        float deltaTimeAsSeconds = deltaTime.asSeconds();
-        bool frameChanged = false;
+        float targetWidth = m_isHovered ? ( DEFAULT_WIDTH + EXPANSION_AMOUNT ) : DEFAULT_WIDTH;
 
-        if ( m_isHovered )
+        float diff = targetWidth - m_currentWidth;
+        if ( std::abs( diff ) > 0.1f )
         {
-            if ( m_currentFrame < TOTAL_FRAMES - 1 )
-            {
-                m_currentFrame += FPS * deltaTimeAsSeconds;
-                if ( m_currentFrame >= TOTAL_FRAMES ) m_currentFrame = TOTAL_FRAMES - 1;
-                frameChanged = true;
-            }
+            m_currentWidth += diff * ANIM_SPEED * deltaTime.asSeconds();
         }
         else
         {
-            if ( m_currentFrame > 0 )
-            {
-                m_currentFrame -= FPS * deltaTimeAsSeconds;
-                m_currentFrame = std::max< float >( m_currentFrame, 0 );
-                frameChanged = true;
-            }
+            m_currentWidth = targetWidth;
         }
 
-        if ( frameChanged ) updateTextureRect();
+        m_shader.setUniform( "u_time", m_clock.getElapsedTime().asSeconds() );
     }
 
-    void draw( Window& window ) 
-    { 
-        window.draw( m_sprite ); 
+    void setText( std::string_view t )
+    {
+        m_text.setString( std::string( t ) );
+        updateTextGeometry();
+    }
+    void setAlignment( Alignment a )
+    {
+        m_alignment = a;
+        updateTextGeometry();
+    }
+    void setSkew( float s ) { m_skew = s; }
+
+    void draw( Window& window )
+    {
+        float scale = ConfigManager::getInstance().getScale();
+
+        float widthDelta = ( m_currentWidth - DEFAULT_WIDTH ) * scale;
+        float centerShiftX = widthDelta / 2.0f;
+
+        sf::Vector2f shaderPos = m_canvas.getPosition();
+        shaderPos.x -= centerShiftX;
+
+        m_shader.setUniform( "u_pos", shaderPos );
+        m_shader.setUniform( "u_winHeight", static_cast< float >( ConfigManager::getInstance().getScreenHeight() ) );
+
+        m_shader.setUniform( "u_size", sf::Vector2f( m_currentWidth * scale, DEFAULT_HEIGHT * scale ) );
+
+        m_shader.setUniform( "u_time", m_clock.getElapsedTime().asSeconds() );
+        m_shader.setUniform( "u_skew", m_skew );
+        m_shader.setUniform( "u_mouse", m_mouseLocalPos );
+
+        window.draw( m_canvas, &m_shader );
         window.draw( m_text );
     }
 
 private:
-    void updateTextureRect()
+    bool isPointInside( sf::Vector2f point )
     {
-        int frameIndex = static_cast< int >( std::floor( m_currentFrame ) );
-        int col = 0, row = 0;
+        float scale = ConfigManager::getInstance().getScale();
 
-        if ( frameIndex <= 38 ) { col = frameIndex % 3; row = frameIndex / 3; }
-        else { col = 3; row = frameIndex - 39; }
+        float widthDelta = ( m_currentWidth - DEFAULT_WIDTH ) * scale;
+        float centerShiftX = widthDelta / 2.0f;
+        sf::Vector2f effectiveCenter = m_canvas.getPosition();
+        effectiveCenter.x -= centerShiftX;
 
-        int posX = START_X + ( col * ( FRAME_W + GAP ) );
-        int posY = START_Y + ( row * ( FRAME_H + GAP ) );
+        sf::Vector2f p = point - effectiveCenter;
 
-        m_sprite.setTextureRect( sf::IntRect( { posX, posY }, { FRAME_W, FRAME_H } ) );
+        float halfW = ( m_currentWidth * scale ) * 0.5f;
+        float halfH = ( DEFAULT_HEIGHT * scale ) * 0.5f;
+
+        float d_y = std::abs( p.y ) - halfH;
+        float d_right = p.x - halfW;
+
+        sf::Vector2f normalLeft{ -1.0f, m_skew };
+        float len = std::sqrt( normalLeft.x * normalLeft.x + normalLeft.y * normalLeft.y );
+        normalLeft /= len;
+
+        float leftAnchor = -halfW + ( m_skew * halfH * 0.5f );
+        float d_left = ( p.x - leftAnchor ) * normalLeft.x + p.y * normalLeft.y;
+
+        float d = std::max( { d_y, d_right, d_left } );
+        return d <= 0.0f;
     }
 
     void updateTextGeometry()
     {
         auto textBounds = m_text.getLocalBounds();
-        auto btnBounds = m_sprite.getGlobalBounds();
-
-        sf::Text refText( *m_font, "H", m_text.getCharacterSize() );
+        float scale = ConfigManager::getInstance().getScale();
+        float btnWidth = DEFAULT_WIDTH * scale;
+        sf::Text refText( *m_font, "A", m_text.getCharacterSize() );
         auto refBounds = refText.getLocalBounds();
 
-        float paddingX = 100.0f * m_sprite.getScale().x;
+        float paddingX = 40.0f * scale;
 
         float originY = refBounds.position.y + refBounds.size.y / 2.0f;
-        
+        float posY = m_canvas.getPosition().y;
         float originX = 0.0f;
-        float posY = m_sprite.getPosition().y;
         float posX = 0.0f;
 
         switch ( m_alignment )
         {
-            case Alignment::Center:
-                originX = textBounds.position.x + textBounds.size.x / 2.0f;
-                posX = m_sprite.getPosition().x;
-                break;
+        case Alignment::Center:
+            originX = textBounds.position.x + textBounds.size.x / 2.0f;
+            posX = m_canvas.getPosition().x;
+            break;
+        case Alignment::Right:
+            originX = textBounds.position.x + textBounds.size.x;
 
-            case Alignment::Right:
-                originX = textBounds.position.x + textBounds.size.x;
-                posX = m_sprite.getPosition().x + (btnBounds.size.x / 2.0f) - paddingX;
-                break;
-
-            case Alignment::Left:
-                originX = textBounds.position.x;
-                posX = m_sprite.getPosition().x - (btnBounds.size.x / 2.0f) + paddingX;
-                break;
+            posX = m_canvas.getPosition().x + ( btnWidth / 2.0f ) - paddingX;
+            break;
+        case Alignment::Left:
+            originX = textBounds.position.x;
+            posX = m_canvas.getPosition().x - ( btnWidth / 2.0f ) + paddingX + ( m_skew * 40.f );
+            break;
         }
-
         m_text.setOrigin( { originX, originY } );
         m_text.setPosition( { posX, posY } );
     }
 
     Callback m_callback;
-    sf::Sprite m_sprite;
+    sf::RectangleShape m_canvas;
+    sf::Vector2f m_canvasSize;
+    sf::Shader m_shader;
+    sf::Clock m_clock;
     std::shared_ptr< sf::Font > m_font;
     sf::Text m_text;
-    
     Alignment m_alignment;
     bool m_isHovered = false;
-    float m_currentFrame = 0.0f;
+    float m_skew;
+    sf::Vector2f m_mouseLocalPos;
+
+    float m_currentWidth;
 };

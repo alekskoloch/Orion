@@ -52,18 +52,18 @@ void MainMenu::initButtons()
     m_elements.emplace_back( Title( "Orion", sf::Vector2f{ titlePosX, titleY }, 550 * config.getScale() ) );
 
 
-    m_elements.emplace_back( Button( "GUI/button", "Continue", sf::Vector2f{ posX, startY },
+    m_elements.emplace_back( Button( "Continue", sf::Vector2f{ posX, startY },
                                      [ this ]() { *m_gameState = GameState::Game; } ) );
 
-    m_elements.emplace_back( Button( "GUI/button", "Start Game", sf::Vector2f{ posX, startY + spacing },
+    m_elements.emplace_back( Button( "Start Game", sf::Vector2f{ posX, startY + spacing },
                                      [ this ]() { *m_gameState = GameState::Game; } ) );
 
-    m_elements.emplace_back( Button( "GUI/button", "Load Game", sf::Vector2f{ posX, startY + spacing * 2 },
+    m_elements.emplace_back( Button( "Load Game", sf::Vector2f{ posX, startY + spacing * 2 },
                                      [ this ]() {} ) );
 
-    m_elements.emplace_back( Button( "GUI/button", "Settings", sf::Vector2f{ posX, startY + spacing * 3 },
+    m_elements.emplace_back( Button( "Settings", sf::Vector2f{ posX, startY + spacing * 3 },
                                      [ this ]() {} ) );
 
-    m_elements.emplace_back( Button( "GUI/button", "Quit", sf::Vector2f{ posX, startY + spacing * 4 },
+    m_elements.emplace_back( Button( "Quit", sf::Vector2f{ posX, startY + spacing * 4 },
                                      [ this ]() { *m_gameState = GameState::Quit; } ) );
 }

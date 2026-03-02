@@ -41,6 +41,7 @@ public:
     void clear() const;
     void display() const;
     void draw( const sf::Drawable& drawable );
+    void draw( const sf::Drawable& drawable, const sf::RenderStates& states );
 
     [[nodiscard]] auto getMouseState() const -> Mouse::MouseState;
     void setMouseCursor( const sf::Cursor& cursor );

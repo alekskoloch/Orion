@@ -1,51 +1,37 @@
 #pragma once
 
 #include <SFML/Graphics/Font.hpp>
+#include <SFML/Graphics/RenderTexture.hpp>
+#include <SFML/Graphics/Sprite.hpp>
 #include <SFML/Graphics/Text.hpp>
+#include <SFML/System/Time.hpp>
 #include <SFML/System/Vector2.hpp>
-#include <iostream>
+
 #include <memory>
-#include <string>
+#include <optional>
 #include <string_view>
 
-#include "ConfigManager.hpp"
+#include "GlitchShaderEffect.hpp"
 #include "Window.hpp"
-
-//
-#ifndef ASSETS_PATH
-#define ASSETS_PATH "assets/"
-#endif
 
 class Title
 {
 public:
-    Title( std::string_view text, sf::Vector2f position, unsigned int fontSize = 150 )
-        : m_font( std::make_shared< sf::Font >() ), m_text( *m_font )
-    {
-        std::string fontPath = std::string( ASSETS_PATH ) + "fonts/ScienceGothic-Regular.ttf";
-        if ( !m_font->openFromFile( fontPath ) )
-        {
-            std::cerr << "ERROR: Failed to load font for Title: " << fontPath << std::endl;
-        }
+    Title(std::string_view text, sf::Vector2f position, unsigned int fontSize = 150);
 
-        float scale = ConfigManager::getInstance().getScale();
+    Title(Title&&) noexcept = default;
+    Title& operator=(Title&&) noexcept = default;
 
-        m_text.setString( std::string( text ) );
-        m_text.setCharacterSize( static_cast< unsigned int >( fontSize * scale ) );
-        m_text.setFillColor( sf::Color::White );
+    Title(const Title&) = delete;
+    Title& operator=(const Title&) = delete;
 
-        auto bounds = m_text.getLocalBounds();
-
-        m_text.setOrigin( { bounds.position.x + bounds.size.x / 2.0f, bounds.position.y + bounds.size.y / 2.0f } );
-
-        m_text.setPosition( position );
-    }
-
-    void draw( Window& window ) { window.draw( m_text ); }
-
-    void update( sf::Time ) {}
+    void update(sf::Time deltaTime);
+    void draw(Window& window);
 
 private:
-    std::shared_ptr< sf::Font > m_font;
+    std::shared_ptr<sf::Font> m_font;
     sf::Text m_text;
+    std::unique_ptr<sf::RenderTexture> m_renderTexture;
+    std::optional<sf::Sprite> m_renderSprite;
+    GlitchShaderEffect m_glitchEffect;
 };

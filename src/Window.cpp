@@ -79,6 +79,11 @@ void Window::draw( const sf::Drawable& drawable )
     m_renderWindow->draw( drawable, sf::RenderStates::Default );
 }
 
+void Window::draw( const sf::Drawable& drawable, const sf::RenderStates& states )
+{
+    m_renderWindow->draw( drawable, states );
+}
+
 auto Window::getMouseState() const -> Mouse::MouseState
 {
     const auto screenPosition = sf::Mouse::getPosition( *m_renderWindow );
