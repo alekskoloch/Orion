@@ -1,5 +1,5 @@
 {
-    "clangd.path": "c:/tools/clang+llvm/bin/clangd.exe",
+    "clangd.path": "c:/Program Files/LLVM/bin/clangd.exe",
     "clangd.arguments": [
         "--compile-commands-dir=${workspaceFolder}/build",
         "--background-index",
@@ -12,7 +12,7 @@
     "clang-format.style": "file",
 
     "[cpp]": {
-        "editor.defaultFormatter": "xaver.clang-format",
+        "editor.defaultFormatter": "llvm-vs-code-extensions.vscode-clangd",
     },
     "cSpell.words": [
         "DASSETS",

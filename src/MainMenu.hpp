@@ -17,19 +17,31 @@ class Window;
 
 using MenuElement = GUIBaseElement< Button, Title >;
 
+enum class MenuState : std::uint8_t
+{
+    MainMenu,
+    LoadGame,
+    Settings
+};
+
 class MainMenu
 {
 public:
-    MainMenu( GameState* gameState );
+    explicit MainMenu( GameState* gameState );
 
     void handleEvent( const InputContext& inputContext );
     void update( sf::Time deltaTime );
     void draw( Window& window );
 
 private:
-    void initButtons();
+    void initMainMenu();
+    void initLoadGame();
+    void initSettings();
 
     GameState* m_gameState;
 
-    std::vector< MenuElement > m_elements;
+    MenuState m_menuState{ MenuState::MainMenu };
+    std::vector< MenuElement > m_mainMenuElements;
+    std::vector< MenuElement > m_settingsElements;
+    std::vector< MenuElement > m_loadGameElements;
 };
