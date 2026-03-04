@@ -115,7 +115,8 @@ void MainMenu::initLoadGame()
 
     const auto& config = ConfigManager::getInstance();
 
-    const auto posX = static_cast< float >( config.getScreenWidth() ) * 0.83F;
+    const auto mainMenuButtonPosX = static_cast< float >( config.getScreenWidth() ) * 0.20F;
+    const auto loadButtonsPosX = static_cast< float >( config.getScreenWidth() ) * 0.50F;
     const auto startY = static_cast< float >( config.getScreenHeight() ) * 0.33F;
 
     float spacing = spacingBetweenButtons * config.getScale();
@@ -125,17 +126,17 @@ void MainMenu::initLoadGame()
     const auto titlePosX = static_cast< float >( config.getScreenWidth() ) * 0.50F;
     m_loadGameElements.emplace_back( Title( "Load Game", sf::Vector2f{ titlePosX, titleY }, 350 * config.getScale() ) );
 
-    m_loadGameElements.emplace_back( Button( "Load 1", sf::Vector2f{ posX, startY }, [ this ]() {} ) );
+    m_loadGameElements.emplace_back( Button( "Load 1", sf::Vector2f{ loadButtonsPosX, startY }, [ this ]() {}, Alignment::Center ) );
 
     m_loadGameElements.emplace_back(
-        Button( "Load 2", sf::Vector2f{ posX, startY + spacing }, [ this ]() {} ) );
+        Button( "Load 2", sf::Vector2f{ loadButtonsPosX, startY + spacing }, [ this ]() {}, Alignment::Center ) );
 
-    m_loadGameElements.emplace_back( Button( "Load 3", sf::Vector2f{ posX, startY + spacing * 2 }, [ this ]() {} ) );
+    m_loadGameElements.emplace_back( Button( "Load 3", sf::Vector2f{ loadButtonsPosX, startY + spacing * 2 }, [ this ]() {}, Alignment::Center ) );
 
-    m_loadGameElements.emplace_back( Button( "Load 4", sf::Vector2f{ posX, startY + spacing * 3 }, [ this ]() {} ) );
+    m_loadGameElements.emplace_back( Button( "Load 4", sf::Vector2f{ loadButtonsPosX, startY + spacing * 3 }, [ this ]() {}, Alignment::Center ) );
 
     m_loadGameElements.emplace_back(
-        Button( "Main Menu", sf::Vector2f{ posX, startY + spacing * 4 }, [ this ]() { m_menuState = MenuState::MainMenu; } ) );
+        Button( "Main Menu", sf::Vector2f{ mainMenuButtonPosX, startY + spacing * 4 }, [ this ]() { m_menuState = MenuState::MainMenu; }, Alignment::Left ) );
 }
 
 void MainMenu::initSettings()

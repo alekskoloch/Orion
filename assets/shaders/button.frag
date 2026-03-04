@@ -6,7 +6,10 @@ uniform vec2 u_pos;
 uniform vec2 u_mouse;
 uniform float u_time;
 uniform float u_winHeight;
-uniform float u_skew;
+
+uniform float u_skewL;
+uniform float u_skewR;
+uniform float u_hexAnchor;
 
 const vec3 C_HEX = vec3( 1.00, 0.0, 0.65 );
 const vec3 C_LEFT = vec3( 1.0, 0.0, 0.7 );
@@ -60,16 +63,17 @@ void main()
 
     float d_y = abs( p.y ) - halfH;
 
-    float d_right = p.x - halfW;
-
-    vec2 normalLeft = normalize( vec2( -1.0, -u_skew ) );
-    float leftAnchor = -halfW + ( u_skew * halfH );
+    vec2 normalLeft = normalize( vec2( -1.0, -u_skewL ) );
+    float leftAnchor = -halfW + ( u_skewL * halfH );
     float d_left = dot( p - vec2( leftAnchor, 0.0 ), normalLeft );
+
+    vec2 normalRight = normalize( vec2( 1.0, u_skewR ) ); 
+    float rightAnchor = halfW - ( u_skewR * halfH );
+    float d_right = dot( p - vec2( rightAnchor, 0.0 ), normalRight );
 
     float d = max( d_y, max( d_right, d_left ) );
 
     float maskShape = 1.0 - smoothstep( 0.0, BORDER_AA, d );
-
     float maskBorder = smoothstep( -BORDER_WIDTH - 1.0, -BORDER_WIDTH, d );
     maskBorder *= maskShape;
 
@@ -77,21 +81,17 @@ void main()
     if ( d > 0.0 )
     {
         float glowFactor = exp( -d * ( 1.0 / GLOW_WIDTH ) ) * GLOW_INTENSITY;
-
         float gradX = ( p.x / halfW ) * 0.5 + 0.5;
         vec3 gCol = mix( C_LEFT, C_RIGHT, clamp( gradX, 0.0, 1.0 ) );
-
         glowColor = gCol * glowFactor;
     }
 
     float distFromCenter = abs( p.x );
-    float distFromEdge = halfW - distFromCenter;
-
+    float distFromEdge = halfW - distFromCenter; 
     float globalHexMask = smoothstep( VIGNETTE_OFFSET, VIGNETTE_WIDTH, distFromEdge );
 
     vec2 hexP = p;
-
-    hexP.x -= halfW;
+    hexP.x += u_hexAnchor * halfW;
 
     float hexVal = getHexGrid( hexP / HEX_SCALE );
     float hexLines = smoothstep( HEX_LINE_WIDTH, HEX_LINE_SHARP, hexVal );

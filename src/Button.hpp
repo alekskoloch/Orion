@@ -76,9 +76,7 @@ public:
         bool isInside = isPointInside( mousePos );
         m_isHovered = isInside;
 
-        float scale = ConfigManager::getInstance().getScale();
-        float widthDelta = ( m_currentWidth - DEFAULT_WIDTH ) * scale;
-        float centerShift = widthDelta / 2.0f;
+        float centerShift = getCenterShift();
 
         sf::Vector2f effectiveCenter = m_canvas.getPosition();
         effectiveCenter.x -= centerShift;
@@ -132,19 +130,42 @@ public:
     {
         float scale = ConfigManager::getInstance().getScale();
 
-        float widthDelta = ( m_currentWidth - DEFAULT_WIDTH ) * scale;
-        float centerShiftX = widthDelta / 2.0f;
+        float centerShiftX = getCenterShift();
 
         sf::Vector2f shaderPos = m_canvas.getPosition();
         shaderPos.x -= centerShiftX;
 
         m_shader.setUniform( "u_pos", shaderPos );
         m_shader.setUniform( "u_winHeight", static_cast< float >( ConfigManager::getInstance().getScreenHeight() ) );
-
         m_shader.setUniform( "u_size", sf::Vector2f( m_currentWidth * scale, DEFAULT_HEIGHT * scale ) );
-
         m_shader.setUniform( "u_time", m_clock.getElapsedTime().asSeconds() );
-        m_shader.setUniform( "u_skew", m_skew );
+        
+        float skewL = 0.0f;
+        float skewR = 0.0f;
+        float hexAnchor = 0.0f;
+
+        switch ( m_alignment )
+        {
+        case Alignment::Right:
+            skewL = m_skew; 
+            skewR = 0.0f;
+            hexAnchor = -1.0f;
+            break;
+        case Alignment::Left:
+            skewL = 0.0f;
+            skewR = m_skew;
+            hexAnchor = 1.0f;
+            break;
+        case Alignment::Center:
+            skewL = m_skew;
+            skewR = m_skew;
+            hexAnchor = 0.0f;
+            break;
+        }
+
+        m_shader.setUniform( "u_skewL", skewL );
+        m_shader.setUniform( "u_skewR", skewR );
+        m_shader.setUniform( "u_hexAnchor", hexAnchor );
         m_shader.setUniform( "u_mouse", m_mouseLocalPos );
 
         window.draw( m_canvas, &m_shader );
@@ -152,12 +173,29 @@ public:
     }
 
 private:
+    float getCenterShift() const
+    {
+        float scale = ConfigManager::getInstance().getScale();
+        float widthDelta = ( m_currentWidth - DEFAULT_WIDTH ) * scale;
+
+        switch ( m_alignment )
+        {
+        case Alignment::Right:
+            return widthDelta / 2.0f;
+        case Alignment::Left:
+            return -widthDelta / 2.0f;
+        case Alignment::Center:
+            return 0.0f;
+        }
+        return 0.0f;
+    }
+
     bool isPointInside( sf::Vector2f point )
     {
         float scale = ConfigManager::getInstance().getScale();
 
-        float widthDelta = ( m_currentWidth - DEFAULT_WIDTH ) * scale;
-        float centerShiftX = widthDelta / 2.0f;
+        float centerShiftX = getCenterShift();
+
         sf::Vector2f effectiveCenter = m_canvas.getPosition();
         effectiveCenter.x -= centerShiftX;
 
@@ -166,17 +204,33 @@ private:
         float halfW = ( m_currentWidth * scale ) * 0.5f;
         float halfH = ( DEFAULT_HEIGHT * scale ) * 0.5f;
 
+        float skewL = 0.0f;
+        float skewR = 0.0f;
+        switch ( m_alignment )
+        {
+        case Alignment::Right:  skewL = m_skew; skewR = 0.0f;   break;
+        case Alignment::Left:   skewL = 0.0f;   skewR = m_skew; break;
+        case Alignment::Center: skewL = m_skew; skewR = m_skew; break;
+        }
+
         float d_y = std::abs( p.y ) - halfH;
-        float d_right = p.x - halfW;
 
-        sf::Vector2f normalLeft{ -1.0f, m_skew };
-        float len = std::sqrt( normalLeft.x * normalLeft.x + normalLeft.y * normalLeft.y );
-        normalLeft /= len;
+        sf::Vector2f normalLeft{ -1.0f, -skewL };
+        float lenL = std::sqrt( normalLeft.x * normalLeft.x + normalLeft.y * normalLeft.y );
+        normalLeft /= lenL;
 
-        float leftAnchor = -halfW + ( m_skew * halfH * 0.5f );
+        float leftAnchor = -halfW + ( skewL * halfH );
         float d_left = ( p.x - leftAnchor ) * normalLeft.x + p.y * normalLeft.y;
 
+        sf::Vector2f normalRight{ 1.0f, skewR };
+        float lenR = std::sqrt( normalRight.x * normalRight.x + normalRight.y * normalRight.y );
+        normalRight /= lenR;
+
+        float rightAnchor = halfW - ( skewR * halfH );
+        float d_right = ( p.x - rightAnchor ) * normalRight.x + p.y * normalRight.y;
+
         float d = std::max( { d_y, d_right, d_left } );
+        
         return d <= 0.0f;
     }
 
@@ -203,7 +257,6 @@ private:
             break;
         case Alignment::Right:
             originX = textBounds.position.x + textBounds.size.x;
-
             posX = m_canvas.getPosition().x + ( btnWidth / 2.0f ) - paddingX;
             break;
         case Alignment::Left:
