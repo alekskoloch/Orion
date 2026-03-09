@@ -6,6 +6,8 @@
 
 #include "GameState.hpp"
 
+#include "TabWindow.hpp"
+
 namespace sf
 {
 class Time;
@@ -15,7 +17,7 @@ struct InputContext;
 
 class Window;
 
-using MenuElement = GUIBaseElement< Button, Title >;
+using MenuElement = GUIBaseElement< Button, Title, TabWindow >;
 
 enum class MenuState : std::uint8_t
 {

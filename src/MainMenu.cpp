@@ -139,32 +139,50 @@ void MainMenu::initLoadGame()
         Button( "Main Menu", sf::Vector2f{ mainMenuButtonPosX, startY + spacing * 4 }, [ this ]() { m_menuState = MenuState::MainMenu; }, Alignment::Left ) );
 }
 
+// void MainMenu::initSettings()
+// {
+//     constexpr auto margin = 200.F;
+//     constexpr auto spacingBetweenButtons = 260.F;
+
+//     const auto& config = ConfigManager::getInstance();
+
+//     const auto posX = static_cast< float >( config.getScreenWidth() ) * 0.83F;
+//     const auto startY = static_cast< float >( config.getScreenHeight() ) * 0.33F;
+
+//     float spacing = spacingBetweenButtons * config.getScale();
+
+//     const auto titleY = static_cast< float >( config.getScreenHeight() ) * 0.15F;
+
+//     const auto titlePosX = static_cast< float >( config.getScreenWidth() ) * 0.50F;
+//     m_settingsElements.emplace_back( Title( "Settings", sf::Vector2f{ titlePosX, titleY }, 350 * config.getScale() ) );
+
+//     m_settingsElements.emplace_back( Button( "Setting 1", sf::Vector2f{ posX, startY }, [ this ]() {} ) );
+
+//     m_settingsElements.emplace_back(
+//         Button( "Setting 2", sf::Vector2f{ posX, startY + spacing }, [ this ]() {} ) );
+
+//     m_settingsElements.emplace_back( Button( "Setting 3", sf::Vector2f{ posX, startY + spacing * 2 }, [ this ]() {} ) );
+
+//     m_settingsElements.emplace_back( Button( "Setting 4", sf::Vector2f{ posX, startY + spacing * 3 }, [ this ]() {} ) );
+
+//     m_settingsElements.emplace_back(
+//         Button( "Main Menu", sf::Vector2f{ posX, startY + spacing * 4 }, [ this ]() { m_menuState = MenuState::MainMenu; } ) );
+// }
+
 void MainMenu::initSettings()
 {
-    constexpr auto margin = 200.F;
-    constexpr auto spacingBetweenButtons = 260.F;
+    // 1. Dodaj TabWindow (dzięki variantowi to działa)
+    // Tworzy instancję TabWindow i wrzuca do wektora.
+    m_settingsElements.emplace_back( TabWindow() );
 
+    // 2. Dodaj przycisk powrotu na dole
     const auto& config = ConfigManager::getInstance();
-
-    const auto posX = static_cast< float >( config.getScreenWidth() ) * 0.83F;
-    const auto startY = static_cast< float >( config.getScreenHeight() ) * 0.33F;
-
-    float spacing = spacingBetweenButtons * config.getScale();
-
-    const auto titleY = static_cast< float >( config.getScreenHeight() ) * 0.15F;
-
-    const auto titlePosX = static_cast< float >( config.getScreenWidth() ) * 0.50F;
-    m_settingsElements.emplace_back( Title( "Settings", sf::Vector2f{ titlePosX, titleY }, 350 * config.getScale() ) );
-
-    m_settingsElements.emplace_back( Button( "Setting 1", sf::Vector2f{ posX, startY }, [ this ]() {} ) );
+    const auto posX = static_cast< float >( config.getScreenWidth() ) * 0.5F;
+    const auto posY = static_cast< float >( config.getScreenHeight() ) * 0.9F;
 
     m_settingsElements.emplace_back(
-        Button( "Setting 2", sf::Vector2f{ posX, startY + spacing }, [ this ]() {} ) );
-
-    m_settingsElements.emplace_back( Button( "Setting 3", sf::Vector2f{ posX, startY + spacing * 2 }, [ this ]() {} ) );
-
-    m_settingsElements.emplace_back( Button( "Setting 4", sf::Vector2f{ posX, startY + spacing * 3 }, [ this ]() {} ) );
-
-    m_settingsElements.emplace_back(
-        Button( "Main Menu", sf::Vector2f{ posX, startY + spacing * 4 }, [ this ]() { m_menuState = MenuState::MainMenu; } ) );
+        Button( "Back", sf::Vector2f{ posX, posY }, 
+        [ this ]() { m_menuState = MenuState::MainMenu; }, 
+        Alignment::Center ) 
+    );
 }
