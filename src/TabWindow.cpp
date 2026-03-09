@@ -31,10 +31,14 @@ void TabWindow::initGeometry()
     const auto& config = ConfigManager::getInstance();
     m_scale = config.getScale();
 
-    if (!m_bodyShader->loadFromFile( std::string( ASSETS_PATH ) + "shaders/tab_body.frag", sf::Shader::Type::Fragment ))
+    // ZMIANA: Ładujemy ten sam plik shadera dla obu komponentów
+    std::string shaderPath = std::string( ASSETS_PATH ) + "shaders/tab_unified.frag";
+
+    if (!m_bodyShader->loadFromFile( shaderPath, sf::Shader::Type::Fragment ))
          std::cerr << "CRITICAL: Shader body error" << std::endl;
-    if (!m_tabShader->loadFromFile( std::string( ASSETS_PATH ) + "shaders/tab_item.frag", sf::Shader::Type::Fragment ))
+    if (!m_tabShader->loadFromFile( shaderPath, sf::Shader::Type::Fragment ))
          std::cerr << "CRITICAL: Shader item error" << std::endl;
+         
     m_font->openFromFile( std::string( ASSETS_PATH ) + "fonts/ScienceGothic-Regular.ttf" );
 
     float screenW = static_cast< float >( config.getScreenWidth() );
@@ -55,7 +59,6 @@ void TabWindow::initGeometry()
     float skew = TAB_SKEW_AMOUNT * m_scale;
     float tabSpacing = TAB_SPACING_OFFSET * m_scale;
 
-    // Zmieniono verticalOverlap na 3.5f - idealny kompromis miedzy usuwaniem linii a rownoscia geometrii
     float verticalOverlap = 4.0f * m_scale; 
     float bodyTopY = m_bodyPosition.y - (m_bodySize.y / 2.0f);
     float tabPosY = bodyTopY - (tabHeight / 2.0f) + verticalOverlap; 
@@ -155,18 +158,28 @@ void TabWindow::draw( Window& window )
     sf::Vector2f bodyTopLeft = m_bodyCanvas.getPosition() - m_bodyCanvas.getOrigin();
 
     if ( m_bodyShader ) {
+        // --- ZMIANA: USTAWIENIE TYPU NA 0 (BODY) ---
+        m_bodyShader->setUniform( "u_type", 0 );
+        
         m_bodyShader->setUniform( "u_pos", bodyTopLeft );
         m_bodyShader->setUniform( "u_winHeight", screenH );
         m_bodyShader->setUniform( "u_size", m_bodySize );
         
+        // Przekazujemy clickPos i clickTime normalnie
         m_bodyShader->setUniform( "u_clickPos", m_clickPos );
         m_bodyShader->setUniform( "u_clickTime", m_timeSinceClick );
+
+        // Pozostałe zmienne (u_skew, u_active itp) nie są potrzebne dla body (type 0), 
+        // ale shader je ma zdefiniowane, więc nie musimy ich wysyłać (będą 0).
 
         window.draw( m_bodyCanvas, m_bodyShader.get() );
     } else window.draw( m_bodyCanvas );
 
     auto drawTab = [&]( const TabElement& tab, bool forceActive ) {
         if ( m_tabShader ) {
+            // --- ZMIANA: USTAWIENIE TYPU NA 1 (TAB) ---
+            m_tabShader->setUniform( "u_type", 1 );
+
             sf::Vector2f topLeft = tab.shape.getPosition() - tab.shape.getOrigin();
             
             m_tabShader->setUniform( "u_pos", topLeft );

@@ -17,15 +17,27 @@ const vec3 C_LEFT  = vec3( 1.0, 0.0, 0.85 );
 const vec3 C_RIGHT = vec3( 0.0, 0.8, 1.0 );
 const vec3 C_BG    = vec3( 0.05, 0.05, 0.08 );
 
-float sdTrapezoid(vec2 p, float width, float height, float skew) {
-    float t = clamp(p.y / height, 0.0, 1.0);
-    float leftLimit = skew * (1.0 - t);
-    float rightLimit = width - (skew * (1.0 - t));
-    float dLeft = p.x - leftLimit;
-    float dRight = rightLimit - p.x;
-    float dTop = p.y;
-    float dBot = height - p.y;
-    return min(min(dLeft, dRight), min(dTop, dBot));
+const float HEX_SCALE = 42.0; 
+const float HEX_LINE_WIDTH = 0.08;
+const float HEX_LINE_SHARP = 0.02;
+
+// --- FUNKCJA LOSUJĄCA ---
+float hash(vec2 p) {
+    return fract(sin(dot(p, vec2(12.9898, 78.233))) * 43758.5453);
+}
+
+float hexDist(vec2 p) {
+    p = abs(p);
+    float c = dot(p, normalize(vec2(1.0, 1.732)));
+    return max(c, p.x);
+}
+
+vec2 getHexCenterDist(vec2 p) {
+    vec2 r = vec2(1.0, 1.732);
+    vec2 h = r * 0.5;
+    vec2 a = mod(p, r) - h;
+    vec2 b = mod(p - h, r) - h;
+    return dot(a, a) < dot(b, b) ? a : b;
 }
 
 void main() {
@@ -37,6 +49,7 @@ void main() {
 
     vec2 p = glPos - u_pos;
     
+    // --- GEOMETRIA ---
     float t = clamp(p.y / u_size.y, 0.0, 1.0);
     float leftLimit = u_skew * (1.0 - t);
     float rightLimit = u_size.x - (u_skew * (1.0 - t));
@@ -59,9 +72,8 @@ void main() {
 
     if (u_active) {
         finalColor = C_BG;
-        finalColor += accentColor * 0.15 * smoothstep(u_size.y, 0.0, p.y);
+        finalColor += accentColor * 0.1 * smoothstep(u_size.y, 0.0, p.y);
         borderMask = max(borderMask, smoothstep(2.0, 0.0, p.y));
-        // Usunieto bottomFade, aby przywrocic boczne linie
     } else {
         finalColor *= 0.6;
         if (u_hover) {
@@ -72,19 +84,58 @@ void main() {
 
     finalColor = mix(finalColor, accentColor, clamp(borderMask, 0.0, 1.0));
 
-    float distClick = distance(glPos, u_clickPos);
-    float speed = 2500.0;
-    float radius = u_clickTime * speed;
-    float waveWidth = 150.0;
-    
-    float wave = smoothstep(radius, radius - waveWidth, distClick) 
-               - smoothstep(radius - waveWidth * 0.2, radius - waveWidth * 1.2, distClick);
-    wave = max(0.0, wave);
-    
-    float fade = exp(-u_clickTime * 4.0);
-    vec3 waveColor = accentColor + vec3(0.5);
-    
-    finalColor += waveColor * wave * fade * 0.6;
+    // --- LOGIKA REAKCJI ŁAŃCUCHOWEJ (DIGITAL DECAY) ---
+    if (u_active) {
+        vec2 globalHexUV = glPos / HEX_SCALE;
+        vec2 cellVec = getHexCenterDist(globalHexUV);
+        vec2 hexCenterPos = (globalHexUV - cellVec) * HEX_SCALE;
+        
+        float distToHex = distance(hexCenterPos, u_clickPos);
+
+        // --- RANDOMIZACJA UNIKALNA DLA KLIKNIĘCIA ---
+        // Dodajemy u_clickPos do seeda. Każde kliknięcie w innym miejscu da inny wzór.
+        float rnd = hash(floor(hexCenterPos) + floor(u_clickPos)); 
+        
+        float jitterAmount = 60.0; 
+        distToHex += (rnd - 0.5) * jitterAmount;
+
+        float speed = 3000.0;
+        float currentRadius = u_clickTime * speed;
+        
+        float diff = currentRadius - distToHex;
+        
+        float intensity = 0.0;
+
+        if (diff > 0.0) {
+            // --- OGRANICZENIE ZASIĘGU ---
+            // 1. Zwiększyłem współczynnik z 0.0020 na 0.0060 (3x szybszy zanik zasięgu)
+            float dropoffFactor = 0.0060;
+            
+            // 2. Odejmujemy 0.1 od wyniku. To sprawia, że szansa spada do zera 
+            // ZANIM exp naturalnie osiągnie zero (co trwa w nieskończoność).
+            // To eliminuje "pojedyncze heksy" daleko od centrum.
+            float survivalChance = exp(-distToHex * dropoffFactor) - 0.1; 
+            
+            if (rnd <= survivalChance) {
+                float decay = exp(-diff * 0.005); 
+                if (diff < 800.0) {
+                    intensity = decay; 
+                }
+            }
+        }
+
+        float hexVal = 0.5 - hexDist(cellVec);
+        float hexGridMask = smoothstep(HEX_LINE_WIDTH, HEX_LINE_SHARP, hexVal);
+        
+        vec3 hexGlow = accentColor * 2.5; 
+        
+        vec3 hexEffect = hexGlow * hexGridMask * intensity;
+        hexEffect += accentColor * 0.4 * intensity * hexVal; 
+
+        hexEffect *= (1.0 - clamp(borderMask, 0.0, 1.0));
+
+        finalColor += hexEffect;
+    }
 
     gl_FragColor = vec4(finalColor, 1.0);
 }
