@@ -6,7 +6,7 @@
 
 #include "GameState.hpp"
 
-#include "TabWindow.hpp"
+#include "MenuElement.hpp"
 
 namespace sf
 {
