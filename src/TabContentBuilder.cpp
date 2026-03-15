@@ -21,9 +21,9 @@ TabContentBuilder& TabContentBuilder::addTitle( const std::string& text )
 }
 
 TabContentBuilder& TabContentBuilder::addSlider( const std::function<void( float )>& callback,
-                                                  float minValue, float maxValue, float initialValue )
+                                                  float minValue, float maxValue, float initialValue, ShowValue showValue )
 {
-    m_elements.emplace_back( Slider( m_currentPosition, callback, minValue, maxValue, initialValue ) );
+    m_elements.emplace_back( Slider( m_currentPosition, callback, minValue, maxValue, initialValue, showValue ) );
     m_currentPosition.y += m_spacing;
     return *this;
 }

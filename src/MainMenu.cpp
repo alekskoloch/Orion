@@ -185,7 +185,7 @@ void MainMenu::initSettings()
         )
         .addTab( SettingsTab::Audio, "Audio",
             TabContentBuilder( contentStartPos, spacing )
-                .addSlider( []( float val ){ /* TODO: implement volume change */ }, 0.0f, 100.0f, 80.0f )
+                .addSlider( []( float val ){ /* TODO: implement volume change */ }, 0.0f, 100.0f, 80.0f, ShowValue::No )
                 .addSlider( []( float val ){ /* TODO: implement volume change */ }, 0.0f, 100.0f, 70.0f )
                 .build()
         )

@@ -12,6 +12,8 @@
 #include "InputContext.hpp"
 #include "Window.hpp"
 
+enum class ShowValue : bool { No = false, Yes = true };
+
 class Slider
 {
 public:
@@ -20,10 +22,10 @@ public:
     static constexpr float DEFAULT_WIDTH = 600.f;
     static constexpr float DEFAULT_HEIGHT = 120.f;
 
-    Slider( sf::Vector2f position, Callback callback, float minValue = 0.0f, float maxValue = 100.0f, float initialValue = 50.0f )
+    Slider( sf::Vector2f position, Callback callback, float minValue = 0.0f, float maxValue = 100.0f, float initialValue = 50.0f, ShowValue showValue = ShowValue::Yes )
         : m_callback( std::move( callback ) ), m_font( std::make_shared< sf::Font >() ), m_valueText( *m_font ),
           m_minValue( minValue ), m_maxValue( maxValue ), m_value( initialValue ), m_currentValue( initialValue ),
-          m_releaseTime( -100.0f )
+          m_releaseTime( -100.0f ), m_showValue( showValue )
     {
         float scale = ConfigManager::getInstance().getScale();
 
@@ -139,7 +141,10 @@ public:
         m_shader.setUniform( "u_mouse", m_mouseLocalPos );
 
         window.draw( m_canvas, &m_shader );
-        window.draw( m_valueText );
+        if ( m_showValue == ShowValue::Yes )
+        {
+            window.draw( m_valueText );
+        }
     }
 
 private:
@@ -199,4 +204,5 @@ private:
     bool m_isDragging = false;
     sf::Vector2f m_mouseLocalPos;
     float m_releaseTime;
+    ShowValue m_showValue;
 };
