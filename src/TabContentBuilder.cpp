@@ -20,10 +20,10 @@ TabContentBuilder& TabContentBuilder::addTitle( const std::string& text )
     return *this;
 }
 
-TabContentBuilder& TabContentBuilder::addSlider( const std::string& label, const std::function<void( float )>& callback,
+TabContentBuilder& TabContentBuilder::addSlider( const std::function<void( float )>& callback,
                                                   float minValue, float maxValue, float initialValue )
 {
-    m_elements.emplace_back( Slider( label, m_currentPosition, callback, minValue, maxValue, initialValue ) );
+    m_elements.emplace_back( Slider( m_currentPosition, callback, minValue, maxValue, initialValue ) );
     m_currentPosition.y += m_spacing;
     return *this;
 }

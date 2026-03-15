@@ -20,11 +20,9 @@ public:
     static constexpr float DEFAULT_WIDTH = 600.f;
     static constexpr float DEFAULT_HEIGHT = 120.f;
 
-    Slider( std::string_view text, sf::Vector2f position, Callback callback,
-            float minValue = 0.0f, float maxValue = 100.0f, float initialValue = 50.0f )
-        : m_callback( std::move( callback ) ), m_font( std::make_shared< sf::Font >() ),
-          m_text( *m_font ), m_valueText( *m_font ), m_minValue( minValue ),
-          m_maxValue( maxValue ), m_value( initialValue ), m_currentValue( initialValue ),
+    Slider( sf::Vector2f position, Callback callback, float minValue = 0.0f, float maxValue = 100.0f, float initialValue = 50.0f )
+        : m_callback( std::move( callback ) ), m_font( std::make_shared< sf::Font >() ), m_valueText( *m_font ),
+          m_minValue( minValue ), m_maxValue( maxValue ), m_value( initialValue ), m_currentValue( initialValue ),
           m_releaseTime( -100.0f )
     {
         float scale = ConfigManager::getInstance().getScale();
@@ -47,14 +45,18 @@ public:
             std::cerr << "ERROR: Font load failed: " << fontPath << std::endl;
         }
 
-        m_text.setString( std::string( text ) );
-        m_text.setCharacterSize( static_cast< unsigned int >( 42 * scale ) );
-        m_text.setFillColor( sf::Color::White );
-
         m_valueText.setCharacterSize( static_cast< unsigned int >( 38 * scale ) );
         m_valueText.setFillColor( sf::Color( 180, 180, 200 ) );
 
-        updateTextGeometry();
+        auto valueBounds = m_valueText.getLocalBounds();
+        float valueOriginX = valueBounds.position.x + valueBounds.size.x;
+        float valueOriginY = valueBounds.position.y + valueBounds.size.y / 2.0f;
+        float valuePosX = m_canvas.getPosition().x + ( DEFAULT_WIDTH * scale / 2.f ) - ( 50.f * scale );
+        float valuePosY = m_canvas.getPosition().y - ( 25.f * scale );
+
+        m_valueText.setOrigin( { valueOriginX, valueOriginY } );
+        m_valueText.setPosition( { valuePosX, valuePosY } );
+
         updateValue( initialValue );
     }
 
@@ -122,10 +124,7 @@ public:
         m_valueText.setString( valueStr );
     }
 
-    void setValue( float value )
-    {
-        updateValue( value );
-    }
+    void setValue( float value ) { updateValue( value ); }
 
     float getValue() const { return m_currentValue; }
 
@@ -140,7 +139,6 @@ public:
         m_shader.setUniform( "u_mouse", m_mouseLocalPos );
 
         window.draw( m_canvas, &m_shader );
-        window.draw( m_text );
         window.draw( m_valueText );
     }
 
@@ -152,29 +150,6 @@ private:
         float halfH = m_canvasSize.y / 2.f;
 
         return std::abs( p.x ) <= halfW && std::abs( p.y ) <= halfH;
-    }
-
-    void updateTextGeometry()
-    {
-        auto textBounds = m_text.getLocalBounds();
-        float scale = ConfigManager::getInstance().getScale();
-
-        float originY = textBounds.position.y + textBounds.size.y / 2.0f;
-        float posY = m_canvas.getPosition().y - ( DEFAULT_HEIGHT * scale / 2.f ) + ( 30.f * scale );
-        float originX = textBounds.position.x;
-        float posX = m_canvas.getPosition().x - ( DEFAULT_WIDTH * scale / 2.f ) + ( 30.f * scale );
-
-        m_text.setOrigin( { originX, originY } );
-        m_text.setPosition( { posX, posY } );
-
-        auto valueBounds = m_valueText.getLocalBounds();
-        float valueOriginX = valueBounds.position.x + valueBounds.size.x;
-        float valueOriginY = valueBounds.position.y + valueBounds.size.y / 2.0f;
-        float valuePosY = m_canvas.getPosition().y + ( DEFAULT_HEIGHT * scale / 2.f ) - ( 30.f * scale );
-        float valuePosX = m_canvas.getPosition().x + ( DEFAULT_WIDTH * scale / 2.f ) - ( 30.f * scale );
-
-        m_valueText.setOrigin( { valueOriginX, valueOriginY } );
-        m_valueText.setPosition( { valuePosX, valuePosY } );
     }
 
     void updateValue( float value )
@@ -194,19 +169,18 @@ private:
         int intPart = static_cast< int >( rounded );
         float fracPart = rounded - intPart;
 
-        if ( std::abs( fracPart ) < 0.05f )
+        if ( std::abs( fracPart ) < 0.05F )
         {
             return std::to_string( intPart );
         }
-        else
-        {
-            std::string str = std::to_string( static_cast< int >( rounded * 10 ) );
+        
+                    std::string str = std::to_string( static_cast< int >( rounded * 10 ) );
             if ( str.size() >= 1 )
             {
                 str.insert( str.size() - 1, "." );
             }
             return str;
-        }
+       
     }
 
     Callback m_callback;
@@ -215,7 +189,6 @@ private:
     sf::Shader m_shader;
     sf::Clock m_clock;
     std::shared_ptr< sf::Font > m_font;
-    sf::Text m_text;
     sf::Text m_valueText;
     float m_minValue;
     float m_maxValue;
