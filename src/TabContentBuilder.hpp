@@ -5,7 +5,9 @@
 #include <functional>
 #include <SFML/System/Vector2.hpp>
 
-#include "TabWindow.hpp" 
+#include "TabWindow.hpp"
+
+class Slider;
 
 class TabContentBuilder
 {
@@ -14,7 +16,9 @@ public:
 
     TabContentBuilder& addButton( const std::string& label, const std::function<void()>& callback );
     TabContentBuilder& addTitle( const std::string& text );
-    
+    TabContentBuilder& addSlider( const std::string& label, const std::function<void( float )>& callback,
+                                   float minValue = 0.0f, float maxValue = 100.0f, float initialValue = 50.0f );
+
     std::vector< TabChildElement > build();
 
 private:

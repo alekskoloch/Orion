@@ -9,10 +9,11 @@
 #include "GUIBaseElement.h"
 #include "Button.hpp"
 #include "Title.hpp"
+#include "Slider.hpp"
 
 class Window;
 
-using TabChildElement = GUIBaseElement< Button, Title >;
+using TabChildElement = GUIBaseElement< Button, Title, Slider >;
 
 enum class SettingsTab : std::uint8_t { General, Graphics, Audio, Controls, Count };
 

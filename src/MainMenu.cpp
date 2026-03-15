@@ -183,10 +183,10 @@ void MainMenu::initSettings()
                 .addButton( "Quality: High", noOp )
                 .build()
         )
-        .addTab( SettingsTab::Audio, "Audio", 
+        .addTab( SettingsTab::Audio, "Audio",
             TabContentBuilder( contentStartPos, spacing )
-                .addButton( "Master Volume", noOp )
-                .addButton( "SFX Volume", noOp )
+                .addSlider( "Master Volume", []( float val ){ /* TODO: implement volume change */ }, 0.0f, 100.0f, 80.0f )
+                .addSlider( "SFX Volume", []( float val ){ /* TODO: implement volume change */ }, 0.0f, 100.0f, 70.0f )
                 .build()
         )
         .addTab( SettingsTab::Controls, "Controls", 
