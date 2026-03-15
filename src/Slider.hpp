@@ -12,7 +12,13 @@
 #include "InputContext.hpp"
 #include "Window.hpp"
 
-enum class ShowValue : bool { No = false, Yes = true };
+#include "utils/stringUtils.hpp"
+
+enum class ShowValue : bool
+{
+    No = false,
+    Yes = true
+};
 
 class Slider
 {
@@ -22,7 +28,8 @@ public:
     static constexpr float DEFAULT_WIDTH = 600.f;
     static constexpr float DEFAULT_HEIGHT = 120.f;
 
-    Slider( sf::Vector2f position, Callback callback, float minValue = 0.0f, float maxValue = 100.0f, float initialValue = 50.0f, ShowValue showValue = ShowValue::Yes )
+    Slider( sf::Vector2f position, Callback callback, float minValue = 0.0f, float maxValue = 100.0f, float initialValue = 50.0f,
+            ShowValue showValue = ShowValue::Yes )
         : m_callback( std::move( callback ) ), m_font( std::make_shared< sf::Font >() ), m_valueText( *m_font ),
           m_minValue( minValue ), m_maxValue( maxValue ), m_value( initialValue ), m_currentValue( initialValue ),
           m_releaseTime( -100.0f ), m_showValue( showValue )
@@ -122,7 +129,7 @@ public:
         m_shader.setUniform( "u_dragging", m_isDragging ? 1.0f : 0.0f );
         m_shader.setUniform( "u_releaseTime", m_releaseTime );
 
-        std::string valueStr = formatValue( m_currentValue );
+        std::string valueStr = utils::formatValue( m_currentValue );
         m_valueText.setString( valueStr );
     }
 
@@ -166,26 +173,6 @@ private:
         {
             m_callback( m_currentValue );
         }
-    }
-
-    std::string formatValue( float value ) const
-    {
-        float rounded = std::round( value * 10.0f ) / 10.0f;
-        int intPart = static_cast< int >( rounded );
-        float fracPart = rounded - intPart;
-
-        if ( std::abs( fracPart ) < 0.05F )
-        {
-            return std::to_string( intPart );
-        }
-        
-                    std::string str = std::to_string( static_cast< int >( rounded * 10 ) );
-            if ( str.size() >= 1 )
-            {
-                str.insert( str.size() - 1, "." );
-            }
-            return str;
-       
     }
 
     Callback m_callback;
