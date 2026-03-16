@@ -57,16 +57,18 @@ public:
         m_valueText.setCharacterSize( static_cast< unsigned int >( 38 * scale ) );
         m_valueText.setFillColor( sf::Color( 180, 180, 200 ) );
 
-        auto valueBounds = m_valueText.getLocalBounds();
-        float valueOriginX = valueBounds.position.x + valueBounds.size.x;
-        float valueOriginY = valueBounds.position.y + valueBounds.size.y / 2.0f;
-        float valuePosX = m_canvas.getPosition().x + ( DEFAULT_WIDTH * scale / 2.f ) - ( 50.f * scale );
-        float valuePosY = m_canvas.getPosition().y - ( 25.f * scale );
+        // Store value text offset relative to canvas center
+        m_valueTextOffset = { ( DEFAULT_WIDTH * scale / 2.f ) - ( 50.f * scale ), -( 25.f * scale ) };
 
-        m_valueText.setOrigin( { valueOriginX, valueOriginY } );
-        m_valueText.setPosition( { valuePosX, valuePosY } );
-
+        updateValueTextGeometry();
         updateValue( initialValue );
+    }
+
+    void updateValueTextGeometry()
+    {
+        // Position value text relative to canvas center using stored offset
+        sf::Vector2f valuePos = m_canvas.getPosition() + m_valueTextOffset;
+        m_valueText.setPosition( valuePos );
     }
 
     void handleEvent( const InputContext& inputContext )
@@ -137,6 +139,14 @@ public:
 
     float getValue() const { return m_currentValue; }
 
+    sf::Vector2f getPosition() const { return m_canvas.getPosition(); }
+    void setPosition( const sf::Vector2f& pos )
+    {
+        m_canvas.setPosition( pos );
+        updateValueTextGeometry();
+    }
+    sf::Vector2f getSize() const { return m_canvasSize; }
+
     void draw( Window& window )
     {
         float scale = ConfigManager::getInstance().getScale();
@@ -155,13 +165,19 @@ public:
     }
 
 private:
-    bool isPointInside( sf::Vector2f point )
+    bool isPointInside( sf::Vector2f point ) const
     {
-        sf::Vector2f p = point - m_canvas.getPosition();
+        float scale = ConfigManager::getInstance().getScale();
+        
+        // Use the full canvas bounds for hit detection - more intuitive
+        sf::Vector2f center = m_canvas.getPosition();
         float halfW = m_canvasSize.x / 2.f;
         float halfH = m_canvasSize.y / 2.f;
 
-        return std::abs( p.x ) <= halfW && std::abs( p.y ) <= halfH;
+        float dX = point.x - center.x;
+        float dY = point.y - center.y;
+
+        return std::abs( dX ) <= halfW && std::abs( dY ) <= halfH;
     }
 
     void updateValue( float value )
@@ -178,6 +194,7 @@ private:
     Callback m_callback;
     sf::RectangleShape m_canvas;
     sf::Vector2f m_canvasSize;
+    sf::Vector2f m_valueTextOffset;
     sf::Shader m_shader;
     sf::Clock m_clock;
     std::shared_ptr< sf::Font > m_font;

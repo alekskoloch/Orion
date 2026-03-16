@@ -13,7 +13,6 @@ namespace
     constexpr float BodyHeightRatio = 0.55f;
     constexpr float BodyPosYRatio = 0.56f;
     constexpr float BackButtonPosYRatio = 0.90f;
-    constexpr float ContentStartOffset = -150.0f; 
     constexpr float ContentSpacing = 180.0f;
 }
 
@@ -156,11 +155,11 @@ void MainMenu::initSettings()
 
     sf::Vector2f bodySize{ screenW * BodyWidthRatio, screenH * BodyHeightRatio };
     sf::Vector2f bodyPos{ screenW * 0.5f, screenH * BodyPosYRatio };
-    
-    // Punkt startowy dla elementów wewnątrz zakładki (np. odrobinę wyżej niż środek)
+
+    // Punkt startowy dla elementów wewnątrz zakładki - góra okna z paddingiem
     sf::Vector2f contentStartPos = bodyPos;
-    contentStartPos.y += ContentStartOffset * config.getScale();
-    
+    contentStartPos.y -= ( bodySize.y / 2.0f ) - ( 125.0f * config.getScale() );
+
     float spacing = ContentSpacing * config.getScale();
     auto noOp = [](){};
 
@@ -185,7 +184,29 @@ void MainMenu::initSettings()
         )
         .addTab( SettingsTab::Audio, "Audio",
             TabContentBuilder( contentStartPos, spacing )
+                .addSettingSection( "Volume")
                 .addSlider( []( float val ){ /* TODO: implement volume change */ }, 0.0f, 100.0f, 80.0f, ShowValue::No )
+                .addSettingSection("Sound")
+                .addSlider( []( float val ){ /* TODO: implement volume change */ }, 0.0f, 100.0f, 70.0f )
+                .addSettingSection("Sound")
+                .addSlider( []( float val ){ /* TODO: implement volume change */ }, 0.0f, 100.0f, 70.0f )
+                .addSettingSection("Sound")
+                .addSlider( []( float val ){ /* TODO: implement volume change */ }, 0.0f, 100.0f, 70.0f )
+                .addSettingSection("Sound")
+                .addSlider( []( float val ){ /* TODO: implement volume change */ }, 0.0f, 100.0f, 70.0f )
+                .addSettingSection("Sound")
+                .addSlider( []( float val ){ /* TODO: implement volume change */ }, 0.0f, 100.0f, 70.0f )
+                .addSettingSection("Sound")
+                .addSlider( []( float val ){ /* TODO: implement volume change */ }, 0.0f, 100.0f, 70.0f )
+                .addSettingSection("Sound")
+                .addSlider( []( float val ){ /* TODO: implement volume change */ }, 0.0f, 100.0f, 70.0f )
+                .addSettingSection("Sound")
+                .addSlider( []( float val ){ /* TODO: implement volume change */ }, 0.0f, 100.0f, 70.0f )
+                .addSettingSection("Sound")
+                .addSlider( []( float val ){ /* TODO: implement volume change */ }, 0.0f, 100.0f, 70.0f )
+                .addSettingSection("Sound")
+                .addSlider( []( float val ){ /* TODO: implement volume change */ }, 0.0f, 100.0f, 70.0f )
+                .addSettingSection("Sound")
                 .addSlider( []( float val ){ /* TODO: implement volume change */ }, 0.0f, 100.0f, 70.0f )
                 .build()
         )

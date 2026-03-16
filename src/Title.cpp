@@ -63,6 +63,17 @@ void Title::update(sf::Time deltaTime)
     m_glitchEffect.update(deltaTime);
 }
 
+sf::Vector2f Title::getSize() const
+{
+    if ( m_renderSprite.has_value() )
+    {
+        auto texSize = m_renderSprite->getTexture().getSize();
+        return { static_cast< float >( texSize.x ), static_cast< float >( texSize.y ) };
+    }
+    auto bounds = m_text.getLocalBounds();
+    return { bounds.size.x, bounds.size.y };
+}
+
 void Title::draw(Window& window)
 {
     if (!m_renderSprite.has_value())

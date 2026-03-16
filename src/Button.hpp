@@ -126,6 +126,14 @@ public:
     }
     void setSkew( float s ) { m_skew = s; }
 
+    sf::Vector2f getPosition() const { return m_canvas.getPosition(); }
+    void setPosition( const sf::Vector2f& pos )
+    {
+        m_canvas.setPosition( pos );
+        updateTextGeometry();
+    }
+    sf::Vector2f getSize() const { return m_canvas.getSize(); }
+
     void draw( Window& window )
     {
         float scale = ConfigManager::getInstance().getScale();

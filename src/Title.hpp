@@ -28,6 +28,10 @@ public:
     void update(sf::Time deltaTime);
     void draw(Window& window);
 
+    sf::Vector2f getPosition() const { return m_text.getPosition(); }
+    void setPosition( const sf::Vector2f& pos ) { m_text.setPosition( pos ); }
+    sf::Vector2f getSize() const;
+
 private:
     std::shared_ptr<sf::Font> m_font;
     sf::Text m_text;
