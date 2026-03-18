@@ -1,6 +1,7 @@
 #include "TabContentBuilder.hpp"
 #include "Slider.hpp"
 #include "SettingSection.hpp"
+#include "StepSelector.hpp"
 
 TabContentBuilder::TabContentBuilder( const sf::Vector2f& startPosition, float spacing )
     : m_currentPosition( startPosition )
@@ -60,6 +61,26 @@ TabContentBuilder& TabContentBuilder::addSlider( const std::function<void( float
     else
     {
         m_elements.emplace_back( Slider( m_currentPosition, callback, minValue, maxValue, initialValue, showValue ) );
+        m_currentPosition.y += m_spacing;
+    }
+    return *this;
+}
+
+TabContentBuilder& TabContentBuilder::addStepSelector( const std::function<void( int )>& callback, std::vector< std::string > steps, int initialStep )
+{
+    if ( m_currentSectionIndex.has_value() )
+    {
+        std::visit( [ &callback, &steps, initialStep ]( auto& element )
+        {
+            if constexpr ( std::is_same_v< std::remove_cvref_t< decltype( element ) >, SettingSection > )
+            {
+                element.setStepSelector( callback, std::move( steps ), initialStep );
+            }
+        }, m_elements[ m_currentSectionIndex.value() ] );
+    }
+    else
+    {
+        m_elements.emplace_back( StepSelector( m_currentPosition, callback, std::move( steps ), initialStep ) );
         m_currentPosition.y += m_spacing;
     }
     return *this;

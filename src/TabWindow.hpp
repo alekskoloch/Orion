@@ -11,12 +11,13 @@
 #include "Slider.hpp"
 #include "SettingSection.hpp"
 #include "Scrollbar.hpp"
+#include "StepSelector.hpp"
 
 class Window;
 
 // TabChildElement is a variant of raw widget types, not GUIBaseElement
 // This allows direct access to setPosition/getPosition/getSize for scrolling
-using TabChildElement = std::variant< Button, Title, Slider, SettingSection >;
+using TabChildElement = std::variant< Button, Title, Slider, SettingSection, StepSelector >;
 
 enum class SettingsTab : std::uint8_t { General, Graphics, Audio, Controls, Count };
 

@@ -6,12 +6,14 @@
 #include <functional>
 #include <optional>
 #include <variant>
+#include <vector>
 
 #include "ConfigManager.hpp"
 #include "InputContext.hpp"
 #include "Window.hpp"
 #include "Button.hpp"
 #include "Slider.hpp"
+#include "StepSelector.hpp"
 
 class SettingSection
 {
@@ -49,7 +51,7 @@ public:
     {
         float scale = ConfigManager::getInstance().getScale();
         float buttonX = m_position.x + ( 650.0f * scale / 2.0f ) - ( 40.0f * scale );
-        
+
         m_button.emplace( label, sf::Vector2f{ buttonX, m_position.y }, callback, Alignment::Right );
     }
 
@@ -58,8 +60,16 @@ public:
     {
         float scale = ConfigManager::getInstance().getScale();
         float sliderX = m_position.x + ( 600.0f * scale / 2.0f );
-        
+
         m_slider.emplace( sf::Vector2f{ sliderX, m_position.y }, callback, minValue, maxValue, initialValue, showValue );
+    }
+
+    void setStepSelector( const std::function<void( int )>& callback, std::vector< std::string > steps, int initialStep = 0 )
+    {
+        float scale = ConfigManager::getInstance().getScale();
+        float selectorX = m_position.x + ( 600.0f * scale / 2.0f );
+
+        m_stepSelector.emplace( sf::Vector2f{ selectorX, m_position.y }, callback, std::move( steps ), initialStep );
     }
 
     void setScrollOffset( float offset )
@@ -78,6 +88,11 @@ public:
         {
             auto sliderPos = m_slider->getPosition();
             m_slider->setPosition( { sliderPos.x, m_basePosition.y - m_scrollOffset } );
+        }
+        else if ( m_stepSelector.has_value() )
+        {
+            auto selectorPos = m_stepSelector->getPosition();
+            m_stepSelector->setPosition( { selectorPos.x, m_basePosition.y - m_scrollOffset } );
         }
     }
 
@@ -100,6 +115,11 @@ public:
             float sliderX = m_basePosition.x + ( 600.0f * m_scale / 2.0f );
             m_slider->setPosition( { sliderX, m_basePosition.y } );
         }
+        else if ( m_stepSelector.has_value() )
+        {
+            float selectorX = m_basePosition.x + ( 600.0f * m_scale / 2.0f );
+            m_stepSelector->setPosition( { selectorX, m_basePosition.y } );
+        }
     }
 
     sf::Vector2f getBasePosition() const { return m_basePosition; }
@@ -116,6 +136,10 @@ public:
         {
             return m_slider->getSize().y;
         }
+        else if ( m_stepSelector.has_value() )
+        {
+            return m_stepSelector->getSize().y;
+        }
         return 100.0f * m_scale; // Default height for label-only sections
     }
 
@@ -129,6 +153,10 @@ public:
         {
             m_slider->handleEvent( inputContext );
         }
+        else if ( m_stepSelector.has_value() )
+        {
+            m_stepSelector->handleEvent( inputContext );
+        }
     }
 
     void update( sf::Time deltaTime )
@@ -140,6 +168,10 @@ public:
         else if ( m_slider.has_value() )
         {
             m_slider->update( deltaTime );
+        }
+        else if ( m_stepSelector.has_value() )
+        {
+            m_stepSelector->update( deltaTime );
         }
     }
 
@@ -155,6 +187,10 @@ public:
         {
             m_slider->draw( window );
         }
+        else if ( m_stepSelector.has_value() )
+        {
+            m_stepSelector->draw( window );
+        }
     }
 
 private:
@@ -168,4 +204,5 @@ private:
 
     std::optional< Button > m_button;
     std::optional< Slider > m_slider;
+    std::optional< StepSelector > m_stepSelector;
 };

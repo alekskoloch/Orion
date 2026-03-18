@@ -19,6 +19,7 @@ public:
     TabContentBuilder& addTitle( const std::string& text );
     TabContentBuilder& addSlider( const std::function<void( float )>& callback,
                                    float minValue = 0.0f, float maxValue = 100.0f, float initialValue = 50.0f, ShowValue showValue = ShowValue::Yes );
+    TabContentBuilder& addStepSelector( const std::function<void( int )>& callback, std::vector< std::string > steps, int initialStep = 0 );
 
     std::vector< TabChildElement > build();
 
