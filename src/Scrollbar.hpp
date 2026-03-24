@@ -170,17 +170,17 @@ public:
             float scrollDelta = m_scrollOffsetTarget - m_scrollOffset;
             float scrollChange = scrollDelta * deltaTime.asSeconds() * SCROLL_SMOOTH_SPEED;
             m_scrollOffset += scrollChange;
-            
+
             // Check if we're close enough to snap to target
             if ( std::abs( scrollDelta ) < 0.5f )
             {
                 m_scrollOffset = m_scrollOffsetTarget;
             }
         }
-        
+
         // Update thumb position based on current (smoothed) scroll offset
         float contentScrollableDistance = m_contentHeight - m_viewportHeight;
-        
+
         // Only calculate thumb position if there's actual scrolling to do
         if ( contentScrollableDistance > 1.0f )
         {
@@ -196,7 +196,7 @@ public:
             m_normalizedScroll = 0.0f;
             m_thumbPosition = m_position + sf::Vector2f( 0.0f, m_trackHeight / 2.0f );
         }
-    
+
         m_shader.setUniform( "u_time", m_clock.getElapsedTime().asSeconds() );
         m_shader.setUniform( "u_hover", m_isHovered ? 1.0f : 0.0f );
         m_shader.setUniform( "u_thumbHover", m_isThumbHovered ? 1.0f : 0.0f );

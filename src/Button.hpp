@@ -147,7 +147,8 @@ public:
         m_shader.setUniform( "u_winHeight", static_cast< float >( ConfigManager::getInstance().getScreenHeight() ) );
         m_shader.setUniform( "u_size", sf::Vector2f( m_currentWidth * scale, DEFAULT_HEIGHT * scale ) );
         m_shader.setUniform( "u_time", m_clock.getElapsedTime().asSeconds() );
-        
+        m_shader.setUniform( "u_mouse", m_mouseLocalPos );
+
         float skewL = 0.0f;
         float skewR = 0.0f;
         float hexAnchor = 0.0f;
@@ -155,7 +156,7 @@ public:
         switch ( m_alignment )
         {
         case Alignment::Right:
-            skewL = m_skew; 
+            skewL = m_skew;
             skewR = 0.0f;
             hexAnchor = -1.0f;
             break;
@@ -174,7 +175,6 @@ public:
         m_shader.setUniform( "u_skewL", skewL );
         m_shader.setUniform( "u_skewR", skewR );
         m_shader.setUniform( "u_hexAnchor", hexAnchor );
-        m_shader.setUniform( "u_mouse", m_mouseLocalPos );
 
         window.draw( m_canvas, &m_shader );
         window.draw( m_text );

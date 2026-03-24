@@ -150,7 +150,6 @@ public:
         m_shader.setUniform( "u_winHeight", static_cast< float >( ConfigManager::getInstance().getScreenHeight() ) );
         m_shader.setUniform( "u_size", sf::Vector2f( m_canvasSize.x, m_canvasSize.y ) );
         m_shader.setUniform( "u_value", m_normalizedValue );
-        m_shader.setUniform( "u_mouse", m_mouseLocalPos );
         m_shader.setUniform( "u_stepCount", static_cast< float >( m_steps.size() ) );
 
         window.draw( m_canvas, &m_shader );
